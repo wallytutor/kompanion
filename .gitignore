@@ -28,10 +28,10 @@
 .python_history
 pip/
 
-
 # Other languages:
 .julia/*
 .rlang/*
+.stack/*
 
 # User profile directories/files:
 AppData/

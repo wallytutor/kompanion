@@ -78,6 +78,16 @@ $URL_QUARTO      = "https://github.com/quarto-dev/quarto-cli/releases/download/v
 $URL_PYTHON      = "https://github.com/winpython/winpython/releases/download/17.2.20251012/WinPython64-3.13.8.0dotb1.zip"
 $URL_RUST        = "https://static.rust-lang.org/rustup/dist/x86_64-pc-windows-gnu/rustup-init.exe"
 $URL_JULIA       = "https://julialang-s3.julialang.org/bin/winnt/x64/1.12/julia-1.12.1-win64.zip"
+$URL_ERLANG      = "https://github.com/erlang/otp/releases/download/OTP-27.3.4.4/otp_win64_27.3.4.4.zip"
+$URL_STACK       = "https://github.com/commercialhaskell/stack/releases/download/v3.7.1/stack-3.7.1-windows-x86_64.zip"
+$URL_ELM         = "https://github.com/elm/compiler/releases/download/0.19.1/binary-for-windows-64-bit.gz"
+$URL_RLANG       = "https://cran.asnr.fr/bin/windows/base/R-4.5.2-win.exe"
+
+$URL_PARAVIEW    = "https://www.paraview.org/paraview-downloads/download.php?submit=Download&version=v6.0&type=binary&os=Windows&downloadFile=ParaView-6.0.1-Windows-Python3.12-msvc2017-AMD64.zip"
+$URL_FREECAD     = "https://github.com/FreeCAD/FreeCAD/releases/download/1.0.2/FreeCAD_1.0.2-conda-Windows-x86_64-py311.7z"
+$URL_BLENDER     = "https://ftp.halifax.rwth-aachen.de/blender/release/Blender4.5/blender-4.5.4-windows-x64.zip"
+$URL_MESHLAB     = "https://github.com/cnr-isti-vclab/meshlab/releases/download/MeshLab-2025.07/MeshLab2025.07-windows_x86_64.zip"
+$URL_DWSIM       = "https://github.com/DanWBR/dwsim/releases/download/v9.0.4/DWSIM_v904_win64_portable.7z"
 
 $URL_GMSH        = "https://gmsh.info/bin/Windows/gmsh-4.14.1-Windows64-sdk.zip"
 $URL_ELMER       = "https://www.nic.funet.fi/pub/sci/physics/elmer/bin/windows/ElmerFEM-gui-mpi-Windows-AMD64.zip"
@@ -1288,22 +1298,6 @@ function Invoke-InstallJulia() {
     Invoke-UncompressZipIfNeeded -Source $output -Destination $path
 }
 
-function Invoke-ConfigureNode() {
-    $env:NODE_HOME = "$env:KOMPANION_BIN\node\node-v24.11.0-win-x64"
-    Initialize-AddToPath -Directory "$env:NODE_HOME"
-}
-
-function Invoke-InstallNode() {
-    $output = "$env:KOMPANION_TEMP\node.zip"
-    $path   = "$env:KOMPANION_BIN\node"
-    $url    = "https://nodejs.org/dist/v24.11.0/node-v24.11.0-win-x64.zip"
-
-    if (Test-Path -Path $path) { return }
-
-    Invoke-DownloadIfNeeded -URL $url -Output $output
-    Invoke-UncompressZipIfNeeded -Source $output -Destination $path
-}
-
 function Invoke-ConfigureErlang() {
     $env:ERLANG_HOME = "$env:KOMPANION_BIN\erlang\bin"
     Initialize-AddToPath -Directory "$env:ERLANG_HOME"
@@ -1312,7 +1306,7 @@ function Invoke-ConfigureErlang() {
 function Invoke-InstallErlang() {
     $output = "$env:KOMPANION_TEMP\erlang.zip"
     $path   = "$env:KOMPANION_BIN\erlang"
-    $url    = "https://github.com/erlang/otp/releases/download/OTP-27.3.4.4/otp_win64_27.3.4.4.zip"
+    $url    = $URL_ERLANG
 
     if (Test-Path -Path $path) { return }
 
@@ -1345,12 +1339,13 @@ function Invoke-ConfigureHaskell() {
 function Invoke-InstallHaskell() {
     $output = "$env:KOMPANION_TEMP\stack.zip"
     $path   = "$env:KOMPANION_BIN\stack"
-    $url    = "https://github.com/commercialhaskell/stack/releases/download/v3.7.1/stack-3.7.1-windows-x86_64.zip"
+    $url    = $URL_STACK
 
     if (Test-Path -Path $path) { return }
 
     Invoke-DownloadIfNeeded -URL $url -Output $output
     Invoke-UncompressZipIfNeeded -Source $output -Destination $path
+    # You still need to run "stack ghci" to get the compiler!
 }
 
 function Invoke-ConfigureElm() {
@@ -1360,47 +1355,12 @@ function Invoke-ConfigureElm() {
 function Invoke-InstallElm() {
     $output = "$env:KOMPANION_TEMP\elm.gz"
     $path   = "$env:KOMPANION_BIN\elm.exe"
-    $url    = "https://github.com/elm/compiler/releases/download/0.19.1/binary-for-windows-64-bit.gz"
+    $url    = $URL_ELM
 
     if (Test-Path -Path $path) { return }
 
     Invoke-DownloadIfNeeded -URL $url -Output $output
     Invoke-UncompressGzipIfNeeded -Source $output -Destination $path
-}
-
-function Invoke-ConfigureRacket() {
-    # $env:RACKET_HOME = "$env:KOMPANION_BIN\racket"
-    # Initialize-AddToPath -Directory "$env:RACKET_HOME\bin"
-    # $env:PLTUSERHOME     = "$env:KOMPANION_DIR\.racket"
-    # $env:PLT_PKGDIR      = "$env:PLTUSERHOME\Racket\8.18\pkgs"
-}
-
-function Invoke-InstallRacket() {
-    Write-Host "- Racket installation not yet implemented."
-}
-
-
-
-function Invoke-ConfigureCoq() {
-    $env:COQ_HOME = "$env:KOMPANION_BIN\coq"
-    Initialize-AddToPath -Directory "$env:COQ_HOME\bin"
-}
-
-function Invoke-InstallCoq() {
-    $output = "$env:KOMPANION_TEMP\coq.zip"
-    $path   = "$env:KOMPANION_BIN\coq"
-    $url    = "https://github.com/rocq-prover/platform/releases/download/2025.01.0/Coq-Platform-release-2025.01.0-version.8.20.2025.01-Windows-x86_64.exe"
-
-    if (Test-Path -Path $path) { return }
-
-    Invoke-DownloadIfNeeded -URL $url -Output $output
-    Invoke-Uncompress7zIfNeeded -Source $output -Destination $path
-
-    $target = Join-Path $path '$PLUGINSDIR'
-    if (Test-Path $target) { Remove-Item $target -Recurse -Force }
-
-    $target = Join-Path $path 'Uninstall.exe.nsis'
-    if (Test-Path $target) { Remove-Item $target }
 }
 
 function Invoke-ConfigureRlang() {
@@ -1434,7 +1394,7 @@ function Invoke-ConfigureRlang() {
 function Invoke-InstallRlang() {
     $output = "$env:KOMPANION_TEMP\R-4.5.2-win.exe"
     $path   = "$env:KOMPANION_BIN\rlang"
-    $url    = "https://cran.asnr.fr/bin/windows/base/R-4.5.2-win.exe"
+    $url    = $URL_RLANG
 
     if (Test-Path -Path $path) { return }
 
@@ -1451,13 +1411,62 @@ function Invoke-InstallRlang() {
         Start-Process -FilePath $output -ArgumentList $arglist -Wait
     }
 }
+
+function Invoke-ConfigureNode() {
+    $env:NODE_HOME = "$env:KOMPANION_BIN\node\node-v24.11.0-win-x64"
+    Initialize-AddToPath -Directory "$env:NODE_HOME"
+}
+
+function Invoke-InstallNode() {
+    $output = "$env:KOMPANION_TEMP\node.zip"
+    $path   = "$env:KOMPANION_BIN\node"
+    $url    = "https://nodejs.org/dist/v24.11.0/node-v24.11.0-win-x64.zip"
+
+    if (Test-Path -Path $path) { return }
+
+    Invoke-DownloadIfNeeded -URL $url -Output $output
+    Invoke-UncompressZipIfNeeded -Source $output -Destination $path
+}
+
+function Invoke-ConfigureRacket() {
+    # $env:RACKET_HOME = "$env:KOMPANION_BIN\racket"
+    # Initialize-AddToPath -Directory "$env:RACKET_HOME\bin"
+    # $env:PLTUSERHOME     = "$env:KOMPANION_DIR\.racket"
+    # $env:PLT_PKGDIR      = "$env:PLTUSERHOME\Racket\8.18\pkgs"
+}
+
+function Invoke-InstallRacket() {
+    Write-Host "- Racket installation not yet implemented."
+}
+
+function Invoke-ConfigureCoq() {
+    $env:COQ_HOME = "$env:KOMPANION_BIN\coq"
+    Initialize-AddToPath -Directory "$env:COQ_HOME\bin"
+}
+
+function Invoke-InstallCoq() {
+    $output = "$env:KOMPANION_TEMP\coq.zip"
+    $path   = "$env:KOMPANION_BIN\coq"
+    $url    = "https://github.com/rocq-prover/platform/releases/download/2025.01.0/Coq-Platform-release-2025.01.0-version.8.20.2025.01-Windows-x86_64.exe"
+
+    if (Test-Path -Path $path) { return }
+
+    Invoke-DownloadIfNeeded -URL $url -Output $output
+    Invoke-Uncompress7zIfNeeded -Source $output -Destination $path
+
+    $target = Join-Path $path '$PLUGINSDIR'
+    if (Test-Path $target) { Remove-Item $target -Recurse -Force }
+
+    $target = Join-Path $path 'Uninstall.exe.nsis'
+    if (Test-Path $target) { Remove-Item $target }
+}
 #endregion: install_configure_lang
 
 #region: install_configure_sim_nonconf
 function Invoke-InstallParaView {
     $output = "$env:KOMPANION_TEMP\paraview.zip"
     $path   = "$env:KOMPANION_BIN\paraview"
-    $url    = "https://www.paraview.org/paraview-downloads/download.php?submit=Download&version=v6.0&type=binary&os=Windows&downloadFile=ParaView-6.0.1-Windows-Python3.12-msvc2017-AMD64.zip"
+    $url    = $URL_PARAVIEW
 
     if (Test-Path -Path $path) { return }
 
@@ -1468,7 +1477,7 @@ function Invoke-InstallParaView {
 function Invoke-InstallFreeCAD {
     $output = "$env:KOMPANION_TEMP\freecad.7z"
     $path   = "$env:KOMPANION_BIN\freecad"
-    $url    = "https://github.com/FreeCAD/FreeCAD/releases/download/1.0.2/FreeCAD_1.0.2-conda-Windows-x86_64-py311.7z"
+    $url    = $URL_FREECAD
 
     if (Test-Path -Path $path) { return }
 
@@ -1487,7 +1496,7 @@ function Invoke-InstallFreeCAD {
 function Invoke-InstallBlender {
     $output = "$env:KOMPANION_TEMP\blender.zip"
     $path   = "$env:KOMPANION_BIN\blender"
-    $url    = "https://ftp.halifax.rwth-aachen.de/blender/release/Blender4.5/blender-4.5.4-windows-x64.zip"
+    $url    = $URL_BLENDER
 
     if (Test-Path -Path $path) { return }
 
@@ -1498,7 +1507,7 @@ function Invoke-InstallBlender {
 function Invoke-InstallMeshLab {
     $output = "$env:KOMPANION_TEMP\meshlab.zip"
     $path   = "$env:KOMPANION_BIN\meshlab"
-    $url    = "https://github.com/cnr-isti-vclab/meshlab/releases/download/MeshLab-2025.07/MeshLab2025.07-windows_x86_64.zip"
+    $url    = $URL_MESHLAB
 
     if (Test-Path -Path $path) { return }
 
@@ -1509,7 +1518,7 @@ function Invoke-InstallMeshLab {
 function Invoke-InstallDwsim {
     $output = "$env:KOMPANION_TEMP\dwsim.zip"
     $path   = "$env:KOMPANION_BIN\dwsim"
-    $url    = "https://github.com/DanWBR/dwsim/releases/download/v9.0.4/DWSIM_v904_win64_portable.7z"
+    $url    = $URL_DWSIM
 
     if (Test-Path -Path $path) { return }
 

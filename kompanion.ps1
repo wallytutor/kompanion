@@ -64,6 +64,12 @@ $DEFAULT_CONFIG = [PSCustomObject]@{
     }
 }
 
+$DEFAULT_RUST_INSTALL = [PSCustomObject]@{
+    toolchain = "stable"
+    triple    = "x86_64-pc-windows-gnu"
+    profile   = "default"
+}
+
 $URL_VSCODE      = "https://update.code.visualstudio.com/latest/win32-x64-archive/stable"
 $URL_GIT         = "https://github.com/git-for-windows/git/releases/download/v2.51.0.windows.1/PortableGit-2.51.0-64-bit.7z.exe"
 $URL_CURL        = "https://curl.se/windows/dl-8.16.0_13/curl-8.16.0_13-win64-mingw.zip"
@@ -76,7 +82,8 @@ $URL_POPPLER     = "https://github.com/oschwartz10612/poppler-windows/releases/d
 $URL_QUARTO      = "https://github.com/quarto-dev/quarto-cli/releases/download/v1.8.26/quarto-1.8.26-win.zip"
 
 $URL_PYTHON      = "https://github.com/winpython/winpython/releases/download/17.2.20251012/WinPython64-3.13.8.0dotb1.zip"
-$URL_RUST        = "https://static.rust-lang.org/rustup/dist/x86_64-pc-windows-gnu/rustup-init.exe"
+$URL_RUST_GNU    = "https://static.rust-lang.org/rustup/dist/x86_64-pc-windows-gnu/rustup-init.exe"
+$URL_RUST_MSVC   = "https://static.rust-lang.org/rustup/dist/x86_64-pc-windows-msvc/rustup-init.exe"
 $URL_JULIA       = "https://julialang-s3.julialang.org/bin/winnt/x64/1.12/julia-1.12.1-win64.zip"
 $URL_ERLANG      = "https://github.com/erlang/otp/releases/download/OTP-27.3.4.4/otp_win64_27.3.4.4.zip"
 $URL_STACK       = "https://github.com/commercialhaskell/stack/releases/download/v3.7.1/stack-3.7.1-windows-x86_64.zip"
@@ -1224,7 +1231,8 @@ function Invoke-InstallPython() {
 }
 
 function Invoke-ConfigureRust() {
-    $env:CARGO_HOME = "$env:USERPROFILE\.cargo"
+    $env:CARGO_HOME  = "$env:KOMPANION_DIR\.cargo"
+    $env:RUSTUP_HOME = "$env:KOMPANION_DIR\.cargo"
     Initialize-AddToPath -Directory "$env:CARGO_HOME\bin"
 
     # XXX: disable certificate revocation check due to possible issues
@@ -1235,25 +1243,31 @@ function Invoke-ConfigureRust() {
 
 function Invoke-InstallRust() {
     $output = "$env:KOMPANION_TEMP\rustup-init.exe"
-    $path   = "$env:USERPROFILE\.cargo\bin"
+    $path   = "$env:KOMPANION_DIR\.cargo\bin"
 
     # Choose one of the following URLs depending on the desired toolchain
     # notice that MSVC requires Visual Studio Build Tools to be installed
-    # $url    = "https://static.rust-lang.org/rustup/dist/x86_64-pc-windows-msvc/rustup-init.exe"
-    $url    = $URL_RUST
+    # $url    = $URL_RUST_MSVC
+    $url    = $URL_RUST_GNU
 
     if (Test-Path -Path $path) { return }
 
     Invoke-DownloadIfNeeded -URL $url -Output $output
 
     if (-not (Test-Path $path)) {
+
+
         $arglist = @(
             "--verbose",
             "-y",
-            "--default-toolchain", "stable-x86_64-pc-windows-gnu",
-            "--profile", "complete",
+            "--default-host",      $DEFAULT_RUST_INSTALL.triple,
+            "--default-toolchain", $DEFAULT_RUST_INSTALL.toolchain,
+            "--profile",           $DEFAULT_RUST_INSTALL.profile,
             "--no-modify-path"
         )
+
+        $env:CARGO_HOME  = "$env:KOMPANION_DIR\.cargo"
+        $env:RUSTUP_HOME = "$env:KOMPANION_DIR\.cargo"
 
         Invoke-CapturedCommand -FilePath $output -ArgumentList $arglist -Wait
     }

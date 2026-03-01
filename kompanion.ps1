@@ -64,13 +64,27 @@ $DEFAULT_CONFIG = [PSCustomObject]@{
     }
 }
 
-$URL_VSCODE   = "https://update.code.visualstudio.com/latest/win32-x64-archive/stable"
-$URL_GIT      = "https://github.com/git-for-windows/git/releases/download/v2.51.0.windows.1/PortableGit-2.51.0-64-bit.7z.exe"
-$URL_CURL     = "https://curl.se/windows/dl-8.16.0_13/curl-8.16.0_13-win64-mingw.zip"
-$URL_SEVENZIP = "https://github.com/commercialhaskell/stackage-content/releases/download/7z-22.01/"
+$URL_VSCODE      = "https://update.code.visualstudio.com/latest/win32-x64-archive/stable"
+$URL_GIT         = "https://github.com/git-for-windows/git/releases/download/v2.51.0.windows.1/PortableGit-2.51.0-64-bit.7z.exe"
+$URL_CURL        = "https://curl.se/windows/dl-8.16.0_13/curl-8.16.0_13-win64-mingw.zip"
+$URL_SEVENZIP    = "https://github.com/commercialhaskell/stackage-content/releases/download/7z-22.01/"
+$URL_LESSMSI     = "https://github.com/activescott/lessmsi/releases/download/v2.10.3/lessmsi-v2.10.3.zip"
+$URL_PANDOC      = "https://github.com/jgm/pandoc/releases/download/3.8/pandoc-3.8-windows-x86_64.zip"
+$URL_JABREF      = "https://github.com/JabRef/jabref/releases/download/v5.15/JabRef-5.15-portable_windows.zip"
+$URL_IMAGEMAGICK = "https://github.com/ImageMagick/ImageMagick/releases/download/7.1.2-8/ImageMagick-7.1.2-8-portable-Q16-HDRI-x64.7z"
+$URL_POPPLER     = "https://github.com/oschwartz10612/poppler-windows/releases/download/v25.11.0-0/Release-25.11.0-0.zip"
+$URL_QUARTO      = "https://github.com/quarto-dev/quarto-cli/releases/download/v1.8.26/quarto-1.8.26-win.zip"
 
-$URL_PYTHON   = "https://github.com/winpython/winpython/releases/download/17.2.20251012/WinPython64-3.13.8.0dotb1.zip"
-$URL_JULIA    = "https://julialang-s3.julialang.org/bin/winnt/x64/1.12/julia-1.12.1-win64.zip"
+$URL_PYTHON      = "https://github.com/winpython/winpython/releases/download/17.2.20251012/WinPython64-3.13.8.0dotb1.zip"
+$URL_RUST        = "https://static.rust-lang.org/rustup/dist/x86_64-pc-windows-gnu/rustup-init.exe"
+$URL_JULIA       = "https://julialang-s3.julialang.org/bin/winnt/x64/1.12/julia-1.12.1-win64.zip"
+
+$URL_GMSH        = "https://gmsh.info/bin/Windows/gmsh-4.14.1-Windows64-sdk.zip"
+$URL_ELMER       = "https://www.nic.funet.fi/pub/sci/physics/elmer/bin/windows/ElmerFEM-gui-mpi-Windows-AMD64.zip"
+$URL_SU2         = "https://github.com/su2code/SU2/releases/download/v8.4.0/SU2-v8.4.0-win64-mpi.zip"
+$URL_FIREMODELS  = "https://github.com/firemodels/fds/releases/download/FDS-6.10.1/FDS-6.10.1_SMV-6.10.1_win.exe"
+$URL_RADCAL      = "https://github.com/firemodels/radcal/releases/download/v2.0/radcal_win_64.exe"
+$URL_TESSERACT   = "https://github.com/tesseract-ocr/tesseract/releases/download/5.5.0/tesseract-ocr-w64-setup-5.5.0.20241111.exe"
 #endregion: default_config
 
 #region: kompanion
@@ -855,6 +869,106 @@ function Invoke-InstallSevenZip {
     Invoke-ConfigureSevenZip
 }
 
+function Invoke-ConfigureLessMsi {
+    $env:LESSMSI_HOME = "$env:KOMPANION_BIN\lessmsi"
+    Initialize-AddToPath -Directory "$env:LESSMSI_HOME"
+}
+
+function Invoke-InstallLessMsi {
+    $output = "$env:KOMPANION_TEMP\lessmsi.zip"
+    $path   = "$env:KOMPANION_BIN\lessmsi"
+    $url    = $URL_LESSMSI
+
+    if (Test-Path -Path $path) { return }
+
+    Invoke-DownloadIfNeeded -URL $url -Output $output
+    Invoke-UncompressZipIfNeeded -Source $output -Destination $path
+    Invoke-ConfigureLessMsi
+}
+
+function Invoke-ConfigurePandoc {
+    $env:PANDOC_HOME = "$env:KOMPANION_BIN\pandoc\pandoc-3.8"
+    Initialize-AddToPath -Directory "$env:PANDOC_HOME"
+}
+
+function Invoke-InstallPandoc {
+    $output = "$env:KOMPANION_TEMP\pandoc.zip"
+    $path   = "$env:KOMPANION_BIN\pandoc"
+    $url    = $URL_PANDOC
+
+    if (Test-Path -Path $path) { return }
+
+    Invoke-DownloadIfNeeded -URL $url -Output $output
+    Invoke-UncompressZipIfNeeded -Source $output -Destination $path
+    Invoke-ConfigurePandoc
+}
+
+function Invoke-ConfigureJabRef {
+    $env:JABREF_HOME = "$env:KOMPANION_BIN\jabref\JabRef"
+    Initialize-AddToPath -Directory "$env:JABREF_HOME"
+}
+
+function Invoke-InstallJabRef {
+    $output = "$env:KOMPANION_TEMP\jabref.zip"
+    $path   = "$env:KOMPANION_BIN\jabref"
+    $url    = $URL_JABREF
+
+    if (Test-Path -Path $path) { return }
+
+    Invoke-DownloadIfNeeded -URL $url -Output $output
+    Invoke-UncompressZipIfNeeded -Source $output -Destination $path
+    Invoke-ConfigureJabRef
+}
+
+function Invoke-InstallImageMagick {
+    $output = "$env:KOMPANION_TEMP\imagemagick.zip"
+    $path   = "$env:KOMPANION_BIN\imagemagick"
+    $url    = $URL_IMAGEMAGICK
+
+    if (Test-Path -Path $path) { return }
+
+    Invoke-DownloadIfNeeded -URL $url -Output $output
+    Invoke-Uncompress7zIfNeeded -Source $output -Destination $path
+    Invoke-ConfigureImageMagick
+}
+
+function Invoke-ConfigurePoppler {
+    $env:POPLER_HOME = "$env:KOMPANION_BIN\poppler\poppler-25.11.0\Library"
+    Initialize-AddToPath -Directory "$env:POPLER_HOME\bin"
+    Initialize-AddToManPath -Directory "$env:POPLER_HOME\share\man"
+}
+
+function Invoke-InstallPoppler {
+    $output = "$env:KOMPANION_TEMP\poppler.zip"
+    $path   = "$env:KOMPANION_BIN\poppler"
+    $url    = $URL_POPPLER
+
+    if (Test-Path -Path $path) { return }
+
+    Invoke-DownloadIfNeeded -URL $url -Output $output
+    Invoke-UncompressZipIfNeeded -Source $output -Destination $path
+    Invoke-ConfigurePoppler
+}
+
+function Invoke-ConfigureQuarto {
+    $env:QUARTO_HOME = "$env:KOMPANION_BIN\quarto"
+    Initialize-AddToPath -Directory "$env:QUARTO_HOME\bin"
+}
+
+function Invoke-InstallQuarto {
+    $output = "$env:KOMPANION_TEMP\quarto.zip"
+    $path   = "$env:KOMPANION_BIN\quarto"
+    $url    = $URL_QUARTO
+
+    if (Test-Path -Path $path) { return }
+
+    Invoke-DownloadIfNeeded -URL $url -Output $output
+    Invoke-UncompressZipIfNeeded -Source $output -Destination $path
+    Invoke-ConfigureQuarto
+
+    & quarto install tinytex
+}
+
 function Invoke-ConfigureZettlr {
     $env:ZETTLR_HOME = "$env:KOMPANION_BIN\zettlr"
     $env:ZETTLR_DATA = "$env:KOMPANION_DIR\.zettlr"
@@ -913,23 +1027,6 @@ function Invoke-InstallNvim {
     Invoke-ConfigureNvim
 }
 
-function Invoke-ConfigureLessMsi {
-    $env:LESSMSI_HOME = "$env:KOMPANION_BIN\lessmsi"
-    Initialize-AddToPath -Directory "$env:LESSMSI_HOME"
-}
-
-function Invoke-InstallLessMsi {
-    $output = "$env:KOMPANION_TEMP\lessmsi.zip"
-    $path   = "$env:KOMPANION_BIN\lessmsi"
-    $url    = "https://github.com/activescott/lessmsi/releases/download/v2.10.3/lessmsi-v2.10.3.zip"
-
-    if (Test-Path -Path $path) { return }
-
-    Invoke-DownloadIfNeeded -URL $url -Output $output
-    Invoke-UncompressZipIfNeeded -Source $output -Destination $path
-    Invoke-ConfigureLessMsi
-}
-
 function Invoke-ConfigureMsys2 {
     # TODO once MSYS2 is installed!
 }
@@ -958,40 +1055,6 @@ function Invoke-InstallMsys2 {
     # pacman -Syuu && pacman -S bash coreutils make gcc p7zip
     # pacman -Sy --noconfirm; pacman -S --noconfirm p7zip
     Invoke-ConfigureMsys2
-}
-
-function Invoke-ConfigurePandoc {
-    $env:PANDOC_HOME = "$env:KOMPANION_BIN\pandoc\pandoc-3.8"
-    Initialize-AddToPath -Directory "$env:PANDOC_HOME"
-}
-
-function Invoke-InstallPandoc {
-    $output = "$env:KOMPANION_TEMP\pandoc.zip"
-    $path   = "$env:KOMPANION_BIN\pandoc"
-    $url    =  "https://github.com/jgm/pandoc/releases/download/3.8/pandoc-3.8-windows-x86_64.zip"
-
-    if (Test-Path -Path $path) { return }
-
-    Invoke-DownloadIfNeeded -URL $url -Output $output
-    Invoke-UncompressZipIfNeeded -Source $output -Destination $path
-    Invoke-ConfigurePandoc
-}
-
-function Invoke-ConfigureJabRef {
-    $env:JABREF_HOME = "$env:KOMPANION_BIN\jabref\JabRef"
-    Initialize-AddToPath -Directory "$env:JABREF_HOME"
-}
-
-function Invoke-InstallJabRef {
-    $output = "$env:KOMPANION_TEMP\jabref.zip"
-    $path   = "$env:KOMPANION_BIN\jabref"
-    $url    = "https://github.com/JabRef/jabref/releases/download/v5.15/JabRef-5.15-portable_windows.zip"
-
-    if (Test-Path -Path $path) { return }
-
-    Invoke-DownloadIfNeeded -URL $url -Output $output
-    Invoke-UncompressZipIfNeeded -Source $output -Destination $path
-    Invoke-ConfigureJabRef
 }
 
 function Invoke-ConfigureInkscape {
@@ -1096,55 +1159,6 @@ function Invoke-ConfigureImageMagick {
     $env:IMAGEMAGICK_HOME = "$env:KOMPANION_BIN\imagemagick"
     Initialize-AddToPath -Directory "$env:IMAGEMAGICK_HOME"
 }
-
-function Invoke-InstallImageMagick {
-    $output = "$env:KOMPANION_TEMP\imagemagick.zip"
-    $path   = "$env:KOMPANION_BIN\imagemagick"
-    $url    = "https://github.com/ImageMagick/ImageMagick/releases/download/7.1.2-8/ImageMagick-7.1.2-8-portable-Q16-HDRI-x64.7z"
-
-    if (Test-Path -Path $path) { return }
-
-    Invoke-DownloadIfNeeded -URL $url -Output $output
-    Invoke-Uncompress7zIfNeeded -Source $output -Destination $path
-    Invoke-ConfigureImageMagick
-}
-
-function Invoke-ConfigurePoppler {
-    $env:POPLER_HOME = "$env:KOMPANION_BIN\poppler\poppler-25.11.0\Library"
-    Initialize-AddToPath -Directory "$env:POPLER_HOME\bin"
-    Initialize-AddToManPath -Directory "$env:POPLER_HOME\share\man"
-}
-
-function Invoke-InstallPoppler {
-    $output = "$env:KOMPANION_TEMP\poppler.zip"
-    $path   = "$env:KOMPANION_BIN\poppler"
-    $url    = "https://github.com/oschwartz10612/poppler-windows/releases/download/v25.11.0-0/Release-25.11.0-0.zip"
-
-    if (Test-Path -Path $path) { return }
-
-    Invoke-DownloadIfNeeded -URL $url -Output $output
-    Invoke-UncompressZipIfNeeded -Source $output -Destination $path
-    Invoke-ConfigurePoppler
-}
-
-function Invoke-ConfigureQuarto {
-    $env:QUARTO_HOME = "$env:KOMPANION_BIN\quarto"
-    Initialize-AddToPath -Directory "$env:QUARTO_HOME\bin"
-}
-
-function Invoke-InstallQuarto {
-    $output = "$env:KOMPANION_TEMP\quarto.zip"
-    $path   = "$env:KOMPANION_BIN\quarto"
-    $url    = "https://github.com/quarto-dev/quarto-cli/releases/download/v1.8.26/quarto-1.8.26-win.zip"
-
-    if (Test-Path -Path $path) { return }
-
-    Invoke-DownloadIfNeeded -URL $url -Output $output
-    Invoke-UncompressZipIfNeeded -Source $output -Destination $path
-    Invoke-ConfigureQuarto
-
-    & quarto install tinytex
-}
 #endregion: install_configure_base
 
 #region: install_configure_lang
@@ -1197,6 +1211,42 @@ function Invoke-InstallPython() {
 
     Invoke-DownloadIfNeeded -URL $url -Output $output
     Invoke-UncompressZipIfNeeded -Source $output -Destination $path
+}
+
+function Invoke-ConfigureRust() {
+    $env:CARGO_HOME = "$env:USERPROFILE\.cargo"
+    Initialize-AddToPath -Directory "$env:CARGO_HOME\bin"
+
+    # XXX: disable certificate revocation check due to possible issues
+    # with certain Windows configurations (corporate networks, proxies, etc.)
+    # Avoid using this in general, as it lowers security!
+    $env:CARGO_HTTP_CHECK_REVOKE = 'false'
+}
+
+function Invoke-InstallRust() {
+    $output = "$env:KOMPANION_TEMP\rustup-init.exe"
+    $path   = "$env:USERPROFILE\.cargo\bin"
+
+    # Choose one of the following URLs depending on the desired toolchain
+    # notice that MSVC requires Visual Studio Build Tools to be installed
+    # $url    = "https://static.rust-lang.org/rustup/dist/x86_64-pc-windows-msvc/rustup-init.exe"
+    $url    = $URL_RUST
+
+    if (Test-Path -Path $path) { return }
+
+    Invoke-DownloadIfNeeded -URL $url -Output $output
+
+    if (-not (Test-Path $path)) {
+        $arglist = @(
+            "--verbose",
+            "-y",
+            "--default-toolchain", "stable-x86_64-pc-windows-gnu",
+            "--profile", "complete",
+            "--no-modify-path"
+        )
+
+        Invoke-CapturedCommand -FilePath $output -ArgumentList $arglist -Wait
+    }
 }
 
 function Invoke-ConfigureJulia() {
@@ -1329,41 +1379,7 @@ function Invoke-InstallRacket() {
     Write-Host "- Racket installation not yet implemented."
 }
 
-function Invoke-ConfigureRust() {
-    $env:CARGO_HOME = "$env:USERPROFILE\.cargo"
-    Initialize-AddToPath -Directory "$env:CARGO_HOME\bin"
 
-    # XXX: disable certificate revocation check due to possible issues
-    # with certain Windows configurations (corporate networks, proxies, etc.)
-    # Avoid using this in general, as it lowers security!
-    $env:CARGO_HTTP_CHECK_REVOKE = 'false'
-}
-
-function Invoke-InstallRust() {
-    $output = "$env:KOMPANION_TEMP\rustup-init.exe"
-    $path   = "$env:USERPROFILE\.cargo\bin"
-
-    # Choose one of the following URLs depending on the desired toolchain
-    # notice that MSVC requires Visual Studio Build Tools to be installed
-    # $url    = "https://static.rust-lang.org/rustup/dist/x86_64-pc-windows-msvc/rustup-init.exe"
-    $url    = "https://static.rust-lang.org/rustup/dist/x86_64-pc-windows-gnu/rustup-init.exe"
-
-    if (Test-Path -Path $path) { return }
-
-    Invoke-DownloadIfNeeded -URL $url -Output $output
-
-    if (-not (Test-Path $path)) {
-        $arglist = @(
-            "--verbose",
-            "-y",
-            "--default-toolchain", "stable-x86_64-pc-windows-gnu",
-            "--profile", "complete",
-            "--no-modify-path"
-        )
-
-        Invoke-CapturedCommand -FilePath $output -ArgumentList $arglist -Wait
-    }
-}
 
 function Invoke-ConfigureCoq() {
     $env:COQ_HOME = "$env:KOMPANION_BIN\coq"
@@ -1503,32 +1519,23 @@ function Invoke-InstallDwsim {
 #endregion: install_configure_sim_nonconf
 
 #region: install_configure_sim_conf
-function Invoke-ConfigureRadcal {
-    $env:FIREMODELS_HOME = "$env:KOMPANION_BIN\firemodels"
-    Initialize-AddToPath -Directory "$env:FIREMODELS_HOME\FDS6\bin"
-    Initialize-AddToPath -Directory "$env:FIREMODELS_HOME\SMV6"
-    Initialize-AddToPath -Directory "$env:FIREMODELS_HOME"
+function Invoke-ConfigureGmsh {
+    $env:GMSH_HOME = "$env:KOMPANION_BIN\gmsh\gmsh-4.14.1-Windows64-sdk"
+    Initialize-AddToPath -Directory "$env:GMSH_HOME\lib"
+    Initialize-AddToPath -Directory "$env:GMSH_HOME\bin"
+    # TODO add to PYTHONPATH;JULIA_LOAD_PATH
 }
 
-function Invoke-InstallRadcal {
-    $output = "$env:KOMPANION_TEMP\fds_smv.exe"
-    $temp   = "$env:KOMPANION_TEMP\fds_smv"
-    $path   = "$env:KOMPANION_BIN\firemodels"
-    $url    = "https://github.com/firemodels/fds/releases/download/FDS-6.10.1/FDS-6.10.1_SMV-6.10.1_win.exe"
+function Invoke-InstallGmsh {
+    $output = "$env:KOMPANION_TEMP\gmsh.zip"
+    $path   = "$env:KOMPANION_BIN\gmsh"
+    $url    =  $URL_GMSH
 
     if (Test-Path -Path $path) { return }
 
     Invoke-DownloadIfNeeded -URL $url -Output $output
-    Invoke-Uncompress7zIfNeeded -Source $output -Destination $temp
-
-    Move-Item -Path "$temp\firemodels" -Destination $path
-    Remove-Item -Path $temp -Recurse -Force
-
-    $output = "$path\radcal.exe"
-    $url    = "https://github.com/firemodels/radcal/releases/download/v2.0/radcal_win_64.exe"
-    Invoke-DownloadIfNeeded -URL $url -Output $output
-
-    Invoke-ConfigureRadcal
+    Invoke-UncompressZipIfNeeded -Source $output -Destination $path
+    Invoke-ConfigureGmsh
 }
 
 function Invoke-ConfigureElmer {
@@ -1541,32 +1548,13 @@ function Invoke-ConfigureElmer {
 function Invoke-InstallElmer {
     $output = "$env:KOMPANION_TEMP\elmer.zip"
     $path   = "$env:KOMPANION_BIN\elmer"
-    $url    = "https://www.nic.funet.fi/pub/sci/physics/elmer/bin/windows/ElmerFEM-gui-mpi-Windows-AMD64.zip"
+    $url    = $URL_ELMER
 
     if (Test-Path -Path $path) { return }
 
     Invoke-DownloadIfNeeded -URL $url -Output $output
     Invoke-UncompressZipIfNeeded -Source $output -Destination $path
     Invoke-ConfigureElmer
-}
-
-function Invoke-ConfigureGmsh {
-    $env:GMSH_HOME = "$env:KOMPANION_BIN\gmsh\gmsh-4.14.1-Windows64-sdk"
-    Initialize-AddToPath -Directory "$env:GMSH_HOME\lib"
-    Initialize-AddToPath -Directory "$env:GMSH_HOME\bin"
-    # TODO add to PYTHONPATH;JULIA_LOAD_PATH
-}
-
-function Invoke-InstallGmsh {
-    $output = "$env:KOMPANION_TEMP\gmsh.zip"
-    $path   = "$env:KOMPANION_BIN\gmsh"
-    $url    =  "https://gmsh.info/bin/Windows/gmsh-4.14.1-Windows64-sdk.zip"
-
-    if (Test-Path -Path $path) { return }
-
-    Invoke-DownloadIfNeeded -URL $url -Output $output
-    Invoke-UncompressZipIfNeeded -Source $output -Destination $path
-    Invoke-ConfigureGmsh
 }
 
 function Invoke-ConfigureSu2 {
@@ -1578,7 +1566,7 @@ function Invoke-ConfigureSu2 {
 function Invoke-InstallSu2 {
     $output = "$env:KOMPANION_TEMP\su2.zip"
     $path   = "$env:KOMPANION_TEMP\su2"
-    $url    = "https://github.com/su2code/SU2/releases/download/v8.4.0/SU2-v8.4.0-win64-mpi.zip"
+    $url    = $URL_SU2
 
     # XXX: there is a second file inside it! Check!
     $innerOutput = "$env:KOMPANION_TEMP\su2\win64-mpi.zip"
@@ -1594,6 +1582,34 @@ function Invoke-InstallSu2 {
     Invoke-ConfigureSu2
 }
 
+function Invoke-ConfigureRadcal {
+    $env:FIREMODELS_HOME = "$env:KOMPANION_BIN\firemodels"
+    Initialize-AddToPath -Directory "$env:FIREMODELS_HOME\FDS6\bin"
+    Initialize-AddToPath -Directory "$env:FIREMODELS_HOME\SMV6"
+    Initialize-AddToPath -Directory "$env:FIREMODELS_HOME"
+}
+
+function Invoke-InstallRadcal {
+    $output = "$env:KOMPANION_TEMP\fds_smv.exe"
+    $temp   = "$env:KOMPANION_TEMP\fds_smv"
+    $path   = "$env:KOMPANION_BIN\firemodels"
+    $url    = $URL_FIREMODELS
+
+    if (Test-Path -Path $path) { return }
+
+    Invoke-DownloadIfNeeded -URL $url -Output $output
+    Invoke-Uncompress7zIfNeeded -Source $output -Destination $temp
+
+    Move-Item -Path "$temp\firemodels" -Destination $path
+    Remove-Item -Path $temp -Recurse -Force
+
+    $output = "$path\radcal.exe"
+    $url    = $URL_RADCAL
+    Invoke-DownloadIfNeeded -URL $url -Output $output
+
+    Invoke-ConfigureRadcal
+}
+
 function Invoke-ConfigureTesseract {
     $env:TESSERACT_HOME = "$env:KOMPANION_BIN\tesseract"
     $env:TESSDATA_PREFIX = "$env:KOMPANION_BIN\tessdata"
@@ -1603,7 +1619,7 @@ function Invoke-ConfigureTesseract {
 function Invoke-InstallTesseract {
     $output = "$env:KOMPANION_TEMP\tesseract.exe"
     $path   = "$env:KOMPANION_BIN\tesseract"
-    $url    = "https://github.com/tesseract-ocr/tesseract/releases/download/5.5.0/tesseract-ocr-w64-setup-5.5.0.20241111.exe"
+    $url    = $URL_TESSERACT
 
     if (Test-Path -Path $path) { return }
 

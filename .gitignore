@@ -10,6 +10,7 @@
 
 # Editor cache:
 .vscode/*
+.copilot/*
 
 # Rust directories:
 .cargo/
@@ -26,6 +27,11 @@ pip/
 # Other languages:
 .julia/*
 .rlang/*
+
+# User profile directories/files:
+AppData/
+Desktop/
+*.lock
 
 #######################################################################
 # User profile: overrides

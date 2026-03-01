@@ -80,6 +80,12 @@ $URL_JABREF      = "https://github.com/JabRef/jabref/releases/download/v5.15/Jab
 $URL_IMAGEMAGICK = "https://github.com/ImageMagick/ImageMagick/releases/download/7.1.2-8/ImageMagick-7.1.2-8-portable-Q16-HDRI-x64.7z"
 $URL_POPPLER     = "https://github.com/oschwartz10612/poppler-windows/releases/download/v25.11.0-0/Release-25.11.0-0.zip"
 $URL_QUARTO      = "https://github.com/quarto-dev/quarto-cli/releases/download/v1.8.26/quarto-1.8.26-win.zip"
+$URL_NVIM        = "https://github.com/neovim/neovim/releases/download/nightly/nvim-win64.zip"
+$URL_ZETTLR      = "https://github.com/Zettlr/Zettlr/releases/download/v4.2.0/Zettlr-4.2.0-x64.exe"
+$URL_FFMPEG      = "https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-full.7z"
+$URL_DRAWIO      = "https://github.com/jgraph/drawio-desktop/releases/download/v29.0.3/draw.io-29.0.3-windows.zip"
+$URL_INKSCAPE    = "https://inkscape.org/gallery/item/53695/inkscape-1.4_2024-10-11_86a8ad7-x64.7z"
+$URL_MIKTEX      = "https://miktex.org/download/ctan/systems/win32/miktex/setup/windows-x64/miktexsetup-5.5.0+1763023-x64.zip"
 
 $URL_PYTHON      = "https://github.com/winpython/winpython/releases/download/17.2.20251012/WinPython64-3.13.8.0dotb1.zip"
 $URL_RUST_GNU    = "https://static.rust-lang.org/rustup/dist/x86_64-pc-windows-gnu/rustup-init.exe"
@@ -105,7 +111,7 @@ $URL_TESSERACT   = "https://github.com/tesseract-ocr/tesseract/releases/download
 #endregion: default_config
 
 #region: kompanion
-function Start-KompanionMain() {
+function Start-KompanionMain {
     # Fake user profile to avoid applications access:
     $env:USERPROFILE    = "$PSScriptRoot"
     $env:APPDATA        = "$PSScriptRoot\AppData"
@@ -149,7 +155,7 @@ function Start-KompanionMain() {
     }
 }
 
-function Start-KompanionInstall() {
+function Start-KompanionInstall {
     param (
         [pscustomobject]$Config
     )
@@ -166,9 +172,23 @@ function Start-KompanionInstall() {
     # next start (unless -RebuildOnStart is used):
     New-Item -ItemType File -Path $lockFile -Force | Out-Null
 
+    # Make sure this is a git repository to allow updates:
+    if (-not (Test-Path -Path "$env:KOMPANION_DIR\.git")) {
+        Write-Warn "Kompanion downloaded as zip, getting repository..."
+
+        & git clone "https://github.com/wallytutor/kompanion.git" `
+            "$env:KOMPANION_DIR\repos\kompanion"
+
+        & Move-Item -Path "$env:KOMPANION_DIR\repos\kompanion\.git" `
+            -Destination $env:KOMPANION_DIR
+
+        & git pull
+
+        & KompanionRebuild
+    }
 }
 
-function Start-KompanionConfigure() {
+function Start-KompanionConfigure {
     param (
         [pscustomobject]$Config
     )
@@ -182,11 +202,11 @@ function Start-KompanionConfigure() {
 
     Write-Host "`nStarting Kompanion configuration..."
 
-    # XXX: languages come last because some packages might override
+    # XXX: languages come first because some packages might override
     # them (especially Python that is used everywhere).
     Start-KompanionBaseConfigure $Config.base
-    Start-KompanionLangConfigure $Config.lang
     Start-KompanionSimuConfigure $Config.simu
+    Start-KompanionLangConfigure $Config.lang
 }
 
 function KompanionSource {
@@ -662,13 +682,12 @@ function Start-KompanionBaseInstall {
 
     # XXX: this order is important: sometimes SSL blocks downloads that
     # could succeed if done with curl, thus it comes before other tools!
-    if ($Config.sevenzip)    { Invoke-InstallSevenZip }
-    if ($Config.curl)        { Invoke-InstallCurl }
+    Invoke-InstallSevenZip
+    Invoke-InstallCurl
+    Invoke-InstallVsCode
+    Invoke-InstallGit
+
     if ($Config.nvim)        { Invoke-InstallNvim }
-
-    if ($Config.vscode)      { Invoke-InstallVsCode }
-    if ($Config.git)         { Invoke-InstallGit }
-
     if ($Config.zettlr)      { Invoke-InstallZettlr }
     if ($Config.drawio)      { Invoke-InstallDrawio }
     if ($Config.lessmsi)     { Invoke-InstallLessMsi }
@@ -691,14 +710,15 @@ function Start-KompanionBaseConfigure {
 
     Write-Host "- starting Kompanion base configuration..."
 
-    if ($Config.vscode)      { Invoke-ConfigureVsCode }
-    if ($Config.sevenzip)    { Invoke-ConfigureSevenZip }
+    Invoke-ConfigureSevenZip
+    Invoke-ConfigureCurl
+    Invoke-ConfigureVsCode
+    Invoke-ConfigureGit
+
+    if ($Config.nvim)        { Invoke-ConfigureNvim }
     if ($Config.zettlr)      { Invoke-ConfigureZettlr }
     if ($Config.drawio)      { Invoke-ConfigureDrawio }
-    if ($Config.git)         { Invoke-ConfigureGit }
-    if ($Config.nvim)        { Invoke-ConfigureNvim }
     if ($Config.lessmsi)     { Invoke-ConfigureLessMsi }
-    if ($Config.curl)        { Invoke-ConfigureCurl }
     if ($Config.msys2)       { Invoke-ConfigureMsys2 }
     if ($Config.pandoc)      { Invoke-ConfigurePandoc }
     if ($Config.jabref)      { Invoke-ConfigureJabRef }
@@ -718,14 +738,15 @@ function Start-KompanionLangInstall() {
 
     Write-Host "- starting Kompanion languages installation..."
 
-    if ($Config.python)  { Invoke-InstallPython }
+    Invoke-InstallPython
+
+    if ($Config.rust)    { Invoke-InstallRust }
     if ($Config.julia)   { Invoke-InstallJulia }
     if ($Config.node)    { Invoke-InstallNode }
     if ($Config.erlang)  { Invoke-InstallErlang }
     if ($Config.haskell) { Invoke-InstallHaskell }
     if ($Config.elm)     { Invoke-InstallElm }
     if ($Config.racket)  { Invoke-InstallRacket }
-    if ($Config.rust)    { Invoke-InstallRust }
     if ($Config.coq)     { Invoke-InstallCoq }
     if ($Config.rlang)   { Invoke-InstallRlang }
 }
@@ -737,14 +758,15 @@ function Start-KompanionLangConfigure() {
 
     Write-Host "- starting Kompanion languages configuration..."
 
-    if ($Config.python)  { Invoke-ConfigurePython }
+    Invoke-ConfigurePython
+
+    if ($Config.rust)    { Invoke-ConfigureRust }
     if ($Config.julia)   { Invoke-ConfigureJulia }
     if ($Config.node)    { Invoke-ConfigureNode }
     if ($Config.erlang)  { Invoke-ConfigureErlang }
     if ($Config.haskell) { Invoke-ConfigureHaskell }
     if ($Config.elm)     { Invoke-ConfigureElm }
     if ($Config.racket)  { Invoke-ConfigureRacket }
-    if ($Config.rust)    { Invoke-ConfigureRust }
     if ($Config.coq)     { Invoke-ConfigureCoq }
     if ($Config.rlang)   { Invoke-ConfigureRlang }
 }
@@ -937,18 +959,6 @@ function Invoke-InstallJabRef {
     Invoke-ConfigureJabRef
 }
 
-function Invoke-InstallImageMagick {
-    $output = "$env:KOMPANION_TEMP\imagemagick.zip"
-    $path   = "$env:KOMPANION_BIN\imagemagick"
-    $url    = $URL_IMAGEMAGICK
-
-    if (Test-Path -Path $path) { return }
-
-    Invoke-DownloadIfNeeded -URL $url -Output $output
-    Invoke-Uncompress7zIfNeeded -Source $output -Destination $path
-    Invoke-ConfigureImageMagick
-}
-
 function Invoke-ConfigurePoppler {
     $env:POPLER_HOME = "$env:KOMPANION_BIN\poppler\poppler-25.11.0\Library"
     Initialize-AddToPath -Directory "$env:POPLER_HOME\bin"
@@ -996,7 +1006,7 @@ function Invoke-InstallZettlr {
     $output = "$env:KOMPANION_TEMP\zettlr.exe"
     $temp   = "$env:KOMPANION_TEMP\zettlr_tmp"
     $path   = "$env:KOMPANION_BIN\zettlr"
-    $url    = "https://github.com/Zettlr/Zettlr/releases/download/v3.6.0/Zettlr-3.6.0-x64.exe"
+    $url    = $URL_ZETTLR
 
     if (Test-Path -Path $path) { return }
 
@@ -1018,7 +1028,7 @@ function Invoke-ConfigureDrawio {
 function Invoke-InstallDrawio {
     $output = "$env:KOMPANION_TEMP\drawio.zip"
     $path   = "$env:KOMPANION_BIN\drawio"
-    $url    = "https://github.com/jgraph/drawio-desktop/releases/download/v29.0.3/draw.io-29.0.3-windows.zip"
+    $url    = $URL_DRAWIO
 
     if (Test-Path -Path $path) { return }
 
@@ -1035,7 +1045,7 @@ function Invoke-ConfigureNvim {
 function Invoke-InstallNvim {
     $output = "$env:KOMPANION_TEMP\nvim.zip"
     $path   = "$env:KOMPANION_BIN\nvim"
-    $url    = "https://github.com/neovim/neovim/releases/download/nightly/nvim-win64.zip"
+    $url    = $URL_NVIM
 
     if (Test-Path -Path $path) { return }
 
@@ -1082,7 +1092,7 @@ function Invoke-ConfigureInkscape {
 function Invoke-InstallInkscape {
     $output = "$env:KOMPANION_TEMP\inkscape.7z"
     $path   = "$env:KOMPANION_BIN\inkscape"
-    $url    = "https://inkscape.org/gallery/item/53695/inkscape-1.4_2024-10-11_86a8ad7-x64.7z"
+    $url    = $URL_INKSCAPE
 
     if (Test-Path -Path $path) { return }
 
@@ -1105,7 +1115,7 @@ function Invoke-ConfigureMikTex {
 function Invoke-InstallMikTex {
     $output  = "$env:KOMPANION_TEMP\miktexsetup.zip"
     $path    = "$env:KOMPANION_BIN\miktexsetup"
-    $url     = "https://miktex.org/download/ctan/systems/win32/miktex/setup/windows-x64/miktexsetup-5.5.0+1763023-x64.zip"
+    $url     = $URL_MIKTEX
     $miktex  = "$env:KOMPANION_BIN\miktex"
 
     if ((Test-Path -Path $path) -and (Test-Path -Path $miktex)) { return }
@@ -1131,6 +1141,7 @@ function Invoke-InstallMikTex {
         Invoke-CapturedCommand $path $argList
     }
 
+    Write-Warn "Please, consider manually removing $pkgData if succeeded"
     Invoke-ConfigureMikTex
 }
 
@@ -1160,7 +1171,7 @@ function Invoke-InstallFfmpeg {
     $output = "$env:KOMPANION_TEMP\ffmpeg.7z"
     $temp   = "$env:KOMPANION_TEMP\ffmpeg"
     $path   = "$env:KOMPANION_BIN\ffmpeg"
-    $url    = "https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-full.7z"
+    $url    = $URL_FFMPEG
 
     if (Test-Path -Path $path) { return }
 
@@ -1170,6 +1181,18 @@ function Invoke-InstallFfmpeg {
     Move-Item -Path (Join-Path $temp "ffmpeg-*") -Destination $path
     Remove-Item -Path $temp -Recurse -Force
     Invoke-ConfigureFfmpeg
+}
+
+function Invoke-InstallImageMagick {
+    $output = "$env:KOMPANION_TEMP\imagemagick.zip"
+    $path   = "$env:KOMPANION_BIN\imagemagick"
+    $url    = $URL_IMAGEMAGICK
+
+    if (Test-Path -Path $path) { return }
+
+    Invoke-DownloadIfNeeded -URL $url -Output $output
+    Invoke-Uncompress7zIfNeeded -Source $output -Destination $path
+    Invoke-ConfigureImageMagick
 }
 
 function Invoke-ConfigureImageMagick {

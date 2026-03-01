@@ -17,6 +17,7 @@ repos/
 # Editor cache:
 .vscode/*
 .copilot/*
+.zettlr/*
 
 # Rust directories:
 .cargo/
@@ -33,6 +34,7 @@ pip/
 
 # Other languages:
 .julia/*
+.miktex/*
 .rlang/*
 .stack/*
 

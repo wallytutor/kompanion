@@ -1,0 +1,12 @@
+# http://docs.haskellstack.org/en/stable/configure/yaml/
+# https://docs.haskellstack.org/en/stable/configure/yaml/non-project/#templates
+
+local-bin-path: __STACK_ROOT__\local-bin
+local-programs-path: __STACK_ROOT__\local-programs
+
+templates:
+  params:
+   author-name: Walter Dal'Maz Silva
+   author-email: walter.dalmazsilva.manager@gmail.com
+   copyright: "2025 Walter Dal'Maz Silva"
+   github-username: wallytutor

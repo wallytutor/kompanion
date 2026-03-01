@@ -1,0 +1,70 @@
+# Note: use this file to add new listed default packages, then
+# run `pip install -r requirements-dev.txt` to install them and
+# `pip freeze > requirements.txt` to update the versions.
+
+# Tools
+pywin32
+wheel
+
+# SciPy stack
+numpy
+matplotlib
+pandas
+scipy
+sympy
+
+# Pandas alternatives
+polars[all]
+
+# Data formats
+arrow
+openpyxl
+PyYAML
+xlrd
+xlsxwriter
+
+# Environments
+ipykernel
+ipyparallel
+jupyterlab
+jupyterlab-quarto
+jupyterlab-scenes
+jupyterlab_pygments
+jupyterlab_server
+jupytext
+jupyter-cache
+marimo
+nbconvert
+nbclassic
+voila
+
+# Scientific
+cantera
+casadi
+FiPy
+meshio
+py-pde
+pyvista
+datalab-platform[qt]
+hyperspy
+opencv-python
+
+# Machine learning
+torch
+scikit-learn
+scikit-image
+
+# Other
+beautifulsoup4
+graphviz
+manim
+mpmath
+networkx
+numba
+pillow
+Pygments
+pyparsing
+tqdm
+
+# Rust extensions
+maturin

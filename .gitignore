@@ -8,6 +8,9 @@
 .kompanion/temp/
 .kompanion/*.lock
 
+# User-specific configuration:
+.kompanion/kompanion.json
+
 # Editor cache:
 .vscode/*
 .copilot/*
@@ -21,8 +24,10 @@
 .jupyter/*
 
 # Python:
+.matplotlib/
 .python_history
 pip/
+
 
 # Other languages:
 .julia/*

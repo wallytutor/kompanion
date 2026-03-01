@@ -68,7 +68,9 @@ $URL_VSCODE   = "https://update.code.visualstudio.com/latest/win32-x64-archive/s
 $URL_GIT      = "https://github.com/git-for-windows/git/releases/download/v2.51.0.windows.1/PortableGit-2.51.0-64-bit.7z.exe"
 $URL_CURL     = "https://curl.se/windows/dl-8.16.0_13/curl-8.16.0_13-win64-mingw.zip"
 $URL_SEVENZIP = "https://github.com/commercialhaskell/stackage-content/releases/download/7z-22.01/"
+
 $URL_PYTHON   = "https://github.com/winpython/winpython/releases/download/17.2.20251012/WinPython64-3.13.8.0dotb1.zip"
+$URL_JULIA    = "https://julialang-s3.julialang.org/bin/winnt/x64/1.12/julia-1.12.1-win64.zip"
 #endregion: default_config
 
 #region: kompanion
@@ -1163,6 +1165,9 @@ function Invoke-ConfigurePython() {
     # This is required for nteract to work:
     $env:JUPYTER_PATH = $env:JUPYTER_DATA_DIR
 
+    # Point quarto to the right python:
+    $env:QUARTO_PYTHON = "$env:PYTHON_HOME\python.exe"
+
     # Install minimal requirements:
     $lockFile = "$env:KOMPANION_DOT\python.lock"
 
@@ -1225,7 +1230,7 @@ function Invoke-ConfigureJulia() {
 function Invoke-InstallJulia() {
     $output = "$env:KOMPANION_TEMP\julia.zip"
     $path   = "$env:KOMPANION_BIN\julia"
-    $url    = "https://julialang-s3.julialang.org/bin/winnt/x64/1.12/julia-1.12.1-win64.zip"
+    $url    = $URL_JULIA
 
     if (Test-Path -Path $path) { return }
 

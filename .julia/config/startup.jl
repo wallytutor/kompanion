@@ -3,8 +3,8 @@
 # TODO: make this configurable from CLI.
 const KOMPANION_VERBOSE = false
 
-const KOMPANION_PKG = abspath(ENV["KOMPANION_PKG"])
-const AUCHIMISTE_PATH = abspath(ENV["AUCHIMISTE_PATH"])
+# const KOMPANION_PKG = abspath(ENV["KOMPANION_PKG"])
+# const AUCHIMISTE_PATH = abspath(ENV["AUCHIMISTE_PATH"])
 
 #######################################################################
 # module Kompanion
@@ -45,7 +45,6 @@ function setup_loadpath()
         "Revise",
     ]
 
-
     for package in minimal_packages
         try
             !is_installed(package) && Pkg.add(package)
@@ -54,42 +53,42 @@ function setup_loadpath()
         end
     end
 
-    update = parse(Int64, get(ENV, "KOMPANION_UPDATE", "0")) >= 1
-    pkgs = abspath(get(ENV, "KOMPANION_PKG", Main.KOMPANION_PKG))
+    # update = parse(Int64, get(ENV, "KOMPANION_UPDATE", "0")) >= 1
+    # pkgs = abspath(get(ENV, "KOMPANION_PKG", Main.KOMPANION_PKG))
 
-    if isdir(pkgs)
-        Main.KOMPANION_VERBOSE && @info("""
-        Loading local environment...
+    # if isdir(pkgs)
+    #     Main.KOMPANION_VERBOSE && @info("""
+    #     Loading local environment...
 
-        - Update status (KOMPANION_UPDATE) ... $(update)
-        - Local packages repository .......... $(pkgs)
+    #     - Update status (KOMPANION_UPDATE) ... $(update)
+    #     - Local packages repository .......... $(pkgs)
 
-        """)
+    #     """)
 
-        for candidate in readdir(pkgs)
-            path = joinpath(pkgs, candidate)
+    #     for candidate in readdir(pkgs)
+    #         path = joinpath(pkgs, candidate)
 
-            if maybe_package(path)
-                name = package_name(path)
+    #         if maybe_package(path)
+    #             name = package_name(path)
 
-                if is_installed(name) && !update
-                    Main.KOMPANION_VERBOSE && let
-                        @info("Package `$(name)` already installed...")
-                    end
-                    continue
-                end
+    #             if is_installed(name) && !update
+    #                 Main.KOMPANION_VERBOSE && let
+    #                     @info("Package `$(name)` already installed...")
+    #                 end
+    #                 continue
+    #             end
 
-                Pkg.develop(; path=path)
-            end
-        end
-    end
+    #             Pkg.develop(; path=path)
+    #         end
+    #     end
+    # end
 
-    mods = abspath(get(ENV, "AUCHIMISTE_PATH", Main.AUCHIMISTE_PATH))
+    # mods = abspath(get(ENV, "AUCHIMISTE_PATH", Main.AUCHIMISTE_PATH))
 
-    if isdir(mods)
-        @info("Loading local modules from $(mods)...")
-        push!(LOAD_PATH, mods)
-    end
+    # if isdir(mods)
+    #     @info("Loading local modules from $(mods)...")
+    #     push!(LOAD_PATH, mods)
+    # end
 
     return nothing
 end

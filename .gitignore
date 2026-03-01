@@ -2,6 +2,9 @@
 # General
 #######################################################################
 
+# User repositories:
+repos/
+
 # Created by Kompanion:
 .kompanion/bin/
 .kompanion/logs/

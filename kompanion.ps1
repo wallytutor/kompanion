@@ -90,13 +90,13 @@ function Start-KompanionMain() {
     $env:KOMPANION_BIN  = "$env:KOMPANION_DOT\bin"
     $env:KOMPANION_LOGS = "$env:KOMPANION_DOT\logs"
     $env:KOMPANION_TEMP = "$env:KOMPANION_DOT\temp"
+    $env:KOMPANION_REPO = "$env:KOMPANION_DIR\repos"
 
     # Ensure important directories exist:
     Initialize-EnsureDirectory $env:KOMPANION_BIN
     Initialize-EnsureDirectory $env:KOMPANION_LOGS
     Initialize-EnsureDirectory $env:KOMPANION_TEMP
-
-    # $env:KOMPANION_PKG  = "$env:KOMPANION_DIR\pkg"
+    Initialize-EnsureDirectory $env:KOMPANION_REPO
 
     # Get configuration of modules:
     $config = Get-ModulesConfig

@@ -1613,7 +1613,7 @@ function Invoke-InstallDwsim {
 function Invoke-InstallOpenCascade {
     $output = "$env:KOMPANION_TEMP\opencascade.zip"
     $path   = "$env:KOMPANION_BIN\opencascade"
-    $url    = $URL_OPENCASCADE
+    $url    = $URL_OCC
 
     if (Test-Path -Path $path) { return }
 

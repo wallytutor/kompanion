@@ -28,6 +28,7 @@ repos/
 .jupyter/*
 
 # Python:
+.hyperspy/
 .matplotlib/
 .python_history
 pip/

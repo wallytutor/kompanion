@@ -1550,7 +1550,7 @@ function Invoke-InstallFreeCAD {
 
     # TODO: not working because of page redirection
     # Invoke-DownloadIfNeeded -URL $url -Output $output
-    Invoke-UncompressMsiIfNeeded -Source $output -Destination $path
+    # Invoke-UncompressMsiIfNeeded -Source $output -Destination $path
 }
 
 function Invoke-InstallBlender {

@@ -158,6 +158,7 @@
     //////////////////////////////////////////////////////////////////////////
 
     "[markdown]": {
+        "editor.foldingStrategy": "auto",
         "editor.wordWrap": "wordWrapColumn",
         "editor.wordWrapColumn": 80,
         "rewrap.autoWrap.enabled": false,

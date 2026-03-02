@@ -9,10 +9,14 @@
 # - graphviz
 
 param (
-    [switch]$RebuildOnStart,
+    # Actions:
     [switch]$RunVsCode,
+    [switch]$RebuildOnStart,
+
+    # Build options:
     [switch]$NoPythonDeps,
-    [switch]$NoJuliaDeps
+    [switch]$NoJuliaDeps,
+    [switch]$NoMajordome
 )
 
 #region: default_config
@@ -108,6 +112,9 @@ $URL_SU2         = "https://github.com/su2code/SU2/releases/download/v8.4.0/SU2-
 $URL_FIREMODELS  = "https://github.com/firemodels/fds/releases/download/FDS-6.10.1/FDS-6.10.1_SMV-6.10.1_win.exe"
 $URL_RADCAL      = "https://github.com/firemodels/radcal/releases/download/v2.0/radcal_win_64.exe"
 $URL_TESSERACT   = "https://github.com/tesseract-ocr/tesseract/releases/download/5.5.0/tesseract-ocr-w64-setup-5.5.0.20241111.exe"
+
+$GIT_KOMPANION = "https://github.com/wallytutor/kompanion.git"
+$GIT_MAJORDOME = "https://github.com/wallytutor/python-majordome.git"
 #endregion: default_config
 
 #region: kompanion
@@ -179,16 +186,29 @@ function Start-KompanionInstall {
     if (-not (Test-Path -Path "$env:KOMPANION_DIR\.git")) {
         Write-Warn "Kompanion downloaded as zip, getting repository..."
 
-        & git clone "https://github.com/wallytutor/kompanion.git" `
-            "$env:KOMPANION_DIR\repos\kompanion"
+        & git clone $GIT_KOMPANION "$env:KOMPANION_REPO\kompanion"
 
-        & Move-Item -Path "$env:KOMPANION_DIR\repos\kompanion\.git" `
+        # Steal the .git folder to make this directory a git repository:
+        & Move-Item -Path "$env:KOMPANION_REPO\kompanion\.git" `
             -Destination $env:KOMPANION_DIR
 
+        # Clean up the temporary repository:
+        & Remove-Item -Path "$env:KOMPANION_REPO\kompanion" -Recurse
+
+        # This means -> pull to this directory:
         & git pull
 
         & KompanionRebuild
     }
+
+    if ($NoMajordome) {
+        Write-Warn "Skipping Majordome installation as requested..."
+    } else {
+        if (-not (Test-Path -Path "$env:KOMPANION_REPO\majordome")) {
+            & git clone $GIT_MAJORDOME "$env:KOMPANION_REPO\majordome"
+        }
+    }
+
 }
 
 function Start-KompanionConfigure {

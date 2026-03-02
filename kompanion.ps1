@@ -243,6 +243,26 @@ function KompanionSource {
 function KompanionRebuild {
     . "$env:KOMPANION_DIR/kompanion.ps1" -RebuildOnStart
 }
+
+function Invoke-HandledInstall {
+    param (
+        [string]$Path,
+        [string]$Output,
+        [scriptblock]$InstallScript
+    )
+
+    try {
+        if (Test-Path -Path $path) { return }
+
+        & $InstallScript
+
+        Write-Good "Successfully installed $Path."
+    } catch {
+        Write-Bad "Failed to install $Path : $_"
+        Remove-Item -Path $Output -ErrorAction SilentlyContinue
+        Remove-Item -Path $Path -Recurse -ErrorAction SilentlyContinue
+    }
+}
 #endregion: kompanion
 
 #region: messages
@@ -866,20 +886,19 @@ function Invoke-ConfigureGit {
 }
 
 function Invoke-ConfigureTabby {
-    # $env:TABBY_HOME = "$env:KOMPANION_BIN\tabby"
-    # Initialize-AddToPath -Directory "$env:TABBY_HOME"
+    $env:TABBY_HOME = "$env:KOMPANION_BIN\tabby"
+    Initialize-AddToPath -Directory "$env:TABBY_HOME"
 }
 
 function Invoke-InstallTabby {
-    # $output = "$env:KOMPANION_TEMP\tabby.zip"
-    # $path   = "$env:KOMPANION_BIN\tabby"
-    # $url    = $URL_TABBY
+    $output = "$env:KOMPANION_TEMP\tabby.zip"
+    $path   = "$env:KOMPANION_BIN\tabby"
 
-    # if (Test-Path -Path $path) { return }
-
-    # Invoke-DownloadIfNeeded -URL $url -Output $output
-    # Invoke-UncompressZipIfNeeded -Source $output -Destination $path
-    # Invoke-ConfigureTabby
+    Invoke-HandledInstall -Path $path -Output $output -InstallScript {
+        Invoke-DownloadIfNeeded -URL $URL_TABBY -Output $output
+        Invoke-UncompressZipIfNeeded -Source $output -Destination $path
+        Invoke-ConfigureTabby
+    }
 }
 
 function Invoke-InstallGit {

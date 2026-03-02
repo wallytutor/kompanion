@@ -62,6 +62,7 @@ $DEFAULT_CONFIG = [PSCustomObject]@{
         dwsim       = $false
         elmer       = $false
         gmsh        = $false
+        opencascade = $false
         su2         = $false
         tesseract   = $false
         radcal      = $false
@@ -114,6 +115,7 @@ $URL_SU2         = "https://github.com/su2code/SU2/releases/download/v8.4.0/SU2-
 $URL_FIREMODELS  = "https://github.com/firemodels/fds/releases/download/FDS-6.10.1/FDS-6.10.1_SMV-6.10.1_win.exe"
 $URL_RADCAL      = "https://github.com/firemodels/radcal/releases/download/v2.0/radcal_win_64.exe"
 $URL_TESSERACT   = "https://github.com/tesseract-ocr/tesseract/releases/download/5.5.0/tesseract-ocr-w64-setup-5.5.0.20241111.exe"
+$URL_OCC         = "https://github.com/Open-Cascade-SAS/OCCT/releases/download/V7_9_3/opencascade-7.9.3-vc14-64-combined.zip"
 
 $GIT_KOMPANION = "https://github.com/wallytutor/kompanion.git"
 $GIT_MAJORDOME = "https://github.com/wallytutor/python-majordome.git"
@@ -806,19 +808,20 @@ function Start-KompanionSimuInstall {
     Write-Host "- starting Kompanion simulation tools installation..."
 
     # No configure (not in path):
-    if ($Config.paraview)  { Invoke-InstallParaView }
-    if ($Config.freecad)   { Invoke-InstallFreeCAD }
-    if ($Config.blender)   { Invoke-InstallBlender }
-    if ($Config.meshlab)   { Invoke-InstallMeshLab }
-    if ($Config.dwsim)     { Invoke-InstallDwsim }
+    if ($Config.paraview)     { Invoke-InstallParaView }
+    if ($Config.freecad)      { Invoke-InstallFreeCAD }
+    if ($Config.blender)      { Invoke-InstallBlender }
+    if ($Config.meshlab)      { Invoke-InstallMeshLab }
+    if ($Config.dwsim)        { Invoke-InstallDwsim }
+    if ($Config.opencascade)  { Invoke-InstallOpenCascade }
 
     # With configure:
-    if ($Config.elmer)     { Invoke-InstallElmer }
-    if ($Config.gmsh)      { Invoke-InstallGmsh }
-    if ($Config.su2)       { Invoke-InstallSu2 }
-    if ($Config.tesseract) { Invoke-InstallTesseract }
-    if ($Config.radcal)    { Invoke-InstallRadcal }
-    if ($Config.freefem)   { Invoke-InstallFreeFem }
+    if ($Config.elmer)        { Invoke-InstallElmer }
+    if ($Config.gmsh)         { Invoke-InstallGmsh }
+    if ($Config.su2)          { Invoke-InstallSu2 }
+    if ($Config.tesseract)    { Invoke-InstallTesseract }
+    if ($Config.radcal)       { Invoke-InstallRadcal }
+    if ($Config.freefem)      { Invoke-InstallFreeFem }
 }
 
 function Start-KompanionSimuConfigure {
@@ -1605,6 +1608,17 @@ function Invoke-InstallDwsim {
 
     Invoke-DownloadIfNeeded -URL $url -Output $output
     Invoke-Uncompress7zIfNeeded -Source $output -Destination $path
+}
+
+function Invoke-InstallOpenCascade {
+    $output = "$env:KOMPANION_TEMP\opencascade.zip"
+    $path   = "$env:KOMPANION_BIN\opencascade"
+    $url    = $URL_OPENCASCADE
+
+    if (Test-Path -Path $path) { return }
+
+    Invoke-DownloadIfNeeded -URL $url -Output $output
+    Invoke-UncompressZipIfNeeded -Source $output -Destination $path
 }
 #endregion: install_configure_sim_nonconf
 

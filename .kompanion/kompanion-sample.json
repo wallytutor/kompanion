@@ -38,6 +38,7 @@
         "dwsim":       false,
         "elmer":       false,
         "gmsh":        false,
+        "opencascade": false,
         "su2":         false,
         "tesseract":   false,
         "radcal":      false,

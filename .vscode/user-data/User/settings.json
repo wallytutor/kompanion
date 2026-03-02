@@ -259,6 +259,7 @@
     // FORTRAN
     //////////////////////////////////////////////////////////////////////////
 
+    "fortran.notifications.releaseNotes": false,
     "fortran.preferredCase": "lowercase",
     "fortran.fortls.directories":[
         "**/build/*",

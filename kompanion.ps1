@@ -135,6 +135,9 @@ function Start-KompanionMain {
     Initialize-EnsureDirectory $env:KOMPANION_TEMP
     Initialize-EnsureDirectory $env:KOMPANION_REPO
 
+    # Just so that opening file explored doesn't generate an warning:
+    Initialize-EnsureDirectory "$env:KOMPANION_DIR\Desktop"
+
     # Get configuration of modules:
     $config = Get-ModulesConfig
 

@@ -1,5 +1,6 @@
 {
     "base": {
+        "tabby":       false,
         "zettlr":      false,
         "nvim":        false,
         "quarto":      false,

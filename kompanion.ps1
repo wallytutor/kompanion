@@ -23,6 +23,7 @@ param (
 $DEFAULT_CONFIG = [PSCustomObject]@{
     base = [PSCustomObject]@{
         vscode      = $true
+        tabby       = $true
         git         = $true
         curl        = $true
         sevenzip    = $true
@@ -90,6 +91,7 @@ $URL_FFMPEG      = "https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-full.7z"
 $URL_DRAWIO      = "https://github.com/jgraph/drawio-desktop/releases/download/v29.0.3/draw.io-29.0.3-windows.zip"
 $URL_INKSCAPE    = "https://inkscape.org/gallery/item/53695/inkscape-1.4_2024-10-11_86a8ad7-x64.7z"
 $URL_MIKTEX      = "https://miktex.org/download/ctan/systems/win32/miktex/setup/windows-x64/miktexsetup-5.5.0+1763023-x64.zip"
+$URL_TABBY       = "https://github.com/Eugeny/tabby/releases/download/v1.0.230/tabby-1.0.230-portable-x64.zip"
 
 $URL_PYTHON      = "https://github.com/winpython/winpython/releases/download/17.2.20251012/WinPython64-3.13.8.0dotb1.zip"
 $URL_RUST_GNU    = "https://static.rust-lang.org/rustup/dist/x86_64-pc-windows-gnu/rustup-init.exe"
@@ -710,6 +712,7 @@ function Start-KompanionBaseInstall {
     Invoke-InstallVsCode
     Invoke-InstallGit
 
+    if ($Config.tabby)       { Invoke-InstallTabby }
     if ($Config.nvim)        { Invoke-InstallNvim }
     if ($Config.zettlr)      { Invoke-InstallZettlr }
     if ($Config.drawio)      { Invoke-InstallDrawio }
@@ -738,6 +741,7 @@ function Start-KompanionBaseConfigure {
     Invoke-ConfigureVsCode
     Invoke-ConfigureGit
 
+    if ($Config.tabby)       { Invoke-ConfigureTabby }
     if ($Config.nvim)        { Invoke-ConfigureNvim }
     if ($Config.zettlr)      { Invoke-ConfigureZettlr }
     if ($Config.drawio)      { Invoke-ConfigureDrawio }
@@ -856,6 +860,23 @@ function Invoke-InstallVsCode {
 function Invoke-ConfigureGit {
     $env:GIT_HOME = "$env:KOMPANION_BIN\git"
     Initialize-AddToPath -Directory "$env:GIT_HOME\cmd"
+}
+
+function Invoke-ConfigureTabby {
+    # $env:TABBY_HOME = "$env:KOMPANION_BIN\tabby"
+    # Initialize-AddToPath -Directory "$env:TABBY_HOME"
+}
+
+function Invoke-InstallTabby {
+    # $output = "$env:KOMPANION_TEMP\tabby.zip"
+    # $path   = "$env:KOMPANION_BIN\tabby"
+    # $url    = $URL_TABBY
+
+    # if (Test-Path -Path $path) { return }
+
+    # Invoke-DownloadIfNeeded -URL $url -Output $output
+    # Invoke-UncompressZipIfNeeded -Source $output -Destination $path
+    # Invoke-ConfigureTabby
 }
 
 function Invoke-InstallGit {

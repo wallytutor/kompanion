@@ -42,6 +42,7 @@ pip/
 # User profile directories/files:
 AppData/
 Desktop/
+Microsoft/
 *.lock
 
 #######################################################################

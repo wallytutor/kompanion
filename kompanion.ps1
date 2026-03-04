@@ -60,9 +60,10 @@ $DEFAULT_CONFIG = [PSCustomObject]@{
         blender     = $false
         meshlab     = $false
         dwsim       = $false
-        elmer       = $false
-        gmsh        = $false
         opencascade = $false
+        gmsh        = $false
+        elmer       = $false
+        prepomax    = $false
         su2         = $false
         tesseract   = $false
         radcal      = $false
@@ -110,13 +111,14 @@ $URL_BLENDER     = "https://ftp.halifax.rwth-aachen.de/blender/release/Blender4.
 $URL_MESHLAB     = "https://github.com/cnr-isti-vclab/meshlab/releases/download/MeshLab-2025.07/MeshLab2025.07-windows_x86_64.zip"
 $URL_DWSIM       = "https://github.com/DanWBR/dwsim/releases/download/v9.0.4/DWSIM_v904_win64_portable.7z"
 
+$URL_OPENCASCADE = "https://github.com/Open-Cascade-SAS/OCCT/releases/download/V7_9_3/opencascade-7.9.3-vc14-64-combined.zip"
 $URL_GMSH        = "https://gmsh.info/bin/Windows/gmsh-4.14.1-Windows64-sdk.zip"
 $URL_ELMER       = "https://www.nic.funet.fi/pub/sci/physics/elmer/bin/windows/ElmerFEM-gui-mpi-Windows-AMD64.zip"
+$URL_PREPOMAX    = "https://prepomax.fs.um.si/Files/Downloads/PrePoMax%20v2.5.0.zip"
 $URL_SU2         = "https://github.com/su2code/SU2/releases/download/v8.4.0/SU2-v8.4.0-win64-mpi.zip"
 $URL_FIREMODELS  = "https://github.com/firemodels/fds/releases/download/FDS-6.10.1/FDS-6.10.1_SMV-6.10.1_win.exe"
 $URL_RADCAL      = "https://github.com/firemodels/radcal/releases/download/v2.0/radcal_win_64.exe"
 $URL_TESSERACT   = "https://github.com/tesseract-ocr/tesseract/releases/download/5.5.0/tesseract-ocr-w64-setup-5.5.0.20241111.exe"
-$URL_OCC         = "https://github.com/Open-Cascade-SAS/OCCT/releases/download/V7_9_3/opencascade-7.9.3-vc14-64-combined.zip"
 
 $GIT_KOMPANION = "https://github.com/wallytutor/kompanion.git"
 $GIT_MAJORDOME = "https://github.com/wallytutor/python-majordome.git"
@@ -837,8 +839,9 @@ function Start-KompanionSimuInstall {
     if ($Config.opencascade)  { Invoke-InstallOpenCascade }
 
     # With configure:
-    if ($Config.elmer)        { Invoke-InstallElmer }
     if ($Config.gmsh)         { Invoke-InstallGmsh }
+    if ($Config.elmer)        { Invoke-InstallElmer }
+    if ($Config.prepomax)     { Invoke-InstallPrePoMax }
     if ($Config.su2)          { Invoke-InstallSu2 }
     if ($Config.tesseract)    { Invoke-InstallTesseract }
     if ($Config.radcal)       { Invoke-InstallRadcal }
@@ -852,8 +855,9 @@ function Start-KompanionSimuConfigure {
 
     Write-Host "- starting Kompanion simulation tools configuration..."
 
-    if ($Config.elmer)     { Invoke-ConfigureElmer }
     if ($Config.gmsh)      { Invoke-ConfigureGmsh }
+    if ($Config.elmer)     { Invoke-ConfigureElmer }
+    if ($Config.prepomax)  { Invoke-ConfigurePrePoMax }
     if ($Config.su2)       { Invoke-ConfigureSu2 }
     if ($Config.tesseract) { Invoke-ConfigureTesseract }
     if ($Config.radcal)    { Invoke-ConfigureRadcal }
@@ -1633,7 +1637,7 @@ function Invoke-InstallDwsim {
 function Invoke-InstallOpenCascade {
     $output = "$env:KOMPANION_TEMP\opencascade.zip"
     $path   = "$env:KOMPANION_BIN\opencascade"
-    $url    = $URL_OCC
+    $url    = $URL_OPENCASCADE
 
     if (Test-Path -Path $path) { return }
 
@@ -1679,6 +1683,22 @@ function Invoke-InstallElmer {
     Invoke-DownloadIfNeeded -URL $url -Output $output
     Invoke-UncompressZipIfNeeded -Source $output -Destination $path
     Invoke-ConfigureElmer
+}
+
+function Invoke-ConfigurePrePoMax {
+    $env:PREPOMAX_HOME = "$env:KOMPANION_BIN\prepomax\PrePoMax v2.5.0"
+    Initialize-AddToPath -Directory "$env:PREPOMAX_HOME"
+}
+
+function Invoke-InstallPrePoMax {
+    $output = "$env:KOMPANION_TEMP\prepomax.zip"
+    $path   = "$env:KOMPANION_BIN\prepomax"
+
+    Invoke-HandledInstall -Path $path -Output $output -InstallScript {
+        Invoke-DownloadIfNeeded -URL $URL_PREPOMAX -Output $output
+        Invoke-UncompressZipIfNeeded -Source $output -Destination $path
+        Invoke-ConfigurePrePoMax
+    }
 }
 
 function Invoke-ConfigureSu2 {

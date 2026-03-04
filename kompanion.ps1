@@ -93,6 +93,7 @@ $URL_DRAWIO      = "https://github.com/jgraph/drawio-desktop/releases/download/v
 $URL_INKSCAPE    = "https://inkscape.org/gallery/item/53695/inkscape-1.4_2024-10-11_86a8ad7-x64.7z"
 $URL_MIKTEX      = "https://miktex.org/download/ctan/systems/win32/miktex/setup/windows-x64/miktexsetup-5.5.0+1763023-x64.zip"
 $URL_TABBY       = "https://github.com/Eugeny/tabby/releases/download/v1.0.230/tabby-1.0.230-portable-x64.zip"
+# $URL_NTERACT     = "https://github.com/nteract/nteract/releases/download/v0.28.0/nteract-0.28.0-win.zip"
 
 $URL_PYTHON      = "https://github.com/winpython/winpython/releases/download/17.2.20251012/WinPython64-3.13.8.0dotb1.zip"
 $URL_RUST_GNU    = "https://static.rust-lang.org/rustup/dist/x86_64-pc-windows-gnu/rustup-init.exe"
@@ -744,7 +745,7 @@ function Start-KompanionBaseInstall {
     if ($Config.jabref)      { Invoke-InstallJabRef }
     if ($Config.inkscape)    { Invoke-InstallInkscape }
     if ($Config.miktex)      { Invoke-InstallMikTex }
-    if ($Config.nteract)     { Invoke-InstallNteract }
+    # if ($Config.nteract)     { Invoke-InstallNteract }
     if ($Config.ffmpeg)      { Invoke-InstallFfmpeg }
     if ($Config.imagemagick) { Invoke-InstallImageMagick }
     if ($Config.poppler)     { Invoke-InstallPoppler }
@@ -773,7 +774,7 @@ function Start-KompanionBaseConfigure {
     if ($Config.jabref)      { Invoke-ConfigureJabRef }
     if ($Config.inkscape)    { Invoke-ConfigureInkscape }
     if ($Config.miktex)      { Invoke-ConfigureMikTex }
-    if ($Config.nteract)     { Invoke-ConfigureNteract }
+    # if ($Config.nteract)     { Invoke-ConfigureNteract }
     if ($Config.ffmpeg)      { Invoke-ConfigureFfmpeg }
     if ($Config.imagemagick) { Invoke-ConfigureImageMagick }
     if ($Config.poppler)     { Invoke-ConfigurePoppler }
@@ -1219,7 +1220,7 @@ function Invoke-ConfigureNteract {
 function Invoke-InstallNteract {
     $output = "$env:KOMPANION_TEMP\nteract.zip"
     $path   = "$env:KOMPANION_BIN\nteract"
-    $url    = "https://github.com/nteract/nteract/releases/download/v0.28.0/nteract-0.28.0-win.zip"
+    $url    = $URL_NTERACT
 
     if (Test-Path -Path $path) { return }
 

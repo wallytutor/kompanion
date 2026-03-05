@@ -247,6 +247,14 @@ function KompanionRebuild {
     . "$env:KOMPANION_DIR/kompanion.ps1" -RebuildOnStart
 }
 
+function Kode {
+    . "$env:KOMPANION_DIR/kompanion.ps1"
+
+    Code.exe $env:KOMPANION_DIR $PWD.Path `
+        --extensions-dir $env:VSCODE_EXTENSIONS `
+        --user-data-dir  $env:VSCODE_SETTINGS
+}
+
 function Invoke-HandledInstall {
     param (
         [string]$Path,

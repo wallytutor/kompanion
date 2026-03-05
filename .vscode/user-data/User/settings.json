@@ -425,6 +425,8 @@
     // JUPYTER
     //////////////////////////////////////////////////////////////////////////
 
+    "notebook.lineNumbers": "on",
+
     "jupyter.askForKernelRestart": false,
     "jupyter.interactiveWindow.creationMode": "perFile",
     "jupyter.kernels.excludePythonEnvironments": [

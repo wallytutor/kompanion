@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
-print("\n\033[32mKOMPANION IPYTHON\033[0m")
+from pathlib import Path
+import sys
+
+print(f"\n\033[32mKOMPANION IPYTHON\033[0m")
+print(f"\033[34mUsing: {Path(sys.executable).as_posix()}\033[0m\n")
 
 try:
     from IPython import get_ipython

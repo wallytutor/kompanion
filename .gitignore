@@ -2,6 +2,9 @@
 # General
 #######################################################################
 
+# Any sandbox
+*sandbox*
+
 # User repositories:
 repos/
 

@@ -1,6 +1,0 @@
-# Traversée des arêtes du Gerbier
-
-
-```{python}
-
-```

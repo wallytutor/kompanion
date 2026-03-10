@@ -47,6 +47,7 @@ AppData/
 Desktop/
 Microsoft/
 *.lock
+.ssh/
 
 #######################################################################
 # User profile: overrides

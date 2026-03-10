@@ -15,8 +15,9 @@ try:
 except Exception as e:
     print(f"\033[31m- Could not enable autoreload: {e}\033[0m")
 
-try:
-    import majordome as mj
-    print("\033[34m- Imported majordome as mj\033[0m")
-except ImportError:
-    print("\033[31m- Could not import majordome\033[0m")
+# For now keep it off, as we are working on majordome.exe.
+# try:
+#     import majordome as mj
+#     print("\033[34m- Imported majordome as mj\033[0m")
+# except ImportError:
+#     print("\033[31m- Could not import majordome\033[0m")

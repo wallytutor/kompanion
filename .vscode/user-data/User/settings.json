@@ -211,6 +211,11 @@
         }
     ],
 
+    "python-envs.globalSearchPaths": [
+        ".venv/**",
+        "venv**",
+    ],
+
     "[python]": {
         "editor.tabSize": 4,
         "editor.foldingStrategy": "indentation",
@@ -223,7 +228,7 @@
     "python.analysis.stubPath": "./typings",
     "python.analysis.typeCheckingMode": "standard",
     "python.createEnvironment.trigger": "off",
-    // "python.defaultInterpreterPath": "${workspaceFolder}/.venv/Scripts/python.exe",
+    "python.defaultInterpreterPath": "${env:PYTHON_HOME}\\python.exe",
     "python.useEnvironmentsExtension": true,
     "python.terminal.activateEnvInCurrentTerminal": true,
     "python.languageServer": "Default",
@@ -372,7 +377,6 @@
     //////////////////////////////////////////////////////////////////////////
 
     "github.copilot.nextEditSuggestions.enabled": true,
-
 
     "github.copilot.enable": {
         "*": true,

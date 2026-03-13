@@ -1,0 +1,38 @@
+# Mechanics
+
+## Variational calculus
+
+- Function:
+
+$$
+f(x): \Re \to \Re
+$$
+
+- Functional:
+
+$$
+F[f(x)]: (\Re \to \Re) \to \Re
+$$
+
+- Multivariate Taylor series expansion:
+
+$$
+f(x+\delta{x}, y+\delta{x}) = f(x, y) +
+\frac{\partial{f}}{\partial{x}}\delta{x} +
+\frac{\partial{f}}{\partial{y}}\delta{y} +
+\mathcal{O}(\delta{x}^{2}+\delta{x}^{2})
+$$
+
+- Finding functional extrema, $\delta{F[f(x)]} = 0$:
+
+$$
+\delta{F[f(x)]} = F[y+\delta{y}] - F[y]
+$$
+
+$$
+F[y+\delta{y}] - F[y] =
+\int_{}dx\;L(y+\delta{y}, y^{\prime}+\delta{y^{\prime}},x)-
+\int_{}dx\;L(y, y^{\prime},x)
+$$
+
+## Lagrangian formalism

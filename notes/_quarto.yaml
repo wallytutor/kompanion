@@ -47,6 +47,12 @@ book:
         - fluent/tui-results.qmd
         - fluent/pyfluent.qmd
 
+    - part: "Reactor Engineering"
+      chapters:
+        - reactors/acetylene-pyrolysis-reactor.qmd
+        - reactors/counter-current-pfr.qmd
+        - reactors/converting-nasa-poly.qmd
+
     - part: "Montagne"
       chapters:
         - tracks/carto.qmd

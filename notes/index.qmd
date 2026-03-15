@@ -4,6 +4,8 @@ This it the *Kompanion companion* notes!
 
 Kompanion is a portable setup toolbox for working in Scientific Computing under Windows. It is designed to be used in a laptop with no or minor administrator rights, and it allows you to install and use a wide range of tools and libraries for scientific computing without the need for a full installation.
 
+For more details, please check our repository at [GitHub](https://github.com/wallytutor/kompanion). Contributions and corrections are welcome, please reach me by [mail](mailto:walter.dalmazsilva.manager@gmail.com).
+
 **Important:** before using this, please be aware that your company/university probably forbids the use of portable tools outside sandboxed systems. It is your responsability to use this toolbox only in systems where you are allowed to. The developper does not hold any resposibility on your failure to respect your local regulations.
 
 ## Foreword

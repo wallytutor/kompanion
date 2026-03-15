@@ -16,6 +16,7 @@ repos/
 
 # User-specific configuration:
 .kompanion/kompanion.json
+.kompanion/envs.ps1
 
 # Editor cache:
 .vscode/*

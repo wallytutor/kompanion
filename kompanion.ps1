@@ -1185,7 +1185,21 @@ function Invoke-ConfigureMikTex {
     Initialize-AddToPath -Directory "$env:MIKTEX_HOME"
 
     $path = "$env:MIKTEX_HOME\miktex-portable.cmd"
-    Start-Process -FilePath $path -NoNewWindow
+
+    if (Test-Path -Path $path) {
+        $isMikTexConsoleRunning = @(
+            Get-Process -Name "miktex-console" -ErrorAction SilentlyContinue
+        ).Count -gt 0
+
+        $isPortableCmdRunning = @(
+            Get-CimInstance Win32_Process -Filter "Name='cmd.exe'" -ErrorAction SilentlyContinue |
+            Where-Object { $_.CommandLine -like "*miktex-portable.cmd*" }
+        ).Count -gt 0
+
+        if (-not ($isMikTexConsoleRunning -or $isPortableCmdRunning)) {
+            Start-Process -FilePath $path -NoNewWindow
+        }
+    }
 
     Initialize-AddToPath -Directory "$env:MIKTEX_HOME\texmfs\install\miktex\bin\x64\internal"
     Initialize-AddToPath -Directory "$env:MIKTEX_HOME\texmfs\install\miktex\bin\x64"

@@ -1,0 +1,112 @@
+% ----------------------------------------------------------------------
+% beamer-minimal.tex
+% ----------------------------------------------------------------------
+
+\documentclass[aspectratio=1610]{beamer}
+\usepackage[french]{babel}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{chemformula}
+\usepackage{graphicx}
+\usepackage{siunitx}
+
+% Comes last (interact with other packages)
+\usepackage{hyperref}
+
+% ----------------------------------------------------------------------
+% Colors
+% ----------------------------------------------------------------------
+
+\definecolor{CfdBlue}{RGB}{6, 2, 112}
+\definecolor{PurpleHeart}{RGB}{78, 41, 213}
+
+% ----------------------------------------------------------------------
+% General configurations
+% ----------------------------------------------------------------------
+
+\hypersetup{
+  colorlinks=true,
+  urlcolor=PurpleHeart,  % external links
+  linkcolor=CfdBlue, % internal links
+  citecolor=CfdBlue  % citation links
+}
+
+% ----------------------------------------------------------------------
+% Beamer overrides
+% ----------------------------------------------------------------------
+
+\setbeamertemplate{section page}
+{%
+  \begin{centering}%
+    \vfill%
+    \begin{beamercolorbox}[sep=12pt,center]{section title}%
+      \usebeamerfont{section title}\insertsection%
+    \end{beamercolorbox}%
+    \vfill%
+  \end{centering}%
+}
+
+\setbeamercolor{structure}{fg=CfdBlue}
+
+\setbeamertemplate{footnote}{
+  \parindent 0pt%
+  \noindent%
+  \raggedright%
+  \hbox to 1em{\insertfootnotemark\hfil}\insertfootnotetext
+}
+
+\AtBeginSection{\frame{\sectionpage}}
+\AtBeginSubsection{\frame{\subsectionpage}}
+
+\makeatletter
+\renewcommand\footnotesize{\scriptsize}
+\makeatother
+
+% ----------------------------------------------------------------------
+% Additional units
+% ----------------------------------------------------------------------
+
+\DeclareSIPrefix{\normal}{N}{1}
+
+% ----------------------------------------------------------------------
+% User commands
+% ----------------------------------------------------------------------
+
+$userpreamble
+
+% ----------------------------------------------------------------------
+% graphicspath customization
+% ----------------------------------------------------------------------
+
+\graphicspath{$graphicspath}
+
+% ----------------------------------------------------------------------
+% titlepage customization
+% ----------------------------------------------------------------------
+
+\title{$title}
+\subtitle{$subtitle}
+\author{$author}
+\date{$date}
+
+% ----------------------------------------------------------------------
+% Start document
+% ----------------------------------------------------------------------
+
+\begin{document}
+\frame{\titlepage}
+\frame{\tableofcontents}
+
+% ----------------------------------------------------------------------
+% User provided contents
+% ----------------------------------------------------------------------
+
+$contents
+
+% ----------------------------------------------------------------------
+% Close document
+% ----------------------------------------------------------------------
+
+\frame{\centering{EOF}}
+\end{document}%
+\endinput%

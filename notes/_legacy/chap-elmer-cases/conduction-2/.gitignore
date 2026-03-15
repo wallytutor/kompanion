@@ -1,0 +1,10 @@
+# Mesh files:
+domain/*.msh
+domain/mesh.*
+
+# Results:
+**/results/
+
+# Logs:
+convergence.dat
+log.*

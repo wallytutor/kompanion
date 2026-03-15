@@ -1,0 +1,82 @@
+# Following some suggestions proposed here:
+# https://markaicode.com/ollama-academic-literature-review-guide/
+
+prompts:
+
+- object: Automated Paper Summarization
+  prompt: |
+    Analyze this academic paper and provide:
+
+    1. MAIN CONTRIBUTION (2-3 sentences)
+    2. METHODOLOGY (research design, sample size, key methods)
+    3. KEY FINDINGS (3-5 bullet points with specific results)
+    4. LIMITATIONS (methodological concerns, scope restrictions)
+    5. RELEVANCE SCORE (1-10 for your research question: [INSERT YOUR TOPIC])
+    6. CITATION CATEGORIES (theory, methods, findings, background)
+
+    Paper text: [PASTE PAPER TEXT HERE]
+
+- object: Thematic Analysis and Categorization
+  prompt: |
+    Based on these 5 paper summaries, identify:
+
+    1. EMERGING THEMES (what patterns appear across papers?)
+    2. METHODOLOGICAL APPROACHES (categorize research designs)
+    3. KNOWLEDGE GAPS (what questions remain unanswered?)
+    4. CONFLICTING FINDINGS (where do authors disagree?)
+    5. THEORETICAL FRAMEWORKS (what models guide this research?)
+
+    Summaries:
+    [PASTE YOUR SUMMARIES HERE]
+
+- object: Building Evidence Tables
+  prompt: |
+    Create a comparison table with these columns:
+
+    - Author/Year
+    - Sample Size
+    - Methodology
+    - Key Variables
+    - Main Finding
+    - Effect Size (if reported)
+    - Quality Score (rate study rigor 1-10)
+
+    Format as markdown table for easy copying.
+
+    Papers to analyze: [LIST YOUR PAPERS]
+
+- object: Cross-Paper Synthesis
+  prompt: |
+    Synthesize findings from these 10 papers about [YOUR TOPIC]:
+
+    1. What do ALL papers agree on?
+    2. Where do findings contradict each other?
+    3. What trends emerge over time (early vs recent papers)?
+    4. Which methodological approaches produce strongest evidence?
+    5. What would be the next logical research question?
+
+    Be specific and cite paper numbers in your analysis.
+
+- object: Research Gap Identification
+  prompt: |
+    Given this literature review on [TOPIC], identify 5 specific research gaps:
+
+    1. METHODOLOGICAL GAPS (better ways to study this)
+    2. POPULATION GAPS (understudied groups)
+    3. THEORETICAL GAPS (unexplored concepts)
+    4. PRACTICAL GAPS (real-world applications missing)
+    5. MEASUREMENT GAPS (better tools needed)
+
+    For each gap, suggest one specific research question and explain why it matters.
+
+- object: Citation Network Analysis
+  prompt: |
+    Analyze citation patterns in these papers:
+
+    1. Which papers cite each other?
+    2. What are the foundational texts (cited by many)?
+    3. What are the cutting-edge papers (recent, highly cited)?
+    4. Which authors appear most frequently?
+    5. What institutions lead this research area?
+
+    Papers: [YOUR BIBLIOGRAPHY]

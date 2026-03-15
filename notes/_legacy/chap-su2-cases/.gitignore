@@ -1,0 +1,30 @@
+# Notebooks checkpoints:
+.ipynb_checkpoints/
+
+# Any log files:
+*.log
+log.*
+
+# Generated LaTeX
+*.aux
+*.nav
+*.out
+*.snm
+*.toc
+_*.tex
+_*.pdf
+
+# Any sandbox
+*sandbox*
+
+# SU2 results
+*.vtu
+*.dat
+*.csv
+
+# Generated files
+**/model.cfg
+
+# Keep notebooks for now:
+!*.ipynb
+!slides.tex

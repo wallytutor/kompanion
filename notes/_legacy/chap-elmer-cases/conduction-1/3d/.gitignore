@@ -1,0 +1,16 @@
+# Keep project geometry
+!*.geo
+
+# No need to keep domain though
+domain/*
+results/*
+
+# Ignore raw post-processing
+animation/*.png
+
+# Any log files
+log.*
+*.log
+
+# In this case the names file is stored at root
+*.dat.names

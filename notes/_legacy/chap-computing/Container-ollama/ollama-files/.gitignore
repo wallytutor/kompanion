@@ -1,0 +1,14 @@
+# Virtual environment
+.venv/
+
+# Python bytecode
+__pycache__/
+*.py[cod]
+
+# Create directories:
+bin/
+models/
+tmp/
+
+# Any sandbox:
+*sandbox*

@@ -1,0 +1,300 @@
+# Inviscid Bump in a Channel
+
+This notebook provides a Python approach to setup and run the standard tutorial case [Inviscid Bump](https://su2code.github.io/tutorials/Inviscid_Bump/) and reading that case before getting here is highly recommended, since we will not be discussing all the points.
+
+The main goal is provide a full Python interface to the problem from case construction to post-processing. This is done through our package `majordome` and [`pyvista`](https://docs.pyvista.org/getting-started/index.html), an excellent tool for VTK data rendering. Alternative approaches of VTK data rendering are discussed [here](https://stackoverflow.com/questions/56401123).
+
+Next we configure `pv` to [display static images in notebook](https://docs.pyvista.org/user-guide/jupyter/index.html). We also start the display.
+
+```{python}
+%load_ext autoreload
+%autoreload 2
+```
+
+```{python}
+from majordome._majordome import su2
+from majordome.su2.mesh import *
+from majordome.su2.enums import *
+from majordome.su2.groups import *
+import pyvista as pv
+
+pv.set_jupyter_backend("static")
+```
+
+## Domain inspection
+
+As of any CFD problem, visualization is of utmost importance. Using `pyvista` we provide below the rendering of problem mesh.
+
+From the `outline` property we can get a good guess of camera placement to see the mesh later.
+
+```{python}
+mesh_reader = SU2MeshLoader("mesh.su2")
+mesh = mesh_reader.to_pyvista()
+mesh.outline()
+```
+
+```{python}
+class ExtendedPlotter:
+    """ A wrapper around pyvista.Plotter to set some default options. """
+    def __init__(self, *args, **kwargs):
+        self.plotter = pv.Plotter(*args, **kwargs)
+
+    def add_mesh(self, *args, **kwargs):
+        self.plotter.add_mesh(*args, **kwargs)
+
+    def show(self, *args, **kwargs):
+        bg = kwargs.pop("background", "#CCCCCC")
+        ps = kwargs.pop("parallel_scale", 1.2)
+
+        self.plotter.renderer.set_background(bg)
+        self.plotter.renderer.reset_camera()
+        self.plotter.camera.zoom("tight")
+        self.plotter.camera.parallel_scale *= ps
+
+        self.plotter.show(*args, **kwargs)
+
+    @property
+    def renderer(self):
+        return self.plotter.renderer
+
+    @property
+    def camera(self):
+        return self.plotter.camera
+```
+
+```{python}
+# XXX: casting required to avoid linting warnings:
+p = ExtendedPlotter()
+p.add_mesh(mesh.cast_to_unstructured_grid(), show_edges=True, color="w")
+p.show()
+```
+
+With boundaries in hand we can use a more complex feature of `pyvista` to make a composite plot depicting each of these selected tags. A grid is also added to the image to provide the size of the system, which will later also be need to analyse the data.
+
+```{python}
+mesh_grid      = mesh#.cast_to_unstructured_grid()
+tag_inlet      = mesh_reader.get_tag("inlet")
+tag_lower_wall = mesh_reader.get_tag("lower_wall")
+tag_outlet     = mesh_reader.get_tag("outlet")
+tag_upper_wall = mesh_reader.get_tag("upper_wall")
+```
+
+```{python}
+p = ExtendedPlotter()
+p.add_mesh(mesh_grid,      color="w", show_edges=True, opacity=0.3)
+p.add_mesh(tag_inlet,      color="r", show_edges=True, line_width=5)
+p.add_mesh(tag_lower_wall, color="g", show_edges=True, line_width=5)
+p.add_mesh(tag_outlet,     color="b", show_edges=True, line_width=5)
+p.add_mesh(tag_upper_wall, color="g", show_edges=True, line_width=5)
+p.renderer.show_grid(xtitle="X", ytitle="Y", font_size=20,
+                     color="k", bold=True,)
+p.show(parallel_scale=1.4)
+```
+
+## Prepare case configuration
+
+In this section we show how to use `majordome` to transform the [original case](https://github.com/su2code/Tutorials/tree/master/compressible_flow/Inviscid_Bump) into a Python script. This has the advantage to allow parametric generation of cases and other computations to be performed directly in case construction. Different *sections* of SU2 configuration files are simply filled-in through Python classes as follows. Dumping of *.cfg* file is automatically manager by `SU2Configuration`.
+
+```{python}
+conf = SU2Configuration(
+    problem = ProblemDefinition(
+        solver = SU2.SolverType.Euler,
+    )
+)
+
+conf.compressible_freestream = CompressibleFreeStreamDefinition(
+    mach             = 0.5,
+    angle_of_attack  = 0.0,
+    sideslip_angle   = 0.0,
+    pressure         = 101325.0,
+    temperature      = 288.0
+)
+
+conf.reference_values = ReferenceValues(
+    ref_origin_moment_x = 0.25,
+    ref_origin_moment_y = 0.00,
+    ref_origin_moment_z = 0.00,
+    ref_length          = 1.0,
+    ref_area            = 1.0
+)
+
+conf.boundary_conditions = BoundaryConditions(
+    marker_euler  = [
+        BCTypeWallEuler("upper_wall"),
+        BCTypeWallEuler("lower_wall"),
+    ],
+    marker_inlet  = ["inlet", 288.6, 102010.0, 1.0, 0.0, 0.0],
+    marker_outlet = ["outlet", 101300.0],
+    inlet_type    = InletType.TOTAL_CONDITIONS,
+)
+
+conf.surfaces_identification = SurfacesIdentification(
+    marker_plotting   = ["lower_wall"],
+    marker_monitoring = ["upper_wall", "lower_wall"],
+)
+
+conf.common_numerical_parameters = CommonParametersNumerical(
+    num_method_grad = NumMethodGrad.GREEN_GAUSS,
+    cfl_number      = 50.0,
+    cfl_adapt       = YesNoEnum.YES,
+    cfl_adapt_param = ParametersCFL(
+        factor_down            = 0.1,
+        factor_up              = 2.0,
+        min_value              = 50.0,
+        max_value              = 1.0e+10
+    ),
+    rk_alpha_coeff = (0.66667, 0.66667, 1.000000),
+)
+
+conf.linear_solver_parameters = LinearSolverParameters(
+    linear_solver      = LinearSolver.FGMRES,
+    linear_solver_prec = Preconditioner.ILU,
+    error              = 1.0e-10,
+    n_iter             = 20
+)
+
+conf.multigrid_parameters = MultigridParameters(
+    mg_level             = 3,
+    mg_cycle             = MgCycle.W_CYCLE,
+    mg_pre_smooth        = [1, 2, 3, 3],
+    mg_post_smooth       = [0, 0, 0, 0],
+    mg_correction_smooth = [0, 0, 0, 0],
+    mg_damp_restriction  = 1.0,
+    mg_damp_prolongation = 1.0
+)
+
+conf.flow_numerical_method = FlowNumericalMethod(
+    conv_num_method_flow = ConvectiveScheme.JST,
+    time_discre_flow     = TimeDiscretization.EULER_IMPLICIT,
+)
+
+conf.slope_limiter = SlopeLimiter(
+    jst_sensor_coeff = (0.5, 0.02)
+)
+
+conf.solver_control = SolverControl(
+    iter                 = 999999,
+    conv_field           = "RMS_DENSITY",
+    conv_residual_minval = -10,
+    conv_startiter       = 10,
+    conv_cauchy_elems    = 100,
+    conv_cauchy_eps      = 1.0e-10,
+)
+
+conf.screen_history_info = ScreenHistoryInfo(
+    screen_output = [
+        "INNER_ITER",
+        "WALL_TIME",
+        "RMS_DENSITY",
+        "RMS_ENERGY",
+        "LIFT",
+        "DRAG"
+    ],
+)
+
+conf.io_file_info = IOFileInfo(
+    mesh_filename         = "mesh.su2",
+    mesh_format           = MeshFormat.SU2,
+    mesh_out_filename     = "mesh_out.su2",
+    solution_filename     = "solution_flow",
+    solution_adj_filename = "solution_adj",
+    tabular_format        = TabularFormat.CSV,
+    conv_filename         = "history.dat",
+    restart_filename      = "restart_flow",
+    restart_adj_filename  = "restart_adj",
+    volume_filename       = "flow",
+    volume_adj_filename   = "adjoint",
+    grad_objfunc_filename = "of_grad.dat",
+    surface_filename      = "surface_flow",
+    surface_adj_filename  = "surface_adjoint",
+)
+
+conf.to_file("model.cfg", force=True)
+```
+
+Before going to the next section, let's make a dry run for verification of configuration file:
+
+```{python}
+!SU2_CFD -d model.cfg
+```
+
+## Run simulation
+
+```{python}
+# !SU2_CFD model.cfg
+
+# Linux: maybe need to load MPI module first:
+# module load mpi/mpich-x86_64
+
+# Run in 4 cores:
+# !mpirun -n 4 SU2_CFD model.cfg
+# !mpiexec -n 4 SU2_CFD model.cfg
+
+# Run using all available hardware threads:
+# !mpirun --use-hwthread-cpus -parallel model.cfg
+
+# Use SU2 script to run in parallel:
+# !python3 -m parallel_computation -f model.cfg -n 2 -c COMPUTE
+```
+
+## Post-processing
+
+```{python}
+grid = pv.read("flow.vtu")
+# grid # uncomment to see mesh info
+```
+
+```{python}
+cpos = ((1.5, 0.4, 3.0),
+        (1.5, 0.4, 0.0),
+        (0.0, 0.0, 0.0))
+
+vbar = {
+    "vertical": True,
+    "title_font_size": 16,
+    "label_font_size": 12,
+    "position_x": 0.03,
+    "position_y": 0.10,
+    "color": "k",
+    "n_colors": 10,
+    "width": 0.07,
+    "height": 0.8,
+}
+hbar = {
+    "vertical": False,
+    "title_font_size": 16,
+    "label_font_size": 12,
+    "position_x": 0.1,
+    "position_y": 0.05,
+    "color": "k",
+    "n_colors": 10,
+    "width": 0.8,
+    "height": 0.1,
+}
+
+opts = {"pbr": False, "cmap": "viridis", "scalar_bar_args": vbar}
+
+lims1 = (100860, 101860)
+opts1 = {**opts}
+opts1["scalar_bar_args"]["fmt"] = "%.0f"
+contour1 = grid.contour(40, scalars="Pressure", rng=lims1)
+
+lims2 = (0.07, 0.13)
+opts2 = {**opts}
+opts2["scalar_bar_args"]["fmt"] = "%.2f"
+contour2 = grid.contour(40, scalars="Mach", rng=lims2)
+
+p = pv.Plotter(shape="1/1")
+p.renderer.set_background(color="w")
+
+p.subplot(0)
+p.add_mesh(grid.cast_to_unstructured_grid(), **opts1, scalars="Pressure", clim=lims1)
+p.add_mesh(contour1, color="k", line_width=1)
+
+p.subplot(1)
+p.add_mesh(grid.cast_to_unstructured_grid(), **opts2, scalars="Mach", clim=lims2)
+p.add_mesh(contour2, color="k", line_width=1)
+
+p.link_views()
+p.show(cpos=cpos)
+```

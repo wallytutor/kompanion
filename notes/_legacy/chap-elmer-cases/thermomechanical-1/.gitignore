@@ -1,0 +1,12 @@
+# Mesh:
+domain/*.msh
+domain/mesh.*
+domain/partitioning.*
+
+# Logs:
+log.*
+*.log
+convergence.dat
+
+# Results:
+results/

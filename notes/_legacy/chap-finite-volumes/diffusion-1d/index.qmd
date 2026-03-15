@@ -1,0 +1,832 @@
+# Diffusion in 1-D {#sec-diffusion-in-1-d}
+
+## Import toolbox
+
+```{python}
+from abc import ABC
+from sympy import symbols, init_printing
+from sympy import Eq as SymEq, expand, solve
+from pandas import DataFrame
+import casadi as cs
+import numpy as np
+
+init_printing(use_latex="mathjax")
+```
+
+## Introductory Fickean diffusion
+
+Assume a simple concentration-dependent diffusion in the absence of external driving forces; in this introduction we chose to *model* the diffusive flux through Fick's constitutive (first) law stated below, where $D$ is the diffusion coefficient that may depend on position $x$ and/or concentration $c$, *i.e.* $D\equiv{}D(x, c)$. It states that diffusive flux of an species has the composition gradient as a driver force; the negative sign indicates that diffusion occurs from high to low concentration regions.
+
+$$
+J=-D\dfrac{\partial{}c}{\partial{}x}
+$$
+
+We can anticipate here that this can be the case for simple diluted systems, but interactions between species must be considered in concentrated solutions, what is generalized by the *Irreversible Thermodynamics* by @Onsager1931 and @Onsager1931a. Here we emphasize again the word *model*: empirical observation has led scientists to *represent* reality through such an approximation; different models can be used for the same physics with their applicability limited to certain scenarios. Properly selecting an applicable model is the role of the researcher/engineer, what is outside our scope here; in what follows we will focus on *how to solve* balance equations for a given model.
+
+Simply put, diffusion equation solves for a local mass balance; and mathematically, a local balance leads to a divergence operation. Following this idea, it can be shown that the time derivative of concentration $c$ at one location is given by the divergence - which collapses to the spatial derivative - of the negative of mass flux given by Fick's (first) law (or in general any other constitutive law/model describing the mass flux); sometimes this form is called Fick's second law in the literature. Given the possible non-linearity introduced by diffusion coefficient $D$, the derivative in the right-hand side is not expanded. In Cartesian coordinate system, the governing diffusion equation in one dimension writes:
+
+$$
+\dfrac{\partial{}c}{\partial{}t}=
+\dfrac{\partial{}}{\partial{}x}
+\left(D\dfrac{\partial{}c}{\partial{}x}\right)
+$$
+
+This is the form of the diffusion equation that is discussed in what follows.
+
+## Internal discretization
+
+To solve the diffusion equation numerically, we employ the finite volume method (FVM). The first step to establish a FVM scheme consists of integrating the governing equation over a control volume $P$ from $w$ (west face) to $e$ (east face) and over a time interval from $0$ to $\tau$. The left-hand side is first integrated over time as it represents a *storage* term, meaning that it measures how much the average concentration changes in the control volume over the time-step. The right-hand side is a *flux* term, and using similar arguments its *natural* integration is performed over space. Also, the order of integration can be exchanged due to the smoothness assumptions considered here. For more details, please check @Patankar1980.
+
+$$
+\int_{w}^{e}\int_{0}^{\tau}
+\dfrac{\partial{}c}{\partial{}t}\:dt\:dx=
+\int_{0}^{\tau}\int_{w}^{e}
+\dfrac{\partial{}}{\partial{}x}
+\left(D\dfrac{\partial{}c}{\partial{}x}\right)\:dx\:dt
+$$
+
+This double integration allows us to convert the partial differential equation into a form suitable for numerical discretization. Evaluating the innermost integrals leads to:
+
+$$
+\int_{w}^{e}
+\left(c_{P}-c_{P}^{0}\right)\:dx=
+\int_{0}^{\tau}
+\left[
+    \left(D\dfrac{\partial{}c}{\partial{}x}\right)_{e}-
+    \left(D\dfrac{\partial{}c}{\partial{}x}\right)_{w}
+\right]
+\:dt
+$$
+
+Here, $c_P^0$ and $c_P$ represent the concentration at the center of the control volume $P$ at times $0$ and $\tau$, respectively. A convention of not adding a superscript to time $\tau$ is adopted here, unless required by the context. The right-hand side represents the net flux into the control volume through its east and west faces. Assuming the concentration is uniform within each control volume and the fluxes are constant over the time interval, we obtain:
+
+$$
+\left(c_{P}-c_{P}^{0}\right)
+\dfrac{\delta}{\tau}=
+\left(D\dfrac{\partial{}c}{\partial{}x}\right)_{e}-
+\left(D\dfrac{\partial{}c}{\partial{}x}\right)_{w}
+$$
+
+where $\delta$ is the width of the control volume. This equation represents a discrete time-step of the diffusion equation for a single control volume, where one still needs to specify a discretization of the gradients, *i.e.* how the fluxes are evaluated at a cell face. A simple introductory approach is to use forward differences, where the composition gradients are approximated as first differences between neighbors.
+
+Before starting we declare a few classes grouping the required symbols for what follows:
+
+```{python}
+class FvmVars:
+    """ General FVM parameters and variables. """
+    delta = symbols("delta")
+    tau = symbols("tau")
+```
+
+```{python}
+class BcVars:
+    """ Boundary condition parameters and variables. """
+    h = symbols("h")
+    c_inf = symbols("c_{\\infty}")
+```
+
+```{python}
+class CellVars:
+    """ Cell-centered coefficients and variables. """
+    c_0 = symbols("c_0")
+    c_E = symbols("c_E")
+    c_P = symbols("c_P")
+    c_W = symbols("c_W")
+
+    D_E = symbols("D_E")
+    D_P = symbols("D_P")
+    D_W = symbols("D_W")
+
+    c_G = symbols("c_G")
+    c_B = symbols("c_B")  # sort of cell (0-D cell)...
+
+    D_G = symbols("D_G")
+    D_B = symbols("D_B")
+
+    @staticmethod
+    def composition():
+        """Return all cell compositions as a list."""
+        return [
+            CellVars.c_0,
+            CellVars.c_E,
+            CellVars.c_P,
+            CellVars.c_W,
+            CellVars.c_G,
+            CellVars.c_B,
+        ]
+```
+
+```{python}
+class FaceVars:
+    """ Face-centered coefficients and variables. """
+    D_e = symbols("D_e")
+    D_w = symbols("D_w")
+    D_g = symbols("D_g")
+    D_b = symbols("D_b")
+
+    Fo_e = symbols("alpha_e")
+    Fo_w = symbols("alpha_w")
+    Fo_g = symbols("alpha_g")
+    Fo_b = symbols("alpha_b")
+```
+
+To approximate the aforementioned gradients, the next cell introduces the expressions for the fluxes at east and west faces. These helper functions ensure the order of arguments is consistent with the finite difference definition given above.
+
+```{python}
+def diffusion_flux(D, c_left, c_right, delta=FvmVars.delta):
+    """ Compute the (forward difference) diffusion flux between two points. """
+    return -D * (c_right - c_left) / delta
+
+
+def diffusion_flux_east(D=FaceVars.D_e, c_right=CellVars.c_E,
+                        delta=FvmVars.delta):
+    """ Compute the diffusion flux to the east cell. """
+    return diffusion_flux(D, CellVars.c_P, c_right, delta=delta)
+
+
+def diffusion_flux_west(D=FaceVars.D_w, c_left=CellVars.c_W,
+                        delta=FvmVars.delta):
+    """ Compute the diffusion flux to the west cell. """
+    return diffusion_flux(D, c_left, CellVars.c_P, delta=delta)
+```
+
+For standardizing equations as organized as $F(x)=0$ we override `sympy.Eq` with `StandardEquation` class:
+
+```{python}
+class StandardEquation(SymEq):
+    """ Standard LHS format of finite volume equation. """
+    def __new__(cls, lhs, rhs=0, **kwargs):
+        return SymEq.__new__(cls, expand(lhs), 0, **kwargs)
+
+    def __truediv__(self, other):
+        return StandardEquation(self.lhs / other)
+
+    def __rtruediv__(self, other):
+        return StandardEquation(other / self.lhs)
+
+    def __mul__(self, other):
+        return StandardEquation(self.lhs * other)
+
+    def __rmul__(self, other):
+        return StandardEquation(other * self.lhs)
+
+    def subs(self, *args, **kwargs):
+        """ Substitute into the equation LHS. """
+        return StandardEquation(self.lhs.subs(*args, **kwargs))
+
+    def solve_for(self, var):
+        """ Solve the equation for the specified variable. """
+        return solve(self, var)
+
+    def coefficients(self, variables=None, op=lambda x: x):
+        """ Extract coefficients for the specified variables. """
+        variables = CellVars.composition() if variables is None else variables
+        variables = [v for v in variables if v in self.lhs.free_symbols]
+        return {var: op(self.lhs.coeff(var)) for var in variables}
+
+    def tabulate(self, **kwargs):
+        """ Helper to display a table of coefficients for the problem. """
+        coefs = self.coefficients(**kwargs).items()
+        return DataFrame(coefs, columns=["Variable", "Coefficient"])
+
+
+# Alias:
+Eq = StandardEquation
+```
+
+Below we compose the diffusion equation with help of [SymPy](https://docs.sympy.org/latest/index.html) and the above extensions. Notice that when compositing the right-hand side `rhs` we multiply by -1 because we are integrating the negative of the fluxes.
+
+```{python}
+J_w = diffusion_flux_west()
+J_e = diffusion_flux_east()
+
+lhs = (CellVars.c_P - CellVars.c_0) * FvmVars.delta / FvmVars.tau
+rhs = -1 * (J_e - J_w)
+
+eq = Eq(lhs - rhs)
+eq
+```
+
+Here, $c_E$ and $c_W$ are the concentrations at the eastern and western neighboring control volumes, respectively, and $D_e$ and $D_w$ are the effective diffusion coefficients at the east and west faces of the control volume. @Patankar1980 shows that the evaluation of these diffusion coefficients is not arbitrary and for conservation (here the continuity of flux across the interface) to be respected one must take the harmonic mean of neighboring cells:
+
+$$
+D_{k}=2\frac{D_{i}D_{j}}{D_{i}+D_{j}}
+$$
+
+Or as code:
+
+```{python}
+def harmonic_mean(a, b):
+    """ Compute the harmonic mean of two values. """
+    return 2 * a * b / (a + b)
+```
+
+A final step to get a linear form of the problem is multiplying both sides by $\tau/\delta$ and rearranging terms. This form clearly shows the contribution of each neighboring concentration to the rate of change at point P. The coefficient of $c_P$ is negative, representing the outflow from the central node, while the coefficients of $c_E$ and $c_W$ are positive, representing inflow from the neighboring nodes.
+
+```{python}
+eq = eq * FvmVars.tau / FvmVars.delta
+eq
+```
+
+Introducing dimensionless coefficients $\alpha_{k}$, the [Fourier number](https://en.wikipedia.org/wiki/Fourier_number) for mass transfer (more generally referred to as $\mathcal{Fo}_{m}$), we obtain the final discrete form. It represents the dimensionless diffusion number, which determines the stability and accuracy of the numerical scheme. The subscript $k$ refers to either the east ($e$) or west ($w$) face.
+
+$$
+\alpha_{k}=\dfrac{\tau{}D_{k}}{\delta^2}
+$$
+
+This definition is provided below for helping with the replacements that follow.
+
+```{python}
+def fourier_number(D, tau=FvmVars.tau, delta=FvmVars.delta):
+    """ Compute the Fourier number for the given parameters. """
+    return D * tau / delta**2
+
+
+SUBS_FOURIER = [
+    (fourier_number(FaceVars.D_e), FaceVars.Fo_e),
+    (fourier_number(FaceVars.D_w), FaceVars.Fo_w),
+    (fourier_number(FaceVars.D_g), FaceVars.Fo_g),
+    (fourier_number(FaceVars.D_b), FaceVars.Fo_b),
+]
+```
+
+Performing the replacements with help of SymPy:
+
+```{python}
+eq = eq.subs(SUBS_FOURIER)
+eq
+```
+
+Notice that so far nothing has been said with respect to the instant at which the right-hand side is evaluated. The obvious solution would be to take $c_{0}\equiv{}c_{P}^{0}$ as it is currently known, but for numerical stability reasons we will continue here with an implicit scheme so that all values other than $c_{0}$ are defined to be evaluated at time $\tau$, *i.e.* $c_{K}\equiv{}c_{K}^{\tau}$, in phase with the notation convention introduced above.
+
+Because it is more convenient for symbolic manipulations with SymPy, the problem is currently written as $F(c)=0$, *i.e.* all elements are on the left-hand side. Care must be taken to properly interpret the signs of the coefficients below.
+
+```{python}
+coefs = eq.coefficients()
+coefs
+```
+
+Because it is more readable, a helper utility is provided to tabulate them:
+
+```{python}
+eq.tabulate()
+```
+
+## Boundary conditions
+
+So far all we have derived are the internal balances of the system, we still lack proper boundary conditions. It should be evident by now that we have formulated a tridiagonal matrix for representing the 1-D system: there are 3 unknowns at step $\tau$ ($c_W$, $c_P$, and $c_E$) and a currently known *field* $c_0$.
+
+In what follows we will workout the three families of boundary conditions: Dirichlet (type 1), Neumann (type 2), and the more general Robin (type 3). Following this sequence will create the required intuition for deriving the progressively more complex conditions. In practice, for diffusion in solids often only the implementation of Robin conditions is required, as it will be discussed later. Our goal at presenting types 1 and 2 is simply to introduce the tooling required for working out type 3 boundary condition; they will not be treated in full detail, leaving the full discussion for later.
+
+The implementation of boundary conditions requires special treatment of the control volumes at the domain boundaries. The general form for a boundary control volume is:
+
+$$
+\left(c_{P}-c_{P}^{0}\right)
+\dfrac{\delta}{\tau}=
+\text{flux}_{\text{interior}} - \text{flux}_{\text{boundary}}
+$$
+
+It is worth here repeating the partial development derived above for an analogy:
+
+$$
+\left(c_{P}^{\tau}-c_{P}^{0}\right)
+\dfrac{\delta}{\tau}=
+D_{e}\dfrac{c_{E}-c_{P}}{\delta}-
+D_{w}\dfrac{c_{P}-c_{W}}{\delta}
+$$
+
+Please, notice that from now on we make use of class `StandardProblem` for the end of representing a canonical discrete equation. It encodes the results obtained in the previous section and is also repeated below:
+
+```{python}
+class StandardProblem:
+    """ Standard format of finite volume diffusion problem in 1-D. """
+    @staticmethod
+    def get_lhs(**kw):
+        """ Standard format of inner LHS of problem. """
+        return (CellVars.c_P - CellVars.c_0) * FvmVars.delta / FvmVars.tau
+
+    @staticmethod
+    def get_rhs(**kw):
+        """ Standard format of inner RHS of problem."""
+        J_e = kw.get("J_e", diffusion_flux_east())
+        J_w = kw.get("J_w", diffusion_flux_west())
+        return -1 * (J_e - J_w)
+
+    @staticmethod
+    def full_expression(subs_lhs=[], subs_rhs=[], subs_fourier=False, **kw):
+        """ Canonical form of problem set as `f(c)=0`. """
+        lhs = StandardProblem.get_lhs(**kw).subs(subs_lhs)
+        rhs = StandardProblem.get_rhs(**kw).subs(subs_rhs)
+
+        eq = StandardEquation(lhs - rhs)
+        eq = eq * FvmVars.tau / FvmVars.delta
+
+        if subs_fourier:
+            eq = eq.subs(SUBS_FOURIER)
+
+        return eq
+```
+
+```{python}
+StandardProblem.full_expression()
+```
+
+## Type 1 BC - Dirichlet {#sec-type-1-bc-dirichlet}
+
+Let's start by the Dirichlet, or fixed concentration, boundary condition (type 1), for which the concentration at the boundary face is prescribed, *i.e.* $c_{\text{B}} = c_{\text{prescribed}}$. Notice that before using this we need to make a choice regarding the computational grid (mesh); you could have half-volumes on boundaries, fictitious volumes (sometimes called ghost cells), or immersed nodes over the boundary.
+
+Partial control volumes on boundaries are not desirable as they introduce implementation complexities in code and lack conservation (especially in higher dimensions), see a discussion by @Maliska2004 (section 3.7) for details. In what follows we discuss immersed nodes and extended domains with *ghost* cells. This last solution implies considerably more unknowns in 3-D problems, for which different variants of FVM will be discussed at a more advanced point.
+
+**Immersed boundary:** Assume the last cell on *west* boundary is indexed as $P$; over its *west* boundary we find a node where prescribed composition $c_{B}$ is enforced - and the corresponding diffusion coefficient $D_{b}$. Notice that this node does not belong to the cell, nor represents a half-cell, but lies over its boundary. To keep it simple, let's assume $c_{B}$ is constant (time-dependency would slightly complicate the development and it is worth postponing it to the algorithm development discussion), so keeping our fully implicit scheme leads to We start by computing the mass flux from the boundary node to the first cell center; this flux is computed using half-cell length $\delta/2$ for the derivative approximation.
+
+```{python}
+J_w = diffusion_flux_west(FaceVars.D_b, CellVars.c_B, FvmVars.delta/2)
+J_w
+```
+
+This expression of flux is used as replacement for the *west* boundary in the full equation:
+
+```{python}
+eq = StandardProblem.full_expression(J_w=J_w, subs_fourier=True)
+eq
+```
+
+The coefficients for the first row of the matrix problem are summarized below:
+
+```{python}
+eq.tabulate()
+```
+
+There are two main features in this equation: the coefficient of cell $P$ now depends on the prescribed composition through $\alpha_{b}$ and a modification is applied to the right-hand side at boundaries where solution is prescribed. That's a good reminder that the array of coefficients must correspond to the number of interfaces, not cells - more on this later.
+
+The immersed boundary approach presented above is simple. Nonetheless, it requires a different calculation of boundary nodes with respect to the volume, but that comes with the advantage that no additional equation has been added to the system. Let's now explore the extended domain alternative.
+
+**Ghost cell:** As above, assume the last cell on *west* boundary is indexed as $P$. Consider another *ghost* cell to its left being denoted $G$ (fictitious cell in place of $W$). The node $c_{B}$ where composition is enforced and the same details presented above still apply here. Here we repeat the immersed node flux computation and do the same with respect to *ghost* cell $G$.
+
+Our goal is to identify an equation for $c_{G}$ so that it is solved along with the interior points and ensures the same flux as the immersed node. To identify the compatible *ghost* composition we equate the fluxes by both definitions and solve for $c_{G}$. The following steps repeat what we have seem so far and should be self-explanatory.
+
+```{python}
+J_w1 = diffusion_flux_west(FaceVars.D_b, CellVars.c_B, FvmVars.delta/2)
+J_w2 = diffusion_flux_west(FaceVars.D_g, CellVars.c_G, FvmVars.delta)
+
+Eq(J_w1 - J_w2).tabulate()
+```
+
+Care must be taken for interpreting the above result; here $c_{G}$ takes the diagonal position and $c_{P}$ is the first *east* cell in the first row of the problem's matrix. There is no previous state (no coefficient on $c_{0}$), but a source term based on $c_{B}$ that must be placed on the right-hand side for solution. This is the equation we are looking for to extend the system.
+
+Since this equation has $D_{g}$ as a coefficient, an initial guess for $c_{G}$ is required. The boundary $B$ being the same interface for evaluation of $D_{g}$, for both fluxes to equate one needs to make sure the same diffusivity is evaluated there. Thus we make $D_{b}\equiv{}D_{g}$, what seems physically reasonable but so far not supported by any mathematical argument:
+
+```{python}
+c_G_sol = Eq(J_w1 - J_w2).solve_for(CellVars.c_G)[0]
+c_G_sol = c_G_sol.subs(FaceVars.D_b, FaceVars.D_g)
+c_G_sol
+```
+
+This simply says that the composition is linearly extrapolated, with the distances from cell centers to the boundary being used as weighting factors. It ensures the problem is initialized the same as the immersed boundary as we made $D_g=D_b$.
+
+::: {.callout-caution title="Common mistake"}
+One could think about solving for $c_G$ and using the result in the standard balance equation, but doing so falls back to the immersed boundary approach. Replacing the solution in `J_w2` simply gets back to the initial point and does not produce one extra equation!
+
+```{python}
+J_w = J_w2.subs(CellVars.c_G, c_G_sol)
+
+eq = StandardProblem.full_expression(J_w=J_w, subs_fourier=True)
+eq.tabulate()
+```
+:::
+
+## Type 2 BC - Neumann
+
+Next, let's handle Neumann boundary condition (type 2). For a fixed flux boundary condition, the flux at the boundary is prescribed at $q_{B}$. A special case arises when one imposes zero flux (impermeable boundary for mass transfer, adiabatic boundary for heat transfer) where $q_{B}=0$. It is worthless formulating the problem for this case as the equation is trivial, so we will assume a general $q_{B}$ in what follows.
+
+$$
+-D\dfrac{\partial{}c}{\partial{}x}\bigg|_{B} = q_{B}
+$$
+
+When dealing with Neumann boundary conditions one must take care of the sign of fluxes, especially in 1-D. In higher dimensions, when applying Gauss theorem to convert the volume integral into a surface integral one normally works with vector calculus formulations; here we have dropped the vector notation when integrating over $dx$, but the concept of surface orientation must be recalled at this point. At the *west* boundary the flux into domain is positive and conversely, at the *east* boundary the flux out of domain is positive.
+
+$$
+\begin{aligned}
+\text{(west)}\qquad &
+\left(c_{P}^{\tau}-c_{P}^{0}\right)\dfrac{\delta}{\tau}=
+D_{e}\dfrac{c_{E}-c_{P}}{\delta} + q_{B}
+\\[12pt]
+\text{(east)}\qquad &
+\left(c_{P}^{\tau}-c_{P}^{0}\right)\dfrac{\delta}{\tau}=
+-q_{B} - D_{w}\dfrac{c_{P}-c_{W}}{\delta}
+\end{aligned}
+$$
+
+We will not elaborate more as the most relevant condition represented by this class, the impermeable condition, can be represented with a type 3 boundary condition by setting the mass transfer coefficient $h$ to zero.
+
+## Type 3 BC - Robin
+
+Finally, we generalize the above discussion for a Robin boundary condition (type 3). Also known as a convective or mixed boundary condition. In this case the flux is proportional to the concentration difference between the boundary and a reference external composition $c_{\infty}$. This often models mass transfer between a reacting fluid and a solid, but the discussion of boundary layer formation is out of the present scope and we summarize it simply by the mass transfer coefficient $h$.
+
+$$
+-D\dfrac{\partial c}{\partial x}\bigg|_{B} = h(c_{B} - c_{\infty})
+$$
+
+::: {.callout-note title="Fallback to other kinds"}
+In fact, this is not the canonical form of such a boundary condition, but the reasonable engineering statement. Below we transform the equation to a format more commonly found the in mathematical literature, where all elements should be interpreted as being evaluated at boundary $B$.
+
+$$
+\alpha{}c + \beta\dfrac{\partial{}c}{\partial{}x} = g
+$$
+
+where
+
+$$
+\alpha = 1
+\quad\text{and}\quad
+\beta = \dfrac{D}{h}
+\quad\text{and}\quad
+g = c_{\infty}
+$$
+
+Under this form we can easily jump to conclusions with respect to its relationship to the other types of boundary conditions. First, simply by setting $\beta=0$ we find ourselves with a type 1 condition where $c=\alpha^{-1}g$ - or in engineering notation $c_{B}=c_{\infty}$; this happens as mass transfer efficiency is ideal, as $\beta\to{}0$ when $h\to{}\infty$. In computational practice it is enough to enforce that $h\gg{}D$ to approach a Dirichlet boundary condition.
+
+A type 2 condition would be established with $\alpha=0$, but that is not possible straight from the way we have posed the equation. By multiplying everything by $h$ and setting its value to zero we get to an impermeable Neumann condition, the only one we consider here for the mass transfer context (because in general it is not simple to enforce a mass uptake by a material).
+
+That said, type 3 condition is *all we need* for a first solid state diffusion solver. As for the type 2 condition, we need to take care of signs here.
+:::
+
+The (scalar) convention we used so far implies a convective flux that is positive *outwards* the domain, $J=h(c_{b}-c_{\infty})>0$ if $c_{b}>c_{\infty}$, *i.e.*, the chemical potential in the solid is higher than the environment. The *west* boundary being oriented towards the $-y$ axis, we need to account for its sign; in later chapters we will see that the boundary condition reasoning is actually simpler to follow in higher dimensions as we implicitly treat the face normal vectors through the inner product.
+
+```{python}
+def convection_flux(cb, h=BcVars.h, c_inf=BcVars.c_inf):
+    """ Compute the convection flux between environment and surface. """
+    return h * (c_inf - cb)
+```
+
+```{python}
+q_bw = -convection_flux(CellVars.c_B)
+q_be = +convection_flux(CellVars.c_B)
+```
+
+In what follows we derive the immersed boundary equation for type 3 condition. The extension to *ghost* cells is trivial and can be worked out with the ideas presented in section @sec-type-1-bc-dirichlet. We solve for $c_{B}$ at both sides of the domain by equating the convective flux to the one established internally with the immersed boundary node:
+
+```{python}
+J_w = diffusion_flux_west(FaceVars.D_b, CellVars.c_B, FvmVars.delta/2)
+J_e = diffusion_flux_east(FaceVars.D_b, CellVars.c_B, FvmVars.delta/2)
+
+c_Bw = Eq(J_w - q_bw).solve_for(CellVars.c_B)[0]
+c_Be = Eq(J_e - q_be).solve_for(CellVars.c_B)[0]
+```
+
+This leads to
+
+```{python}
+c_Bw
+```
+
+and
+
+```{python}
+c_Be
+```
+
+If we take, *e.g.*, the *west* boundary equation with the previous definition of flux evaluated from the immersed boundary node, we retrieve the corresponding equation for the system. Notice that $c_{B}$ is a known value at the current iteration, so in solution it can be moved to the right-hand side and act as a flux term. This gives a grasp of the solution algorithm that makes the subject for the next section.
+
+```{python}
+eq = StandardProblem.full_expression(J_w=J_w, subs_fourier=True)
+eq.tabulate()
+```
+
+## Arbitrary grid spacing
+
+For establishing the equations for an arbitrary grid spacing in 1-D, we move forward to a more general derivation. Instead of expressing the problem over a single coordinate, we introduce the control volume $V$ that will be revisited again when solving for 3-D geometries. For convenience the minus sign is moved outside the integral in what follows.
+
+$$
+\int_{V}\int_{0}^{\tau}
+\dfrac{\partial{}c}{\partial{}t}\:dt\:dV=
+-\int_{0}^{\tau}\int_{V}
+\nabla\cdot\vec{J}\:dV\:dt
+$$
+
+The inner integration on the right-hand side is treated first. Using the divergence theorem, we convert the volume integral of the divergence of flux into a surface integral over the control volume's faces. Since in FVM we are dealing with a finite number of faces, we can express the surface integral as a sum over all faces $f$ of the control volume, where $J_{f}$ is the flux through face $f$ and $A_{f}$ is the area of that face.
+
+$$
+\int_{V}\nabla\cdot\vec{J}\:dV=
+\int_{S}\vec{J}\cdot\vec{n}\:dS=
+\sum_{f}J_{f}A_{f}
+$$
+
+Substituting this result back into the original equation and integrating the left-hand side over time gives:
+
+$$
+\int_{V}\left(c_{P}-c_{P}^{0}\right)\:dV=
+-\int_{0}^{\tau}\sum_{f}J_{f}A_{f}\:dt
+$$
+
+And finally integrating the last level:
+
+$$
+\left(c_{P}-c_{P}^{0}\right)\dfrac{V}{\tau}=
+-\vec{J}_{f}\cdotp\vec{A}_{f}
+$$
+
+In 1-D, there are only two faces: the west face ($w$) and the east face ($e$). Thus, the summation over faces simplifies to just these two contributions:
+
+$$
+\left(c_{P}-c_{P}^{0}\right)\dfrac{V}{\tau}=
+    -J_{w}(-\hat{i})A_{w}(-\hat{i})
+    -J_{e}(+\hat{i})A_{e}(+\hat{i})
+$$
+
+Notice that as we are dealing with the actual surfaces, the signs of the terms will be naturally handled by the flux definitions. The final step consists of substituting the expressions for the diffusive fluxes at each face, which can be approximated using finite differences. Below we account already for the face orientation (sign). For the west face:
+
+$$
+-J_{w}(-\hat{i})A_{w}(-\hat{i})=D_{w}\dfrac{c_{W}-c_{P}}{\delta_{w}}A_{w}
+$$
+
+And for the east face:
+
+$$
+-J_{e}(+\hat{i})A_{e}(+\hat{i})=D_{e}\dfrac{c_{E}-c_{P}}{\delta_{e}}A_{e}
+$$
+
+Substituting these flux expressions back into the integrated equation gives:
+
+$$
+\left(c_{P}-c_{P}^{0}\right)\dfrac{V}{\tau}=
+D_{w}\dfrac{c_{W}-c_{P}}{\delta_{w}}A_{w}
+D_{e}\dfrac{c_{E}-c_{P}}{\delta_{e}}A_{e}
+$$
+
+Rearranging terms leads to the final discrete equation for an arbitrary grid spacing in 1-D implicit formulation:
+
+$$
+-\dfrac{D_{w}A_{w}}{\delta_{w}}c_{W}
++\left(
+    \dfrac{V}{\tau}+
+    \dfrac{D_{w}A_{w}}{\delta_{w}}+
+    \dfrac{D_{e}A_{e}}{\delta_{e}}
+\right)c_{P}
+-\dfrac{D_{e}A_{e}}{\delta_{e}}c_{E}=
+\dfrac{V}{\tau}c_{P}^{0}
+$$
+
+or assuming a unit cross-sectional area $A$ so that $V=A\delta_{P}$, we have:
+
+$$
+-\dfrac{D_{w}\tau}{\delta_{w}\delta_{P}}c_{W}
++\left(
+    1 +
+    \dfrac{D_{w}\tau}{\delta_{w}\delta_{P}}+
+    \dfrac{D_{e}\tau}{\delta_{e}\delta_{P}}
+\right)c_{P}
+-\dfrac{D_{e}\tau}{\delta_{e}\delta_{P}}c_{E}=
+c_{P}^{0}
+$$
+
+For the boundary conditions we apply the same approach as before:
+
+$$
+-J_{b}(-\hat{i})A_{b}(-\hat{i})=
+D_{b}\dfrac{c_{B}-c_{P}}{\frac{1}{2}\delta_{P}}A_{b}=
+hA_{b}(c_{\infty}-c_{B})
+$$
+
+Before simplifying this expression to find out $c_{B}$ it is worth introducing the [Sherwood number](Sherwood%20number%20-%20Wikipedia) $\mathcal{Sh}$ defined as follows, where $L$ represents a characteristic length of the problem and $D$ the diffusion coefficient; here $L=\delta_{P}/2$ as half-cell length was used in flux computations and
+
+$$
+\mathcal{Sh}=\dfrac{hL}{D}
+\quad\text{and}\quad
+\mathcal{Sh}_{b}=\dfrac{h\delta_{P}}{2D_{b}}
+$$
+
+leading to the final boundary node concentration
+
+$$
+c_{B}=
+\dfrac{c_{P}+\mathcal{Sh}_{b}\:c_{\infty}}{1 + \mathcal{Sh}_{b}}
+$$
+
+## Solution algorithm
+
+Using a segregated solution of non-linear boundaries or immersed nodes:
+
+$$
+\begin{bmatrix}
+A_{(0)} & A_{E}  & 0      &        &        & \dots  & 0      & 0       \vphantom{\dfrac{1}{1}}\\
+A_{W}   & A_{P}  & A_{E}  &        &        & \dots  & 0      & 0       \vphantom{\dfrac{1}{1}}\\
+0       & A_{W}  & A_{P}  & A_{E}  & 0      & \dots  & 0      & 0       \vphantom{\dfrac{1}{1}}\\
+0       & 0      & \ddots & \ddots & \ddots & \ddots & \vdots & \vdots  \vphantom{\dfrac{1}{1}}\\
+\vdots  & \vdots & \ddots & \ddots & \ddots & \ddots & 0      & 0       \vphantom{\dfrac{1}{1}}\\
+0       & 0      & \dots  & 0      & A_{W}  & A_{P}  & A_{E}  & 0       \vphantom{\dfrac{1}{1}}\\
+0       & 0      & \dots  & 0      & 0      & A_{W}  & A_{P}  & A_{E}   \vphantom{\dfrac{1}{1}}\\
+0       & 0      & \dots  & 0      & 0      & 0      & A_{W}  & A_{(n)} \vphantom{\dfrac{1}{1}}\\
+\end{bmatrix}\cdotp
+%--------------------------------------
+\begin{bmatrix}
+c_{(0)}^{\tau}   \vphantom{\dfrac{1}{1}}\\
+c_{(1)}^{\tau}   \vphantom{\dfrac{1}{1}}\\
+c_{(2)}^{\tau}   \vphantom{\dfrac{1}{1}}\\
+c_{(3)}^{\tau}   \vphantom{\dfrac{1}{1}}\\
+\vdots           \vphantom{\dfrac{1}{1}}\\
+c_{(N-3)}^{\tau} \vphantom{\dfrac{1}{1}}\\
+c_{(N-2)}^{\tau} \vphantom{\dfrac{1}{1}}\\
+c_{(N-1)}^{\tau} \vphantom{\dfrac{1}{1}}\\
+\end{bmatrix}=
+%--------------------------------------
+\begin{bmatrix}
+c_{(0)}^{0}   \vphantom{\dfrac{1}{1}}\\
+c_{(1)}^{0}   \vphantom{\dfrac{1}{1}}\\
+c_{(2)}^{0}   \vphantom{\dfrac{1}{1}}\\
+c_{(3)}^{0}   \vphantom{\dfrac{1}{1}}\\
+\vdots        \vphantom{\dfrac{1}{1}}\\
+c_{(N-3)}^{0} \vphantom{\dfrac{1}{1}}\\
+c_{(N-2)}^{0} \vphantom{\dfrac{1}{1}}\\
+c_{(N-1)}^{0} \vphantom{\dfrac{1}{1}}\\
+\end{bmatrix}+
+%--------------------------------------
+\begin{bmatrix}
+B_{(0)}   \vphantom{\dfrac{1}{1}}\\
+0         \vphantom{\dfrac{1}{1}}\\
+0         \vphantom{\dfrac{1}{1}}\\
+0         \vphantom{\dfrac{1}{1}}\\
+\vdots    \vphantom{\dfrac{1}{1}}\\
+0         \vphantom{\dfrac{1}{1}}\\
+0         \vphantom{\dfrac{1}{1}}\\
+B_{(N-1)} \vphantom{\dfrac{1}{1}}\\
+\end{bmatrix}
+$$
+
+## Python prototype
+
+::: callout-note
+## Draft 1 - cell-node approach
+:::
+
+```{python}
+class Cell:
+    __slots__ = ("_x",)
+
+    def __init__(self, center) -> None:
+        self._x = center
+```
+
+```{python}
+class NodeCell(Cell):
+    def __repr__(self) -> str:
+        return f"<NodeCell x={self._x} />"
+```
+
+```{python}
+class LineCell(Cell):
+    __slots__ = ("_d",)
+
+    def __init__(self, center, length) -> None:
+        super().__init__(center)
+        self._d = length
+
+    def __repr__(self) -> str:
+        return f"<LineCell x={self._x} d={self._d} />"
+```
+
+```{python}
+class CellFace:
+    __slots__ = ("_center", "_normal",)
+
+    def __init__(self, center, normal) -> None:
+        self._center = center
+        self._normal = normal
+```
+
+```{python}
+class CellFace1D(CellFace):
+    def __init__(self, center, normal) -> None:
+        super().__init__(center, normal)
+
+    def __repr__(self) -> str:
+        return f"<CellFace1D center={self._center} normal={self._normal} />"
+```
+
+```{python}
+class Grid1D:
+    __slots__ = ["_cells", "_faces"]
+
+    def __init__(self, x):
+        if len(x) < 3:
+            raise ValueError("At least 3 cells are required!")
+
+        # TODO create an networkx unstructured graph.
+
+        # Coordinates of cell faces (first and last coordinate are
+        # implicitly the boundaries of the system).
+        f = np.hstack((x[0], (x[2:-1] + x[1:-2]) / 2, x[-1]))
+
+        # Cell lengths are simply the distance between faces:
+        L = f[1:] - f[:-1]
+
+        # Create inner cells (LineCell objects):
+        inner = map(lambda a: LineCell(*a), zip(x[1:-1], L[:]))
+
+        # Stack boundaries and inner cells:
+        self._cells = [NodeCell(x[0]), *inner, NodeCell(x[-1])]
+
+        # Assembly faces:
+        self._faces = [CellFace1D(g, +1) for g in f[1:]]
+        self._faces.insert(0, CellFace1D(f[0], -1))
+```
+
+```{python}
+Lx = 1.00
+dx = 0.1
+
+xc1 = dx/2
+xcn = Lx - dx/2 + 0.01*dx
+
+x = np.hstack((0, np.arange(xc1, xcn, dx), Lx))
+
+grid = Grid1D(x)
+for c in grid._faces:
+    print(c)
+```
+
+```{python}
+x = np.array(symbols("x:10"))
+
+grid = Grid1D(x)
+for c in grid._cells:
+    print(c)
+
+for c in grid._faces:
+    print(c)
+```
+
+::: callout-note
+## Draft 2 - OpenFOAM approach
+:::
+
+```{python}
+Coordinate = tuple[float, ...]
+
+
+class GridGraph(ABC):
+    """ A computational mesh similar to the one employed by OpenFOAM.
+
+    References:
+    - https://doc.cfd.direct/notes/cfd-general-principles/computational-mesh
+    - https://doc.cfd.direct/openfoam/user-guide-v13/mesh-files
+    """
+    __slots__ = (
+        "vertex", # a list of every vertex used to define all faces;
+        "faces",  # a list of faces, each defined by a sequence of vertex indices;
+        "owner",  # a list of owner cell indices associated with the faces;
+        "neigh",  # a list of neighbour cell indices associated with faces;
+        "patches" # grouping boundary faces into a set of patches.
+    )
+    def __init__(self, *args, **kwargs) -> None:
+        self.vertex: list[Coordinate] = []
+        self.faces: list[int] = []
+        self.owner: list[int] = []
+        self.neigh: list[int] = []
+        self.patches: dict[int, list[int]] = []
+
+
+class GridGraph1D(GridGraph):
+    """ One dimensional implementation of GridGraph. """
+    def __init__(self, *args, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
+
+        (xf,) = args
+
+        self.vertex = xf
+```
+
+First we define the $x$ coordinates of faces in grid:
+
+```{python}
+Lx = 1.00
+dx = 0.1
+
+xf = np.arange(0, Lx+dx/2, dx)
+```
+
+For a pseudo-one-dimensional mesh we need each point over $x$ to actually be a face of unit area; this can be accomplished, for instance, by surrounding the axis with a unit square such as provided in the pseudo-code below:
+
+```
+0: (x, -1/2, -1/2)
+1: (x, +1/2, -1/2)
+2: (x, -1/2, +1/2)
+3: (x, +1/2, +1/2)
+```
+
+```{python}
+square = [
+    (-1/2, -1/2),
+    (+1/2, -1/2),
+    (-1/2, +1/2),
+    (+1/2, +1/2),
+]
+
+x =  [(xf_i, y, z) for xf_i in xf for (y, z) in square]
+x
+```
+
+```{python}
+# grid = GridGraph1D(xf)
+# grid.vertex
+```

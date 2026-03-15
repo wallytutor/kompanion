@@ -1,0 +1,12 @@
+# Quarto artifacts:
+.quarto/
+.jupyter_cache/
+_site/
+_book/
+site_libs/
+**/*.quarto_ipynb
+**/*_files/
+*.html
+index.*
+!index.qmd
+/.quarto/

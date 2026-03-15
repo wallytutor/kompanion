@@ -1,0 +1,42 @@
+project:
+  type: book
+
+execute:
+  cache:   true
+  echo:    false
+  warning: false
+
+bibliography: references.bib
+
+book:
+  title: "Kompanion"
+  author: "Walter Dal'Maz Silva"
+  date: "today"
+  sidebar:
+    style: "docked"
+    search: true
+    collapse-level: 1
+
+  chapters:
+    - index.qmd
+
+    - part: "Computing"
+      chapters:
+        - computing/portable.qmd
+
+    - references.qmd
+
+format:
+  html:
+    highlight-style: github
+    theme:
+      - pulse
+
+  pdf:
+    highlight-style: github
+    documentclass: scrreprt
+    papersize: a4
+    mainfont: "Latin Modern Sans"
+    sansfont: "Latin Modern Sans"
+    geometry:
+      - margin=25mm

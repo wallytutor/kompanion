@@ -1,0 +1,98 @@
+# Kompanion {.unnumbered}
+
+This it the *Kompanion companion* notes!
+
+Kompanion is a portable setup toolbox for working in Scientific Computing under Windows. It is designed to be used in a laptop with no or minor administrator rights, and it allows you to install and use a wide range of tools and libraries for scientific computing without the need for a full installation.
+
+**Important:** before using this, please be aware that your company/university probably forbids the use of portable tools outside sandboxed systems. It is your responsability to use this toolbox only in systems where you are allowed to. The developper does not hold any resposibility on your failure to respect your local regulations.
+
+## Foreword
+
+For many years I have been trying to *work*... well, when you are in scientific computing you quickly discover that IT knows nothing about it and even in academic settings these guys are unaware of your needs. Those who are supposed to help you thrive are actually stopping you from even trying to do things. The *corporate* rules are too restrictive for any creative mind; *governance* means failure.
+
+As a natural rebel, I learned everything to by-pass rules. Early in my career, when I was working only in Linux systems, that was pretty easy as you can compile your code and that is not against the rules at all in most settings. That allowed me to develop a solid background in compiling the code of others, what is not always trivial. When reading the *README* and *INSTALL* projects of major scientific computing projects, you quickly realize the inconsistencies in procedures and the available flags for compilation. When faced many and many times with this sort of issue, you are obliged to master at least `Makefiles` and `CMakefiles`. The classical `Makefiles` may be obscure with some macro expansions doing weird stuff, while `CMakefiles` can be so huge that it takes years to fully create a grasp of them.
+
+Next, when moving into the corporate world, you will at some point be forced to go into Windows, and that was the case for me too. About 10 years ago, before the *big-bullshit era* of AI, the scientific computing for Windows was pretty poor. Even Python was quite limited, you most certainly needed to use Anaconda at that time. Most scientific libraries are harder to compile under Windows and you will probably learn about Cygwin and MSYS2 to try to overcome the issues, as getting a proper license of Windows compiler will probably be difficult unless that is your core job as a developer.
+
+The other part of the nightmare concerns *PortableApps*: you can't simply trust those packages, and you don't want to get in trouble by bringing some viruses home. To be avoided at all costs. That's when you learn that many installers are simply zip packages and that you can extract them somewhat. It was that that gave rise to *Kompanion* (it had so many names and repositories over the years, but now we will stick with it): allow people to do scientific computing in a laptop with no or minor (needed to run codes in parallel) administrator rights. I discuss about that in more detail in a dedicated section @sec-portable, and I strongly encourage you to read that to understand a bit what is happening under `kompanion.ps1` script without reading its thousands lines of *copy-paste* code.
+
+## Installation
+
+### Before you start
+
+The minimal Kompanion setup includes a Python and Rust environment, Git version control and Visual Studio code. If that's all you need, simply open a PowerShell terminal (preferred over the legacy *Windows PowerShell*) at this directory and run `.\kompanion.ps1` (or `.\kompanion.ps1 -RebuildOnStart` if the first run fails) to install the defaults. In most cases this will work out of the box, as the links for these tools are from well known sources and are generally not filtered by corporate firewalls. If that fails, you might need to build Kompanion elsewhere and drop it in a USB drive to transfer to your workstation.
+
+Installing the basic setup before tweaking the packages you need is a good choice, as generally you will have no proper code editor (other than the trashy Notepad) to configure `kompanion.json` file, as described in what follows. Also, if there are any errors, a minimal configuration will produce less messages and it will be easier to debug.
+
+After succeding the preliminary installation, you can start tweaking the packages you need. For that, run `.\kompanion.ps1 -RunVsCode` from this directory. That will start VSCode with the current project open. Under `.kompanion` directory you will find a `kompanion-sample.json` which allows one to configure packages to be installed. Copy this file and rename it to `kompanion.json`, where you can play with the `true/false` flags for selecting packages.  After saving the file run `.\kompanion.ps1 -RebuildOnStart` once again and wait for completion.
+
+**Note:** please notice that if some package fails to download, *e.g.* firewall issues, you might need to manually clean the respective folder under `.kompanion\bin` before running again. Simply delete the directory named after the failed package. You may also need to delete the file named after that package under `.kompanion\temp` as there be a partial download there.
+
+If you want to save some important disk space, after installation you can delete the whole `.kompanion\temp`.
+
+Now you should be good to go!
+
+### Automatic sourcing
+
+This section describes how to get Kompanion automatically sourced in your user profile for all PowerShell sessions. Start by creating an environment variable `KOMPANION_SOURCE` pointing to the *full-path* of file `kompanion.ps1`.
+
+From Windows menu, search for *Environment variables for your account* and open it. Click on *New* create a variable named `KOMPANION_SOURCE`; use the *Browse file...* button to select the `kompanion.ps1` file to get the right path.
+
+For instance, if you are called like me and cloned this repository at `GitHub\kompanion` under your profile, then its value should be `C:\Users\walter\GitHub\kompanion\kompanion.ps1`
+
+Next, start PowerShell and identify the path to your user profile:
+
+```ps1
+echo $PROFILE
+```
+
+If that file does not exist, create it with:
+
+```ps1
+New-Item -ItemType File -Path $PROFILE -Force
+```
+
+Now you can run `notepad $PROFILE` to open it and append the following lines:
+
+```ps1
+if (Test-Path $env:KOMPANION_SOURCE) {
+    . $env:KOMPANION_SOURCE
+
+    # Uncomment the following if you want the terminal to start at
+    # the root of this repository; useful for development.
+    # cd "$env:KOMPANION_DIR"
+} else {
+    Write-Host "KOMPANION_SOURCE not found at '$env:KOMPANION_SOURCE'"
+}
+```
+
+Now all PowerShell sessions will automatically source Kompanion, and you can start using it right away. You can run `Kode` from any directory to open the root of this repository in VSCode.
+
+## Building the notes
+
+Notes are built using [Quarto](https://quarto.org/), and you can find the source code in this repository. To build the notes, you need to have that tool, Python and Rust enabled in Kompanion. Then you can follow these steps to create a virtual environment, install the required packages and build the notes:
+
+``` bash
+# Create a virtual environment
+python -m venv .venv
+
+# On Windows, use
+.venv\Scripts\Activate.ps1
+
+# Update pip
+python -m pip install --upgrade pip
+
+# Install the required packages
+python -m pip install -r requirements.txt
+
+# Use this to generate all formats
+quarto render
+
+# Or use these to generate specific formats
+quarto render --to html
+quarto render --to pdf
+
+# Finally, to publish the notes on GitHub Pages, use
+# (you need to be an allowed project collaborator to do this)
+quarto publish gh-pages --no-prompt --no-browser
+```

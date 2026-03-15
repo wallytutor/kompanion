@@ -1,0 +1,5 @@
+# Make sure that majordome was cloned and that Kompanion has Rust.
+-e ../repos/majordome[full]
+
+# Specific dependencies for the notes
+sympy

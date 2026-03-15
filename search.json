@@ -1,0 +1,32 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Kompanion",
+    "section": "",
+    "text": "1 Kompanion\nThis it the Kompanion companion notes!",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Kompanion</span>"
+    ]
+  },
+  {
+    "objectID": "index.html#foreword",
+    "href": "index.html#foreword",
+    "title": "Kompanion",
+    "section": "1.1 Foreword",
+    "text": "1.1 Foreword\nFor many years I have been trying to work… well, when you are in scientific computing you quickly discover that IT knows nothing about it and even in academic settings these guys are unaware of your needs. Those who are supposed to help you thrive are actually stopping you from even trying to do things. The corporate rules are too restrictive for any creative mind; governance means failure.\nAs a natural rebel, I learned everything to by-pass rules. Early in my career, when I was working only in Linux systems, that was pretty easy as you can compile your code and that is not against the rules at all in most settings. That allowed me to develop a solid background in compiling the code of others, what is not always trivial. When reading the README and INSTALL projects of major scientific computing projects, you quickly realize the inconsistencies in procedures and the available flags for compilation. When faced many and many times with this sort of issue, you are obliged to master at least Makefiles and CMakefiles. The classical Makefiles may be obscure with some macro expansions doing weird stuff, while CMakefiles can be so huge that it takes years to fully create a grasp of them.\nNext, when moving into the corporate world, you will at some point be forced to go into Windows, and that was the case for me too. About 10 years ago, before the big-bullshit era of AI, the scientific computing for Windows was pretty poor. Even Python was quite limited, you most certainly needed to use Anaconda at that time. Most scientific libraries are harder to compile under Windows and you will probably learn about Cygwin and MSYS2 to try to overcome the issues, as getting a proper license of Windows compiler will probably be difficult unless that is your core job as a developer.\nThe other part of the nightmare concerns PortableApps: you can’t simply trust those packages, and you don’t want to get in trouble by bringing some viruses home. To be avoided at all costs. That’s when you learn that many installers are simply zip packages and that you can extract them somewhat. It was that that gave rise to Kompanion (it had so many names and repositories over the years, but now we will stick with it): allow people to do scientific computing in a laptop with no or minor (needed to run codes in parallel) administrator rights. I discuss about that in more detail in a dedicated section Chapter 2, and I strongly encourage you to read that to understand a bit what is happening under kompanion.ps1 script without reading its thousands lines of copy-paste code.",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Kompanion</span>"
+    ]
+  },
+  {
+    "objectID": "index.html#building-the-notes",
+    "href": "index.html#building-the-notes",
+    "title": "Kompanion",
+    "section": "1.2 Building the notes",
+    "text": "1.2 Building the notes\n# Create a virtual environment\npython -m venv .venv\n\n# On Windows, use\n.venv\\Scripts\\Activate.ps1\n\n# Update pip\npython -m pip install --upgrade pip\n\n# Install the required packages\npython -m pip install -r requirements.txt\n# Use this to generate all formats\nquarto render\n\n# Or use these to generate specific formats\nquarto render --to html\nquarto render --to pdf\n\n# Finally, to publish the notes on GitHub Pages, use\nquarto publish gh-pages --no-prompt --no-browser",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Kompanion</span>"
+    ]
+  }
+]

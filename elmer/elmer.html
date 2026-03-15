@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>9&nbsp; Portable applications – Kompanion</title>
+<title>10&nbsp; Elmer Fundamentals – Kompanion</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,6 +20,41 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -30,8 +65,8 @@ ul.task-list li input[type="checkbox"] {
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
-<link href="../elmer/index.html" rel="next">
-<link href="../computing/selection.html" rel="prev">
+<link href="../elmer/sif.html" rel="next">
+<link href="../elmer/index.html" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
@@ -83,7 +118,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../computing/index.html">Computing</a></li><li class="breadcrumb-item"><a href="../computing/portable.html"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Portable applications</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../elmer/index.html">Elmer Multiphysics</a></li><li class="breadcrumb-item"><a href="../elmer/elmer.html"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Elmer Fundamentals</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -118,11 +153,11 @@ ul.task-list li input[type="checkbox"] {
       <div class="sidebar-item-container"> 
             <a href="../computing/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Computing</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../computing/git.html" class="sidebar-item-text sidebar-link">
@@ -173,7 +208,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../computing/portable.html" class="sidebar-item-text sidebar-link active">
+  <a href="../computing/portable.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Portable applications</span></span></a>
   </div>
 </li>
@@ -183,14 +218,14 @@ ul.task-list li input[type="checkbox"] {
       <div class="sidebar-item-container"> 
             <a href="../elmer/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Elmer Multiphysics</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">  
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../elmer/elmer.html" class="sidebar-item-text sidebar-link">
+  <a href="../elmer/elmer.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Elmer Fundamentals</span></span></a>
   </div>
 </li>
@@ -294,25 +329,27 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#how-does-it-work" id="toc-how-does-it-work" class="nav-link active" data-scroll-target="#how-does-it-work"><span class="header-section-number">9.1</span> How does it work?</a></li>
-  <li><a href="#other-possibly-supported-applications" id="toc-other-possibly-supported-applications" class="nav-link" data-scroll-target="#other-possibly-supported-applications"><span class="header-section-number">9.2</span> Other possibly supported applications</a></li>
-  <li><a href="#software-specific-instructions" id="toc-software-specific-instructions" class="nav-link" data-scroll-target="#software-specific-instructions"><span class="header-section-number">9.3</span> Software specific instructions</a>
+  <li><a href="#preprocessing-steps" id="toc-preprocessing-steps" class="nav-link active" data-scroll-target="#preprocessing-steps"><span class="header-section-number">10.1</span> Preprocessing steps</a></li>
+  <li><a href="#using-elmer" id="toc-using-elmer" class="nav-link" data-scroll-target="#using-elmer"><span class="header-section-number">10.2</span> Using Elmer</a></li>
+  <li><a href="#parallel-computing" id="toc-parallel-computing" class="nav-link" data-scroll-target="#parallel-computing"><span class="header-section-number">10.3</span> Parallel computing</a></li>
+  <li><a href="#tips-and-ideas" id="toc-tips-and-ideas" class="nav-link" data-scroll-target="#tips-and-ideas"><span class="header-section-number">10.4</span> Tips and ideas</a></li>
+  <li><a href="#material-properties" id="toc-material-properties" class="nav-link" data-scroll-target="#material-properties"><span class="header-section-number">10.5</span> Material properties</a></li>
+  <li><a href="#postprocessing" id="toc-postprocessing" class="nav-link" data-scroll-target="#postprocessing"><span class="header-section-number">10.6</span> Postprocessing</a></li>
+  <li><a href="#user-defined-functions" id="toc-user-defined-functions" class="nav-link" data-scroll-target="#user-defined-functions"><span class="header-section-number">10.7</span> User-defined functions</a>
   <ul class="collapse">
-  <li><a href="#dualsphysics" id="toc-dualsphysics" class="nav-link" data-scroll-target="#dualsphysics"><span class="header-section-number">9.3.1</span> DualSPHysics</a></li>
-  <li><a href="#gmsh" id="toc-gmsh" class="nav-link" data-scroll-target="#gmsh"><span class="header-section-number">9.3.2</span> gmsh</a></li>
-  <li><a href="#graphviz" id="toc-graphviz" class="nav-link" data-scroll-target="#graphviz"><span class="header-section-number">9.3.3</span> Graphviz</a></li>
-  <li><a href="#mfix" id="toc-mfix" class="nav-link" data-scroll-target="#mfix"><span class="header-section-number">9.3.4</span> MFiX</a></li>
+  <li><a href="#derived-fields" id="toc-derived-fields" class="nav-link" data-scroll-target="#derived-fields"><span class="header-section-number">10.7.1</span> Derived fields</a></li>
+  <li><a href="#saving-data-modules" id="toc-saving-data-modules" class="nav-link" data-scroll-target="#saving-data-modules"><span class="header-section-number">10.7.2</span> Saving data modules</a></li>
+  <li><a href="#openfoam-coupling" id="toc-openfoam-coupling" class="nav-link" data-scroll-target="#openfoam-coupling"><span class="header-section-number">10.7.3</span> OpenFOAM coupling</a></li>
   </ul></li>
-  <li><a href="#creating-a-portable-environment" id="toc-creating-a-portable-environment" class="nav-link" data-scroll-target="#creating-a-portable-environment"><span class="header-section-number">9.4</span> Creating a portable environment</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../computing/index.html">Computing</a></li><li class="breadcrumb-item"><a href="../computing/portable.html"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Portable applications</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../elmer/index.html">Elmer Multiphysics</a></li><li class="breadcrumb-item"><a href="../elmer/elmer.html"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Elmer Fundamentals</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span id="sec-portable" class="quarto-section-identifier"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Portable applications</span></span></h1>
+<h1 class="title"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Elmer Fundamentals</span></h1>
 </div>
 
 
@@ -329,100 +366,241 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="how-does-it-work" class="level2" data-number="9.1">
-<h2 data-number="9.1" class="anchored" data-anchor-id="how-does-it-work"><span class="header-section-number">9.1</span> How does it work?</h2>
-<p><em>Kompanion</em> is intended to be used as a portable environment with <em>almost</em> all batteries included. Applications are placed under <code>.kompanion/bin/</code> directory and all configuration of paths and other required environment variables are provided by <em>kompanion.ps1</em> script.</p>
-<p>It mostly revolves around <a href="https://code.visualstudio.com/download">VS Code</a>. You launch the editor through a dedicated script and everything else is available in its terminal. That said, the whole of the ecosystem is command line based - but this is scientific computing, if you don’t know command line you are in the wrong job. If you followed the instructions to source Kompanion from $PROFILE, then you can also launch the terminal from the start menu and everything will be available there as well.</p>
-<p>It is intended to leave minimal track on host system (probably a few files and directories on your user home directory or under <em>AppData</em>), but this is not enforced in its development, so take care if you are not allowed to execute some software in a given computer.</p>
-</section>
-<section id="other-possibly-supported-applications" class="level2" data-number="9.2">
-<h2 data-number="9.2" class="anchored" data-anchor-id="other-possibly-supported-applications"><span class="header-section-number">9.2</span> Other possibly supported applications</h2>
-<p>The following packages are not currently included in Kompanion, but they are known to be somewhat portable and they might be added in the future. Those displayed in italics cannot be currently automated, but they can be installed in a machine then copied to Kompanion (ongoing investigation on how to automate that). Also check the <a href="selection.html" class="quarto-xref"><span>Chapter 8</span></a> for a software selection that might be of interest for you and maybe not listed here.</p>
+<section id="preprocessing-steps" class="level2" data-number="10.1">
+<h2 data-number="10.1" class="anchored" data-anchor-id="preprocessing-steps"><span class="header-section-number">10.1</span> Preprocessing steps</h2>
 <ul>
-<li>DualSPHysics</li>
-<li>Dyssol</li>
-<li>Fiji</li>
-<li>FileZilla</li>
-<li><em>FreeFEM++</em></li>
-<li>gnuplot</li>
-<li>Graphviz</li>
-<li><a href="https://iperf.fr/">iperf</a></li>
-<li>Ipopt</li>
-<li>Jamovi</li>
-<li>JASP</li>
-<li>lazarus</li>
-<li><a href="https://github.com/lite-xl/lite-xl">lite-xl</a></li>
-<li>LAMMPS</li>
-<li>MFiX</li>
-<li>MSYS2</li>
-<li>MUSEN</li>
-<li><a href="https://notepad-plus-plus.org/downloads/">Notepad++</a></li>
-<li>Octave</li>
-<li>OpenCALPHAD</li>
-<li>OpenModelica</li>
-<li>Orange3</li>
-<li>Portable LISP</li>
-<li>puTTy</li>
-<li>Ruby</li>
-<li>Rufus (requires admin privileges to be used though)</li>
-<li>SALOME (needs to be manually downloaded)</li>
-<li><em>Scilab</em></li>
-<li>strawberry-perl</li>
-<li>VMD</li>
-<li><a href="https://studio.zerobrane.com/">ZeroBraneStudio</a></li>
-<li><a href="https://www.zettlr.com/">Zettlr</a></li>
-<li><a href="https://xpra.org/index.html">Xpra</a></li>
+<li><p>Other than the native <code>ElmerGrid</code>, several other software can be used for conceiving a geometry and mesh generation workflow. Users are encouraged to use external tools such as <a href="https://gmsh.info/">gmsh</a> or <a href="https://www.salome-platform.org/">Salome</a> to generate computational meshes, built-in support in Elmer bein limited to very simple geometries only. For complex geometries <a href="https://www.freecad.org/">FreeCAD</a> is a standout alternative. For more consider reading <em>Geometry and Preprocessing</em>.</p></li>
+<li><p>Not all <code>gmsh</code> standard mesh formats are supported, but only version 2 (as for OpenFOAM); that said, users are encouraged to export mesh in UNV format to avoid compatibility issues, and also because both proposed tools support it. You can control the element orders in command line using option <code>-order &lt;N&gt;</code>; gmsh operates this way so that the same script can generate any supported element type.</p></li>
+<li><p>For importing meshes one uses <code>ElmerGrid &lt;input-format&gt; &lt;output-format&gt;</code>, where the format arguments are documented in the <a href="https://www.nic.funet.fi/pub/sci/physics/elmer/doc/ElmerGridManual.pdf">manual</a> sections 1.3 and 1.4. The UNV input is given by number 8 while standard <code>ElmerSolver</code> output by number 2, so that the conversion command would start with <code>ElmerGrid 8 2 &lt;other-arguments...&gt;</code>. Always verify the number of nodes remain untouched after conversion - or if it changed when using option <code>-merge &lt;dist&gt;</code>, merging nodes that are closer than the user-defined <code>&lt;dist&gt;</code>.</p></li>
+<li><p>Remember to use <code>Coherence;</code> with OpenCASCADE factory in gmsh scripts to automatically strip internal faces; that might not be enough for complex cases, see below. <strong>Note:</strong> I tried doing so and unless <code>Physical Surfaces</code> naming the external boundaries are provided every interface is dumped and imported by Elmer; maybe I misunderstood the use of command!</p></li>
+<li><p>Because faces are not named in Elmer, <em>i.e.</em> no matter what <code>Physical Surface</code> names you provide in gmsh, even for the advanced user working from command line it might be interesting to use the interactive zone grouping capabilities of <code>ElmerGUI</code>. That might even become a <em>requirement</em> as geometric complexity grows.</p></li>
+</ul>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 79%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Software</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>FreeCAD</td>
+<td>Geometry only for now, probably the best in the list; good parametric modeling support. Has native Elmer integration.</td>
+</tr>
+<tr class="even">
+<td>Salome</td>
+<td>Can export UNV (8) meshes readable by Elmer. An extension to call Elmer directly from Salome is under development.</td>
+</tr>
+<tr class="odd">
+<td>gmsh</td>
+<td>Can export MSH2 (14) and UNV (8) formats readable by Elmer.</td>
+</tr>
+<tr class="even">
+<td>netgen</td>
+<td>Is able to write native Elmer linear meshes; can be used as a plug-in.</td>
+</tr>
+<tr class="odd">
+<td>tetgen</td>
+<td>Can be used as a plug-in.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="using-elmer" class="level2" data-number="10.2">
+<h2 data-number="10.2" class="anchored" data-anchor-id="using-elmer"><span class="header-section-number">10.2</span> Using Elmer</h2>
+<ul>
+<li><p>Newcomers might be interested in <code>ElmerGUI</code>; although very intuitive, the interface is quite limited and for complex programs running from command line is the preferred mode.</p></li>
+<li><p>Most users will finally end setting up an workflow employing both to <code>ElmerSolver</code> (to run the simulations) and <code>ElmerGrid</code> (to prepare the grid and setup parallelization).</p></li>
+<li><p>There is also <code>ViewFactors</code> which might be useful in special cases involving radiation and other executables but they are not mentioned here because they fall in the legacy code family.</p></li>
+<li><p>Users must be aware that Elmer has no default unit system; one must take care that units are coherent across the different models and materials.</p></li>
+<li><p>Support to mathematical operations in SIF through MATC, which has its own <a href="https://www.nic.funet.fi/pub/sci/physics/elmer/doc/MATCManual.pdf">syntax and documentation</a>. It can be used, <em>e.g.</em> for computing temperature dependent properties, what can be helpful for simple expressions (instead of writing Fortran 90 code for extensions).</p></li>
 </ul>
 </section>
-<section id="software-specific-instructions" class="level2" data-number="9.3">
-<h2 data-number="9.3" class="anchored" data-anchor-id="software-specific-instructions"><span class="header-section-number">9.3</span> Software specific instructions</h2>
-<section id="dualsphysics" class="level3" data-number="9.3.1">
-<h3 data-number="9.3.1" class="anchored" data-anchor-id="dualsphysics"><span class="header-section-number">9.3.1</span> DualSPHysics</h3>
-<p>For <a href="https://dual.sphysics.org/downloads/">DualSPHysics</a> one might also want to install <a href="https://github.com/DualSPHysics/DesignSPHysics">this FreeCAD addon</a> and <a href="https://github.com/EPhysLab-UVigo/VisualSPHysics">this Blender addon</a>.</p>
-</section>
-<section id="gmsh" class="level3" data-number="9.3.2">
-<h3 data-number="9.3.2" class="anchored" data-anchor-id="gmsh"><span class="header-section-number">9.3.2</span> gmsh</h3>
-<p>Because it was chosen that SDK version of gmsh was more adapted to integrate Kompanion, if you want to be able to pin the executable to your taskbar you need to copy the DLL from its <code>lib/</code> directory to <code>bin/</code>. If you think you will not need Python/Julia interfaces of gmsh, then you can move the DLL instead to save ~80MB of disk (and you can always install gmsh with pip for those cases).</p>
-</section>
-<section id="graphviz" class="level3" data-number="9.3.3">
-<h3 data-number="9.3.3" class="anchored" data-anchor-id="graphviz"><span class="header-section-number">9.3.3</span> Graphviz</h3>
-<p>If the first time you run <code>dot</code> you get a message as</p>
-<pre class="text"><code>There is no layout engine support for "dot"
-Perhaps "dot -c" needs to be run (with installer's privileges) to register the plugins?</code></pre>
-<p>Simply run <code>dot -c</code> as suggested and it should work fine (without admin privileges).</p>
-</section>
-<section id="mfix" class="level3" data-number="9.3.4">
-<h3 data-number="9.3.4" class="anchored" data-anchor-id="mfix"><span class="header-section-number">9.3.4</span> MFiX</h3>
-<p>This package is <a href="https://mfix.netl.doe.gov/products/mfix/download/">installed</a> in a separate environment and not added to the toolbox path; that is because other Python environments could interact with each other and lead to unpredictable behavior. The following instructions are provided:</p>
+<section id="parallel-computing" class="level2" data-number="10.3">
+<h2 data-number="10.3" class="anchored" data-anchor-id="parallel-computing"><span class="header-section-number">10.3</span> Parallel computing</h2>
 <ul>
-<li><p>Install <a href="https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Windows-x86_64.exe">miniforge3</a> under a dedicated directory.</p></li>
-<li><p>Add a script with the following content to launch miniforge console:</p></li>
+<li><p>Before running in parallel a working case running in serial is required; using <code>ElmerGUI</code> this can be enabled in <code>Run &gt; Parallel settings...</code>. Notice that after running postprocessing of <code>.pvtu</code> needs to be done in ParaView directly.</p></li>
+<li><p>To partition the mesh from command line one needs to run <code>ElmerGrid 2 2 &lt;mesh-name&gt; -partdual -metiskway &lt;N&gt;</code>, which will convert <code>&lt;mesh-name&gt;</code> from Elmer mesh format (2) into itself (thus the <code>2 2</code> in the command) and dump the resulting mesh in <code>partitions.&lt;N&gt;</code>, with <code>&lt;N&gt;</code> being the number of physical cores to run the simulation.</p></li>
+<li><p>Parallel cases can be run with <code>mpiexec -n &lt;N&gt; ElmerSolver_mpi</code>. Notice that under Linux the MPI runner is called <code>mpirun</code> instead of <code>mpiexec</code>.</p></li>
 </ul>
-<pre class="shell"><code>%windir%\system32\cmd.exe "/K" ^
-    %~dp0\miniforge3\Scripts\activate.bat ^
-    %~dp0\miniforge3</code></pre>
-<ul>
-<li>Go to the <a href="https://mfix.netl.doe.gov/mfix/download-mfix">downloads</a> page, login and copy the personal installation command that looks like the following:</li>
-</ul>
-<pre class="shell"><code>conda create -n mfix-&lt;version&gt; ^
-    mfix==&lt;version&gt;            ^
-    mfix-doc==&lt;version&gt;        ^
-    mfix-gui==&lt;version&gt;        ^
-    mfix-solver==&lt;version&gt;     ^
-    mfix-src==&lt;version&gt;        ^
-    -c conda-forge -c          ^
-    https://mfix.netl.doe.gov/s3/&lt;personal-token&gt;//conda/dist</code></pre>
-<ul>
-<li>To run the software activate the created environment and call its executable:</li>
-</ul>
-<pre class="shell"><code>conda activate mfix-&lt;version&gt;
-mfix</code></pre>
 </section>
+<section id="tips-and-ideas" class="level2" data-number="10.4">
+<h2 data-number="10.4" class="anchored" data-anchor-id="tips-and-ideas"><span class="header-section-number">10.4</span> Tips and ideas</h2>
+<ul>
+<li>Use <code>Coordinate Mapping</code> to rotate meshes with oriented particles</li>
+<li>Scaling of a single direction can be done with <code>Coordinate Scaling</code></li>
+<li>Time step can be changed with a list of elements in <code>Timestep Intervals</code>, <em>e.g.</em></li>
+</ul>
+<pre><code>! Run 10 time-steps of 0.1 s, then 100 with 1.0 s.
+Timestep Intervals(2) = 10 100
+Timestep Sizes(2) = 0.1 1.0</code></pre>
+<ul>
+<li>Take care with <code>Linear System Abort Not Converged = True</code> for physical consistency; generally continuing a simulation after a failed step is worthless unless one is pseudo-stepping towards a difficult (highly nonlinear) steady-state.</li>
+</ul>
 </section>
-<section id="creating-a-portable-environment" class="level2" data-number="9.4">
-<h2 data-number="9.4" class="anchored" data-anchor-id="creating-a-portable-environment"><span class="header-section-number">9.4</span> Creating a portable environment</h2>
+<section id="material-properties" class="level2" data-number="10.5">
+<h2 data-number="10.5" class="anchored" data-anchor-id="material-properties"><span class="header-section-number">10.5</span> Material properties</h2>
+<p>Material properties can be specified as:</p>
+<ul>
+<li><p>Constant: just the default numeric input in SIF files</p></li>
+<li><p>Tabulated linearly or using a cubic spline, <em>e.g.</em></p></li>
+</ul>
+<pre><code>! Linear interpolation
+Viscosity = Variable Temperature
+  Real
+    298.15 1.0
+    ! ... more data here
+    373.15 2.0
+End
+
+! Cubic spline interpolation
+Viscosity = Variable Temperature
+  Real cubic
+    298.15 1.0
+    315.15 1.1
+    345.15 1.5
+    ! ... more data here
+    373.15 2.0
+End</code></pre>
+<ul>
+<li>Arrays: for representing anisotropic bodies, <em>e.g.</em></li>
+</ul>
+<pre><code>Heat Conductivity(3,3) = 1 0 0\
+                         0 1 0\
+                         0 0 2</code></pre>
+<ul>
+<li><p>Using MATC as explained below in this page. Notice that sourcing files in MATC is the recommended way to get reusable code; coding MATC in SIF files requires to escape all lines and quickly becomes messy.</p></li>
+<li><p>User-defined functions (UDF) can also be provided in Fortran; notice that even when MATC can be used, this may lead to a speed-up of calculations with the inconvenient of needing more code. So for cases that are intended to be reused, it is important to consider writing proper extensions in Fortran. The following example illustrates a temperature dependent thermal conductivity function which is evaluated by Elmer at all nodes. In most cases a simple <code>USE DefUtils</code> is enough to get the required Elmer API to write the extension.</p></li>
+</ul>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode fortran code-with-copy"><code class="sourceCode fortranfixed"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">FUNCTION</span> conductivity(model, n, time) <span class="kw">RESULT</span>(k)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">!**************************************************************</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="co">! Load Elmer library.</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="co">!**************************************************************</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    <span class="kw">USE</span> DefUtils</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    <span class="kw">IMPLICIT</span> <span class="kw">None</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    <span class="co">!**************************************************************</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    <span class="co">! Function interface.</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    <span class="co">!**************************************************************</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>    <span class="dt">TYPE(Model_t)</span> <span class="dt">::</span> model</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>    <span class="dt">INTEGER</span>       <span class="dt">::</span> n</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>    <span class="dt">REAL(KIND=dp)</span> <span class="dt">::</span> time, k</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>    <span class="co">!**************************************************************</span></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>    <span class="co">! Function internals.</span></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>    <span class="co">!**************************************************************</span></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>    <span class="dt">TYPE(Variable_t)</span>, <span class="dt">POINTER</span> <span class="dt">::</span> varptr</span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>    <span class="dt">REAL(KIND=dp)</span> <span class="dt">::</span> T</span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>    <span class="dt">INTEGER</span> <span class="dt">::</span> idx</span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>    <span class="co">!**************************************************************</span></span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>    <span class="co">! Actual implementation</span></span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>    <span class="co">!**************************************************************</span></span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>    <span class="co">! Retrieve pointer to the temperature variable.</span></span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>    varptr <span class="kw">=</span><span class="op">&gt;</span> VariableGet(model<span class="op">%</span>Variables, <span class="st">'Temperature'</span>)</span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a>    <span class="co">! Access index of current node.</span></span>
+<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a>    idx <span class="kw">=</span> varptr<span class="op">%</span>Perm(n)</span>
+<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a>    <span class="co">! Retrieve nodal temperature.</span></span>
+<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a>    T <span class="kw">=</span> varptr<span class="op">%</span>Values(idx)</span>
+<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a>    <span class="co">! Compute heat conductivity from NodalTemperature, k=k(T)</span></span>
+<span id="cb4-39"><a href="#cb4-39" aria-hidden="true" tabindex="-1"></a>    k <span class="kw">=</span> <span class="fl">2.0</span> <span class="kw">-</span> T <span class="kw">*</span> (<span class="fl">2.5e-03</span> <span class="kw">-</span> <span class="fl">1.0e-06</span> <span class="kw">*</span> T)</span>
+<span id="cb4-40"><a href="#cb4-40" aria-hidden="true" tabindex="-1"></a><span class="kw">END FUNCTION</span> conductivity</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>In order to compile the above assume it is written to <code>properties.f90</code> file; then one can call <code>elmerf90 properties.f90 –o properties</code> to generate the required shared library that is loaded in runtime by Elmer. Below we illustrate the use of <code>Procedure</code> to attach this library to a given material; first one provides the name of the shared library then the name of the function. A single library can in fact contain several functionalities.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>Material <span class="dv">1</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  Name <span class="op">=</span> <span class="st">"Solid"</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  Heat Conductivity <span class="op">=</span> Variable Time</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    Procedure <span class="st">"properties"</span> <span class="st">"conductivity"</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  Heat Capacity <span class="op">=</span> <span class="dv">1000</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  Density <span class="op">=</span> <span class="dv">2500</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>End</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="postprocessing" class="level2" data-number="10.6">
+<h2 data-number="10.6" class="anchored" data-anchor-id="postprocessing"><span class="header-section-number">10.6</span> Postprocessing</h2>
+<p>For postprocessing the recommended way is by using external tools as <a href="https://www.paraview.org/">ParaView</a> and <a href="https://docs.pyvista.org/version/stable/">PyVista</a>, both handling well the VTK format of outputs. Nonetheless there are a some in-solver processing utilities that are worth knowing, especially in what concerns extracting and filtering data from certain regions, creating new fields, and computing fluxes.</p>
+<ul>
+<li>Creating a new scalar</li>
+</ul>
+<p>The keyword set of materials is actually not fixed; one can, for instance, create composition field in different units with MATC, as illustrated below (case <a href="cases/diffusion-1/carburizing_slycke_gui">here</a>):</p>
+<pre><code>MoleFraction = Variable Concentration
+  Real MATC "carbonmolefraction(tx)"</code></pre>
+<p>Then in solver <code>SaveMaterials</code>, this new name <code>MoleFraction</code> can be used as a variable:</p>
+<pre><code>Solver 1
+  Equation = SaveMaterials
+  Parameter 1 = Concentration Diffusivity
+  Parameter 2 = MoleFraction
+  Procedure = "SaveData" "SaveMaterials"
+  Exec Solver = After Timestep
+End</code></pre>
+<p>Another situation that can be frequently found is unit conversion for temperature. It was chosen to implement it in <a href="cases/conduction-4/transient_parallel">this case</a> because it is multi-material; that is a reminder that in such cases the new variable needs to be created for all materials (as this is a tweak, since the temperature is not a material property, but a global field). If forgotten in one material, an error will show up in ParaView telling you that the field is not available in some regions.</p>
+</section>
+<section id="user-defined-functions" class="level2" data-number="10.7">
+<h2 data-number="10.7" class="anchored" data-anchor-id="user-defined-functions"><span class="header-section-number">10.7</span> User-defined functions</h2>
+<p><em>Upcoming</em></p>
+<section id="derived-fields" class="level3" data-number="10.7.1">
+<h3 data-number="10.7.1" class="anchored" data-anchor-id="derived-fields"><span class="header-section-number">10.7.1</span> Derived fields</h3>
+<ul>
+<li><p>StreamSolver</p></li>
+<li><p>FluxSolver</p></li>
+</ul>
+<p>#elmer/models/flux-solver</p>
+<ul>
+<li><p>VorticitySolver</p></li>
+<li><p>DivergenceSolver</p></li>
+<li><p>ScalarPotentialSolver</p></li>
+<li><p>ArtificialCompressibility</p></li>
+<li><p>FluidicForce</p></li>
+<li><p>ElectricForce</p></li>
+<li><p>RigidBodyReduction</p></li>
+<li><p>FilterTimeSeries</p></li>
+<li><p>DataToFieldSolver</p></li>
+<li><p>ProjectToPlane</p></li>
+<li><p>StructureProjectToPlane</p></li>
+<li><p>FindOptimum</p></li>
+</ul>
+</section>
+<section id="saving-data-modules" class="level3" data-number="10.7.2">
+<h3 data-number="10.7.2" class="anchored" data-anchor-id="saving-data-modules"><span class="header-section-number">10.7.2</span> Saving data modules</h3>
+<p><strong>Note</strong>: coupling to OpenFOAM is discussed separately in another section.</p>
+<ul>
+<li><p>SaveData</p></li>
+<li><p>SaveScalars</p></li>
+</ul>
+<p>#elmer/models/save-scalars</p>
+<ul>
+<li>SaveLine</li>
+</ul>
+<p>#elmer/models/save-line</p>
+<ul>
+<li><p>SaveMaterials</p></li>
+<li><p>SaveBoundaryValues</p></li>
+<li><p>ResultOutputSolve</p></li>
+<li><p>ResultOutputSolver</p></li>
+</ul>
+<p>#elmer/models/result-output-solver</p>
+<ul>
+<li><p>SaveGridData</p></li>
+<li><p>SaveGridData</p></li>
+<li><p>Isosurface</p></li>
+<li><p>IsosurfaceSolver</p></li>
+</ul>
+</section>
+<section id="openfoam-coupling" class="level3" data-number="10.7.3">
+<h3 data-number="10.7.3" class="anchored" data-anchor-id="openfoam-coupling"><span class="header-section-number">10.7.3</span> OpenFOAM coupling</h3>
+<p>…</p>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->
@@ -828,13 +1006,13 @@ mfix</code></pre>
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../computing/selection.html" class="pagination-link" aria-label="Selection of tools">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Selection of tools</span></span>
+      <a href="../elmer/index.html" class="pagination-link" aria-label="Elmer Multiphysics">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Elmer Multiphysics</span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../elmer/index.html" class="pagination-link" aria-label="Elmer Multiphysics">
-        <span class="nav-page-text">Elmer Multiphysics</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../elmer/sif.html" class="pagination-link" aria-label="Solver Input Files (SIF)">
+        <span class="nav-page-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Solver Input Files (SIF)</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

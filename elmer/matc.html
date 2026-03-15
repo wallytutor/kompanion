@@ -1,0 +1,1279 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.26">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>12&nbsp; MATC – Kompanion</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../fluent/index.html" rel="next">
+<link href="../elmer/sif.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-597958c53c93a607afca12fd375c57ed.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-49bf9995813b73fc9d466afa58da3ad1.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar docked quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../elmer/index.html">Elmer Multiphysics</a></li><li class="breadcrumb-item"><a href="../elmer/matc.html"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">MATC</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../">Kompanion</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Kompanion</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../computing/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Computing</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../computing/git.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Git version control</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../computing/ssh.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Using SSH</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../computing/coding.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Scientific programming</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../computing/vscode.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Visual Studio Code</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../computing/windows.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Working on Windows</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../computing/containers.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Using containers</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../computing/tips.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">General Tips</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../computing/selection.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Selection of tools</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../computing/portable.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Portable applications</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../elmer/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Elmer Multiphysics</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../elmer/elmer.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Elmer Fundamentals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../elmer/sif.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Solver Input Files (SIF)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../elmer/matc.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">MATC</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../fluent/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Ansys Fluent</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fluent/tui-basics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Text user interface (TUI)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fluent/tui-config.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">User profile</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fluent/tui-setup.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Setup from TUI</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fluent/tui-solution.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Solution from TUI</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fluent/tui-results.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Results from TUI</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fluent/pyfluent.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Getting started with PyFluent</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false">
+ <span class="menu-text">Montagne</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tracks/carto.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Cartographie</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tracks/liens.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Liens utiles</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#declaring-variables" id="toc-declaring-variables" class="nav-link active" data-scroll-target="#declaring-variables"><span class="header-section-number">12.1</span> Declaring variables</a></li>
+  <li><a href="#control-structures" id="toc-control-structures" class="nav-link" data-scroll-target="#control-structures"><span class="header-section-number">12.2</span> Control structures</a></li>
+  <li><a href="#operators" id="toc-operators" class="nav-link" data-scroll-target="#operators"><span class="header-section-number">12.3</span> Operators</a></li>
+  <li><a href="#function-definitions" id="toc-function-definitions" class="nav-link" data-scroll-target="#function-definitions"><span class="header-section-number">12.4</span> Function definitions</a></li>
+  <li><a href="#built-in-functions" id="toc-built-in-functions" class="nav-link" data-scroll-target="#built-in-functions"><span class="header-section-number">12.5</span> Built-in functions</a></li>
+  <li><a href="#usage" id="toc-usage" class="nav-link" data-scroll-target="#usage"><span class="header-section-number">12.6</span> Usage</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../elmer/index.html">Elmer Multiphysics</a></li><li class="breadcrumb-item"><a href="../elmer/matc.html"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">MATC</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">MATC</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>Elmer provides a few extension methods. For complex models you might be prompted to use directly Fortran 90. For simpler things, such as providing temperature dependent thermophysical properties, it has its own parser for use in SIF, the metalanguage MATC. Expressions provided in MATC can be evaluated when file is read or during simulation execution.</p>
+<p>Because it is quite concise, I summarized the whole of MATC syntax and functions in this page. For the official documentation please refer to <a href="https://www.nic.funet.fi/pub/sci/physics/elmer/doc/MATCManual.pdf">this document</a>.</p>
+<section id="declaring-variables" class="level2" data-number="12.1">
+<h2 data-number="12.1" class="anchored" data-anchor-id="declaring-variables"><span class="header-section-number">12.1</span> Declaring variables</h2>
+<p>Variables in MATC can be matrices and strings; nonetheless, both are stored as double precision arrays so creating large arrays of strings can represent a waste of memory. For some weird reason I could not yet figure out, MATC language can be quite counterintuitive.</p>
+<p>Let’s start by creating a variable, say <code>x</code> below; attribution, such a in Python, creates the variable. It was stated that everything is a matrix or string; since <code>x</code> is not a string, it is actually a <span class="math inline">\(1\times{}1\)</span> matrix and in this case we can omit the indexing when allocating its memory.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> <span class="dv">1</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>So far nothing weird; when declaring a string as <code>k</code> below we are actually creating a <span class="math inline">\(1\times{}5\)</span> row matrix, what is not unusual in many programming languages (except for being double precision here). Furthermore, we use the typical double-quotes notation for strings.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>k <span class="op">=</span> <span class="st">"hello"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Matrix indexing is zero-based, as in C or Python. Matrix slicing is done as in many scripting languages, such as Python, Julia, Octave, …, and we can reverse the order of the first <em>six</em> elements of an array <code>y</code> as follows:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>y<span class="op">(</span><span class="dv">0</span><span class="op">,</span> <span class="dv">0</span><span class="op">:</span><span class="dv">5</span><span class="op">)</span> <span class="op">=</span> y<span class="op">(</span><span class="dv">0</span><span class="op">,</span> <span class="dv">5</span><span class="op">:</span><span class="dv">0</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Notice above the fact that matrix slicing is <em>last-inclusive</em>, as in Julia, meaning that all elements from index zero to five <em>inclusive</em> are included in the slice. Weirdness starts when you do something like</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>z<span class="op">(</span><span class="dv">0</span><span class="op">:</span><span class="dv">9</span><span class="op">)</span> <span class="op">=</span> <span class="dv">142857</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>which according to the documentation will produce an array <code>1 4 2 8 5 7 1 4 2 8</code>; I could not verify this behavior yet. Additionally, the following produces another unexpected result:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>z<span class="op">(</span><span class="dv">9</span><span class="op">,</span> <span class="dv">9</span><span class="op">)</span> <span class="op">=</span> <span class="dv">1</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>If matrix <code>z</code> does not exist, this results in a <span class="math inline">\(10\times{}10\)</span> matrix with all zeros except the explicitly declared element. The size of variables are dynamic, so in the above if <code>z</code> already existed but wa smaller, it would be padded with zeros instead.</p>
+<p>Finally, logical indexing is also allowed:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>x<span class="op">(</span>x <span class="op">&lt;</span> <span class="fl">0.05</span><span class="op">)</span> <span class="op">=</span> <span class="fl">0.05</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="control-structures" class="level2" data-number="12.2">
+<h2 data-number="12.2" class="anchored" data-anchor-id="control-structures"><span class="header-section-number">12.2</span> Control structures</h2>
+<p>MATC provides conditionals and loops as control structures. Below we have the <code>if-else</code> statement, which can be declared inline of using a C-style declaration using braces.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="op">(</span> expr <span class="op">)</span> expr<span class="op">;</span> <span class="cf">else</span> expr<span class="op">;</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="op">(</span> expr <span class="op">)</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    expr<span class="op">;</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    <span class="op">...</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    expr<span class="op">;</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="op">}</span> <span class="cf">else</span> <span class="op">{</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    expr<span class="op">;</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>    <span class="op">...</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>    expr<span class="op">;</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Loops can be declared using both <code>for</code> or <code>while</code>. There is no mechanism of generating values within a <code>for</code> loop and one must provide a vector of indexes for repetition. <em>In the official documentation there is no reference to a <code>continue</code> or <code>break</code> statement and I could not verify their existence yet</em>.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span><span class="op">(</span> i<span class="op">=</span>vector <span class="op">)</span> expr<span class="op">;</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span><span class="op">(</span> i<span class="op">=</span>vector <span class="op">)</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    expr<span class="op">;</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    <span class="op">...</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    expr<span class="op">;</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="cf">while</span><span class="op">(</span> expr <span class="op">)</span> expr<span class="op">;</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="cf">while</span><span class="op">(</span> expr <span class="op">)</span></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>    expr<span class="op">;</span></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>    <span class="op">...</span></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>    expr<span class="op">;</span></span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="operators" class="level2" data-number="12.3">
+<h2 data-number="12.3" class="anchored" data-anchor-id="operators"><span class="header-section-number">12.3</span> Operators</h2>
+<p>Assume the following definitions:</p>
+<ul>
+<li><code>a</code>, <code>b</code> and <code>c</code> ordinary matrices</li>
+<li><code>l</code>, <code>t</code> and <code>r</code> logical matrices</li>
+<li><code>s</code>, <code>n</code> and <code>m</code> scalars</li>
+</ul>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 17%">
+<col style="width: 82%">
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><code>b = a'</code></td>
+<td style="text-align: left;">is transpose of matrix a.</td>
+</tr>
+<tr class="even">
+<td><code>b = @a</code></td>
+<td style="text-align: left;">evaluate content of a string variable a as a MATC statement.</td>
+</tr>
+<tr class="odd">
+<td><code>t = ~l</code></td>
+<td style="text-align: left;">elementwise logical not of if x is not zero.</td>
+</tr>
+<tr class="even">
+<td><code>b = a ^ s</code></td>
+<td style="text-align: left;">if a is a square matrix and s is integral, a matrix power is computed, otherwise an elementwise power.</td>
+</tr>
+<tr class="odd">
+<td><code>c = a * b</code></td>
+<td style="text-align: left;">if a and b are compatible for matrix product, that is computed, otherwise if they are of the same size or at least one of them is scalar, an elementwise product is computed.</td>
+</tr>
+<tr class="even">
+<td><code>c = a # b</code></td>
+<td style="text-align: left;">elementwise multiplication of a and b.</td>
+</tr>
+<tr class="odd">
+<td><code>c = a / b</code></td>
+<td style="text-align: left;">is fraction of a and b computed elementwise.</td>
+</tr>
+<tr class="even">
+<td><code>c = a + b</code></td>
+<td style="text-align: left;">is sum of matrices a and b computed elementwise.</td>
+</tr>
+<tr class="odd">
+<td><code>c = a - b</code></td>
+<td style="text-align: left;">is difference of matrices a and b computed elementwise.</td>
+</tr>
+<tr class="even">
+<td><code>l = a == b</code></td>
+<td style="text-align: left;">equality of matrices a and b elementwise.</td>
+</tr>
+<tr class="odd">
+<td><code>l = a &lt;&gt; b</code></td>
+<td style="text-align: left;">inequality of matrices a and b elementwise.</td>
+</tr>
+<tr class="even">
+<td><code>l = a &lt; b</code></td>
+<td style="text-align: left;">true if a is less than b computed elementwise.</td>
+</tr>
+<tr class="odd">
+<td><code>l = a &gt; b</code></td>
+<td style="text-align: left;">true if a is greater than b computed elementwise.</td>
+</tr>
+<tr class="even">
+<td><code>l = a &lt;= b</code></td>
+<td style="text-align: left;">true if a is less than or equal to b computed elementwise.</td>
+</tr>
+<tr class="odd">
+<td><code>l = a &gt;= b</code></td>
+<td style="text-align: left;">true if a is greater than or equal to b computed elementwise.</td>
+</tr>
+<tr class="even">
+<td><code>a = n : m</code></td>
+<td style="text-align: left;">return a vector of values starting from n and ending to m by increment of (plus-minus) one.</td>
+</tr>
+<tr class="odd">
+<td><code>r = l &amp; t</code></td>
+<td style="text-align: left;">elementwise logical and of a and b.</td>
+</tr>
+<tr class="even">
+<td><code>l = a \| b</code></td>
+<td style="text-align: left;">elementwise logical or of a and b.</td>
+</tr>
+<tr class="odd">
+<td><code>c = a ? b</code></td>
+<td style="text-align: left;">reduction: set values of a where b is zero to zero.</td>
+</tr>
+<tr class="even">
+<td><code>b = n m % a</code></td>
+<td style="text-align: left;">resize a to matrix of size n by m.</td>
+</tr>
+<tr class="odd">
+<td><code>b = a</code></td>
+<td style="text-align: left;">assigning a to b.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="function-definitions" class="level2" data-number="12.4">
+<h2 data-number="12.4" class="anchored" data-anchor-id="function-definitions"><span class="header-section-number">12.4</span> Function definitions</h2>
+<p>The syntax of the function definition is similar to that of Julia and is given below. The function body is enclosed by braces. Instead of using a <code>return</code> statement, the resulting value is attributed to a variable named after the function with a leading underscore. Notice the <code>!</code> denoting comments in the description of the function.</p>
+<pre><code>function name(arg1, arg2, ...)
+!
+! Optional function description (seen with help("name"))
+!
+import var1, var2
+export var3, var4
+{
+    expr;
+     ...
+    expr;
+
+    _name = value
+}</code></pre>
+<p>Functions have their own list of variables. Global variables are not seen in this function unless imported by <code>import</code> or given as arguments. Local variables can be made global by the <code>export</code> statement.</p>
+<p>Functions, if returning matrices, behave in many ways as variables do. So if you have defined function <code>mult</code> as follows</p>
+<pre><code>function mult(a, b)
+{
+   _mult = a * b;
+}</code></pre>
+<p>You can get element (3,5) of the <code>a</code> times <code>b</code> matrix with <code>mult(x,y)[3,5]</code> or the diagonal values of the same matrix by <code>diag(mult(x, y))</code>.</p>
+</section>
+<section id="built-in-functions" class="level2" data-number="12.5">
+<h2 data-number="12.5" class="anchored" data-anchor-id="built-in-functions"><span class="header-section-number">12.5</span> Built-in functions</h2>
+<ul>
+<li>C-style math</li>
+</ul>
+<p>The following listing provides a series of mathematical functions which follow a their meaning in C. The only exceptions are <code>ln</code> denoting the natural logarithm and <code>log</code> used here for base 10 logarithms.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>r <span class="op">=</span> sin<span class="op">(</span>x<span class="op">)</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>r <span class="op">=</span> cos<span class="op">(</span>x<span class="op">)</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>r <span class="op">=</span> tan<span class="op">(</span>x<span class="op">)</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>r <span class="op">=</span> asin<span class="op">(</span>x<span class="op">)</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>r <span class="op">=</span> acos<span class="op">(</span>x<span class="op">)</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>r <span class="op">=</span> atan<span class="op">(</span>x<span class="op">)</span></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>r <span class="op">=</span> sinh<span class="op">(</span>x<span class="op">)</span></span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>r <span class="op">=</span> cosh<span class="op">(</span>x<span class="op">)</span></span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>r <span class="op">=</span> tanh<span class="op">(</span>x<span class="op">)</span></span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a>r <span class="op">=</span> exp<span class="op">(</span>x<span class="op">)</span></span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a>r <span class="op">=</span> ln<span class="op">(</span>x<span class="op">)</span></span>
+<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a>r <span class="op">=</span> log<span class="op">(</span>x<span class="op">)</span></span>
+<span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-25"><a href="#cb11-25" aria-hidden="true" tabindex="-1"></a>r <span class="op">=</span> sqrt<span class="op">(</span>x<span class="op">)</span></span>
+<span id="cb11-26"><a href="#cb11-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-27"><a href="#cb11-27" aria-hidden="true" tabindex="-1"></a>r <span class="op">=</span> ceil<span class="op">(</span>x<span class="op">)</span></span>
+<span id="cb11-28"><a href="#cb11-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-29"><a href="#cb11-29" aria-hidden="true" tabindex="-1"></a>r <span class="op">=</span> floor<span class="op">(</span>x<span class="op">)</span></span>
+<span id="cb11-30"><a href="#cb11-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-31"><a href="#cb11-31" aria-hidden="true" tabindex="-1"></a>r <span class="op">=</span> abs<span class="op">(</span>x<span class="op">)</span></span>
+<span id="cb11-32"><a href="#cb11-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-33"><a href="#cb11-33" aria-hidden="true" tabindex="-1"></a>r <span class="op">=</span> pow<span class="op">(</span>x<span class="op">,</span>y<span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<ul>
+<li>General utilities</li>
+</ul>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 74%">
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><code>funcdel(name)</code></td>
+<td style="text-align: left;">Delete given function definition from parser.</td>
+</tr>
+<tr class="even">
+<td><code>funclist(name)</code></td>
+<td style="text-align: left;">Give header of the function given by name.</td>
+</tr>
+<tr class="odd">
+<td><code>env(name)</code></td>
+<td style="text-align: left;">Get value of environment variable of the operating system.</td>
+</tr>
+<tr class="even">
+<td><code>exists(name)</code></td>
+<td style="text-align: left;">Return true (non-zero) if variable by given name exists otherwise return false (=0).</td>
+</tr>
+<tr class="odd">
+<td><code>source(name)</code></td>
+<td style="text-align: left;">Execute commands from file given name.</td>
+</tr>
+<tr class="even">
+<td><code>format(precision)</code></td>
+<td style="text-align: left;">Set number of digits used in printing values in MATC.</td>
+</tr>
+<tr class="odd">
+<td><code>r = eval(str)</code></td>
+<td style="text-align: left;">Evaluate content of string str. Another form of this command is <code>@str</code>.</td>
+</tr>
+<tr class="even">
+<td><code>who</code></td>
+<td style="text-align: left;">Give list of currently defined variables.</td>
+</tr>
+<tr class="odd">
+<td><code>help</code> or <code>help("symbol")</code></td>
+<td style="text-align: left;">First form of the command gives list of available commands. Second form gives help on specific routine.</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>String and I/O functions</li>
+</ul>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 9%">
+<col style="width: 90%">
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><code>str = sprintf(fmt[,vec])</code></td>
+<td style="text-align: left;">Return a string formatted using <code>fmt</code> and values from <code>vec</code>. A call to corresponding C-language function is made.</td>
+</tr>
+<tr class="even">
+<td><code>vec = sscanf(str,fmt)</code></td>
+<td style="text-align: left;">Return values from <code>str</code> using format <code>fmt</code>. A call to corresponding C-language function is made.</td>
+</tr>
+<tr class="odd">
+<td><code>str = fread(fp,n)</code></td>
+<td style="text-align: left;">Read <code>n</code> bytes from file given by <code>fp</code>. File pointer fp should have been obtained from a call to <code>fopen</code> or <code>freopen</code>, or be the standard input file stdin. Data is returned as function value.</td>
+</tr>
+<tr class="even">
+<td><code>vec = fscanf(fp,fmt)</code></td>
+<td style="text-align: left;">Read file <code>fp</code> as given in format. Format fmt is equal to C-language format. File pointer <code>fp</code> should have been obtained from a call to <code>fopen</code> or <code>freopen</code>, or be the standard input.</td>
+</tr>
+<tr class="odd">
+<td><code>str = fgets(fp)</code></td>
+<td style="text-align: left;">Read next line from fp. File pointer fp should have been obtained from a call to fopen or freopen or be the standard input.</td>
+</tr>
+<tr class="even">
+<td><code>n = fwrite(fp,buf,n)</code></td>
+<td style="text-align: left;">Write n bytes from buf to file fp. File pointer fp should have been obtained from a call to fopen or freopen or be the standard output (stdout) or standard error (stderr). Return value is number of bytes actually written. Note that one matrix element reserves 8 bytes of space.</td>
+</tr>
+<tr class="odd">
+<td><code>n = fprintf(fp,fmt[, vec])</code></td>
+<td style="text-align: left;">Write formatted string to file fp. File pointer fp should have been obtained from a call to fopen or freopen or be the standard output (stdout) or standard error (stderr). The format fmt is equal to C-language format.</td>
+</tr>
+<tr class="even">
+<td><code>fputs(fp,str)</code></td>
+<td style="text-align: left;">Write string str to file fp. File pointer fp should have been obtained from a call to fopen or freopen or be the standard input (stdin).</td>
+</tr>
+<tr class="odd">
+<td><code>fp = fopen(name,mode)</code></td>
+<td style="text-align: left;">Reopen file given previous file pointer, name and access mode. The most usual modes are <code>"r"</code> for reading and <code>"w"</code> for writing. Return value fp is used in functions reading and writing the file.</td>
+</tr>
+<tr class="even">
+<td><code>fp = freopen(fp,name,mode)</code></td>
+<td style="text-align: left;">Reopen file given previous file pointer, name and access mode. The most usual modes are <code>"r"</code> for reading and <code>"w"</code> for writing. Return value fp is used in functions reading and writing the file.</td>
+</tr>
+<tr class="odd">
+<td><code>fclose(fp)</code></td>
+<td style="text-align: left;">Close file previously opened with fopen or freopen.</td>
+</tr>
+<tr class="even">
+<td><code>save(name, a[,ascii_flag])</code></td>
+<td style="text-align: left;">Close file previously opened with <code>fopen</code> or <code>freopen</code>.</td>
+</tr>
+<tr class="odd">
+<td><code>r = load(name)</code></td>
+<td style="text-align: left;">Load matrix from a file given name and in format used by <code>save</code> command.</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>Numerical utilities</li>
+</ul>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 11%">
+<col style="width: 88%">
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><code>r = min(matrix)</code></td>
+<td style="text-align: left;">Return value is a vector containing smallest element in columns of given matrix. r = min(min(matrix)) gives smallest element of the matrix.</td>
+</tr>
+<tr class="even">
+<td><code>r = max(matrix)</code></td>
+<td style="text-align: left;">Return value is a vector containing largest element in columns of given matrix. <code>r = max(max(matrix))</code> gives largest element of the matrix.</td>
+</tr>
+<tr class="odd">
+<td><code>r = sum(matrix)</code></td>
+<td style="text-align: left;">Return vector is column sums of given matrix. <code>r = sum(sum(matrix))</code> gives the total sum of elements of the matrix.</td>
+</tr>
+<tr class="even">
+<td><code>r = zeros(n,m)</code></td>
+<td style="text-align: left;">Return n by m matrix with elements initialized to zero.</td>
+</tr>
+<tr class="odd">
+<td><code>r = ones(n,m)</code></td>
+<td style="text-align: left;">Return n by m matrix with elements initialized to one.</td>
+</tr>
+<tr class="even">
+<td><code>r = rand(n,m)</code></td>
+<td style="text-align: left;">Return n by m matrix with elements initialized with random numbers from zero to one.</td>
+</tr>
+<tr class="odd">
+<td><code>r = diag(a)</code></td>
+<td style="text-align: left;">Given matrix return diagonal entries as a vector. Given vector return matrix with diagonal elements from vector. <code>r = diag(diag(a))</code> gives matrix with diagonal elements from matrix <code>a</code>, otherwise elements are zero.</td>
+</tr>
+<tr class="even">
+<td><code>r = vector(start,end,inc)</code></td>
+<td style="text-align: left;">Return vector of values going from start to end by inc.</td>
+</tr>
+<tr class="odd">
+<td><code>r = size(matrix)</code></td>
+<td style="text-align: left;">Return size of given matrix.</td>
+</tr>
+<tr class="even">
+<td><code>r = resize(matrix,n,m)</code></td>
+<td style="text-align: left;">Make a matrix to look as a <code>n</code> by <code>m</code> matrix. This is the same as <code>r = n m % matrix</code>.</td>
+</tr>
+<tr class="odd">
+<td><code>r = where(a)</code></td>
+<td style="text-align: left;">Return a row vector giving linear index to <code>a</code> where <code>a</code> is not zero.</td>
+</tr>
+<tr class="even">
+<td><code>r = matcvt(matrix, type)</code></td>
+<td style="text-align: left;">Makes a type conversion from MATC matrix double precision array to given type, which can be one of the following: <code>"int"</code>, <code>"char"</code> or <code>"float"</code>.</td>
+</tr>
+<tr class="odd">
+<td><code>r = cvtmat(special, type)</code></td>
+<td style="text-align: left;">Makes a type conversion from given type to MATC matrix. Type can be one of the following: <code>"int"</code>, <code>"char"</code> or <code>"float"</code>.</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>Linear algebra</li>
+</ul>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 18%">
+<col style="width: 82%">
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><code>r = trace(matrix)</code></td>
+<td style="text-align: left;">Return value is the sum of matrix diagonal elements.</td>
+</tr>
+<tr class="even">
+<td><code>r = det(matrix)</code></td>
+<td style="text-align: left;">Return value is determinant of given square matrix.</td>
+</tr>
+<tr class="odd">
+<td><code>r = inv(matrix)</code></td>
+<td style="text-align: left;">Invert given square matrix. Computed also by operator <span class="math inline">\(^{-1}\)</span></td>
+</tr>
+<tr class="even">
+<td><code>r = tril(x)</code></td>
+<td style="text-align: left;">Return the lower triangle of the matrix x.</td>
+</tr>
+<tr class="odd">
+<td><code>r = triu(x)</code></td>
+<td style="text-align: left;">Return the upper triangle of the matrix x.</td>
+</tr>
+<tr class="even">
+<td><code>r = eig(matrix)</code></td>
+<td style="text-align: left;">Return eigenvalues of given square matrix. The expression <code>r(n,0)</code> is real part of the n:th eigenvalue, <code>r(n,1)</code> is the imaginary part respectively.</td>
+</tr>
+<tr class="odd">
+<td><code>r = jacob(a,b,eps)</code></td>
+<td style="text-align: left;">Solve symmetric positive definite eigenvalue problem by Jacob iteration. Return values are the eigenvalues. Also a variable eigv is created containing eigenvectors.</td>
+</tr>
+<tr class="even">
+<td><code>r = lud(matrix)</code></td>
+<td style="text-align: left;">Return value is LUD decomposition of given matrix.</td>
+</tr>
+<tr class="odd">
+<td><code>r = hesse(matrix)</code></td>
+<td style="text-align: left;">Return the upper hessenberg form of given matrix.</td>
+</tr>
+<tr class="even">
+<td><code>r = eye(n)</code></td>
+<td style="text-align: left;">Return n by n identity matrix.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="usage" class="level2" data-number="12.6">
+<h2 data-number="12.6" class="anchored" data-anchor-id="usage"><span class="header-section-number">12.6</span> Usage</h2>
+<p>Although the language is pretty fast for most simple uses, it is much slower than Fortran extensions, so use with case when scalability is needed. Another point is overuse of MATC; do not use it with simple numerical expressions, <em>e.g.</em> <code>OneThird = Real $1.0/3.0</code> is much faster than its MATC counterpart <code>OneThird = Real MATC "1.0/3.0"</code>.</p>
+<ul>
+<li>Direct expression coding</li>
+</ul>
+<p>One thing that in my opinion lacks in the documentation are examples of use in conjunction with SIF. For instance, for setting the thermal conductivity of a material as temperature-dependent one could use the following snippet and modify the string to match the desired expression. An example of its usage is provided in <a href="https://github.com/wallytutor/WallyToolbox.jl/blob/main/apps/Elmer/conduction_refractory/transient_parallel/case.sif">this case</a>.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>&nbsp; Heat Conductivity <span class="op">=</span> Variable Temperature</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>&nbsp; &nbsp; Real MATC <span class="st">"1.0 - tx * (2.5E-03 - 1.2E-06 * tx)"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<ul>
+<li>Sourcing functions from user modules</li>
+</ul>
+<p>Models can become too complex to code in a single line. Hopefully MATC provides functions which can be declared in external modules. I avoid coding MATC directly in SIF because their syntax is different and that can quickly lead to unmaintainable code. An example of such external sourcing is provided in <a href="https://github.com/wallytutor/WallyToolbox.jl/tree/main/apps/Elmer/diffusion_solids/carburizing_slycke">this case</a>. You need to remember to call <code>source("module")</code> in <code>Simulation</code> section of SIF so that the functions can be used elsewhere. The call of a function become something as</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>&nbsp; Concentration Diffusivity <span class="op">=</span> Variable Concentration</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>&nbsp; &nbsp; Real MATC <span class="st">"diffusivity(tx)"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>if independent variable is concentration or for time</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>&nbsp; Mass Transfer Coefficient <span class="op">=</span> Variable Time</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>&nbsp; &nbsp; Real MATC <span class="st">"masstransfercoef(tx)"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>You can even use multiple variables, <em>e.g.</em></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>&nbsp; Mass Transfer Coefficient <span class="op">=</span> Variable Time<span class="op">,</span> Temperature</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>&nbsp; &nbsp; Real MATC <span class="st">"masstransfercoef(tx(0), tx(1))"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>PS: <em>I managed to use a single <code>source</code> in SIF, although the documentation does not state that many sources are forbidden; for some reason multiple sources work when sourcing from a file.</em></p>
+<p>For more complex cases such as <a href="https://github.com/wallytutor/WallyToolbox.jl/tree/main/apps/Elmer/diffusion_solids/carburizing_slycke_gui">this one</a> it is worth writing actual MATC function modules; since there is no syntax highlighter available for MATC in VS Code, the <code>.ini</code> extension seems to provide better readability to the code. The problem was split in two parts: the <a href="https://github.com/wallytutor/WallyToolbox.jl/blob/main/apps/Elmer/diffusion_solids/carburizing_slycke_gui/models.ini">models</a> which take care of sourcing the <a href="https://github.com/wallytutor/WallyToolbox.jl/blob/main/apps/Elmer/diffusion_solids/carburizing_slycke_gui/conditions.ini">conditions</a>, so that basic users could only edit the latter and run their variant calculations with no coding skills. Notice that the symbols that are used in <a href="https://github.com/wallytutor/WallyToolbox.jl/blob/main/apps/Elmer/diffusion_solids/carburizing_slycke_gui/case.sif">SIF</a> are exported from <a href="https://github.com/wallytutor/WallyToolbox.jl/blob/main/apps/Elmer/diffusion_solids/carburizing_slycke_gui/models.ini#L72">this line</a> instead of being set as global variables.</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../elmer/sif.html" class="pagination-link" aria-label="Solver Input Files (SIF)">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Solver Input Files (SIF)</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../fluent/index.html" class="pagination-link" aria-label="Ansys Fluent">
+        <span class="nav-page-text">Ansys Fluent</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

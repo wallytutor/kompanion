@@ -60,14 +60,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script><script src="site_libs/quarto-nav/quarto-nav.js"></script>
 <script src="site_libs/quarto-nav/headroom.min.js"></script>
 <script src="site_libs/clipboard/clipboard.min.js"></script>
 <script src="site_libs/quarto-search/autocomplete.umd.js"></script>
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./computing/portable.html" rel="next">
+<link href="./computing/index.html" rel="next">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
@@ -106,6 +106,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
+<script src="https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.min.js" integrity="sha384-c9c+LnTbwQ3aujuU7ULEPVvgLs+Fn6fJUvIGTsuu1ZcCf11fiEubah0ttpca4ntM sha384-6V1/AdqZRWk1KAlWbKBlGhN7VG4iE/yAZcO6NZPMF8od0vukrvr0tg4qY6NSrItx" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
 
 
 </head>
@@ -119,7 +122,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Kompanion</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html">Kompanion</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -147,12 +150,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./index.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Kompanion</span></span></a>
+ <span class="menu-text">Kompanion</span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false">
+            <a href="./computing/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Computing</span></a>
           <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
@@ -161,8 +164,155 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="./computing/git.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Git version control</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./computing/ssh.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Using SSH</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./computing/coding.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Scientific programming</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./computing/vscode.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Visual Studio Code</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./computing/windows.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Working on Windows</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./computing/containers.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Using containers</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./computing/tips.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">General Tips</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./computing/selection.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Selection of tools</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="./computing/portable.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Portable applications</span></span></a>
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Portable applications</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./elmer/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Elmer Multiphysics</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./elmer/elmer.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Elmer Fundamentals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./elmer/sif.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Solver Input Files (SIF)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./elmer/matc.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">MATC</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./fluent/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Ansys Fluent</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./fluent/tui-basics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Text user interface (TUI)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./fluent/tui-config.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">User profile</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./fluent/tui-setup.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Setup from TUI</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./fluent/tui-solution.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Solution from TUI</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./fluent/tui-results.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Results from TUI</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./fluent/pyfluent.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Getting started with PyFluent</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false">
+ <span class="menu-text">Montagne</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./tracks/carto.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Cartographie</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./tracks/liens.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Liens utiles</span></span></a>
   </div>
 </li>
       </ul>
@@ -183,10 +333,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#kompanion" id="toc-kompanion" class="nav-link active" data-scroll-target="#kompanion"><span class="header-section-number">1</span> Kompanion</a>
+  <li><a href="#kompanion" id="toc-kompanion" class="nav-link active" data-scroll-target="#kompanion">Kompanion</a>
   <ul class="collapse">
-  <li><a href="#foreword" id="toc-foreword" class="nav-link" data-scroll-target="#foreword"><span class="header-section-number">1.1</span> Foreword</a></li>
-  <li><a href="#building-the-notes" id="toc-building-the-notes" class="nav-link" data-scroll-target="#building-the-notes"><span class="header-section-number">1.2</span> Building the notes</a></li>
+  <li><a href="#foreword" id="toc-foreword" class="nav-link" data-scroll-target="#foreword">Foreword</a></li>
+  <li><a href="#installation" id="toc-installation" class="nav-link" data-scroll-target="#installation">Installation</a>
+  <ul class="collapse">
+  <li><a href="#before-you-start" id="toc-before-you-start" class="nav-link" data-scroll-target="#before-you-start">Before you start</a></li>
+  <li><a href="#automatic-sourcing" id="toc-automatic-sourcing" class="nav-link" data-scroll-target="#automatic-sourcing">Automatic sourcing</a></li>
+  <li><a href="#known-limitations" id="toc-known-limitations" class="nav-link" data-scroll-target="#known-limitations">Known limitations</a></li>
+  </ul></li>
+  <li><a href="#building-the-notes" id="toc-building-the-notes" class="nav-link" data-scroll-target="#building-the-notes">Building the notes</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -225,38 +381,456 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<section id="kompanion" class="level1" data-number="1">
-<h1 data-number="1"><span class="header-section-number">1</span> Kompanion</h1>
+<section id="kompanion" class="level1 unnumbered">
+<h1 class="unnumbered">Kompanion</h1>
 <p>This it the <em>Kompanion companion</em> notes!</p>
-<section id="foreword" class="level2" data-number="1.1">
-<h2 data-number="1.1" class="anchored" data-anchor-id="foreword"><span class="header-section-number">1.1</span> Foreword</h2>
+<p>Kompanion is a portable setup toolbox for working in Scientific Computing under Windows. It is designed to be used in a laptop with no or minor administrator rights, and it allows you to install and use a wide range of tools and libraries for scientific computing without the need for a full installation.</p>
+<p><strong>Important:</strong> before using this, please be aware that your company/university probably forbids the use of portable tools outside sandboxed systems. It is your responsability to use this toolbox only in systems where you are allowed to. The developper does not hold any resposibility on your failure to respect your local regulations.</p>
+<section id="foreword" class="level2">
+<h2 class="anchored" data-anchor-id="foreword">Foreword</h2>
 <p>For many years I have been trying to <em>work</em>… well, when you are in scientific computing you quickly discover that IT knows nothing about it and even in academic settings these guys are unaware of your needs. Those who are supposed to help you thrive are actually stopping you from even trying to do things. The <em>corporate</em> rules are too restrictive for any creative mind; <em>governance</em> means failure.</p>
 <p>As a natural rebel, I learned everything to by-pass rules. Early in my career, when I was working only in Linux systems, that was pretty easy as you can compile your code and that is not against the rules at all in most settings. That allowed me to develop a solid background in compiling the code of others, what is not always trivial. When reading the <em>README</em> and <em>INSTALL</em> projects of major scientific computing projects, you quickly realize the inconsistencies in procedures and the available flags for compilation. When faced many and many times with this sort of issue, you are obliged to master at least <code>Makefiles</code> and <code>CMakefiles</code>. The classical <code>Makefiles</code> may be obscure with some macro expansions doing weird stuff, while <code>CMakefiles</code> can be so huge that it takes years to fully create a grasp of them.</p>
 <p>Next, when moving into the corporate world, you will at some point be forced to go into Windows, and that was the case for me too. About 10 years ago, before the <em>big-bullshit era</em> of AI, the scientific computing for Windows was pretty poor. Even Python was quite limited, you most certainly needed to use Anaconda at that time. Most scientific libraries are harder to compile under Windows and you will probably learn about Cygwin and MSYS2 to try to overcome the issues, as getting a proper license of Windows compiler will probably be difficult unless that is your core job as a developer.</p>
-<p>The other part of the nightmare concerns <em>PortableApps</em>: you can’t simply trust those packages, and you don’t want to get in trouble by bringing some viruses home. To be avoided at all costs. That’s when you learn that many installers are simply zip packages and that you can extract them somewhat. It was that that gave rise to <em>Kompanion</em> (it had so many names and repositories over the years, but now we will stick with it): allow people to do scientific computing in a laptop with no or minor (needed to run codes in parallel) administrator rights. I discuss about that in more detail in a dedicated section <a href="computing/portable.html" class="quarto-xref"><span>Chapter 2</span></a>, and I strongly encourage you to read that to understand a bit what is happening under <code>kompanion.ps1</code> script without reading its thousands lines of <em>copy-paste</em> code.</p>
+<p>The other part of the nightmare concerns <em>PortableApps</em>: you can’t simply trust those packages, and you don’t want to get in trouble by bringing some viruses home. To be avoided at all costs. That’s when you learn that many installers are simply zip packages and that you can extract them somewhat. It was that that gave rise to <em>Kompanion</em> (it had so many names and repositories over the years, but now we will stick with it): allow people to do scientific computing in a laptop with no or minor (needed to run codes in parallel) administrator rights. I discuss about that in more detail in a dedicated section <a href="computing/portable.html" class="quarto-xref"><span>9&nbsp; Portable applications</span></a>, and I strongly encourage you to read that to understand a bit what is happening under <code>kompanion.ps1</code> script without reading its thousands lines of <em>copy-paste</em> code.</p>
 </section>
-<section id="building-the-notes" class="level2" data-number="1.2">
-<h2 data-number="1.2" class="anchored" data-anchor-id="building-the-notes"><span class="header-section-number">1.2</span> Building the notes</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a virtual environment</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> <span class="at">-m</span> venv .venv</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># On Windows, use</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="ex">.venv\Scripts\Activate.ps1</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Update pip</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> <span class="at">-m</span> pip install <span class="at">--upgrade</span> pip</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Install the required packages</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> <span class="at">-m</span> pip install <span class="at">-r</span> requirements.txt</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Use this to generate all formats</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="ex">quarto</span> render</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Or use these to generate specific formats</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="ex">quarto</span> render <span class="at">--to</span> html</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="ex">quarto</span> render <span class="at">--to</span> pdf</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Finally, to publish the notes on GitHub Pages, use</span></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="ex">quarto</span> publish gh-pages <span class="at">--no-prompt</span> <span class="at">--no-browser</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<section id="installation" class="level2">
+<h2 class="anchored" data-anchor-id="installation">Installation</h2>
+<section id="before-you-start" class="level3">
+<h3 class="anchored" data-anchor-id="before-you-start">Before you start</h3>
+<p>The minimal Kompanion setup includes:</p>
+<ul>
+<li>Visual Studio Code</li>
+<li>Python</li>
+<li>Git</li>
+<li>7-Zip</li>
+<li>Curl</li>
+</ul>
+<p>If that’s all you need, simply open a PowerShell terminal (preferred over the legacy <em>Windows PowerShell</em>) at this directory and run <code>.\kompanion.ps1</code> (or <code>.\kompanion.ps1 -RebuildOnStart</code> if the first run fails) to install the defaults. In most cases this will work out of the box, as the links for these tools are from well known sources and are generally not filtered by corporate firewalls. If that fails, you might need to build Kompanion elsewhere and drop it in a USB drive to transfer to your workstation.</p>
+<p>Installing the basic setup before tweaking the packages you need is a good choice, as generally you will have no proper code editor (other than the trashy Notepad) to configure <code>kompanion.json</code> file, as described in what follows. Also, if there are any errors, a minimal configuration will produce less messages and it will be easier to debug.</p>
+<p>After succeding the preliminary installation, you can start tweaking the packages you need. For that, run <code>.\kompanion.ps1 -RunVsCode</code> from this directory. That will start VSCode with the current project open. Under <code>.kompanion</code> directory you will find a <code>kompanion-sample.json</code> which allows one to configure packages to be installed. Copy this file and rename it to <code>kompanion.json</code>, where you can play with the <code>true/false</code> flags for selecting packages. After saving the file run <code>.\kompanion.ps1 -RebuildOnStart</code> once again and wait for completion.</p>
+<ul>
+<li>General purpose tools:</li>
+</ul>
+<div id="0c51578e" class="cell" data-execution_count="3">
+<div class="cell-output cell-output-display" data-execution_count="2">
+<div style="width: 300px;">
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th">Tool</th>
+<th data-quarto-table-cell-role="th">Install</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><div style="width:150px">
+drawio
+</div></td>
+<td><div style="width:150px">
+False
+</div></td>
+</tr>
+<tr class="even">
+<td><div style="width:150px">
+ffmpeg
+</div></td>
+<td><div style="width:150px">
+False
+</div></td>
+</tr>
+<tr class="odd">
+<td><div style="width:150px">
+imagemagick
+</div></td>
+<td><div style="width:150px">
+False
+</div></td>
+</tr>
+<tr class="even">
+<td><div style="width:150px">
+inkscape
+</div></td>
+<td><div style="width:150px">
+False
+</div></td>
+</tr>
+<tr class="odd">
+<td><div style="width:150px">
+jabref
+</div></td>
+<td><div style="width:150px">
+False
+</div></td>
+</tr>
+<tr class="even">
+<td><div style="width:150px">
+lessmsi
+</div></td>
+<td><div style="width:150px">
+False
+</div></td>
+</tr>
+<tr class="odd">
+<td><div style="width:150px">
+miktex
+</div></td>
+<td><div style="width:150px">
+False
+</div></td>
+</tr>
+<tr class="even">
+<td><div style="width:150px">
+msys2
+</div></td>
+<td><div style="width:150px">
+False
+</div></td>
+</tr>
+<tr class="odd">
+<td><div style="width:150px">
+nteract
+</div></td>
+<td><div style="width:150px">
+False
+</div></td>
+</tr>
+<tr class="even">
+<td><div style="width:150px">
+nvim
+</div></td>
+<td><div style="width:150px">
+False
+</div></td>
+</tr>
+<tr class="odd">
+<td><div style="width:150px">
+pandoc
+</div></td>
+<td><div style="width:150px">
+False
+</div></td>
+</tr>
+<tr class="even">
+<td><div style="width:150px">
+poppler
+</div></td>
+<td><div style="width:150px">
+False
+</div></td>
+</tr>
+<tr class="odd">
+<td><div style="width:150px">
+quarto
+</div></td>
+<td><div style="width:150px">
+False
+</div></td>
+</tr>
+<tr class="even">
+<td><div style="width:150px">
+tabby
+</div></td>
+<td><div style="width:150px">
+False
+</div></td>
+</tr>
+<tr class="odd">
+<td><div style="width:150px">
+zettlr
+</div></td>
+<td><div style="width:150px">
+False
+</div></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<ul>
+<li>Programming languages:</li>
+</ul>
+<div id="1dea0934" class="cell" data-execution_count="4">
+<div class="cell-output cell-output-display" data-execution_count="3">
+<div style="width: 300px;">
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th">Tool</th>
+<th data-quarto-table-cell-role="th">Install</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><div style="width:150px">
+coq
+</div></td>
+<td><div style="width:150px">
+False
+</div></td>
+</tr>
+<tr class="even">
+<td><div style="width:150px">
+elm
+</div></td>
+<td><div style="width:150px">
+False
+</div></td>
+</tr>
+<tr class="odd">
+<td><div style="width:150px">
+erlang
+</div></td>
+<td><div style="width:150px">
+False
+</div></td>
+</tr>
+<tr class="even">
+<td><div style="width:150px">
+haskell
+</div></td>
+<td><div style="width:150px">
+False
+</div></td>
+</tr>
+<tr class="odd">
+<td><div style="width:150px">
+julia
+</div></td>
+<td><div style="width:150px">
+False
+</div></td>
+</tr>
+<tr class="even">
+<td><div style="width:150px">
+node
+</div></td>
+<td><div style="width:150px">
+False
+</div></td>
+</tr>
+<tr class="odd">
+<td><div style="width:150px">
+racket
+</div></td>
+<td><div style="width:150px">
+False
+</div></td>
+</tr>
+<tr class="even">
+<td><div style="width:150px">
+rlang
+</div></td>
+<td><div style="width:150px">
+False
+</div></td>
+</tr>
+<tr class="odd">
+<td><div style="width:150px">
+rust
+</div></td>
+<td><div style="width:150px">
+True
+</div></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<ul>
+<li>Scientific libraries:</li>
+</ul>
+<div id="440c8e67" class="cell" data-execution_count="5">
+<div class="cell-output cell-output-display" data-execution_count="4">
+<div style="width: 300px;">
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th">Tool</th>
+<th data-quarto-table-cell-role="th">Install</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><div style="width:150px">
+blender
+</div></td>
+<td><div style="width:150px">
+False
+</div></td>
+</tr>
+<tr class="even">
+<td><div style="width:150px">
+dwsim
+</div></td>
+<td><div style="width:150px">
+False
+</div></td>
+</tr>
+<tr class="odd">
+<td><div style="width:150px">
+elmer
+</div></td>
+<td><div style="width:150px">
+False
+</div></td>
+</tr>
+<tr class="even">
+<td><div style="width:150px">
+freecad
+</div></td>
+<td><div style="width:150px">
+False
+</div></td>
+</tr>
+<tr class="odd">
+<td><div style="width:150px">
+freefem
+</div></td>
+<td><div style="width:150px">
+False
+</div></td>
+</tr>
+<tr class="even">
+<td><div style="width:150px">
+gmsh
+</div></td>
+<td><div style="width:150px">
+False
+</div></td>
+</tr>
+<tr class="odd">
+<td><div style="width:150px">
+meshlab
+</div></td>
+<td><div style="width:150px">
+False
+</div></td>
+</tr>
+<tr class="even">
+<td><div style="width:150px">
+opencascade
+</div></td>
+<td><div style="width:150px">
+False
+</div></td>
+</tr>
+<tr class="odd">
+<td><div style="width:150px">
+paraview
+</div></td>
+<td><div style="width:150px">
+False
+</div></td>
+</tr>
+<tr class="even">
+<td><div style="width:150px">
+prepomax
+</div></td>
+<td><div style="width:150px">
+False
+</div></td>
+</tr>
+<tr class="odd">
+<td><div style="width:150px">
+radcal
+</div></td>
+<td><div style="width:150px">
+False
+</div></td>
+</tr>
+<tr class="even">
+<td><div style="width:150px">
+su2
+</div></td>
+<td><div style="width:150px">
+False
+</div></td>
+</tr>
+<tr class="odd">
+<td><div style="width:150px">
+tesseract
+</div></td>
+<td><div style="width:150px">
+False
+</div></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<p><strong>Note:</strong> please notice that if some package fails to download, <em>e.g.</em> firewall issues, you might need to manually clean the respective folder under <code>.kompanion\bin</code> before running again. Simply delete the directory named after the failed package. You may also need to delete the file named after that package under <code>.kompanion\temp</code> as there be a partial download there.</p>
+<p>If you want to save some important disk space, after installation you can delete the whole <code>.kompanion\temp</code>.</p>
+<p>Now you should be good to go!</p>
+</section>
+<section id="automatic-sourcing" class="level3">
+<h3 class="anchored" data-anchor-id="automatic-sourcing">Automatic sourcing</h3>
+<p>This section describes how to get Kompanion automatically sourced in your user profile for all PowerShell sessions. Start by creating an environment variable <code>KOMPANION_SOURCE</code> pointing to the <em>full-path</em> of file <code>kompanion.ps1</code>.</p>
+<p>From Windows menu, search for <em>Environment variables for your account</em> and open it. Click on <em>New</em> create a variable named <code>KOMPANION_SOURCE</code>; use the <em>Browse file…</em> button to select the <code>kompanion.ps1</code> file to get the right path.</p>
+<p>For instance, if you are called like me and cloned this repository at <code>GitHub\kompanion</code> under your profile, then its value should be <code>C:\Users\walter\GitHub\kompanion\kompanion.ps1</code></p>
+<p>Next, start PowerShell and identify the path to your user profile:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode ps1 code-with-copy"><code class="sourceCode powershell"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">echo</span> <span class="va">$PROFILE</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>If that file does not exist, create it with:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode ps1 code-with-copy"><code class="sourceCode powershell"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">New-Item</span> <span class="op">-</span>ItemType File <span class="op">-</span>Path <span class="va">$PROFILE</span> <span class="op">-</span>Force</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Now you can run <code>notepad $PROFILE</code> to open it and append the following lines:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode ps1 code-with-copy"><code class="sourceCode powershell"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="op">(</span><span class="fu">Test-Path</span> <span class="va">$env</span><span class="op">:</span><span class="va">KOMPANION_SOURCE</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span> <span class="va">$env</span><span class="op">:</span><span class="va">KOMPANION_SOURCE</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Uncomment the following if you want the terminal to start at</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="co"># the root of this repository; useful for development.</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="co"># cd "$env:KOMPANION_DIR"</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="op">}</span> <span class="cf">else</span> <span class="op">{</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">Write-Host</span> <span class="st">"KOMPANION_SOURCE not found at '</span><span class="va">$env</span><span class="op">:</span><span class="va">KOMPANION_SOURCE</span><span class="st">'"</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Now all PowerShell sessions will automatically source Kompanion, and you can start using it right away. You can run <code>Kode</code> from any directory to open the root of this repository in VSCode.</p>
+</section>
+<section id="known-limitations" class="level3">
+<h3 class="anchored" data-anchor-id="known-limitations">Known limitations</h3>
+<ul>
+<li><p>Windows MPI support (as required by SU2 in their distributed version) still requires administrator rights, as you need to install the <a href="https://learn.microsoft.com/en-us/message-passing-interface/microsoft-mpi">Microsoft MPI</a>.</p></li>
+<li><p>You cannot pin the editor to the taskbar (because of how sourcing environment works), but you can create a shortcut to <code>kode.vbs</code> in your desktop.</p></li>
+</ul>
+</section>
+</section>
+<section id="building-the-notes" class="level2">
+<h2 class="anchored" data-anchor-id="building-the-notes">Building the notes</h2>
+<p>Notes are built using <a href="https://quarto.org/">Quarto</a>, and you can find the source code in this repository. To build the notes, you need to have that tool, Python and Rust enabled in Kompanion. Then you can follow these steps to create a virtual environment, install the required packages and build the notes:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a virtual environment</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> <span class="at">-m</span> venv .venv</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co"># On Windows, use</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="ex">.venv\Scripts\Activate.ps1</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Update pip</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> <span class="at">-m</span> pip install <span class="at">--upgrade</span> pip</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Install the required packages</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> <span class="at">-m</span> pip install <span class="at">-r</span> requirements.txt</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Use this to generate all formats</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="ex">quarto</span> render</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Or use these to generate specific formats</span></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a><span class="ex">quarto</span> render <span class="at">--to</span> html</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a><span class="ex">quarto</span> render <span class="at">--to</span> pdf</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Finally, to publish the notes on GitHub Pages, use</span></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a><span class="co"># (you need to be an allowed project collaborator to do this)</span></span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a><span class="ex">quarto</span> publish gh-pages <span class="at">--no-prompt</span> <span class="at">--no-browser</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
 
 </section>
@@ -667,8 +1241,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <div class="nav-page nav-page-previous">
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./computing/portable.html" class="pagination-link" aria-label="Portable applications">
-        <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Portable applications</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./computing/index.html" class="pagination-link" aria-label="Computing">
+        <span class="nav-page-text">Computing</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

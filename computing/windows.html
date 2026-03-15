@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>9&nbsp; Portable applications – Kompanion</title>
+<title>5&nbsp; Working on Windows – Kompanion</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,6 +20,41 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -30,8 +65,8 @@ ul.task-list li input[type="checkbox"] {
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
-<link href="../elmer/index.html" rel="next">
-<link href="../computing/selection.html" rel="prev">
+<link href="../computing/containers.html" rel="next">
+<link href="../computing/vscode.html" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
@@ -83,7 +118,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../computing/index.html">Computing</a></li><li class="breadcrumb-item"><a href="../computing/portable.html"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Portable applications</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../computing/index.html">Computing</a></li><li class="breadcrumb-item"><a href="../computing/windows.html"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Working on Windows</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -149,7 +184,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../computing/windows.html" class="sidebar-item-text sidebar-link">
+  <a href="../computing/windows.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Working on Windows</span></span></a>
   </div>
 </li>
@@ -173,7 +208,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../computing/portable.html" class="sidebar-item-text sidebar-link active">
+  <a href="../computing/portable.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Portable applications</span></span></a>
   </div>
 </li>
@@ -294,25 +329,23 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#how-does-it-work" id="toc-how-does-it-work" class="nav-link active" data-scroll-target="#how-does-it-work"><span class="header-section-number">9.1</span> How does it work?</a></li>
-  <li><a href="#other-possibly-supported-applications" id="toc-other-possibly-supported-applications" class="nav-link" data-scroll-target="#other-possibly-supported-applications"><span class="header-section-number">9.2</span> Other possibly supported applications</a></li>
-  <li><a href="#software-specific-instructions" id="toc-software-specific-instructions" class="nav-link" data-scroll-target="#software-specific-instructions"><span class="header-section-number">9.3</span> Software specific instructions</a>
+  <li><a href="#command-line-basics" id="toc-command-line-basics" class="nav-link active" data-scroll-target="#command-line-basics"><span class="header-section-number">5.1</span> Command line basics</a></li>
+  <li><a href="#creating-a-portable-launcher" id="toc-creating-a-portable-launcher" class="nav-link" data-scroll-target="#creating-a-portable-launcher"><span class="header-section-number">5.2</span> Creating a portable launcher</a></li>
+  <li><a href="#mount-a-network-drive-in-wsl" id="toc-mount-a-network-drive-in-wsl" class="nav-link" data-scroll-target="#mount-a-network-drive-in-wsl"><span class="header-section-number">5.3</span> Mount a network drive in WSL</a></li>
+  <li><a href="#following-the-writing-to-a-file" id="toc-following-the-writing-to-a-file" class="nav-link" data-scroll-target="#following-the-writing-to-a-file"><span class="header-section-number">5.4</span> Following the writing to a file</a>
   <ul class="collapse">
-  <li><a href="#dualsphysics" id="toc-dualsphysics" class="nav-link" data-scroll-target="#dualsphysics"><span class="header-section-number">9.3.1</span> DualSPHysics</a></li>
-  <li><a href="#gmsh" id="toc-gmsh" class="nav-link" data-scroll-target="#gmsh"><span class="header-section-number">9.3.2</span> gmsh</a></li>
-  <li><a href="#graphviz" id="toc-graphviz" class="nav-link" data-scroll-target="#graphviz"><span class="header-section-number">9.3.3</span> Graphviz</a></li>
-  <li><a href="#mfix" id="toc-mfix" class="nav-link" data-scroll-target="#mfix"><span class="header-section-number">9.3.4</span> MFiX</a></li>
+  <li><a href="#finding-a-process-handle" id="toc-finding-a-process-handle" class="nav-link" data-scroll-target="#finding-a-process-handle"><span class="header-section-number">5.4.1</span> Finding a process handle</a></li>
   </ul></li>
-  <li><a href="#creating-a-portable-environment" id="toc-creating-a-portable-environment" class="nav-link" data-scroll-target="#creating-a-portable-environment"><span class="header-section-number">9.4</span> Creating a portable environment</a></li>
+  <li><a href="#identifying-a-proxy-pem" id="toc-identifying-a-proxy-pem" class="nav-link" data-scroll-target="#identifying-a-proxy-pem"><span class="header-section-number">5.5</span> Identifying a proxy PEM</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../computing/index.html">Computing</a></li><li class="breadcrumb-item"><a href="../computing/portable.html"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Portable applications</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../computing/index.html">Computing</a></li><li class="breadcrumb-item"><a href="../computing/windows.html"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Working on Windows</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span id="sec-portable" class="quarto-section-identifier"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Portable applications</span></span></h1>
+<h1 class="title"><span id="sec-working-on-windows" class="quarto-section-identifier"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Working on Windows</span></span></h1>
 </div>
 
 
@@ -329,98 +362,96 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="how-does-it-work" class="level2" data-number="9.1">
-<h2 data-number="9.1" class="anchored" data-anchor-id="how-does-it-work"><span class="header-section-number">9.1</span> How does it work?</h2>
-<p><em>Kompanion</em> is intended to be used as a portable environment with <em>almost</em> all batteries included. Applications are placed under <code>.kompanion/bin/</code> directory and all configuration of paths and other required environment variables are provided by <em>kompanion.ps1</em> script.</p>
-<p>It mostly revolves around <a href="https://code.visualstudio.com/download">VS Code</a>. You launch the editor through a dedicated script and everything else is available in its terminal. That said, the whole of the ecosystem is command line based - but this is scientific computing, if you don’t know command line you are in the wrong job. If you followed the instructions to source Kompanion from $PROFILE, then you can also launch the terminal from the start menu and everything will be available there as well.</p>
-<p>It is intended to leave minimal track on host system (probably a few files and directories on your user home directory or under <em>AppData</em>), but this is not enforced in its development, so take care if you are not allowed to execute some software in a given computer.</p>
+<section id="command-line-basics" class="level2" data-number="5.1">
+<h2 data-number="5.1" class="anchored" data-anchor-id="command-line-basics"><span class="header-section-number">5.1</span> Command line basics</h2>
+<p>If this is you first time using the command prompt you might be interested by this section. The command prompt (often referred to as <em>terminal</em> in Linux world) is your interface to interact with the operating system and many available tools. To learn any useful scientific computing skills it is useful to get a grasp of its use because it is there that we will launch most applications. The illustrations below assume you are working under Windows, but the introductory commands are common to most operating systems.</p>
+<p>Now let’s launch a terminal. If you are working under VS Code you can use the shortcut to display the terminal <code>Ctrl+J</code>; the bottom of your window should display something as</p>
+<pre class="pwsh-session"><code>PS D:\Kompanion&gt;</code></pre>
+<p>The start of this line displays you <em>path</em> in the system; depending on your configuration that could not be the case and you can ask the OS to give you that with <code>pwd</code> (print working directory)</p>
+<pre class="pwsh-session"><code>PS D:\Kompanion&gt; pwd
+
+Path
+----
+D:\Kompanion</code></pre>
+<p>If you are invited to move to directory <code>src</code> you may which to use command <em>change directory</em>, or <code>cd</code> in the system’s language</p>
+<pre class="pwsh-session"><code>PS D:\Kompanion&gt; cd .\bin\
+PS D:\Kompanion\bin&gt;</code></pre>
+<p>Now that you reached your destination, you might be interested at inspecting the contents of this directory, <em>i.e.</em> listing its contents; that is done with <code>ls</code> as follows</p>
+<pre class="pwsh-session"><code>PS D:\Kompanion\bin&gt; ls
+
+
+    Directory: D:\Kompanion\bin
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----         1/31/2025  11:11 AM                apps
+d-----          2/3/2025   9:19 AM                data
+d-----         1/30/2025   2:34 PM                downloads
+d-----          2/3/2025  11:50 AM                pkgs
+d-----         1/31/2025   9:33 AM                scripts
+d-----         1/30/2025   9:58 AM                tests
+-a----         1/31/2025   9:33 AM           2697 activate.bat
+-a----         1/30/2025   9:58 AM            161 code.bat
+-a----         1/30/2025   9:58 AM            132 kode.bat
+-a----         1/30/2025   9:58 AM            131 kpip.bat</code></pre>
+<p>Oops! It was not the directory you wanted to go to! No problems, you can navigate <em>one-level-upwards</em> using the special symbol <code>..</code> (two dots) and change directory again</p>
+<pre class="pwsh-session"><code>PS D:\Kompanion\bin&gt; cd ..\docs\
+PS D:\Kompanion\docs&gt;</code></pre>
+<p>This is the minimum you need to know: navigate, know your address, inspect contents.</p>
 </section>
-<section id="other-possibly-supported-applications" class="level2" data-number="9.2">
-<h2 data-number="9.2" class="anchored" data-anchor-id="other-possibly-supported-applications"><span class="header-section-number">9.2</span> Other possibly supported applications</h2>
-<p>The following packages are not currently included in Kompanion, but they are known to be somewhat portable and they might be added in the future. Those displayed in italics cannot be currently automated, but they can be installed in a machine then copied to Kompanion (ongoing investigation on how to automate that). Also check the <a href="selection.html" class="quarto-xref"><span>Chapter 8</span></a> for a software selection that might be of interest for you and maybe not listed here.</p>
-<ul>
-<li>DualSPHysics</li>
-<li>Dyssol</li>
-<li>Fiji</li>
-<li>FileZilla</li>
-<li><em>FreeFEM++</em></li>
-<li>gnuplot</li>
-<li>Graphviz</li>
-<li><a href="https://iperf.fr/">iperf</a></li>
-<li>Ipopt</li>
-<li>Jamovi</li>
-<li>JASP</li>
-<li>lazarus</li>
-<li><a href="https://github.com/lite-xl/lite-xl">lite-xl</a></li>
-<li>LAMMPS</li>
-<li>MFiX</li>
-<li>MSYS2</li>
-<li>MUSEN</li>
-<li><a href="https://notepad-plus-plus.org/downloads/">Notepad++</a></li>
-<li>Octave</li>
-<li>OpenCALPHAD</li>
-<li>OpenModelica</li>
-<li>Orange3</li>
-<li>Portable LISP</li>
-<li>puTTy</li>
-<li>Ruby</li>
-<li>Rufus (requires admin privileges to be used though)</li>
-<li>SALOME (needs to be manually downloaded)</li>
-<li><em>Scilab</em></li>
-<li>strawberry-perl</li>
-<li>VMD</li>
-<li><a href="https://studio.zerobrane.com/">ZeroBraneStudio</a></li>
-<li><a href="https://www.zettlr.com/">Zettlr</a></li>
-<li><a href="https://xpra.org/index.html">Xpra</a></li>
-</ul>
+<section id="creating-a-portable-launcher" class="level2" data-number="5.2">
+<h2 data-number="5.2" class="anchored" data-anchor-id="creating-a-portable-launcher"><span class="header-section-number">5.2</span> Creating a portable launcher</h2>
+<p>A simple way to create a portable launcher requiring to source extra variables is by writing a simple batch script exporting or calling another script with the definitions:</p>
+<pre class="batch"><code>@echo off
+
+@REM Add variables to be sourced here such as
+@REM set PATH="/path/to/some/dir";%PATH%
+@REM ... or call another shared script doing so.
+@REM call %~dp0\env
+
+MyCode.exe</code></pre>
+<p>Because a batch script will keep a console window open, create a VB file with the following</p>
+<pre class="visual-basic"><code>Set oShell = CreateObject ("Wscript.Shell")
+Dim strArgs
+strArgs = "cmd /c MyCode.bat"
+oShell.Run strArgs, 0, false</code></pre>
+<p>In the example we assume the program is called <code>MyCode.exe</code> and the batch script has been named in an analogous way <code>MyCode.bat</code>.</p>
 </section>
-<section id="software-specific-instructions" class="level2" data-number="9.3">
-<h2 data-number="9.3" class="anchored" data-anchor-id="software-specific-instructions"><span class="header-section-number">9.3</span> Software specific instructions</h2>
-<section id="dualsphysics" class="level3" data-number="9.3.1">
-<h3 data-number="9.3.1" class="anchored" data-anchor-id="dualsphysics"><span class="header-section-number">9.3.1</span> DualSPHysics</h3>
-<p>For <a href="https://dual.sphysics.org/downloads/">DualSPHysics</a> one might also want to install <a href="https://github.com/DualSPHysics/DesignSPHysics">this FreeCAD addon</a> and <a href="https://github.com/EPhysLab-UVigo/VisualSPHysics">this Blender addon</a>.</p>
+<section id="mount-a-network-drive-in-wsl" class="level2" data-number="5.3">
+<h2 data-number="5.3" class="anchored" data-anchor-id="mount-a-network-drive-in-wsl"><span class="header-section-number">5.3</span> Mount a network drive in WSL</h2>
+<p>Here we assume we will mount drive <code>Z:</code> at <code>/mnt/z</code>:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the mount point (if required):</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> mkdir /mnt/z</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Mount the network drive in WSL:</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> mount <span class="at">-t</span> drvfs Z: /mnt/z</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Actually the same procedure can be used to access a SMB drive from within WSL temporarily with:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> mount <span class="at">-t</span> drvfs <span class="st">'\\path\to\smb'</span> /mnt/<span class="op">&lt;</span>mount-point<span class="op">&gt;</span>/</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>For automatic remount, consider adding the following to your <code>/etc/fstab</code></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="ex">//path/to/smb</span> /mnt/<span class="op">&lt;</span>mount-point<span class="op">&gt;</span>/ drvfs auto,rw,nosuid,exec,uid=1000,gid=1000 0 0</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
-<section id="gmsh" class="level3" data-number="9.3.2">
-<h3 data-number="9.3.2" class="anchored" data-anchor-id="gmsh"><span class="header-section-number">9.3.2</span> gmsh</h3>
-<p>Because it was chosen that SDK version of gmsh was more adapted to integrate Kompanion, if you want to be able to pin the executable to your taskbar you need to copy the DLL from its <code>lib/</code> directory to <code>bin/</code>. If you think you will not need Python/Julia interfaces of gmsh, then you can move the DLL instead to save ~80MB of disk (and you can always install gmsh with pip for those cases).</p>
-</section>
-<section id="graphviz" class="level3" data-number="9.3.3">
-<h3 data-number="9.3.3" class="anchored" data-anchor-id="graphviz"><span class="header-section-number">9.3.3</span> Graphviz</h3>
-<p>If the first time you run <code>dot</code> you get a message as</p>
-<pre class="text"><code>There is no layout engine support for "dot"
-Perhaps "dot -c" needs to be run (with installer's privileges) to register the plugins?</code></pre>
-<p>Simply run <code>dot -c</code> as suggested and it should work fine (without admin privileges).</p>
-</section>
-<section id="mfix" class="level3" data-number="9.3.4">
-<h3 data-number="9.3.4" class="anchored" data-anchor-id="mfix"><span class="header-section-number">9.3.4</span> MFiX</h3>
-<p>This package is <a href="https://mfix.netl.doe.gov/products/mfix/download/">installed</a> in a separate environment and not added to the toolbox path; that is because other Python environments could interact with each other and lead to unpredictable behavior. The following instructions are provided:</p>
-<ul>
-<li><p>Install <a href="https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Windows-x86_64.exe">miniforge3</a> under a dedicated directory.</p></li>
-<li><p>Add a script with the following content to launch miniforge console:</p></li>
-</ul>
-<pre class="shell"><code>%windir%\system32\cmd.exe "/K" ^
-    %~dp0\miniforge3\Scripts\activate.bat ^
-    %~dp0\miniforge3</code></pre>
-<ul>
-<li>Go to the <a href="https://mfix.netl.doe.gov/mfix/download-mfix">downloads</a> page, login and copy the personal installation command that looks like the following:</li>
-</ul>
-<pre class="shell"><code>conda create -n mfix-&lt;version&gt; ^
-    mfix==&lt;version&gt;            ^
-    mfix-doc==&lt;version&gt;        ^
-    mfix-gui==&lt;version&gt;        ^
-    mfix-solver==&lt;version&gt;     ^
-    mfix-src==&lt;version&gt;        ^
-    -c conda-forge -c          ^
-    https://mfix.netl.doe.gov/s3/&lt;personal-token&gt;//conda/dist</code></pre>
-<ul>
-<li>To run the software activate the created environment and call its executable:</li>
-</ul>
-<pre class="shell"><code>conda activate mfix-&lt;version&gt;
-mfix</code></pre>
+<section id="following-the-writing-to-a-file" class="level2" data-number="5.4">
+<h2 data-number="5.4" class="anchored" data-anchor-id="following-the-writing-to-a-file"><span class="header-section-number">5.4</span> Following the writing to a file</h2>
+<p>This is equivalent to Linux <code>tail -f &lt;file-path&gt;</code>:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="ex">Get-Content</span> <span class="at">-Path</span> <span class="st">"&lt;file-path&gt;"</span> <span class="at">-Wait</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<section id="finding-a-process-handle" class="level3" data-number="5.4.1">
+<h3 data-number="5.4.1" class="anchored" data-anchor-id="finding-a-process-handle"><span class="header-section-number">5.4.1</span> Finding a process handle</h3>
+<p>This is useful when Windows won’t let you move a file or folder because <em>it is already open somewhere</em>. First, download and extract <a href="https://learn.microsoft.com/en-us/sysinternals/downloads/handle">Handle</a>; from PowerShell run the following:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="ex">./handle.exe</span> <span class="at">-u</span> <span class="at">-nobanner</span> <span class="st">"C:\Path\To\File.txt"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Notice that your file might have started another process and some research might be required.</p>
 </section>
 </section>
-<section id="creating-a-portable-environment" class="level2" data-number="9.4">
-<h2 data-number="9.4" class="anchored" data-anchor-id="creating-a-portable-environment"><span class="header-section-number">9.4</span> Creating a portable environment</h2>
+<section id="identifying-a-proxy-pem" class="level2" data-number="5.5">
+<h2 data-number="5.5" class="anchored" data-anchor-id="identifying-a-proxy-pem"><span class="header-section-number">5.5</span> Identifying a proxy PEM</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># List all root certs:</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="ex">Get-ChildItem</span> <span class="at">-Path</span> Cert:<span class="dt">\L</span>ocalMachine<span class="dt">\R</span>oot</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Export a specific one:</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="va">$cert</span> = Get-ChildItem <span class="at">-Path</span> Cert:<span class="dt">\L</span>ocalMachine<span class="dt">\R</span>oot <span class="kw">|</span> <span class="ex">Where-Object</span> {</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="ex">&nbsp;</span> &nbsp; <span class="va">$_</span>.Subject <span class="at">-like</span> <span class="st">"*&lt;company-name-generally&gt;*"</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="er">}</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="ex">Export-Certificate</span> <span class="at">-Cert</span> <span class="va">$cert</span> <span class="at">-FilePath</span> <span class="st">"proxy.pem"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
 
 </section>
@@ -828,13 +859,13 @@ mfix</code></pre>
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../computing/selection.html" class="pagination-link" aria-label="Selection of tools">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Selection of tools</span></span>
+      <a href="../computing/vscode.html" class="pagination-link" aria-label="Visual Studio Code">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Visual Studio Code</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../elmer/index.html" class="pagination-link" aria-label="Elmer Multiphysics">
-        <span class="nav-page-text">Elmer Multiphysics</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../computing/containers.html" class="pagination-link" aria-label="Using containers">
+        <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Using containers</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

@@ -4,29 +4,1175 @@
     "href": "index.html",
     "title": "Kompanion",
     "section": "",
-    "text": "1 Kompanion\nThis it the Kompanion companion notes!",
+    "text": "Kompanion\nThis it the Kompanion companion notes!\nKompanion is a portable setup toolbox for working in Scientific Computing under Windows. It is designed to be used in a laptop with no or minor administrator rights, and it allows you to install and use a wide range of tools and libraries for scientific computing without the need for a full installation.\nImportant: before using this, please be aware that your company/university probably forbids the use of portable tools outside sandboxed systems. It is your responsability to use this toolbox only in systems where you are allowed to. The developper does not hold any resposibility on your failure to respect your local regulations.",
     "crumbs": [
-      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Kompanion</span>"
+      "Kompanion"
     ]
   },
   {
     "objectID": "index.html#foreword",
     "href": "index.html#foreword",
     "title": "Kompanion",
-    "section": "1.1 Foreword",
-    "text": "1.1 Foreword\nFor many years I have been trying to work… well, when you are in scientific computing you quickly discover that IT knows nothing about it and even in academic settings these guys are unaware of your needs. Those who are supposed to help you thrive are actually stopping you from even trying to do things. The corporate rules are too restrictive for any creative mind; governance means failure.\nAs a natural rebel, I learned everything to by-pass rules. Early in my career, when I was working only in Linux systems, that was pretty easy as you can compile your code and that is not against the rules at all in most settings. That allowed me to develop a solid background in compiling the code of others, what is not always trivial. When reading the README and INSTALL projects of major scientific computing projects, you quickly realize the inconsistencies in procedures and the available flags for compilation. When faced many and many times with this sort of issue, you are obliged to master at least Makefiles and CMakefiles. The classical Makefiles may be obscure with some macro expansions doing weird stuff, while CMakefiles can be so huge that it takes years to fully create a grasp of them.\nNext, when moving into the corporate world, you will at some point be forced to go into Windows, and that was the case for me too. About 10 years ago, before the big-bullshit era of AI, the scientific computing for Windows was pretty poor. Even Python was quite limited, you most certainly needed to use Anaconda at that time. Most scientific libraries are harder to compile under Windows and you will probably learn about Cygwin and MSYS2 to try to overcome the issues, as getting a proper license of Windows compiler will probably be difficult unless that is your core job as a developer.\nThe other part of the nightmare concerns PortableApps: you can’t simply trust those packages, and you don’t want to get in trouble by bringing some viruses home. To be avoided at all costs. That’s when you learn that many installers are simply zip packages and that you can extract them somewhat. It was that that gave rise to Kompanion (it had so many names and repositories over the years, but now we will stick with it): allow people to do scientific computing in a laptop with no or minor (needed to run codes in parallel) administrator rights. I discuss about that in more detail in a dedicated section Chapter 2, and I strongly encourage you to read that to understand a bit what is happening under kompanion.ps1 script without reading its thousands lines of copy-paste code.",
+    "section": "Foreword",
+    "text": "Foreword\nFor many years I have been trying to work… well, when you are in scientific computing you quickly discover that IT knows nothing about it and even in academic settings these guys are unaware of your needs. Those who are supposed to help you thrive are actually stopping you from even trying to do things. The corporate rules are too restrictive for any creative mind; governance means failure.\nAs a natural rebel, I learned everything to by-pass rules. Early in my career, when I was working only in Linux systems, that was pretty easy as you can compile your code and that is not against the rules at all in most settings. That allowed me to develop a solid background in compiling the code of others, what is not always trivial. When reading the README and INSTALL projects of major scientific computing projects, you quickly realize the inconsistencies in procedures and the available flags for compilation. When faced many and many times with this sort of issue, you are obliged to master at least Makefiles and CMakefiles. The classical Makefiles may be obscure with some macro expansions doing weird stuff, while CMakefiles can be so huge that it takes years to fully create a grasp of them.\nNext, when moving into the corporate world, you will at some point be forced to go into Windows, and that was the case for me too. About 10 years ago, before the big-bullshit era of AI, the scientific computing for Windows was pretty poor. Even Python was quite limited, you most certainly needed to use Anaconda at that time. Most scientific libraries are harder to compile under Windows and you will probably learn about Cygwin and MSYS2 to try to overcome the issues, as getting a proper license of Windows compiler will probably be difficult unless that is your core job as a developer.\nThe other part of the nightmare concerns PortableApps: you can’t simply trust those packages, and you don’t want to get in trouble by bringing some viruses home. To be avoided at all costs. That’s when you learn that many installers are simply zip packages and that you can extract them somewhat. It was that that gave rise to Kompanion (it had so many names and repositories over the years, but now we will stick with it): allow people to do scientific computing in a laptop with no or minor (needed to run codes in parallel) administrator rights. I discuss about that in more detail in a dedicated section 9  Portable applications, and I strongly encourage you to read that to understand a bit what is happening under kompanion.ps1 script without reading its thousands lines of copy-paste code.",
     "crumbs": [
-      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Kompanion</span>"
+      "Kompanion"
+    ]
+  },
+  {
+    "objectID": "index.html#installation",
+    "href": "index.html#installation",
+    "title": "Kompanion",
+    "section": "Installation",
+    "text": "Installation\n\nBefore you start\nThe minimal Kompanion setup includes:\n\nVisual Studio Code\nPython\nGit\n7-Zip\nCurl\n\nIf that’s all you need, simply open a PowerShell terminal (preferred over the legacy Windows PowerShell) at this directory and run .\\kompanion.ps1 (or .\\kompanion.ps1 -RebuildOnStart if the first run fails) to install the defaults. In most cases this will work out of the box, as the links for these tools are from well known sources and are generally not filtered by corporate firewalls. If that fails, you might need to build Kompanion elsewhere and drop it in a USB drive to transfer to your workstation.\nInstalling the basic setup before tweaking the packages you need is a good choice, as generally you will have no proper code editor (other than the trashy Notepad) to configure kompanion.json file, as described in what follows. Also, if there are any errors, a minimal configuration will produce less messages and it will be easier to debug.\nAfter succeding the preliminary installation, you can start tweaking the packages you need. For that, run .\\kompanion.ps1 -RunVsCode from this directory. That will start VSCode with the current project open. Under .kompanion directory you will find a kompanion-sample.json which allows one to configure packages to be installed. Copy this file and rename it to kompanion.json, where you can play with the true/false flags for selecting packages. After saving the file run .\\kompanion.ps1 -RebuildOnStart once again and wait for completion.\n\nGeneral purpose tools:\n\n\n\n\n\n\n\n\n\n\n\nTool\nInstall\n\n\n\n\n\ndrawio\n\n\nFalse\n\n\n\n\nffmpeg\n\n\nFalse\n\n\n\n\nimagemagick\n\n\nFalse\n\n\n\n\ninkscape\n\n\nFalse\n\n\n\n\njabref\n\n\nFalse\n\n\n\n\nlessmsi\n\n\nFalse\n\n\n\n\nmiktex\n\n\nFalse\n\n\n\n\nmsys2\n\n\nFalse\n\n\n\n\nnteract\n\n\nFalse\n\n\n\n\nnvim\n\n\nFalse\n\n\n\n\npandoc\n\n\nFalse\n\n\n\n\npoppler\n\n\nFalse\n\n\n\n\nquarto\n\n\nFalse\n\n\n\n\ntabby\n\n\nFalse\n\n\n\n\nzettlr\n\n\nFalse\n\n\n\n\n\n\n\n\nProgramming languages:\n\n\n\n\n\n\n\n\n\n\n\nTool\nInstall\n\n\n\n\n\ncoq\n\n\nFalse\n\n\n\n\nelm\n\n\nFalse\n\n\n\n\nerlang\n\n\nFalse\n\n\n\n\nhaskell\n\n\nFalse\n\n\n\n\njulia\n\n\nFalse\n\n\n\n\nnode\n\n\nFalse\n\n\n\n\nracket\n\n\nFalse\n\n\n\n\nrlang\n\n\nFalse\n\n\n\n\nrust\n\n\nTrue\n\n\n\n\n\n\n\n\nScientific libraries:\n\n\n\n\n\n\n\n\n\n\n\nTool\nInstall\n\n\n\n\n\nblender\n\n\nFalse\n\n\n\n\ndwsim\n\n\nFalse\n\n\n\n\nelmer\n\n\nFalse\n\n\n\n\nfreecad\n\n\nFalse\n\n\n\n\nfreefem\n\n\nFalse\n\n\n\n\ngmsh\n\n\nFalse\n\n\n\n\nmeshlab\n\n\nFalse\n\n\n\n\nopencascade\n\n\nFalse\n\n\n\n\nparaview\n\n\nFalse\n\n\n\n\nprepomax\n\n\nFalse\n\n\n\n\nradcal\n\n\nFalse\n\n\n\n\nsu2\n\n\nFalse\n\n\n\n\ntesseract\n\n\nFalse\n\n\n\n\n\n\n\nNote: please notice that if some package fails to download, e.g. firewall issues, you might need to manually clean the respective folder under .kompanion\\bin before running again. Simply delete the directory named after the failed package. You may also need to delete the file named after that package under .kompanion\\temp as there be a partial download there.\nIf you want to save some important disk space, after installation you can delete the whole .kompanion\\temp.\nNow you should be good to go!\n\n\nAutomatic sourcing\nThis section describes how to get Kompanion automatically sourced in your user profile for all PowerShell sessions. Start by creating an environment variable KOMPANION_SOURCE pointing to the full-path of file kompanion.ps1.\nFrom Windows menu, search for Environment variables for your account and open it. Click on New create a variable named KOMPANION_SOURCE; use the Browse file… button to select the kompanion.ps1 file to get the right path.\nFor instance, if you are called like me and cloned this repository at GitHub\\kompanion under your profile, then its value should be C:\\Users\\walter\\GitHub\\kompanion\\kompanion.ps1\nNext, start PowerShell and identify the path to your user profile:\necho $PROFILE\nIf that file does not exist, create it with:\nNew-Item -ItemType File -Path $PROFILE -Force\nNow you can run notepad $PROFILE to open it and append the following lines:\nif (Test-Path $env:KOMPANION_SOURCE) {\n    . $env:KOMPANION_SOURCE\n\n    # Uncomment the following if you want the terminal to start at\n    # the root of this repository; useful for development.\n    # cd \"$env:KOMPANION_DIR\"\n} else {\n    Write-Host \"KOMPANION_SOURCE not found at '$env:KOMPANION_SOURCE'\"\n}\nNow all PowerShell sessions will automatically source Kompanion, and you can start using it right away. You can run Kode from any directory to open the root of this repository in VSCode.\n\n\nKnown limitations\n\nWindows MPI support (as required by SU2 in their distributed version) still requires administrator rights, as you need to install the Microsoft MPI.\nYou cannot pin the editor to the taskbar (because of how sourcing environment works), but you can create a shortcut to kode.vbs in your desktop.",
+    "crumbs": [
+      "Kompanion"
     ]
   },
   {
     "objectID": "index.html#building-the-notes",
     "href": "index.html#building-the-notes",
     "title": "Kompanion",
-    "section": "1.2 Building the notes",
-    "text": "1.2 Building the notes\n# Create a virtual environment\npython -m venv .venv\n\n# On Windows, use\n.venv\\Scripts\\Activate.ps1\n\n# Update pip\npython -m pip install --upgrade pip\n\n# Install the required packages\npython -m pip install -r requirements.txt\n# Use this to generate all formats\nquarto render\n\n# Or use these to generate specific formats\nquarto render --to html\nquarto render --to pdf\n\n# Finally, to publish the notes on GitHub Pages, use\nquarto publish gh-pages --no-prompt --no-browser",
+    "section": "Building the notes",
+    "text": "Building the notes\nNotes are built using Quarto, and you can find the source code in this repository. To build the notes, you need to have that tool, Python and Rust enabled in Kompanion. Then you can follow these steps to create a virtual environment, install the required packages and build the notes:\n# Create a virtual environment\npython -m venv .venv\n\n# On Windows, use\n.venv\\Scripts\\Activate.ps1\n\n# Update pip\npython -m pip install --upgrade pip\n\n# Install the required packages\npython -m pip install -r requirements.txt\n\n# Use this to generate all formats\nquarto render\n\n# Or use these to generate specific formats\nquarto render --to html\nquarto render --to pdf\n\n# Finally, to publish the notes on GitHub Pages, use\n# (you need to be an allowed project collaborator to do this)\nquarto publish gh-pages --no-prompt --no-browser",
     "crumbs": [
-      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Kompanion</span>"
+      "Kompanion"
+    ]
+  },
+  {
+    "objectID": "computing/index.html",
+    "href": "computing/index.html",
+    "title": "Computing",
+    "section": "",
+    "text": "Notes related to my learning and teaching interests in several fields related to scientific computing (mostly applied mathematics and machine learning) and related applications. This home page is the entry point and those interested in more content and interesting links navigate below between the multiple pages. It can also be used as a general guide for introducing scientific computing as it tries to introduce the minimal skill set any scientific computing engineer or scientist should have:\n\nVersion control comes first, everything else is worthless without it, currently that means Git.\nNext comes software documentation with Doxygen, Sphinx, and/or Documenter.jl.\nA low(er) level programming language among Rust, C, C++, and Fortran, preferably all of them.\nScripting languages, as of 2026, Python is mandatory, Julia highly recommended.\nBasic machine learning in one of the above scripts, everything is ML these days.\nShell automation, basis of both Bash/other UNIX shell and PowerShell are required.\nTypesetting equations reports and presentations (beamer) in LaTeX.\nDomain specific skills related to the field of study (CFD, DFT, MD, ML, …).\n\nA sample setup of an operating system for scientific computing and practicing the above skills is provided in a section dedicated to Ubuntu.\nSome technologies have been mainstream or important in the past, but nowadays, some of them have already died or are becoming too niche to be put in such a list. That is the case of SVN for version control. As for programming languages in science, that is the case of matlabish (MATLAB, Octave, Scilab) environments, which are still used by controls and automation people, but are mostly incompatible with good software practices and should be discouraged.\nIt is also worth getting familiar with high-performance computing (HPC); in the Top 500 page you can get to know the most powerful computers on Earth. The specification benchmarking page allows for the check of hardware specification, what is interesting when preparing investment in a computing structure. Lastly, when working in multi-user systems it is worth knowing about job management systems such as Slurm.\nAs a last word, I would like to remember that it is humanly impossible to master everything at once; even after more than 10 years in the field as of today I only have a grasp in the tools I do not use everyday. Software and methods evolve, and unless you keep using a specific tool you simply cannot afford to keep up to date with it. That should not be a roadblock for a scientist in the long term. As you get used to scientific software, getting back to a good level of some tool you used in the past is quick (but not extremely fast in some cases) and learning new tools for which you already know the science behind is trivial. Even exploring new fields become easy in some cases.",
+    "crumbs": [
+      "Computing"
+    ]
+  },
+  {
+    "objectID": "computing/git.html",
+    "href": "computing/git.html",
+    "title": "1  Git version control",
+    "section": "",
+    "text": "1.1 Common activities",
+    "crumbs": [
+      "Computing",
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Git version control</span>"
+    ]
+  },
+  {
+    "objectID": "computing/git.html#common-activities",
+    "href": "computing/git.html#common-activities",
+    "title": "1  Git version control",
+    "section": "",
+    "text": "Upon connecting for the first time in a computer, remmeber to configure:\n\ngit config --global user.email \"walter.dalmazsilva@gmail.com\"\ngit config --global user.name \"Walter Dal'Maz Silva\"\n\n# Do not track file modes (rwx):\ngit config core.fileMode false\n\n# (GitHub CLI for Linux optional)\ngh auth login\n\nSome daily life reminders (you will repeat this so much it will impregnate in your brain):\n\ngit status\n\ngit add *\n\ngit commit -m \"some message\"\n\ngit checkout '&lt;branch-name&gt;'\n\ngit branch -d '&lt;branch-name&gt;'\n\nLine ending normalization: instructions provided in this thread; do not forget to add a .gitattributes file to the project with * text=auto for checking-in files as normalized. Then run the following:\n\ngit add --update --renormalize\n\nTo create a GitHub pages (gh-pages) branch with no history do the following\n\ngit checkout --orphan gh-pages\ngit reset --hard\ngit commit --allow-empty -m \"fresh and empty gh-pages branch\"\ngit push origin gh-pages",
+    "crumbs": [
+      "Computing",
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Git version control</span>"
+    ]
+  },
+  {
+    "objectID": "computing/git.html#adding-submodules",
+    "href": "computing/git.html#adding-submodules",
+    "title": "1  Git version control",
+    "section": "1.2 Adding submodules",
+    "text": "1.2 Adding submodules\nGenerally speaking adding a submodule to a repository should be a simple matter of\ngit submodule add 'https://&lt;path&gt;/&lt;to&gt;/&lt;repository&gt;.git'\nNonetheless this might fail, especially for large sized repositories; I faced this issue which I tried to fix by increasing buffer size as reported in the link. This solved the issue but led me to another problem which could be solved by degrading HTTP protocol.\nThe reverse operation run:\ngit rm '&lt;path-to-submodule&gt;'\nIt seems that in modern git versions that is enough. In the past it could not be fully automated as discussed here. After running the above you manually remove the history with\nrm -rf '.git/modules/&lt;path-to-submodule&gt;'\n\ngit config remove-section 'submodule.&lt;path-to-submodule&gt;'\nFor managing submodules, the following might be useful:\n# You added the submodule in another computer, now sync it here:\ngit submodule update --init --recursive\n\n# Sync submodule to head of remote:\ngit submodule update --remote --merge",
+    "crumbs": [
+      "Computing",
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Git version control</span>"
+    ]
+  },
+  {
+    "objectID": "computing/git.html#other-tips",
+    "href": "computing/git.html#other-tips",
+    "title": "1  Git version control",
+    "section": "1.3 Other tips",
+    "text": "1.3 Other tips\n\nVersion control in Windows: for Windows users, TortoiseGIT adds the possibility of managing version control and other features directly from the file explorer.",
+    "crumbs": [
+      "Computing",
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Git version control</span>"
+    ]
+  },
+  {
+    "objectID": "computing/ssh.html",
+    "href": "computing/ssh.html",
+    "title": "2  Using SSH",
+    "section": "",
+    "text": "There is something almost inevitable in scientific computing: you will need to connect to some remote machine at some point. Most of the time, that is a daily activity, whether you connect to a remote computer or HPC cluster. The most common protocol for such connections is SSH. This section guides you through the generation of a key pair generation and authentication through VS Code.\nCreating the keys: generate the SSH key pair locally (i.e. on your workstation); common options are:\n\n-t rsa: key type (RSA is widely supported)\n-b 4096: key length (more bits = stronger, recommended 4096)\n-C : comment (usually your email)\n\nWhen running the command, accept defaults for storage at ~/.ssh/id_rsa[.pub]; optionally add a passphrase for additional security (but then you will need to enter it each time you need to connect, so that’s undesirable if the only reason you are creating the SSH key is to have quick access to the server).\nssh-keygen -t rsa -b 4096 -C \"yourusername@your.server.com\"\nssh-keygen -t ed25519 -b 4096 -C \"yourusername@your.server.com\"\nIf you have password access to the server and ssh-copy-id run the following:\nssh-copy-id -i ~/.ssh/id_rsa.pub user@remote_host\nAlternatively (in Windows PowerShell for instance but reformat it in a single line or replace the pipes by backticks) manually append to the ~/.ssh/authorized_keys:\ncat ~/.ssh/id_rsa.pub | \\\n    ssh yourusername@your.server.com \\\n    \"mkdir -p ~/.ssh && chmod 700 ~/.ssh && cat &gt;&gt; ~/.ssh/authorized_keys\"\nAs a last option do it by hand, but you risk breaking the format of authorized_keys.\nTesting Linux server: before anything, try connecting with you identity:\nssh -i ~/.ssh/id_rsa yourusername@your.server.com\nIf that falls-back to your password connection, connect normally to the server and make sure the rights of both SSH directory and authorized keys file are right before trying again:\nchmod 700 ~/.ssh\nchmod 600 ~/.ssh/authorized_keys\nMaybe the server SSH has not been enabled for key authentication, which can be inspected without opening the actual configuration file through (requires sudo rights):\nsudo sshd -T | grep pubkeyauthentication\nIf it is not enabled, you can edit the file (find and modify PubkeyAuthentication yes) as follows and restart the service:\nsudo vim /etc/ssh/sshd_config\nsudo systemctl restart sshd\n\n# Additional step for SELinux only:\nrestorecon -Rv ~/.ssh\nTest again; upon new failure, try the verbose mode of SSH connection on your workstation:\nssh -v yourusername@your.server.com\nwhile simultaneously connected to the server (sudo) reading the logs:\n# Debian-based:\nsudo tail -f /var/log/auth.log\n\n# Under RHEL/CentOS/Fedora:\nsudo tail -f /var/log/secure\nAdding the key to VS Code by perform the following steps:\n\nInstall Remote-SSH extension\nPress F1 and search for Remote-SSH: Open SSH Configuration File\nAdd an entry like the following (modifying the host name and user):\n\nHost myserver\n    HostName your.server.com\n    User yourusername\n    IdentityFile ~/.ssh/id_rsa\nIf the above fails to fill in your right user name (sometimes Windows username will appear) you can try the following workaround to enforce user:\nHost yourusername@your.server.com\n    HostName your.server.com\n    User yourusername\n    IdentityFile ~/.ssh/id_rsa\nAbout cluster usage: that is the single case you might want to store both public and private keys at the same .ssh; to navigate across nodes (assuming your $HOME directory is the same) you need both keys. Please keep in mind to use a different key pair than the one you use to connect to the cluster for security reasons.",
+    "crumbs": [
+      "Computing",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Using SSH</span>"
+    ]
+  },
+  {
+    "objectID": "computing/coding.html",
+    "href": "computing/coding.html",
+    "title": "3  Scientific programming",
+    "section": "",
+    "text": "3.1 Coding practices\nAt its core, serious scientific computing requires scientific programming. To that end, this page provides access to programming learning materials and related links. If this subject is new to you, to be able to successfully follow the contents you might learn a bit about the environment we will use, VS Code 4 and the minimum about command prompt on Chapter 5.\nIt is not worth learning any programming before being introduced to the good practices. Many programmers I know write garbage that works for them only. It is impossible to have a healthy collaboration if code is not standardized, reason why I place this highly biased introduction here.\nOne of the reasons Guido van Rossum created Python is because he wanted code to be readable. You should be able to guess what some code is doing even without specific technical knowledge about the language. This is probably the mean feature that made its creation so popular in the scientific world.\nAlthough they are applicable to Python, the practices recommended in the famous PEP8 can be extended to other languages, including Julia. You should read PEP8 religiously. That document describes how to write clean and maintainable Python code. When transposing that to Julia, the minimum you are expected to do is:\nWhen you code, remember that most of the time what you are doing will be reviewed/used by somebody else and that person might not be in the mood to decipher the cryptic code you wrote; it that person is myself, I will promptly refuse to help you with badly written code. For newcomers, it is always better to talk about this before you write your first lines because once you stick to bad practices you will hardly ever leave them. Before you write something new, check if your ideas are also consistent with PEP20.\nJulia has its own stylistic conventions that are simpler than PEP8; the main differences are the way to name functions (it recommends to glue words and use no underscore) and the exclamation mark ! indicating a function modifies it(s) argument(s). For function naming you may chose to stick to PEP8 recommendation, what is my personal choice. The detailed document is found here.\nPython code documentation is generally done with Sphinx. Julia has its own syntax which can be used to generate package documentation with help of Documenter.jl.\nImportant: Julia supports Unicode input, but its use is highly discouraged in modules. Unicode characters are better suited to write application scripts such as notebooks (in Pluto or Jupyter).",
+    "crumbs": [
+      "Computing",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Scientific programming</span>"
+    ]
+  },
+  {
+    "objectID": "computing/coding.html#coding-practices",
+    "href": "computing/coding.html#coding-practices",
+    "title": "3  Scientific programming",
+    "section": "",
+    "text": "lines are limited to 79 characters\nuse spaces around all operators\nconsistent indentation with spaces\nblank lines around structural blocks\nlower case variable names\nPascal-case structure names\nuse underscore to separate words\ndocument functions properly",
+    "crumbs": [
+      "Computing",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Scientific programming</span>"
+    ]
+  },
+  {
+    "objectID": "computing/coding.html#scientific-publishing",
+    "href": "computing/coding.html#scientific-publishing",
+    "title": "3  Scientific programming",
+    "section": "3.2 Scientific publishing",
+    "text": "3.2 Scientific publishing\nThe following tools might be of interest for creating scientific content with embedded code.\n\nJupytext documentation\nJupyter Book\nWeave.jl - Scientific Reports Using Julia\nFranklin - Building static websites in Julia\nPluto.jl - interactive Julia programming environment\nQuarto",
+    "crumbs": [
+      "Computing",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Scientific programming</span>"
+    ]
+  },
+  {
+    "objectID": "computing/vscode.html",
+    "href": "computing/vscode.html",
+    "title": "4  Visual Studio Code",
+    "section": "",
+    "text": "4.1 VS Code extensions\nIf you are reading this, you are probably using VS Code for the first time or need a refresher! VS Code is Microsoft’s open source text editor that has become the most popular editor in the past decade. It is portable (meaning it works in Windows, Linux, and Mac) and relatively light-weight (it won’t use all you RAM as some proprietary tools would do). If you are doing Data Science or wish a more interactive environment, Posit has made a spin-off VS Code called Positron that is very similar to use and comes bundled with a few extra functionalities.\nThere are a few shortcuts you might want to keep in mind for using this tool in an efficient manner:\nA few more tips concerning the terminal:\nIf you copied a command from a tutorial, you CANNOT use Ctrl+V to paste it into the terminal; in Windows simply right-click the command prompt and it will paste the copied contents. Linux users can Ctrl+Shift+V instead.\nNotice that Ctrl+M will toggle the visibility of the integrated terminal; if you accidentally press it, autocompletion will stop working in terminal. Just press it again and normal behavior will be recovered.\nVS Code supports a number of extensions to facilitate coding and data analysis, among other tasks. Local (user-created) extensions can be manually installed by placing their folder under %USERPROFILE%/.vscode/extensions or in the equivalent directory documented here. Below you find my recommended extensions for different purposes and languages.\nThe following extensions are recommended.\nI have also developed a few (drag-and-drop) extensions; in the future I plan to provided them through the extension manager.\nA few tips for installing extensions:",
+    "crumbs": [
+      "Computing",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Visual Studio Code</span>"
+    ]
+  },
+  {
+    "objectID": "computing/vscode.html#vs-code-extensions",
+    "href": "computing/vscode.html#vs-code-extensions",
+    "title": "4  Visual Studio Code",
+    "section": "",
+    "text": "General purpose:\n\nms-vscode.PowerShell\nms-vscode-remote.remote-ssh\nGitHub.copilot\nukoloff.win-ca\nvscode-icons-team.vscode-icons\nritwickdey.LiveServer\ndnut.rewrap-revived\n\nPython development:\n\nms-python.python\nms-toolsai.jupyter\ntamasfe.even-better-toml\nPyrefly\nRuff\n\nOther languages support\n\nC/C++\nErlang\nGmsh\nJulia\nLaTeX Workshop\nMatlab\nModern Fortran\nQuarto\nRuby\n\nData inspection:\n\nData Wrangler\nExcel Viewer\nRainbow CSV\n\nVS Code themes:\n\nlakshits11.ayu-monokai\ncameronbieganek.julia-color-themes\nGitHub.github-vscode-theme\n\n\n\n\nwallytutor/elmer-sif-vscode: VS Code extension for Elmer Multiphysics SIF\n\n\n\nIf installing local extensions (such as elmer-sif-vscode), consider using Developer: Install Extension from Location instead of placing it under .vscode/extensions manually.\nFor installing extensions from within a VSCode terminal, rather than the main executable one must use %VSCODE_HOME%\\bin\\Code.cmd. Currently, Visual Studio Code’s command-line interface doesn’t directly support installing extensions from a local directory without packaging them into .vsix files. The recommended method is to package your extension into a .vsix file using vsce and then install it.",
+    "crumbs": [
+      "Computing",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Visual Studio Code</span>"
+    ]
+  },
+  {
+    "objectID": "computing/windows.html",
+    "href": "computing/windows.html",
+    "title": "5  Working on Windows",
+    "section": "",
+    "text": "5.1 Command line basics\nIf this is you first time using the command prompt you might be interested by this section. The command prompt (often referred to as terminal in Linux world) is your interface to interact with the operating system and many available tools. To learn any useful scientific computing skills it is useful to get a grasp of its use because it is there that we will launch most applications. The illustrations below assume you are working under Windows, but the introductory commands are common to most operating systems.\nNow let’s launch a terminal. If you are working under VS Code you can use the shortcut to display the terminal Ctrl+J; the bottom of your window should display something as\nThe start of this line displays you path in the system; depending on your configuration that could not be the case and you can ask the OS to give you that with pwd (print working directory)\nIf you are invited to move to directory src you may which to use command change directory, or cd in the system’s language\nNow that you reached your destination, you might be interested at inspecting the contents of this directory, i.e. listing its contents; that is done with ls as follows\nOops! It was not the directory you wanted to go to! No problems, you can navigate one-level-upwards using the special symbol .. (two dots) and change directory again\nThis is the minimum you need to know: navigate, know your address, inspect contents.",
+    "crumbs": [
+      "Computing",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Working on Windows</span>"
+    ]
+  },
+  {
+    "objectID": "computing/windows.html#command-line-basics",
+    "href": "computing/windows.html#command-line-basics",
+    "title": "5  Working on Windows",
+    "section": "",
+    "text": "PS D:\\Kompanion&gt;\n\nPS D:\\Kompanion&gt; pwd\n\nPath\n----\nD:\\Kompanion\n\nPS D:\\Kompanion&gt; cd .\\bin\\\nPS D:\\Kompanion\\bin&gt;\n\nPS D:\\Kompanion\\bin&gt; ls\n\n\n    Directory: D:\\Kompanion\\bin\n\n\nMode                 LastWriteTime         Length Name\n----                 -------------         ------ ----\nd-----         1/31/2025  11:11 AM                apps\nd-----          2/3/2025   9:19 AM                data\nd-----         1/30/2025   2:34 PM                downloads\nd-----          2/3/2025  11:50 AM                pkgs\nd-----         1/31/2025   9:33 AM                scripts\nd-----         1/30/2025   9:58 AM                tests\n-a----         1/31/2025   9:33 AM           2697 activate.bat\n-a----         1/30/2025   9:58 AM            161 code.bat\n-a----         1/30/2025   9:58 AM            132 kode.bat\n-a----         1/30/2025   9:58 AM            131 kpip.bat\n\nPS D:\\Kompanion\\bin&gt; cd ..\\docs\\\nPS D:\\Kompanion\\docs&gt;",
+    "crumbs": [
+      "Computing",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Working on Windows</span>"
+    ]
+  },
+  {
+    "objectID": "computing/windows.html#creating-a-portable-launcher",
+    "href": "computing/windows.html#creating-a-portable-launcher",
+    "title": "5  Working on Windows",
+    "section": "5.2 Creating a portable launcher",
+    "text": "5.2 Creating a portable launcher\nA simple way to create a portable launcher requiring to source extra variables is by writing a simple batch script exporting or calling another script with the definitions:\n@echo off\n\n@REM Add variables to be sourced here such as\n@REM set PATH=\"/path/to/some/dir\";%PATH%\n@REM ... or call another shared script doing so.\n@REM call %~dp0\\env\n\nMyCode.exe\nBecause a batch script will keep a console window open, create a VB file with the following\nSet oShell = CreateObject (\"Wscript.Shell\")\nDim strArgs\nstrArgs = \"cmd /c MyCode.bat\"\noShell.Run strArgs, 0, false\nIn the example we assume the program is called MyCode.exe and the batch script has been named in an analogous way MyCode.bat.",
+    "crumbs": [
+      "Computing",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Working on Windows</span>"
+    ]
+  },
+  {
+    "objectID": "computing/windows.html#mount-a-network-drive-in-wsl",
+    "href": "computing/windows.html#mount-a-network-drive-in-wsl",
+    "title": "5  Working on Windows",
+    "section": "5.3 Mount a network drive in WSL",
+    "text": "5.3 Mount a network drive in WSL\nHere we assume we will mount drive Z: at /mnt/z:\n# Create the mount point (if required):\nsudo mkdir /mnt/z\n\n# Mount the network drive in WSL:\nsudo mount -t drvfs Z: /mnt/z\nActually the same procedure can be used to access a SMB drive from within WSL temporarily with:\nsudo mount -t drvfs '\\\\path\\to\\smb' /mnt/&lt;mount-point&gt;/\nFor automatic remount, consider adding the following to your /etc/fstab\n//path/to/smb /mnt/&lt;mount-point&gt;/ drvfs auto,rw,nosuid,exec,uid=1000,gid=1000 0 0",
+    "crumbs": [
+      "Computing",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Working on Windows</span>"
+    ]
+  },
+  {
+    "objectID": "computing/windows.html#following-the-writing-to-a-file",
+    "href": "computing/windows.html#following-the-writing-to-a-file",
+    "title": "5  Working on Windows",
+    "section": "5.4 Following the writing to a file",
+    "text": "5.4 Following the writing to a file\nThis is equivalent to Linux tail -f &lt;file-path&gt;:\nGet-Content -Path \"&lt;file-path&gt;\" -Wait\n\n5.4.1 Finding a process handle\nThis is useful when Windows won’t let you move a file or folder because it is already open somewhere. First, download and extract Handle; from PowerShell run the following:\n./handle.exe -u -nobanner \"C:\\Path\\To\\File.txt\"\nNotice that your file might have started another process and some research might be required.",
+    "crumbs": [
+      "Computing",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Working on Windows</span>"
+    ]
+  },
+  {
+    "objectID": "computing/windows.html#identifying-a-proxy-pem",
+    "href": "computing/windows.html#identifying-a-proxy-pem",
+    "title": "5  Working on Windows",
+    "section": "5.5 Identifying a proxy PEM",
+    "text": "5.5 Identifying a proxy PEM\n# List all root certs:\nGet-ChildItem -Path Cert:\\LocalMachine\\Root\n\n# Export a specific one:\n$cert = Get-ChildItem -Path Cert:\\LocalMachine\\Root | Where-Object {\n    $_.Subject -like \"*&lt;company-name-generally&gt;*\"\n}\nExport-Certificate -Cert $cert -FilePath \"proxy.pem\"",
+    "crumbs": [
+      "Computing",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Working on Windows</span>"
+    ]
+  },
+  {
+    "objectID": "computing/containers.html",
+    "href": "computing/containers.html",
+    "title": "6  Using containers",
+    "section": "",
+    "text": "6.1 Containerfile creation\nContainers allow for reproducible workflows that can be shared among different users and computing environments. They encapsulate applications and their dependencies, ensuring consistent behavior across various systems. This is particularly useful in scientific computing, where complex software stacks are common. Keeping the focus on open source tools, this section introduces two popular containerization technologies: Podman and Apptainer.\nFor isolating applications and still allow a nice user-space interaction, mixing both tools is great approach; one first creates and dump a container with podman, then converts it to Singularity format with apptainer for portable deployment. Installation instructions for both tools can be found on their respective websites; for podman the package manager is often the way to go, while for apptainer downloading pre-compiled binaries is usually the easiest path. The tool started at Lawrence Berkeley National Laboratory can be downloaded for several Linux systems and deployed locally.\nUnder Debian (or its variants, as Ubuntu), navigate to the download directory and install with the following, taking care to replace the right version (check the repository above for the right version and possible name changes or alternative versions):\nBelow we summarize the most relevant commands and workflows for daily use.\nWiP: a section on how to create a Containerfile should be added here.",
+    "crumbs": [
+      "Computing",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Using containers</span>"
+    ]
+  },
+  {
+    "objectID": "computing/containers.html#using-podman",
+    "href": "computing/containers.html#using-podman",
+    "title": "6  Using containers",
+    "section": "6.2 Using Podman",
+    "text": "6.2 Using Podman\nIn the open source community podman takes the place of docker for the creation of application containers. It mimics the commercial software to allow developers work with both tools almost interchangeably. It is not uncommon to find people creating aliases of docker in their sandbox environments to point to their podman executable (some Linux distributions even have packages dedicated to this automatic override). One must be aware that although the command interfaces are very similar, they are not the exactly same and advance usage requires mastering each of them individually.\nThe following summarizes some daily life commands with podman.\n\nList available images in a local machine:\n\npodman images\n\nRun image &lt;img&gt; interactively using bash:\n\npodman run -it '&lt;img&gt;' /bin/bash\n\nRun image exposing port &lt;container&gt; to host at &lt;host&gt;:\n\npodman run -p '&lt;container&gt;:&lt;host&gt;' '&lt;img&gt;'\n\nDump image &lt;img&gt; to &lt;img&gt;.tar for portability:\n\npodman save -o '&lt;img&gt;.tar' '&lt;img&gt;'\n\nList all available containers (there might be external/hidden, so use -a):\n\npodman container ls -a\n\nRemove a given container by ID (only the first 2-3 characters of ID are required):\n\npodman container rm '&lt;ID&gt;'\n\nRemove a given image by ID:\n\npodman rmi '&lt;ID&gt;'\n# podman image rm '&lt;ID&gt;'\n\nClean all the cache:\n\npodman builder prune",
+    "crumbs": [
+      "Computing",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Using containers</span>"
+    ]
+  },
+  {
+    "objectID": "computing/containers.html#podman-with-gpu",
+    "href": "computing/containers.html#podman-with-gpu",
+    "title": "6  Using containers",
+    "section": "6.3 Podman with GPU",
+    "text": "6.3 Podman with GPU\n\n\n\n\n\n\nWarningWSL not supported\n\n\n\nNotice that podman GPU support will not work on WSL. In that case you need to use the actual docker; please refer to the next section for details.\n\n\nFor supporting GPU (NVidia) you need to install nvidia-container-toolkit first:\nNVIDIA_BASE=\"https://nvidia.github.io/libnvidia-container\"\nNVIDIA_GPG=\"/usr/share/keyrings/nvidia-container-toolkit-keyring.gpg\"\n\ncurl -fsSL \"${NVIDIA_BASE}/gpgkey\" | sudo gpg --dearmor -o ${NVIDIA_GPG}\ncurl -s -L \"${NVIDIA_BASE}/stable/deb/nvidia-container-toolkit.list\" \\\n    | sed \"s#deb https://#deb [signed-by=${NVIDIA_GPG}] https://#g\"  \\\n    | sudo tee /etc/apt/sources.list.d/nvidia-container-toolkit.list\n\nsudo apt-get update\nsudo apt-get install -y nvidia-container-toolkit\nThe Achiles heel is the configuration below, that might break from times to times:\nsudo nvidia-ctk runtime configure --runtime=podman\nsudo systemctl restart podman\n\n\n\n\n\n\nTipSome tips for fixing it\n\n\n\nFirst inspect if podman is using crun instead of runc; the NVIDIA hook will not attach to crun.\npodman info --format '{{.Host.OCIRuntime}}'\nIf that is the case edit /etc/containers/containers.conf by changing the engine as follows:\n[engine]\nruntime = \"runc\"\nYou mignt also need to install runc before restarting podman:\nsudo apt-get install -y runc\nsudo systemctl restart podman\nsudo systemctl status podman\nMaybe also consider reinstalling nvidia-container-toolkit:\nsudo apt-get purge nvidia-container-toolkit\nsudo apt-get update && sudo apt-get install -y nvidia-container-toolkit\n\n\nNow you can test with an image matching your driver version (change below):\npodman run --rm -it \\\n  --security-opt=label=disable \\\n  --hooks-dir=/usr/share/containers/oci/hooks.d \\\n  docker.io/nvidia/cuda:12.6.3-cudnn-runtime-ubuntu24.04 \\\n  bash",
+    "crumbs": [
+      "Computing",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Using containers</span>"
+    ]
+  },
+  {
+    "objectID": "computing/containers.html#sidenote-on-docker",
+    "href": "computing/containers.html#sidenote-on-docker",
+    "title": "6  Using containers",
+    "section": "6.4 Sidenote on Docker",
+    "text": "6.4 Sidenote on Docker\nAs we saw in the previous section, sometimes we are obliged to fall back to docker. In general the CLI of both docker and podman are quite similar (at least with regards to what was presented in the introduction). When working with docker a first thing you might want to to is enable rootless containers by adding your own user name to the docker group:\nsudo usermod -aG docker $USER\nOnce done, you will need to close and restart WSL or your shell session (in case of native Linux). That will allow containers to be run without rights elevation.\nBelow we illustrate the use of --gpus flag that allows exposing a device to the container (as a fallback to what we cannot do with podman in WSL). Before testing, please keep in mind that the image IMAGE must have the same driver version as your local machine, so locally run nvidia-smi to check for that then visit NVidia docker page to identify the image you need.\nIMAGE=\"docker.io/nvidia/cuda:12.6.3-cudnn-runtime-ubuntu24.04\"\ndocker run --gpus all ${IMAGE} nvidia-smi\nSometimes you might encounter a situation where there is no possibility to change the host of an application running in a container, i.e. it binds only to localhost/127.0.0.1, so port forwarding in bridge mode is not an option. For instance, you need to build ParticleAnalyzer yourself to have it modified to run from a container. In that case you can add the --network host option without port mapping so that the same local network is shared. That option is a security issue and must be avoided.\n\n\n\n\n\n\nWarningDocker on Rocky Linux 9\n\n\n\nFor installing docker on Rocky Linux 9, follow the steps below:\ndnf check-update\ndnf config-manager \\\n    --add-repo https://download.docker.com/linux/centos/docker-ce.repo\n\ndnf install docker-ce docker-ce-cli containerd.io\n\nsystemctl start docker\nsystemctl status docker\nsystemctl enable docker\n\n# Optional : allow non-root user to run docker commands\n# usermod -aG docker $USER\nTo enable GPU support with docker on Rocky Linux 9, install Nvidia container toolkit as follows:\ntoolkit=\"https://nvidia.github.io/libnvidia-container/stable/rpm/nvidia-container-toolkit.repo\"\ncurl -s -L $toolkit | tee /etc/yum.repos.d/nvidia-container-toolkit.repo\n\ndnf install -y nvidia-container-toolkit\n\nnvidia-ctk runtime configure --runtime=docker\nsystemctl restart docker",
+    "crumbs": [
+      "Computing",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Using containers</span>"
+    ]
+  },
+  {
+    "objectID": "computing/containers.html#using-apptainer",
+    "href": "computing/containers.html#using-apptainer",
+    "title": "6  Using containers",
+    "section": "6.5 Using Apptainer",
+    "text": "6.5 Using Apptainer\nUsing podman locally is great, but packaging redistributable containers for reuse in HPC is much smoother with Apptainer. Although Apptainer has its own image scripting system through definition files, personal experience has shown that the workflow is much smoother by generating container files and then converting them to Singularity format as explained above.\nThere reason is that container files generate intermediate check-points from which they will continue the build if some failure is encountered, i.e. each RUN command in a container will generate a partial image.\nWhen working with Apptainer definition files, failures imply full rebuild of the image, what might become extremely boring when trying to compile new code. A workaround is to use a sequence of definition files, one importing from the dump of the previous one, but that not only will generate a large size of temporary dumps as it will become difficult to manage.\nAfter getting excited by the Apptainer definition files because they do not need chaining of commands with a && \\ to make a shell block, I personally gave up on them after loosing a few days of my life recompiling again and again… so for now I stick with the container creation and conversion workflow discussed in more detail below.\n\nConverting a local podman tar-dump into a Singularity image:\n\napptainer build \"&lt;img&gt;.sif\" \"docker-archive://&lt;img&gt;.tar\"\n\nRunning an apptainer image as a non-root user is as simple as:\n\napptainer run '&lt;img&gt;.sif'\n\nAnother option with Apptainer is to run instances on the background, as follows:\n\n# Provide the instance name:\ninstancename='&lt;file-name&gt;'\n\n# Start instance on the background:\napptainer instance start -B $PWD \"${instancename}.sif\" \"${instancename}\"\n\n# Enter instance in shell mode:\napptainer shell \"instance://${instancename}\"\n\n# Stop instance after working:\napptainer stop \"${instancename}\"\nOther useful/relevant commands in this context are apptainer instance list and apptainer instance stop &lt;instance-name&gt;. In case additional packages may be required after the instance creation, one can use a temporary file system with --writable-tmpfs. For configuring its maximum size, check the docs before modifying /etc/apptainer/apptainer.conf parameter sessiondir max size.\nSince apptainer makes use of user space, sourcing of applications is not done as root, so one must edit add to their ~/.bashrc if path configuration is desired and re-source that file when activating a container. For instance, the required environment variables for #OpenFOAM are provided by FOAM_SOURCE file given below; in the host system outside the container it does not exist, so adding a test in ~/.bashrc is required. Once you activate the container with apptainer run &lt;image-name&gt;.sif, by calling source ~/.bashrc the environment will be properly set.\nFOAM_SOURCE=/opt/openfoam13/OpenFOAM-13/etc/bashrc\n\n[[ -f ${FOAM_SOURCE} ]] && source ${FOAM_SOURCE}\nAnother approach is to execute the SIF image once, source the required variables required in the container, dump env &gt; draft.env, edit the file as required and then wrap a call with contextualized environment as:\nfunction openfoam12() {\n    FOAM_NAME=$HOME/Applications/openfoam12-rockylinux9\n    apptainer run --cleanenv --env-file ${FOAM}.env ${FOAM}.sif\n}",
+    "crumbs": [
+      "Computing",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Using containers</span>"
+    ]
+  },
+  {
+    "objectID": "computing/containers.html#build-workflow",
+    "href": "computing/containers.html#build-workflow",
+    "title": "6  Using containers",
+    "section": "6.6 Build workflow",
+    "text": "6.6 Build workflow\nUsing both tools can be roughly automated by generating a podman image, dumping it into a portable format, then converting to Singularity format. Below we illustrate the workflow for an arbitrary container file; this is summarized in a bash script containerfile.sh which makes use of Containerfile.\nNow you can move the SIF image to another computer (for instance, you prepared this in a PC with access to the Internet for later using it in an isolated HPC), launch a terminal and run:\napptainer run -B $PWD '/path/to/project/image.sif'\nNotice that apptainer does not resolve symbolic links, so $PWD above will fail if trying to run from a path that contains a link; navigate to the actual directory containing the project before running the image to get your files visible.\nNote: use apptainer run when you want to execute the container’s default application or task; on the other hand, use apptainer shell when you need an interactive session to explore or debug the container.",
+    "crumbs": [
+      "Computing",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Using containers</span>"
+    ]
+  },
+  {
+    "objectID": "computing/tips.html",
+    "href": "computing/tips.html",
+    "title": "7  General Tips",
+    "section": "",
+    "text": "7.1 Running Jupyterlab from a server\n#programming/python/jupyter\nBefore running the server it is a good idea to generate the user configuration file:\nBy default it will be located at ~/.jupyter/jupyter_lab_config.py. Now you can add your own access token that will simplify the following steps (and allow for reproducible connections in the future).\nThe idea is illustrated in this thread; first on the server side you need to start a headless service as provided below. Once Jupyter starts running, copy the token it will generate if you skipped the user configuration step above.\nOn the host side (the computer from where you wish to edit the notebooks) establish a ssh tunel exposing and mapping the port chose to serve Jupyter:\nNow you can browse to http://localhost:8080/ and add the token you copied earlier or your user-token you added to the configuration file. Notice that you need to keep the terminal you used to launch the port forwarding open while you work.",
+    "crumbs": [
+      "Computing",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>General Tips</span>"
+    ]
+  },
+  {
+    "objectID": "computing/tips.html#running-jupyterlab-from-a-server",
+    "href": "computing/tips.html#running-jupyterlab-from-a-server",
+    "title": "7  General Tips",
+    "section": "",
+    "text": "jupyter-lab --generate-config\n\nc.IdentityProvider.token = '&lt;YOUR_TOKEN&gt;'\n\njupyter-lab --no-browser --port=8080\n\n# Notice that the ports below must be specified as:\n# ssh -L &lt;local_port&gt;:localhost:&lt;remote_port&gt; &lt;REMOTE_USER&gt;@&lt;REMOTE_HOST&gt;\nssh -L 8080:localhost:8080 &lt;REMOTE_USER&gt;@&lt;REMOTE_HOST&gt;",
+    "crumbs": [
+      "Computing",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>General Tips</span>"
+    ]
+  },
+  {
+    "objectID": "computing/tips.html#downloading-from-youtube",
+    "href": "computing/tips.html#downloading-from-youtube",
+    "title": "7  General Tips",
+    "section": "7.2 Downloading from YouTube",
+    "text": "7.2 Downloading from YouTube\n#programming/python/tips\nRetrieving a video or playlist from YouTube can be automated with help of yt-dlp.\nTo get the tool working under Ubuntu you can do the following:\n# Install Python venv to create a local virtual environment:\nsudo apt install python3-venv\n\n# Create an homonymous environment:\npython3 -m venv venv\n\n# Activate the local environment:\nsource venv/bin/activate\n\n# Use pip to install the tool:\npip install -U --pre \"yt-dlp[default]\"\nNOTE: alternative applications as youtube-dl and pytube are now considered to be legacy as discussed in this post.",
+    "crumbs": [
+      "Computing",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>General Tips</span>"
+    ]
+  },
+  {
+    "objectID": "computing/tips.html#installing-python-packages-behind-proxy",
+    "href": "computing/tips.html#installing-python-packages-behind-proxy",
+    "title": "7  General Tips",
+    "section": "7.3 Installing Python packages behind proxy",
+    "text": "7.3 Installing Python packages behind proxy\n#programming/python/tips\nTo install a package behind a proxy requiring SSL one can enforce trusted hosts to avoid certificate hand-shake and allow installation. This is done with the following options:\npip install --trusted-host pypi.org --trusted-host files.pythonhosted.org &lt;pkg&gt;",
+    "crumbs": [
+      "Computing",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>General Tips</span>"
+    ]
+  },
+  {
+    "objectID": "computing/tips.html#regular-expressions",
+    "href": "computing/tips.html#regular-expressions",
+    "title": "7  General Tips",
+    "section": "7.4 Regular expressions",
+    "text": "7.4 Regular expressions\nRegular expressions (or simply regex) processing is a must-have skill for anyone doing scientific computing. Most programs produce results or logs in plain text and do not support specific data extraction from those. There regex becomes your best friend. Unfortunately during the years many flavors of regex appeared, each claiming to offer advantages or to be more formal than its predecessors. Due to this, learning regex is often language-specific (most of the time you create and process regex from your favorite language) and sometimes even package-specific. Needless to say, regex may be more difficult to master than assembly programming.\nUseful tools:\n\nregex101\nregexr\n\nMatching between two strings: match all characters between two strings with lookbehind and look ahead patterns. Notice that this will require the enclosing strings to be fixed (at least under PCRE). For processing WallyTutor.jl documentation I have used a more generic approach but less general than what is proposed here.\nMatch any character across multiple lines: as described here with (.|\\n)*.\nRegex in Julia: currently joining regexes in Julia might be tricky (because of escaping characters); a solution is proposed here and seems to work just fine with minimal extra coding.",
+    "crumbs": [
+      "Computing",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>General Tips</span>"
+    ]
+  },
+  {
+    "objectID": "computing/tips.html#using-nteract-with-a-virtual-environment",
+    "href": "computing/tips.html#using-nteract-with-a-virtual-environment",
+    "title": "7  General Tips",
+    "section": "7.5 Using nteract with a virtual environment",
+    "text": "7.5 Using nteract with a virtual environment\n\n\n\n\n\n\nWarning\n\n\n\nnteract project underwent a major restructuration and the following instructions might not work anymore.\n\n\n# Activate the virtual environment:\n. .venv\\Scripts\\Activate.ps1\n\n# Give the kernel an unique name:\n$kName = \"your-kernel-name\"\n\n# Install the kernel:\npython -m ipykernel install --user `\n    --name $kName --display-name \"Python ($kName)\"\n\n# Run nteract:\nnteract.exe",
+    "crumbs": [
+      "Computing",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>General Tips</span>"
+    ]
+  },
+  {
+    "objectID": "computing/selection.html",
+    "href": "computing/selection.html",
+    "title": "8  Selection of tools",
+    "section": "",
+    "text": "8.1 Graphics",
+    "crumbs": [
+      "Computing",
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Selection of tools</span>"
+    ]
+  },
+  {
+    "objectID": "computing/selection.html#graphics",
+    "href": "computing/selection.html#graphics",
+    "title": "8  Selection of tools",
+    "section": "",
+    "text": "Fiji\ngnuplot\nGraphviz",
+    "crumbs": [
+      "Computing",
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Selection of tools</span>"
+    ]
+  },
+  {
+    "objectID": "computing/selection.html#geometry",
+    "href": "computing/selection.html#geometry",
+    "title": "8  Selection of tools",
+    "section": "8.2 Geometry",
+    "text": "8.2 Geometry\n\nblender: the most powerful 3D (in the general sense) open source modeling tool; allows geometries to be exported to STL, which is compatible with most meshing software.\nFreeCAD: contrarily to blender, this is the most mature open source modeling tool in the technical sense. It supports both 3D conception and detailed drawing, among other features.\ncadquery: a simple parametric geometry tool.\nSalome: not just grometry, but also a large meshing toolbox provided by EDF.",
+    "crumbs": [
+      "Computing",
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Selection of tools</span>"
+    ]
+  },
+  {
+    "objectID": "computing/selection.html#meshing",
+    "href": "computing/selection.html#meshing",
+    "title": "8  Selection of tools",
+    "section": "8.3 Meshing",
+    "text": "8.3 Meshing\n\ngmsh: the to-go meshing tool for 2D geometries and visualization of many formats of 3D meshes; before trying to produce reliable structured meshes and geometry in 3D some ninja skills need to be developed. Its own scripting language makes parametric meshing easy.\nMeshLab: allows to manipulate triangulated grids generated in CAD; helpful for preparing patches for use with #OpenFOAM/snappyHexMesh.",
+    "crumbs": [
+      "Computing",
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Selection of tools</span>"
+    ]
+  },
+  {
+    "objectID": "computing/selection.html#rendering",
+    "href": "computing/selection.html#rendering",
+    "title": "8  Selection of tools",
+    "section": "8.4 Rendering",
+    "text": "8.4 Rendering\n\nParaView: the de facto post-processing tool for many fields of application.\ntrame: rendering results in web-applications.",
+    "crumbs": [
+      "Computing",
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Selection of tools</span>"
+    ]
+  },
+  {
+    "objectID": "computing/selection.html#simulation",
+    "href": "computing/selection.html#simulation",
+    "title": "8  Selection of tools",
+    "section": "8.5 Simulation",
+    "text": "8.5 Simulation\n\nCantera\nCasADi\nDualSPHysics\nDWSIM\nElmer: multiphysics FEM toolkit (see dedicated topic); download it here\nFreeFem++\nLAMMPS\nMFiX\nOpenFOAM: general purpose FVM CFD toolkit (see dedicated topic).\nOpenModelica\nRadCal\nSU2\nTRUST Platform: the basis for TrioCFD code by CEA.",
+    "crumbs": [
+      "Computing",
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Selection of tools</span>"
+    ]
+  },
+  {
+    "objectID": "computing/selection.html#productivity",
+    "href": "computing/selection.html#productivity",
+    "title": "8  Selection of tools",
+    "section": "8.6 Productivity",
+    "text": "8.6 Productivity\nObsidian is the de facto solution for note-taking and second brain management, but it is not free for commercial ends and that has become a problem for my intended work use. Looking for alternatives for this tool which is my main productivity setting, I came across the following packages. Testing was done with I want it to be the same mindset and if after a few minutes I was not convinced by the application, it was automatically discarded. In summary, I liked both Joplin and Zettlr but will pursue the use of the latter only as Joplin does not meet by criteria. StandardNotes is a false open-source package and logseq is still too raw for any production setting.\n\n\n\nSoftware\nPros\nCons\n\n\n\n\nlaurent22/joplin\nRich interface with many features; excellent tool if you are not seeking version control as a target. Available as portable executable.\nCounterintuitive interface and files are not directly stored as .md; file system synchronization requires and absolute path. After closing the executable, a process was kept alive.\n\n\nlogseq/logseq\nAvailable as portable executable.\nPoor UI at first sight. Fast but dumb in the sense it will only support one file with a given title, what is incompatible with my way of organizing directories. Pages are not organized as in the folder view.\n\n\nstandardnotes/app\nInterface is cleaner/less cluttered than Joplin. Available as portable executable.\nStopped using it as received the first notification that smart tags require a paid plan. Also only plain text files are supported in free mode.\n\n\nZettlr/Zettlr\nSupport to YAML frontmatter. UI gets better as you open files. Integration to BibTeX.\nPoor UI at first sight. Not available as portable executable; but installation can be done in any user folder, what is also fine. It took a long time to import my existing second brain and sometimes it glitches/has some lags.",
+    "crumbs": [
+      "Computing",
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Selection of tools</span>"
+    ]
+  },
+  {
+    "objectID": "computing/selection.html#other",
+    "href": "computing/selection.html#other",
+    "title": "8  Selection of tools",
+    "section": "8.7 Other",
+    "text": "8.7 Other\n\nprotobuf: for parsing #OpenFOAM dictionaries from Python.",
+    "crumbs": [
+      "Computing",
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Selection of tools</span>"
+    ]
+  },
+  {
+    "objectID": "computing/portable.html",
+    "href": "computing/portable.html",
+    "title": "9  Portable applications",
+    "section": "",
+    "text": "9.1 How does it work?\nKompanion is intended to be used as a portable environment with almost all batteries included. Applications are placed under .kompanion/bin/ directory and all configuration of paths and other required environment variables are provided by kompanion.ps1 script.\nIt mostly revolves around VS Code. You launch the editor through a dedicated script and everything else is available in its terminal. That said, the whole of the ecosystem is command line based - but this is scientific computing, if you don’t know command line you are in the wrong job. If you followed the instructions to source Kompanion from $PROFILE, then you can also launch the terminal from the start menu and everything will be available there as well.\nIt is intended to leave minimal track on host system (probably a few files and directories on your user home directory or under AppData), but this is not enforced in its development, so take care if you are not allowed to execute some software in a given computer.",
+    "crumbs": [
+      "Computing",
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Portable applications</span>"
+    ]
+  },
+  {
+    "objectID": "computing/portable.html#other-possibly-supported-applications",
+    "href": "computing/portable.html#other-possibly-supported-applications",
+    "title": "9  Portable applications",
+    "section": "9.2 Other possibly supported applications",
+    "text": "9.2 Other possibly supported applications\nThe following packages are not currently included in Kompanion, but they are known to be somewhat portable and they might be added in the future. Those displayed in italics cannot be currently automated, but they can be installed in a machine then copied to Kompanion (ongoing investigation on how to automate that). Also check the Chapter 8 for a software selection that might be of interest for you and maybe not listed here.\n\nDualSPHysics\nDyssol\nFiji\nFileZilla\nFreeFEM++\ngnuplot\nGraphviz\niperf\nIpopt\nJamovi\nJASP\nlazarus\nlite-xl\nLAMMPS\nMFiX\nMSYS2\nMUSEN\nNotepad++\nOctave\nOpenCALPHAD\nOpenModelica\nOrange3\nPortable LISP\npuTTy\nRuby\nRufus (requires admin privileges to be used though)\nSALOME (needs to be manually downloaded)\nScilab\nstrawberry-perl\nVMD\nZeroBraneStudio\nZettlr\nXpra",
+    "crumbs": [
+      "Computing",
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Portable applications</span>"
+    ]
+  },
+  {
+    "objectID": "computing/portable.html#software-specific-instructions",
+    "href": "computing/portable.html#software-specific-instructions",
+    "title": "9  Portable applications",
+    "section": "9.3 Software specific instructions",
+    "text": "9.3 Software specific instructions\n\n9.3.1 DualSPHysics\nFor DualSPHysics one might also want to install this FreeCAD addon and this Blender addon.\n\n\n9.3.2 gmsh\nBecause it was chosen that SDK version of gmsh was more adapted to integrate Kompanion, if you want to be able to pin the executable to your taskbar you need to copy the DLL from its lib/ directory to bin/. If you think you will not need Python/Julia interfaces of gmsh, then you can move the DLL instead to save ~80MB of disk (and you can always install gmsh with pip for those cases).\n\n\n9.3.3 Graphviz\nIf the first time you run dot you get a message as\nThere is no layout engine support for \"dot\"\nPerhaps \"dot -c\" needs to be run (with installer's privileges) to register the plugins?\nSimply run dot -c as suggested and it should work fine (without admin privileges).\n\n\n9.3.4 MFiX\nThis package is installed in a separate environment and not added to the toolbox path; that is because other Python environments could interact with each other and lead to unpredictable behavior. The following instructions are provided:\n\nInstall miniforge3 under a dedicated directory.\nAdd a script with the following content to launch miniforge console:\n\n%windir%\\system32\\cmd.exe \"/K\" ^\n    %~dp0\\miniforge3\\Scripts\\activate.bat ^\n    %~dp0\\miniforge3\n\nGo to the downloads page, login and copy the personal installation command that looks like the following:\n\nconda create -n mfix-&lt;version&gt; ^\n    mfix==&lt;version&gt;            ^\n    mfix-doc==&lt;version&gt;        ^\n    mfix-gui==&lt;version&gt;        ^\n    mfix-solver==&lt;version&gt;     ^\n    mfix-src==&lt;version&gt;        ^\n    -c conda-forge -c          ^\n    https://mfix.netl.doe.gov/s3/&lt;personal-token&gt;//conda/dist\n\nTo run the software activate the created environment and call its executable:\n\nconda activate mfix-&lt;version&gt;\nmfix",
+    "crumbs": [
+      "Computing",
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Portable applications</span>"
+    ]
+  },
+  {
+    "objectID": "computing/portable.html#creating-a-portable-environment",
+    "href": "computing/portable.html#creating-a-portable-environment",
+    "title": "9  Portable applications",
+    "section": "9.4 Creating a portable environment",
+    "text": "9.4 Creating a portable environment",
+    "crumbs": [
+      "Computing",
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Portable applications</span>"
+    ]
+  },
+  {
+    "objectID": "elmer/index.html",
+    "href": "elmer/index.html",
+    "title": "Elmer Multiphysics",
+    "section": "",
+    "text": "Quick answers\nElmer is a multiphysics finite element method (FEM) solver mainly developed by CSC and maintained at GitHub. Several resources can be found in is official webpage and in the community portal and in the forum. There is also an YouTube channel with several tutorials and illustration of the package capabilities.\nThe goal of this page is not to supersede the documentation, but to make it (partially) available as a webpage where search and navigation become more intuitive. Notice that this will be fed according to my personal projects and learning, so any contribution to accelerate the process is welcome. Here you find a user-guide-style page with more details are provided below in the selected notes of Elmer documentation.",
+    "crumbs": [
+      "Elmer Multiphysics"
+    ]
+  },
+  {
+    "objectID": "elmer/index.html#quick-answers",
+    "href": "elmer/index.html#quick-answers",
+    "title": "Elmer Multiphysics",
+    "section": "",
+    "text": "Is Elmer the adequate tool for my projects? In this document you find a short introduction to what Elmer can do and the main executables.\nHow do I start learning Elmer? Simply put, Elmer does not require basic users to master all the fundamentals of FEM, so following the getting started guide seems a good starting point. There you learn how to install, configure, and run the software.\nWhere do I get the binaries of Elmer? If willing to run in Windows, the previous link provides the compiled binaries; there are also instructions for installing directly in Ubuntu as well as all the documentation and other test and sample cases.\nI feel alone, where do I find other users? The forum seems to be moderately active, so you can go there to chat with other users and developers if you are not in a hurry.",
+    "crumbs": [
+      "Elmer Multiphysics"
+    ]
+  },
+  {
+    "objectID": "elmer/index.html#limitations-and-issues",
+    "href": "elmer/index.html#limitations-and-issues",
+    "title": "Elmer Multiphysics",
+    "section": "Limitations and issues",
+    "text": "Limitations and issues\n\nCurrently the GUI is not able to import SIF files generated manually because it stores its state in a XML file; to be able to re-run cases from the GUI users need to create the equivalent case (eventually using the free text fields) in the GUI itself before regenerating a SIF file. Notice that this will overwrite the SIF file, so keep in mind to backup the file in another directory; that is especially required for highly customized cases.\nWhen exporting meshes from gmsh, consider using the extension .msh and not .msh2 as is often seen as a reminder of format 2 mesh; Elmer GUI is unable to render the mesh in this case. Notice that this has apparently no effect if running from command line.",
+    "crumbs": [
+      "Elmer Multiphysics"
+    ]
+  },
+  {
+    "objectID": "elmer/index.html#ongoing-work",
+    "href": "elmer/index.html#ongoing-work",
+    "title": "Elmer Multiphysics",
+    "section": "Ongoing work",
+    "text": "Ongoing work\n\nDevelopment of a VS Code syntax highlight extension with help of data provided in SOLVER.KEYWORDS.",
+    "crumbs": [
+      "Elmer Multiphysics"
+    ]
+  },
+  {
+    "objectID": "elmer/index.html#retrieving-materials",
+    "href": "elmer/index.html#retrieving-materials",
+    "title": "Elmer Multiphysics",
+    "section": "Retrieving materials",
+    "text": "Retrieving materials\nBecause there are plenty of interesting materials in Elmer public directory, it is worth downloading it all and selecting what to keep later. In a Linux terminal one could run the following command. If you also want to retrieve the animations, binaries, and virtual machines, consider removing and/or modifying the -X options.\n#!/usr/bin/env bash\n\nURL=\"https://www.nic.funet.fi/pub/sci/physics/elmer/\"\n\nwget -r -l 20 --no-parent           \\\n    -X /pub/sci/physics/elmer/anim/ \\\n    -X /pub/sci/physics/elmer/bin/  \\\n    -R \"index.html*\"                \\\n    ${URL}",
+    "crumbs": [
+      "Elmer Multiphysics"
+    ]
+  },
+  {
+    "objectID": "elmer/elmer.html",
+    "href": "elmer/elmer.html",
+    "title": "10  Elmer Fundamentals",
+    "section": "",
+    "text": "10.1 Preprocessing steps",
+    "crumbs": [
+      "Elmer Multiphysics",
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Elmer Fundamentals</span>"
+    ]
+  },
+  {
+    "objectID": "elmer/elmer.html#preprocessing-steps",
+    "href": "elmer/elmer.html#preprocessing-steps",
+    "title": "10  Elmer Fundamentals",
+    "section": "",
+    "text": "Other than the native ElmerGrid, several other software can be used for conceiving a geometry and mesh generation workflow. Users are encouraged to use external tools such as gmsh or Salome to generate computational meshes, built-in support in Elmer bein limited to very simple geometries only. For complex geometries FreeCAD is a standout alternative. For more consider reading Geometry and Preprocessing.\nNot all gmsh standard mesh formats are supported, but only version 2 (as for OpenFOAM); that said, users are encouraged to export mesh in UNV format to avoid compatibility issues, and also because both proposed tools support it. You can control the element orders in command line using option -order &lt;N&gt;; gmsh operates this way so that the same script can generate any supported element type.\nFor importing meshes one uses ElmerGrid &lt;input-format&gt; &lt;output-format&gt;, where the format arguments are documented in the manual sections 1.3 and 1.4. The UNV input is given by number 8 while standard ElmerSolver output by number 2, so that the conversion command would start with ElmerGrid 8 2 &lt;other-arguments...&gt;. Always verify the number of nodes remain untouched after conversion - or if it changed when using option -merge &lt;dist&gt;, merging nodes that are closer than the user-defined &lt;dist&gt;.\nRemember to use Coherence; with OpenCASCADE factory in gmsh scripts to automatically strip internal faces; that might not be enough for complex cases, see below. Note: I tried doing so and unless Physical Surfaces naming the external boundaries are provided every interface is dumped and imported by Elmer; maybe I misunderstood the use of command!\nBecause faces are not named in Elmer, i.e. no matter what Physical Surface names you provide in gmsh, even for the advanced user working from command line it might be interesting to use the interactive zone grouping capabilities of ElmerGUI. That might even become a requirement as geometric complexity grows.\n\n\n\n\n\n\n\n\nSoftware\nNotes\n\n\n\n\nFreeCAD\nGeometry only for now, probably the best in the list; good parametric modeling support. Has native Elmer integration.\n\n\nSalome\nCan export UNV (8) meshes readable by Elmer. An extension to call Elmer directly from Salome is under development.\n\n\ngmsh\nCan export MSH2 (14) and UNV (8) formats readable by Elmer.\n\n\nnetgen\nIs able to write native Elmer linear meshes; can be used as a plug-in.\n\n\ntetgen\nCan be used as a plug-in.",
+    "crumbs": [
+      "Elmer Multiphysics",
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Elmer Fundamentals</span>"
+    ]
+  },
+  {
+    "objectID": "elmer/elmer.html#using-elmer",
+    "href": "elmer/elmer.html#using-elmer",
+    "title": "10  Elmer Fundamentals",
+    "section": "10.2 Using Elmer",
+    "text": "10.2 Using Elmer\n\nNewcomers might be interested in ElmerGUI; although very intuitive, the interface is quite limited and for complex programs running from command line is the preferred mode.\nMost users will finally end setting up an workflow employing both to ElmerSolver (to run the simulations) and ElmerGrid (to prepare the grid and setup parallelization).\nThere is also ViewFactors which might be useful in special cases involving radiation and other executables but they are not mentioned here because they fall in the legacy code family.\nUsers must be aware that Elmer has no default unit system; one must take care that units are coherent across the different models and materials.\nSupport to mathematical operations in SIF through MATC, which has its own syntax and documentation. It can be used, e.g. for computing temperature dependent properties, what can be helpful for simple expressions (instead of writing Fortran 90 code for extensions).",
+    "crumbs": [
+      "Elmer Multiphysics",
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Elmer Fundamentals</span>"
+    ]
+  },
+  {
+    "objectID": "elmer/elmer.html#parallel-computing",
+    "href": "elmer/elmer.html#parallel-computing",
+    "title": "10  Elmer Fundamentals",
+    "section": "10.3 Parallel computing",
+    "text": "10.3 Parallel computing\n\nBefore running in parallel a working case running in serial is required; using ElmerGUI this can be enabled in Run &gt; Parallel settings.... Notice that after running postprocessing of .pvtu needs to be done in ParaView directly.\nTo partition the mesh from command line one needs to run ElmerGrid 2 2 &lt;mesh-name&gt; -partdual -metiskway &lt;N&gt;, which will convert &lt;mesh-name&gt; from Elmer mesh format (2) into itself (thus the 2 2 in the command) and dump the resulting mesh in partitions.&lt;N&gt;, with &lt;N&gt; being the number of physical cores to run the simulation.\nParallel cases can be run with mpiexec -n &lt;N&gt; ElmerSolver_mpi. Notice that under Linux the MPI runner is called mpirun instead of mpiexec.",
+    "crumbs": [
+      "Elmer Multiphysics",
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Elmer Fundamentals</span>"
+    ]
+  },
+  {
+    "objectID": "elmer/elmer.html#tips-and-ideas",
+    "href": "elmer/elmer.html#tips-and-ideas",
+    "title": "10  Elmer Fundamentals",
+    "section": "10.4 Tips and ideas",
+    "text": "10.4 Tips and ideas\n\nUse Coordinate Mapping to rotate meshes with oriented particles\nScaling of a single direction can be done with Coordinate Scaling\nTime step can be changed with a list of elements in Timestep Intervals, e.g.\n\n! Run 10 time-steps of 0.1 s, then 100 with 1.0 s.\nTimestep Intervals(2) = 10 100\nTimestep Sizes(2) = 0.1 1.0\n\nTake care with Linear System Abort Not Converged = True for physical consistency; generally continuing a simulation after a failed step is worthless unless one is pseudo-stepping towards a difficult (highly nonlinear) steady-state.",
+    "crumbs": [
+      "Elmer Multiphysics",
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Elmer Fundamentals</span>"
+    ]
+  },
+  {
+    "objectID": "elmer/elmer.html#material-properties",
+    "href": "elmer/elmer.html#material-properties",
+    "title": "10  Elmer Fundamentals",
+    "section": "10.5 Material properties",
+    "text": "10.5 Material properties\nMaterial properties can be specified as:\n\nConstant: just the default numeric input in SIF files\nTabulated linearly or using a cubic spline, e.g.\n\n! Linear interpolation\nViscosity = Variable Temperature\n  Real\n    298.15 1.0\n    ! ... more data here\n    373.15 2.0\nEnd\n\n! Cubic spline interpolation\nViscosity = Variable Temperature\n  Real cubic\n    298.15 1.0\n    315.15 1.1\n    345.15 1.5\n    ! ... more data here\n    373.15 2.0\nEnd\n\nArrays: for representing anisotropic bodies, e.g.\n\nHeat Conductivity(3,3) = 1 0 0\\\n                         0 1 0\\\n                         0 0 2\n\nUsing MATC as explained below in this page. Notice that sourcing files in MATC is the recommended way to get reusable code; coding MATC in SIF files requires to escape all lines and quickly becomes messy.\nUser-defined functions (UDF) can also be provided in Fortran; notice that even when MATC can be used, this may lead to a speed-up of calculations with the inconvenient of needing more code. So for cases that are intended to be reused, it is important to consider writing proper extensions in Fortran. The following example illustrates a temperature dependent thermal conductivity function which is evaluated by Elmer at all nodes. In most cases a simple USE DefUtils is enough to get the required Elmer API to write the extension.\n\nFUNCTION conductivity(model, n, time) RESULT(k)\n    !**************************************************************\n    ! Load Elmer library.\n    !**************************************************************\n\n    USE DefUtils\n    IMPLICIT None\n\n    !**************************************************************\n    ! Function interface.\n    !**************************************************************\n\n    TYPE(Model_t) :: model\n    INTEGER       :: n\n    REAL(KIND=dp) :: time, k\n\n    !**************************************************************\n    ! Function internals.\n    !**************************************************************\n\n    TYPE(Variable_t), POINTER :: varptr\n    REAL(KIND=dp) :: T\n    INTEGER :: idx\n\n    !**************************************************************\n    ! Actual implementation\n    !**************************************************************\n\n    ! Retrieve pointer to the temperature variable.\n    varptr =&gt; VariableGet(model%Variables, 'Temperature')\n\n    ! Access index of current node.\n    idx = varptr%Perm(n)\n\n    ! Retrieve nodal temperature.\n    T = varptr%Values(idx)\n\n    ! Compute heat conductivity from NodalTemperature, k=k(T)\n    k = 2.0 - T * (2.5e-03 - 1.0e-06 * T)\nEND FUNCTION conductivity\nIn order to compile the above assume it is written to properties.f90 file; then one can call elmerf90 properties.f90 –o properties to generate the required shared library that is loaded in runtime by Elmer. Below we illustrate the use of Procedure to attach this library to a given material; first one provides the name of the shared library then the name of the function. A single library can in fact contain several functionalities.\nMaterial 1\n  Name = \"Solid\"\n  Heat Conductivity = Variable Time\n    Procedure \"properties\" \"conductivity\"\n  Heat Capacity = 1000\n  Density = 2500\nEnd",
+    "crumbs": [
+      "Elmer Multiphysics",
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Elmer Fundamentals</span>"
+    ]
+  },
+  {
+    "objectID": "elmer/elmer.html#postprocessing",
+    "href": "elmer/elmer.html#postprocessing",
+    "title": "10  Elmer Fundamentals",
+    "section": "10.6 Postprocessing",
+    "text": "10.6 Postprocessing\nFor postprocessing the recommended way is by using external tools as ParaView and PyVista, both handling well the VTK format of outputs. Nonetheless there are a some in-solver processing utilities that are worth knowing, especially in what concerns extracting and filtering data from certain regions, creating new fields, and computing fluxes.\n\nCreating a new scalar\n\nThe keyword set of materials is actually not fixed; one can, for instance, create composition field in different units with MATC, as illustrated below (case here):\nMoleFraction = Variable Concentration\n  Real MATC \"carbonmolefraction(tx)\"\nThen in solver SaveMaterials, this new name MoleFraction can be used as a variable:\nSolver 1\n  Equation = SaveMaterials\n  Parameter 1 = Concentration Diffusivity\n  Parameter 2 = MoleFraction\n  Procedure = \"SaveData\" \"SaveMaterials\"\n  Exec Solver = After Timestep\nEnd\nAnother situation that can be frequently found is unit conversion for temperature. It was chosen to implement it in this case because it is multi-material; that is a reminder that in such cases the new variable needs to be created for all materials (as this is a tweak, since the temperature is not a material property, but a global field). If forgotten in one material, an error will show up in ParaView telling you that the field is not available in some regions.",
+    "crumbs": [
+      "Elmer Multiphysics",
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Elmer Fundamentals</span>"
+    ]
+  },
+  {
+    "objectID": "elmer/elmer.html#user-defined-functions",
+    "href": "elmer/elmer.html#user-defined-functions",
+    "title": "10  Elmer Fundamentals",
+    "section": "10.7 User-defined functions",
+    "text": "10.7 User-defined functions\nUpcoming\n\n10.7.1 Derived fields\n\nStreamSolver\nFluxSolver\n\n#elmer/models/flux-solver\n\nVorticitySolver\nDivergenceSolver\nScalarPotentialSolver\nArtificialCompressibility\nFluidicForce\nElectricForce\nRigidBodyReduction\nFilterTimeSeries\nDataToFieldSolver\nProjectToPlane\nStructureProjectToPlane\nFindOptimum\n\n\n\n10.7.2 Saving data modules\nNote: coupling to OpenFOAM is discussed separately in another section.\n\nSaveData\nSaveScalars\n\n#elmer/models/save-scalars\n\nSaveLine\n\n#elmer/models/save-line\n\nSaveMaterials\nSaveBoundaryValues\nResultOutputSolve\nResultOutputSolver\n\n#elmer/models/result-output-solver\n\nSaveGridData\nSaveGridData\nIsosurface\nIsosurfaceSolver\n\n\n\n10.7.3 OpenFOAM coupling\n…",
+    "crumbs": [
+      "Elmer Multiphysics",
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Elmer Fundamentals</span>"
+    ]
+  },
+  {
+    "objectID": "elmer/sif.html",
+    "href": "elmer/sif.html",
+    "title": "11  Solver Input Files (SIF)",
+    "section": "",
+    "text": "11.1 Sections\nOnce you get serious with Elmer it is a natural evolution to prefer to work with SIF files instead of the GUI most of the time; the GUI remains useful for raw case generation, avoiding writing boilerplate setups and to get default values right. This is also true in a majority of scientific computing software. The documentation of SIF is spread over the whole documentation of Elmer and this page tries to summarize it. For the beginner, this video is a good starting point, this page being more of a reference manual.\nBecause syntax highlighting is important for productivity, I am continuously developing a minimalistic extension for VS Code. Its partial development can be found here. You can clone that repository and copy the sif/ directory under %USERPROFILE%/.vscode/extensions or in the equivalent directory documented here; later it will probably be packaged as a standard VS Code extension.",
+    "crumbs": [
+      "Elmer Multiphysics",
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Solver Input Files (SIF)</span>"
+    ]
+  },
+  {
+    "objectID": "elmer/sif.html#sections",
+    "href": "elmer/sif.html#sections",
+    "title": "11  Solver Input Files (SIF)",
+    "section": "",
+    "text": "Header\nSimulation\nConstants\nMaterial &lt;n&gt;\nBody &lt;n&gt;\nSolver &lt;n&gt;\nEquation &lt;n&gt;\nInitial Condition &lt;n&gt;\nBoundary Condition &lt;n&gt;",
+    "crumbs": [
+      "Elmer Multiphysics",
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Solver Input Files (SIF)</span>"
+    ]
+  },
+  {
+    "objectID": "elmer/matc.html",
+    "href": "elmer/matc.html",
+    "title": "12  MATC",
+    "section": "",
+    "text": "12.1 Declaring variables\nElmer provides a few extension methods. For complex models you might be prompted to use directly Fortran 90. For simpler things, such as providing temperature dependent thermophysical properties, it has its own parser for use in SIF, the metalanguage MATC. Expressions provided in MATC can be evaluated when file is read or during simulation execution.\nBecause it is quite concise, I summarized the whole of MATC syntax and functions in this page. For the official documentation please refer to this document.\nVariables in MATC can be matrices and strings; nonetheless, both are stored as double precision arrays so creating large arrays of strings can represent a waste of memory. For some weird reason I could not yet figure out, MATC language can be quite counterintuitive.\nLet’s start by creating a variable, say x below; attribution, such a in Python, creates the variable. It was stated that everything is a matrix or string; since x is not a string, it is actually a \\(1\\times{}1\\) matrix and in this case we can omit the indexing when allocating its memory.\nSo far nothing weird; when declaring a string as k below we are actually creating a \\(1\\times{}5\\) row matrix, what is not unusual in many programming languages (except for being double precision here). Furthermore, we use the typical double-quotes notation for strings.\nMatrix indexing is zero-based, as in C or Python. Matrix slicing is done as in many scripting languages, such as Python, Julia, Octave, …, and we can reverse the order of the first six elements of an array y as follows:\nNotice above the fact that matrix slicing is last-inclusive, as in Julia, meaning that all elements from index zero to five inclusive are included in the slice. Weirdness starts when you do something like\nwhich according to the documentation will produce an array 1 4 2 8 5 7 1 4 2 8; I could not verify this behavior yet. Additionally, the following produces another unexpected result:\nIf matrix z does not exist, this results in a \\(10\\times{}10\\) matrix with all zeros except the explicitly declared element. The size of variables are dynamic, so in the above if z already existed but wa smaller, it would be padded with zeros instead.\nFinally, logical indexing is also allowed:",
+    "crumbs": [
+      "Elmer Multiphysics",
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>MATC</span>"
+    ]
+  },
+  {
+    "objectID": "elmer/matc.html#declaring-variables",
+    "href": "elmer/matc.html#declaring-variables",
+    "title": "12  MATC",
+    "section": "",
+    "text": "x = 1\n\nk = \"hello\"\n\ny(0, 0:5) = y(0, 5:0)\n\nz(0:9) = 142857\n\nz(9, 9) = 1\n\n\nx(x &lt; 0.05) = 0.05",
+    "crumbs": [
+      "Elmer Multiphysics",
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>MATC</span>"
+    ]
+  },
+  {
+    "objectID": "elmer/matc.html#control-structures",
+    "href": "elmer/matc.html#control-structures",
+    "title": "12  MATC",
+    "section": "12.2 Control structures",
+    "text": "12.2 Control structures\nMATC provides conditionals and loops as control structures. Below we have the if-else statement, which can be declared inline of using a C-style declaration using braces.\nif ( expr ) expr; else expr;\n\nif ( expr )\n{\n    expr;\n    ...\n    expr;\n} else {\n    expr;\n    ...\n    expr;\n}\nLoops can be declared using both for or while. There is no mechanism of generating values within a for loop and one must provide a vector of indexes for repetition. In the official documentation there is no reference to a continue or break statement and I could not verify their existence yet.\nfor( i=vector ) expr;\n\nfor( i=vector )\n{\n    expr;\n    ...\n    expr;\n}\n\nwhile( expr ) expr;\n\nwhile( expr )\n{\n    expr;\n    ...\n    expr;\n}",
+    "crumbs": [
+      "Elmer Multiphysics",
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>MATC</span>"
+    ]
+  },
+  {
+    "objectID": "elmer/matc.html#operators",
+    "href": "elmer/matc.html#operators",
+    "title": "12  MATC",
+    "section": "12.3 Operators",
+    "text": "12.3 Operators\nAssume the following definitions:\n\na, b and c ordinary matrices\nl, t and r logical matrices\ns, n and m scalars\n\n\n\n\n\n\n\n\nb = a'\nis transpose of matrix a.\n\n\nb = @a\nevaluate content of a string variable a as a MATC statement.\n\n\nt = ~l\nelementwise logical not of if x is not zero.\n\n\nb = a ^ s\nif a is a square matrix and s is integral, a matrix power is computed, otherwise an elementwise power.\n\n\nc = a * b\nif a and b are compatible for matrix product, that is computed, otherwise if they are of the same size or at least one of them is scalar, an elementwise product is computed.\n\n\nc = a # b\nelementwise multiplication of a and b.\n\n\nc = a / b\nis fraction of a and b computed elementwise.\n\n\nc = a + b\nis sum of matrices a and b computed elementwise.\n\n\nc = a - b\nis difference of matrices a and b computed elementwise.\n\n\nl = a == b\nequality of matrices a and b elementwise.\n\n\nl = a &lt;&gt; b\ninequality of matrices a and b elementwise.\n\n\nl = a &lt; b\ntrue if a is less than b computed elementwise.\n\n\nl = a &gt; b\ntrue if a is greater than b computed elementwise.\n\n\nl = a &lt;= b\ntrue if a is less than or equal to b computed elementwise.\n\n\nl = a &gt;= b\ntrue if a is greater than or equal to b computed elementwise.\n\n\na = n : m\nreturn a vector of values starting from n and ending to m by increment of (plus-minus) one.\n\n\nr = l & t\nelementwise logical and of a and b.\n\n\nl = a \\| b\nelementwise logical or of a and b.\n\n\nc = a ? b\nreduction: set values of a where b is zero to zero.\n\n\nb = n m % a\nresize a to matrix of size n by m.\n\n\nb = a\nassigning a to b.",
+    "crumbs": [
+      "Elmer Multiphysics",
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>MATC</span>"
+    ]
+  },
+  {
+    "objectID": "elmer/matc.html#function-definitions",
+    "href": "elmer/matc.html#function-definitions",
+    "title": "12  MATC",
+    "section": "12.4 Function definitions",
+    "text": "12.4 Function definitions\nThe syntax of the function definition is similar to that of Julia and is given below. The function body is enclosed by braces. Instead of using a return statement, the resulting value is attributed to a variable named after the function with a leading underscore. Notice the ! denoting comments in the description of the function.\nfunction name(arg1, arg2, ...)\n!\n! Optional function description (seen with help(\"name\"))\n!\nimport var1, var2\nexport var3, var4\n{\n    expr;\n     ...\n    expr;\n\n    _name = value\n}\nFunctions have their own list of variables. Global variables are not seen in this function unless imported by import or given as arguments. Local variables can be made global by the export statement.\nFunctions, if returning matrices, behave in many ways as variables do. So if you have defined function mult as follows\nfunction mult(a, b)\n{\n   _mult = a * b;\n}\nYou can get element (3,5) of the a times b matrix with mult(x,y)[3,5] or the diagonal values of the same matrix by diag(mult(x, y)).",
+    "crumbs": [
+      "Elmer Multiphysics",
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>MATC</span>"
+    ]
+  },
+  {
+    "objectID": "elmer/matc.html#built-in-functions",
+    "href": "elmer/matc.html#built-in-functions",
+    "title": "12  MATC",
+    "section": "12.5 Built-in functions",
+    "text": "12.5 Built-in functions\n\nC-style math\n\nThe following listing provides a series of mathematical functions which follow a their meaning in C. The only exceptions are ln denoting the natural logarithm and log used here for base 10 logarithms.\nr = sin(x)\n\nr = cos(x)\n\nr = tan(x)\n\nr = asin(x)\n\nr = acos(x)\n\nr = atan(x)\n\nr = sinh(x)\n\nr = cosh(x)\n\nr = tanh(x)\n\nr = exp(x)\n\nr = ln(x)\n\nr = log(x)\n\nr = sqrt(x)\n\nr = ceil(x)\n\nr = floor(x)\n\nr = abs(x)\n\nr = pow(x,y)\n\nGeneral utilities\n\n\n\n\n\n\n\n\nfuncdel(name)\nDelete given function definition from parser.\n\n\nfunclist(name)\nGive header of the function given by name.\n\n\nenv(name)\nGet value of environment variable of the operating system.\n\n\nexists(name)\nReturn true (non-zero) if variable by given name exists otherwise return false (=0).\n\n\nsource(name)\nExecute commands from file given name.\n\n\nformat(precision)\nSet number of digits used in printing values in MATC.\n\n\nr = eval(str)\nEvaluate content of string str. Another form of this command is @str.\n\n\nwho\nGive list of currently defined variables.\n\n\nhelp or help(\"symbol\")\nFirst form of the command gives list of available commands. Second form gives help on specific routine.\n\n\n\n\nString and I/O functions\n\n\n\n\n\n\n\n\nstr = sprintf(fmt[,vec])\nReturn a string formatted using fmt and values from vec. A call to corresponding C-language function is made.\n\n\nvec = sscanf(str,fmt)\nReturn values from str using format fmt. A call to corresponding C-language function is made.\n\n\nstr = fread(fp,n)\nRead n bytes from file given by fp. File pointer fp should have been obtained from a call to fopen or freopen, or be the standard input file stdin. Data is returned as function value.\n\n\nvec = fscanf(fp,fmt)\nRead file fp as given in format. Format fmt is equal to C-language format. File pointer fp should have been obtained from a call to fopen or freopen, or be the standard input.\n\n\nstr = fgets(fp)\nRead next line from fp. File pointer fp should have been obtained from a call to fopen or freopen or be the standard input.\n\n\nn = fwrite(fp,buf,n)\nWrite n bytes from buf to file fp. File pointer fp should have been obtained from a call to fopen or freopen or be the standard output (stdout) or standard error (stderr). Return value is number of bytes actually written. Note that one matrix element reserves 8 bytes of space.\n\n\nn = fprintf(fp,fmt[, vec])\nWrite formatted string to file fp. File pointer fp should have been obtained from a call to fopen or freopen or be the standard output (stdout) or standard error (stderr). The format fmt is equal to C-language format.\n\n\nfputs(fp,str)\nWrite string str to file fp. File pointer fp should have been obtained from a call to fopen or freopen or be the standard input (stdin).\n\n\nfp = fopen(name,mode)\nReopen file given previous file pointer, name and access mode. The most usual modes are \"r\" for reading and \"w\" for writing. Return value fp is used in functions reading and writing the file.\n\n\nfp = freopen(fp,name,mode)\nReopen file given previous file pointer, name and access mode. The most usual modes are \"r\" for reading and \"w\" for writing. Return value fp is used in functions reading and writing the file.\n\n\nfclose(fp)\nClose file previously opened with fopen or freopen.\n\n\nsave(name, a[,ascii_flag])\nClose file previously opened with fopen or freopen.\n\n\nr = load(name)\nLoad matrix from a file given name and in format used by save command.\n\n\n\n\nNumerical utilities\n\n\n\n\n\n\n\n\nr = min(matrix)\nReturn value is a vector containing smallest element in columns of given matrix. r = min(min(matrix)) gives smallest element of the matrix.\n\n\nr = max(matrix)\nReturn value is a vector containing largest element in columns of given matrix. r = max(max(matrix)) gives largest element of the matrix.\n\n\nr = sum(matrix)\nReturn vector is column sums of given matrix. r = sum(sum(matrix)) gives the total sum of elements of the matrix.\n\n\nr = zeros(n,m)\nReturn n by m matrix with elements initialized to zero.\n\n\nr = ones(n,m)\nReturn n by m matrix with elements initialized to one.\n\n\nr = rand(n,m)\nReturn n by m matrix with elements initialized with random numbers from zero to one.\n\n\nr = diag(a)\nGiven matrix return diagonal entries as a vector. Given vector return matrix with diagonal elements from vector. r = diag(diag(a)) gives matrix with diagonal elements from matrix a, otherwise elements are zero.\n\n\nr = vector(start,end,inc)\nReturn vector of values going from start to end by inc.\n\n\nr = size(matrix)\nReturn size of given matrix.\n\n\nr = resize(matrix,n,m)\nMake a matrix to look as a n by m matrix. This is the same as r = n m % matrix.\n\n\nr = where(a)\nReturn a row vector giving linear index to a where a is not zero.\n\n\nr = matcvt(matrix, type)\nMakes a type conversion from MATC matrix double precision array to given type, which can be one of the following: \"int\", \"char\" or \"float\".\n\n\nr = cvtmat(special, type)\nMakes a type conversion from given type to MATC matrix. Type can be one of the following: \"int\", \"char\" or \"float\".\n\n\n\n\nLinear algebra\n\n\n\n\n\n\n\n\nr = trace(matrix)\nReturn value is the sum of matrix diagonal elements.\n\n\nr = det(matrix)\nReturn value is determinant of given square matrix.\n\n\nr = inv(matrix)\nInvert given square matrix. Computed also by operator \\(^{-1}\\)\n\n\nr = tril(x)\nReturn the lower triangle of the matrix x.\n\n\nr = triu(x)\nReturn the upper triangle of the matrix x.\n\n\nr = eig(matrix)\nReturn eigenvalues of given square matrix. The expression r(n,0) is real part of the n:th eigenvalue, r(n,1) is the imaginary part respectively.\n\n\nr = jacob(a,b,eps)\nSolve symmetric positive definite eigenvalue problem by Jacob iteration. Return values are the eigenvalues. Also a variable eigv is created containing eigenvectors.\n\n\nr = lud(matrix)\nReturn value is LUD decomposition of given matrix.\n\n\nr = hesse(matrix)\nReturn the upper hessenberg form of given matrix.\n\n\nr = eye(n)\nReturn n by n identity matrix.",
+    "crumbs": [
+      "Elmer Multiphysics",
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>MATC</span>"
+    ]
+  },
+  {
+    "objectID": "elmer/matc.html#usage",
+    "href": "elmer/matc.html#usage",
+    "title": "12  MATC",
+    "section": "12.6 Usage",
+    "text": "12.6 Usage\nAlthough the language is pretty fast for most simple uses, it is much slower than Fortran extensions, so use with case when scalability is needed. Another point is overuse of MATC; do not use it with simple numerical expressions, e.g. OneThird = Real $1.0/3.0 is much faster than its MATC counterpart OneThird = Real MATC \"1.0/3.0\".\n\nDirect expression coding\n\nOne thing that in my opinion lacks in the documentation are examples of use in conjunction with SIF. For instance, for setting the thermal conductivity of a material as temperature-dependent one could use the following snippet and modify the string to match the desired expression. An example of its usage is provided in this case.\n  Heat Conductivity = Variable Temperature\n    Real MATC \"1.0 - tx * (2.5E-03 - 1.2E-06 * tx)\"\n\nSourcing functions from user modules\n\nModels can become too complex to code in a single line. Hopefully MATC provides functions which can be declared in external modules. I avoid coding MATC directly in SIF because their syntax is different and that can quickly lead to unmaintainable code. An example of such external sourcing is provided in this case. You need to remember to call source(\"module\") in Simulation section of SIF so that the functions can be used elsewhere. The call of a function become something as\n  Concentration Diffusivity = Variable Concentration\n    Real MATC \"diffusivity(tx)\"\nif independent variable is concentration or for time\n  Mass Transfer Coefficient = Variable Time\n    Real MATC \"masstransfercoef(tx)\"\nYou can even use multiple variables, e.g.\n  Mass Transfer Coefficient = Variable Time, Temperature\n    Real MATC \"masstransfercoef(tx(0), tx(1))\"\nPS: I managed to use a single source in SIF, although the documentation does not state that many sources are forbidden; for some reason multiple sources work when sourcing from a file.\nFor more complex cases such as this one it is worth writing actual MATC function modules; since there is no syntax highlighter available for MATC in VS Code, the .ini extension seems to provide better readability to the code. The problem was split in two parts: the models which take care of sourcing the conditions, so that basic users could only edit the latter and run their variant calculations with no coding skills. Notice that the symbols that are used in SIF are exported from this line instead of being set as global variables.",
+    "crumbs": [
+      "Elmer Multiphysics",
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>MATC</span>"
+    ]
+  },
+  {
+    "objectID": "fluent/index.html",
+    "href": "fluent/index.html",
+    "title": "Ansys Fluent",
+    "section": "",
+    "text": "License usage",
+    "crumbs": [
+      "Ansys Fluent"
+    ]
+  },
+  {
+    "objectID": "fluent/index.html#license-usage",
+    "href": "fluent/index.html#license-usage",
+    "title": "Ansys Fluent",
+    "section": "",
+    "text": "ansys_root=/path/to/ansys/installation\nansys_version=version-number\n\nexport LMUTIL=\"${ansys_root}$/ansys_inc/${ansys_version}/licensingclient/linx64/lmutil\"\n\n\"${LMUTIL}\" lmstat -c 1055@&lt;ip&gt; -a | grep \"Users of\" | \\\n    awk -F\"[ ]\" \"{printf \"%-25s %3s /%3s\\n\", $3, $13, $7}\"",
+    "crumbs": [
+      "Ansys Fluent"
+    ]
+  },
+  {
+    "objectID": "fluent/tui-basics.html",
+    "href": "fluent/tui-basics.html",
+    "title": "13  Text user interface (TUI)",
+    "section": "",
+    "text": "13.1 Parameters\nAn extremelly opinionated introduction.\nUsing Ansys Fluent can be a huge nightmare; the software is simply bad. There’s no way someone should commercialize such a garbage of user experience, shame on you! It happens that as CFD engineers we often need to use it and in some cases it surprisingly works as its solver is not as bad as the graphical interface. One just needs to refrain themselves from using the graphical interface and go straight to the text user interface, hereafter our friend TUI.\nIf you are beginning in the CFD world, stop here and go learn some good code, as OpenFOAM or SU2; continue only if you really need Fluent because of your company or job opportunities require it. If you started learing with the GUI, I have the good-bad news that you lost your time and to be productive with this garbage tool you really need to use the TUI.\nFor what follows let’s keep in mind the following:\nIn the aforementioned 0-params.scm file I often start by declaring a few constants that are often useful in case setup. The following snippet illustrates the basics of what you need to know about Scheme to do something useful in Fluent: commands are declared within parenthesis, as Scheme is of LISP’s family, and parameter definitions follow a (define &lt;symbol&gt; &lt;value&gt;) syntax.\nOne thing about Scheme that might be not familiar for people coming from other languages (or too young to have used an HP graphical calculator) is Polish notation for numerical operations: you preprend the operator to the operands. That has the advantage that (+ 1 2 3) is valid code and will add up all numbers.\nSide-note: you might be asking yourself why the hell I project gravity acceleration components over the different axes. In some cases it is very useful if a geometry has corners or something that resembles a rectangle to keep it horizontal and apply body forces as components. For instance, when conceiving a geometry with Gmsh it will avoid a lot of trigonometry and round-off errors if you draw the body oriented as the screen. For some post-processing is is also useful to have horizontal bodies.",
+    "crumbs": [
+      "Ansys Fluent",
+      "<span class='chapter-number'>13</span>  <span class='chapter-title'>Text user interface (TUI)</span>"
+    ]
+  },
+  {
+    "objectID": "fluent/tui-basics.html#parameters",
+    "href": "fluent/tui-basics.html#parameters",
+    "title": "13  Text user interface (TUI)",
+    "section": "",
+    "text": "; Pi\n(define pi 3.141592653589793)\n\n; Gravity magnitude [m/s^2]\n(define gravity-acceleration 9.81)\n\n; Atmospheric pressure [Pa]\n(define pressure-atm 101325.0)\n\n; Universal gas constant [J/(mol*K)]\n(define gas-constant 8.31446261815324)\n\n; Compute some angle [deg] -&gt; [rad]\n(define theta (/ (* pi 15.0) 180.0))\n\n; Gravity components [m/s^2]\n(define gx 0.0)\n(define gy (* -1 gravity-acceleration (cos theta)))\n(define gz (* -1 gravity-acceleration (sin theta)))",
+    "crumbs": [
+      "Ansys Fluent",
+      "<span class='chapter-number'>13</span>  <span class='chapter-title'>Text user interface (TUI)</span>"
+    ]
+  },
+  {
+    "objectID": "fluent/tui-basics.html#troubleshooting",
+    "href": "fluent/tui-basics.html#troubleshooting",
+    "title": "13  Text user interface (TUI)",
+    "section": "13.2 Troubleshooting",
+    "text": "13.2 Troubleshooting\n\n13.2.1 Terminal lacking interactivity\nYou can use rlwrap tool that adds readline functionality to any program:\n# Install rlwrap (if not already installed)\nsudo yum install rlwrap  # RHEL/CentOS\nsudo apt install rlwrap  # Debian/Ubuntu\n\n# Run Fluent with readline support\nrlwrap fluent 3d -g\n\n# Or create an alias\nalias fluent-rl='rlwrap fluent'",
+    "crumbs": [
+      "Ansys Fluent",
+      "<span class='chapter-number'>13</span>  <span class='chapter-title'>Text user interface (TUI)</span>"
+    ]
+  },
+  {
+    "objectID": "fluent/tui-config.html",
+    "href": "fluent/tui-config.html",
+    "title": "14  User profile",
+    "section": "",
+    "text": "The real power of TUI is the ability to introduce user-defined commands from a configuration file. This example setup showcases what kind of functionalities can be achieved. The following chapters may need elements exported here.\nTo get going, save this file to a case root or to your user home directory as .fluent; the next time you launch fluent, check the transcript for something as Loading \"/home/&lt;user&gt;/.fluent\". You can define new functions here that best suit your typical CFD workflow.\n; ----------------------------------------------------------------------------\n; Utilities\n; ----------------------------------------------------------------------------\n\n; Configure number of blank lines for screen clear\n(define m-nblanks 50)\n\n; Clear screen (by printing a bunch of new lines)\n(define (cls)\n  (do ((i 0 (+ i 1)))\n      ((= i m-nblanks))\n    (newline))\n  (display \"...\\n\"))\n\n; Alias of Linux list command\n(define (ls)\n  (system \"ls -alt\"))\n\n; ----------------------------------------------------------------------------\n; Manipulate zone info\n; ----------------------------------------------------------------------------\n\n; Get all zone info (list of zone-info)\n(define (m-all-zones)\n    (get-zones-info))\n\n; Select zone name from zone info (1)\n(define (m-get-zone-name zone-info)\n  (symbol-&gt;string (car zone-info)))\n\n; Select zone id from zone info (2)\n(define (m-get-zone-id zone-info)\n  (cadr zone-info))\n\n; Select zone type from zone info (3)\n(define (m-get-zone-type zone-info)\n  (symbol-&gt;string (caddr zone-info)))\n\n; Select cell flag from zone info (4)\n(define (m-is-cell-zone? zone-info)\n  (cadddr zone-info))\n\n; ----------------------------------------------------------------------------\n; DPM zone selection\n; ----------------------------------------------------------------------------\n\n; Zone types to ignore in DPM reports\n(define M-DPM-IGNORE-ZONE-TYPES\n  (list \"fluid\" \"symmetry\" \"periodic\" \"interior\"))\n\n; Select zones for DPM reporting (not in ignore list and not cell zones)\n(define (m-filter-dpm-zones zone-list)\n  (filter\n    (lambda (zone-info)\n      (and (not (member (m-get-zone-type zone-info) M-DPM-IGNORE-ZONE-TYPES))\n           (not (m-is-cell-zone? zone-info))))\n    zone-list))\n\n; Get names of DPM zones for reporting\n(define (m-dpm-zones-names)\n  (map m-get-zone-name (m-filter-dpm-zones (m-all-zones))))\n\n; ----------------------------------------------------------------------------\n; Solution\n; ----------------------------------------------------------------------------\n\n; Alias for programatically iterating flow\n(define (m-solve-iterate n-iterations)\n  (ti-menu-load-string (format #f \"/solve/iterate ~a\" n-iterations)))\n\n; Alias for programatically updating DPM\n(define (m-solve-dpm-update)\n  (ti-menu-load-string \"/solve/dpm-update\"))\n\n; ----------------------------------------------------------------------------\n; EOF\n; ----------------------------------------------------------------------------",
+    "crumbs": [
+      "Ansys Fluent",
+      "<span class='chapter-number'>14</span>  <span class='chapter-title'>User profile</span>"
+    ]
+  },
+  {
+    "objectID": "fluent/tui-setup.html",
+    "href": "fluent/tui-setup.html",
+    "title": "15  Setup from TUI",
+    "section": "",
+    "text": "15.1 Configuration",
+    "crumbs": [
+      "Ansys Fluent",
+      "<span class='chapter-number'>15</span>  <span class='chapter-title'>Setup from TUI</span>"
+    ]
+  },
+  {
+    "objectID": "fluent/tui-setup.html#configuration",
+    "href": "fluent/tui-setup.html#configuration",
+    "title": "15  Setup from TUI",
+    "section": "",
+    "text": "/file/set-batch-options\n    no ; Do you want to confirm overwrite? [yes]\n    no ; Do you want to exit on error? [no]\n    no ; Do you want to hide questions? [no]",
+    "crumbs": [
+      "Ansys Fluent",
+      "<span class='chapter-number'>15</span>  <span class='chapter-title'>Setup from TUI</span>"
+    ]
+  },
+  {
+    "objectID": "fluent/tui-setup.html#loading-and-checking-a-mesh",
+    "href": "fluent/tui-setup.html#loading-and-checking-a-mesh",
+    "title": "15  Setup from TUI",
+    "section": "15.2 Loading and checking a mesh",
+    "text": "15.2 Loading and checking a mesh\n; This is a comment (starting by a semi-colon).\n/file/read-case \"domain/tunnel.msh.h5\" ()\n/mesh/check\n/mesh/mesh-info 0\n\n; Write the case (or overwrite if existing)\n/file/write-case \"tunnel-model.cas.h5\" ()",
+    "crumbs": [
+      "Ansys Fluent",
+      "<span class='chapter-number'>15</span>  <span class='chapter-title'>Setup from TUI</span>"
+    ]
+  },
+  {
+    "objectID": "fluent/tui-setup.html#merging-zones",
+    "href": "fluent/tui-setup.html#merging-zones",
+    "title": "15  Setup from TUI",
+    "section": "15.3 Merging zones",
+    "text": "15.3 Merging zones\n/mesh/modify-zones/merge-zones\n    block\n    block:2\n    block:3\n    ()",
+    "crumbs": [
+      "Ansys Fluent",
+      "<span class='chapter-number'>15</span>  <span class='chapter-title'>Setup from TUI</span>"
+    ]
+  },
+  {
+    "objectID": "fluent/tui-setup.html#handling-named-expressions",
+    "href": "fluent/tui-setup.html#handling-named-expressions",
+    "title": "15  Setup from TUI",
+    "section": "15.4 Handling named expressions",
+    "text": "15.4 Handling named expressions\nThese are really bad examples; as stated in the beginning, for constant values it is better to use plain Scheme definitions. TODO add actual useful examples here:\n/define/named-expressions/add \"diam\"  definition \"0.01 [m]\"       parameter yes ()\n/define/named-expressions/add \"dens\"  definition \"1.29 [kg/m^3]\"  parameter no  ()\n/define/named-expressions/add \"visc\"  definition \"1.84 [Pa*s]\"    parameter no  ()\n/define/named-expressions/add \"theta\" definition \"25 [deg]\"       parameter no  ()\n/define/named-expressions/export-to-tsv \"expressions.tsv\" ()",
+    "crumbs": [
+      "Ansys Fluent",
+      "<span class='chapter-number'>15</span>  <span class='chapter-title'>Setup from TUI</span>"
+    ]
+  },
+  {
+    "objectID": "fluent/tui-setup.html#defining-operating-conditions",
+    "href": "fluent/tui-setup.html#defining-operating-conditions",
+    "title": "15  Setup from TUI",
+    "section": "15.5 Defining operating conditions",
+    "text": "15.5 Defining operating conditions\n/define/operating-conditions/gravity yes\n    \"0 [m/s^2]\"\n    \"-cos(theta) * 9.81 [m/s^2]\"\n    \"-sin(theta) * 9.81 [m/s^2]\"",
+    "crumbs": [
+      "Ansys Fluent",
+      "<span class='chapter-number'>15</span>  <span class='chapter-title'>Setup from TUI</span>"
+    ]
+  },
+  {
+    "objectID": "fluent/tui-setup.html#setting-up-some-models",
+    "href": "fluent/tui-setup.html#setting-up-some-models",
+    "title": "15  Setup from TUI",
+    "section": "15.6 Setting up some models",
+    "text": "15.6 Setting up some models\n; Select a viscous model\n/define/models/viscous/ke-realizable yes\n/define/models/viscous/kw-sst yes\n\n; Activate DPM calculations\n/define/models/dpm/interaction/coupled-calculations yes\n/define/models/dpm/interaction/dpm-iteration-interval 10\n/define/models/dpm/options/two-way-coupling yes",
+    "crumbs": [
+      "Ansys Fluent",
+      "<span class='chapter-number'>15</span>  <span class='chapter-title'>Setup from TUI</span>"
+    ]
+  },
+  {
+    "objectID": "fluent/tui-setup.html#modify-materials",
+    "href": "fluent/tui-setup.html#modify-materials",
+    "title": "15  Setup from TUI",
+    "section": "15.7 Modify materials",
+    "text": "15.7 Modify materials\n(define gas-rho 1.29)\n\n/define/materials/change-create \"air\" \"air\"\n    yes                  ; change Density? [no]\n    constant gas-rho     ; Density\n    no                   ; change Cp (Specific Heat)? [no]\n    no                   ; change Thermal Conductivity? [no]\n    yes                  ; change Viscosity? [no]\n    expression \"gas_mu\"  ; Viscosity\n    no                   ; change Molecular Weight? [no]\n    no                   ; change Thermal Expansion Coefficient? [no]\n    no                   ; change Speed of Sound? [no]",
+    "crumbs": [
+      "Ansys Fluent",
+      "<span class='chapter-number'>15</span>  <span class='chapter-title'>Setup from TUI</span>"
+    ]
+  },
+  {
+    "objectID": "fluent/tui-setup.html#setting-boundary-conditions",
+    "href": "fluent/tui-setup.html#setting-boundary-conditions",
+    "title": "15  Setup from TUI",
+    "section": "15.8 Setting boundary conditions",
+    "text": "15.8 Setting boundary conditions\n/define/boundary-conditions/set/mass-flow-inlet\n    \"inlet\"  () mass-flow no 1.0  ()\n\n/define/boundary-conditions/set/mass-flow-inlet\n    \"inlet\"  () mass-flow no \"mdot_inlet\"  ()\n\n/define/boundary-conditions/set/wall \"gluish-wall\" ()\n    dpm-bc-type yes trap ()\n\n/define/boundary-conditions/modify-zones/zone-type\n    \"environment-entry\" wall ()",
+    "crumbs": [
+      "Ansys Fluent",
+      "<span class='chapter-number'>15</span>  <span class='chapter-title'>Setup from TUI</span>"
+    ]
+  },
+  {
+    "objectID": "fluent/tui-setup.html#creating-a-dpm-injection",
+    "href": "fluent/tui-setup.html#creating-a-dpm-injection",
+    "title": "15  Setup from TUI",
+    "section": "15.9 Creating a DPM injection",
+    "text": "15.9 Creating a DPM injection\n(define xc 0.0)\n(define yc 1.0)\n(define zc 0.2)\n\n(define fiber-mdot (/ 200 3600))\n(define fiber-diam 0.0005)\n(define fiber-streams 50)\n\nUsing group:\n\n/define/models/dpm/injections/create-injection/fibers\n    no            ; Particle type [inert]: Change current value? [no]\n    yes           ; Injection type [single]: Change current value? [no]\n    group         ; Injection type [single]&gt;\n    no            ; Injection Material [anthracite]: Change current value? [no]\n    fiber-streams ; Number of Streams [2]\n    yes           ; Stochastic Tracking? [no]\n    yes           ; Random Eddy Lifetime? [no]\n    1             ; Number of Tries [1]\n    0.15          ; Time Scale Constant [0.15]\n    no            ; Modify Laws? [no]\n    no            ; Set user defined initialization function? [no]\n    no            ; Cloud Tracking? [no]\n    no            ; Rosin Rammler diameter distribution? [no]\n    -0.01         ; First Point X-Position (in [m]) [0]\n    0.01          ; Last Point X-Position (in [m]) [0]\n    yc            ; First Point Y-Position (in [m]) [0]\n    yc            ; Last Point Y-Position (in [m]) [0]\n    zc            ; First Point Z-Position (in [m]) [0]\n    zc            ; Last Point Z-Position (in [m]) [0]\n    0             ; First Point X-Velocity (in [m/s]) [0]\n    0             ; Last Point X-Velocity (in [m/s]) [0]\n    0             ; First Point Y-Velocity (in [m/s]) [0]\n    0             ; Last Point Y-Velocity (in [m/s]) [0]\n    0             ; First Point Z-Velocity (in [m/s]) [0]\n    0             ; Last Point Z-Velocity (in [m/s]) [0]\n    fiber-diam    ; First Point Diameter (in [m]) [0.0001]\n    fiber-diam    ; Last Point Diameter (in [m]) [0.0001]\n    fiber-mdot    ; First Point Flow Rate (in [kg/s]) [9.999999999999999e-21]\n    fiber-mdot    ; Last Point Flow Rate (in [kg/s]) [9.999999999999999e-21]\n\nUsing solid-cone:\n\n/define/models/dpm/injections/create-injection/fibers\n    no            ; Particle type [inert]: Change current value? [no]\n    yes           ; Injection type [single]: Change current value? [no]\n    solid-cone    ; Injection type [single]&gt;\n    no            ; Injection Material [anthracite]: Change current value? [no]\n    fiber-streams ; Number of Streams [2]\n    yes           ; Stochastic Tracking? [no]\n    yes           ; Random Eddy Lifetime? [no]\n    1             ; Number of Tries [1]\n    0.15          ; Time Scale Constant [0.15]\n    no            ; Modify Laws? [no]\n    no            ; Set user defined initialization function? [no]\n    no            ; Cloud Tracking? [no]\n    no            ; Rosin Rammler diameter distribution? [no]\n    xc            ; X-Position (in [m]) [0]\n    yc            ; Y-Position (in [m]) [0]\n    zc            ; Z-Position (in [m]) [0]\n    fiber-diam    ; Diameter (in [m]) [0.0001] 454.28e-06\n    0             ; Azimuthal Start Angle (in [deg]) [0]\n    360           ; Azimuthal Stop Angle (in [deg]) [360.0000005729578]\n    0             ; X-Axis [0]\n    -1            ; Y-Axis [0]\n    0             ; Z-Axis [1]\n    0             ; Velocity Magnitude (in [m/s]) [0]\n    2             ; Cone Half Angle (in [deg]) [0]\n    0.01          ; Outer Radius (in [m]) [0]\n    fiber-mdot    ; Total Flow Rate (in [kg/s]) [9.999999999999999e-21]\n\nUsing surface:\n\n/define/models/dpm/injections/create-injection/fibers\n    no           ; Particle type [inert]: Change current value? [no]\n    yes          ; Injection type [single]: Change current value? [no]\n    surface      ; Injection type [single]&gt;\n    no           ; Injection Material [anthracite]: Change current value? [no]\n    injection () ; Surface(1) [()] injection ()\n    no           ; Scale Flow Rate by Face Area [no]\n    yes          ; Use Face Normal for Velocity Components [no]\n    yes          ; Stochastic Tracking? [no]\n    yes          ; Random Eddy Lifetime? [no]\n    1            ; Number of Tries [1]\n    0.15         ; Time Scale Constant [0.15]\n    no           ; Modify Laws? [no]\n    no           ; Set user defined initialization function? [no]\n    no           ; Cloud Tracking? [no]\n    no           ; Rosin Rammler diameter distribution? [no]\n    fibers-diam  ; Diameter (in [m]) [0.0001]\n    0            ; Velocity Magnitude (in [m/s]) [0]\n    fibers-mdot  ; Total Flow Rate (in [kg/s]) [9.999999999999999e-21]\n/define/materials/change-create/anthracite \"fibers\" yes constant 2800 no yes\n\n/define/models/dpm/injections/properties/set/pick-injections-to-set\n    no     ; List all available injections before picking one or more of them?\n    fibers ; pick injections:(1) [()]\n    ()     ; pick injections:(2) [()]\n    no     ; Review list of picked injections?\n\n/define/models/dpm/injections/injection-properties/set/physical-models\n    drag-parameters nonspherical 0.1",
+    "crumbs": [
+      "Ansys Fluent",
+      "<span class='chapter-number'>15</span>  <span class='chapter-title'>Setup from TUI</span>"
+    ]
+  },
+  {
+    "objectID": "fluent/tui-setup.html#saving-the-case",
+    "href": "fluent/tui-setup.html#saving-the-case",
+    "title": "15  Setup from TUI",
+    "section": "15.10 Saving the case",
+    "text": "15.10 Saving the case\n/file/write-case-data \"model-setup.cas.h5\" yes",
+    "crumbs": [
+      "Ansys Fluent",
+      "<span class='chapter-number'>15</span>  <span class='chapter-title'>Setup from TUI</span>"
+    ]
+  },
+  {
+    "objectID": "fluent/tui-solution.html",
+    "href": "fluent/tui-solution.html",
+    "title": "16  Solution from TUI",
+    "section": "",
+    "text": "16.1 Report definitions",
+    "crumbs": [
+      "Ansys Fluent",
+      "<span class='chapter-number'>16</span>  <span class='chapter-title'>Solution from TUI</span>"
+    ]
+  },
+  {
+    "objectID": "fluent/tui-solution.html#report-definitions",
+    "href": "fluent/tui-solution.html#report-definitions",
+    "title": "16  Solution from TUI",
+    "section": "",
+    "text": "/solve/report-definitions/delete-all yes\n/solve/report-definitions/add/mass-flows surface-massflowrate\n    surface-names \"injection-1\" \"injection-2\" \"extractions\" ()\n    per-surface yes ()\n\n/solve/report-files/add/report-mass-flows\n    file-name   \"report-mass-flows-rfile.out\"\n    report-defs \"mass-flows\" () ()\n\n/solve/report-files/edit/report-mass-flows\n    frequency 10 ()\n/solve/report-definitions/add/mass-extraction injection-escaped-mass\n    boundary-zones \"extraction\" () ()",
+    "crumbs": [
+      "Ansys Fluent",
+      "<span class='chapter-number'>16</span>  <span class='chapter-title'>Solution from TUI</span>"
+    ]
+  },
+  {
+    "objectID": "fluent/tui-solution.html#residuals",
+    "href": "fluent/tui-solution.html#residuals",
+    "title": "16  Solution from TUI",
+    "section": "16.2 Residuals",
+    "text": "16.2 Residuals\n/solve/monitors/residual/convergence-criteria\n    1e-9 ; continuity residual convergence criterion [0.001]\n    1e-6 ; x-velocity residual convergence criterion [0.001]\n    1e-6 ; y-velocity residual convergence criterion [0.001]\n    1e-6 ; z-velocity residual convergence criterion [0.001]\n    1e-5 ; k residual convergence criterion [0.001]\n    1e-5 ; omega residual convergence criterion [0.001]",
+    "crumbs": [
+      "Ansys Fluent",
+      "<span class='chapter-number'>16</span>  <span class='chapter-title'>Solution from TUI</span>"
+    ]
+  },
+  {
+    "objectID": "fluent/tui-solution.html#solver-parameters",
+    "href": "fluent/tui-solution.html#solver-parameters",
+    "title": "16  Solution from TUI",
+    "section": "16.3 Solver parameters",
+    "text": "16.3 Solver parameters\n/solve/set/pseudo-time-method global yes 1 1.0 ()\n\n/solve/set/p-v-controls 0.7 0.3\n/solve/set/pseudo-time-method/relaxation-factors/density 0.5\n\n/solve/set/discretization-scheme/k        0 ()\n/solve/set/discretization-scheme/omega    0 ()",
+    "crumbs": [
+      "Ansys Fluent",
+      "<span class='chapter-number'>16</span>  <span class='chapter-title'>Solution from TUI</span>"
+    ]
+  },
+  {
+    "objectID": "fluent/tui-solution.html#initialize-flow-and-iterate",
+    "href": "fluent/tui-solution.html#initialize-flow-and-iterate",
+    "title": "16  Solution from TUI",
+    "section": "16.4 Initialize flow and iterate",
+    "text": "16.4 Initialize flow and iterate\n/solve/initialize/initialize-flow\n/solve/initialize/hyb-initialization yes\n/solve/iterate 100",
+    "crumbs": [
+      "Ansys Fluent",
+      "<span class='chapter-number'>16</span>  <span class='chapter-title'>Solution from TUI</span>"
+    ]
+  },
+  {
+    "objectID": "fluent/tui-solution.html#parallel-settings",
+    "href": "fluent/tui-solution.html#parallel-settings",
+    "title": "16  Solution from TUI",
+    "section": "16.5 Parallel settings",
+    "text": "16.5 Parallel settings\n; /parallel/check\n; /parallel/partition/auto\n; /parallel/timer/usage",
+    "crumbs": [
+      "Ansys Fluent",
+      "<span class='chapter-number'>16</span>  <span class='chapter-title'>Solution from TUI</span>"
+    ]
+  },
+  {
+    "objectID": "fluent/tui-results.html",
+    "href": "fluent/tui-results.html",
+    "title": "17  Results from TUI",
+    "section": "",
+    "text": "17.1 Figures in graphical mode only\nYou are probably loosing your time here; maybe skip straight to the next section and export results for post-processing with PyVista.",
+    "crumbs": [
+      "Ansys Fluent",
+      "<span class='chapter-number'>17</span>  <span class='chapter-title'>Results from TUI</span>"
+    ]
+  },
+  {
+    "objectID": "fluent/tui-results.html#figures-in-graphical-mode-only",
+    "href": "fluent/tui-results.html#figures-in-graphical-mode-only",
+    "title": "17  Results from TUI",
+    "section": "",
+    "text": "/display/display-states/create state-right\n    \"disable\"      ; Front face transparent (\"enable\" \"disable\" \"dont-save\")\n    \"orthographic\" ; Projection (\"perspective\" \"orthographic\" \"dont-save\")\n    \"enable\"       ; Axes (\"enable\" \"disable\" \"dont-save\")\n    \"disable\"      ; Ruler (\"enable\" \"disable\" \"dont-save\")\n    \"disable\"      ; Title (\"enable\" \"disable\" \"dont-save\")\n    \"enable\"       ; Boundary markers (\"enable\" \"disable\" \"dont-save\")\n    \"enable\"       ; Anti-aliasing (\"enable\" \"disable\" \"dont-save\")\n    \"disable\"      ; Reflections (\"enable\" \"disable\" \"dont-save\")\n    \"disable\"      ; Static shadows (\"enable\" \"disable\" \"dont-save\"\n    \"disable\"      ; Dynamic shadows  (\"enable\" \"disable\" \"dont-save\")\n    \"disable\"      ; Grid plane (\"enable\" \"disable\" \"dont-save\")\n    \"on\"           ; Headlights (\"on\" \"off\" \"automatic\" \"dont-save\")\n    \"automatic\"    ; Lighting (\"automatic\" \"flat\" \"gouraud\" \"phong\" \"dont-save\" \"off\")\n    \"right\"        ; View name (\"active\" \"dont-save\" \"wf-view\" \"front\" \"back\"\n                   ;            \"right\" \"left\" \"top\" \"bottom\" \"isometric\" \"view-0\")\n    \"0\"            ; (dont-save 0) [\"0\"]\n\n; Produces an .stt file (do not add exension in the command!).\n/display/display-states/write \"journaling/display-states\" state-right ()\n/display/objects/create/mesh wire\n    options\n        edges? yes\n        faces? no ()\n    edge-type outline\n    coloring uniform edges black ()\n    display-state-name state-right ()\n/display/objects/create/contour contour-total-pressure\n    surfaces-list \"plane-name\" ()\n    field total-pressure\n    range-option autorange-off\n        minimum -200\n        maximum  200\n        clip-to-range? no ()\n    color-map\n        title-elements \"Variable Only\"\n        color          \"field-pressure\"\n        position       0\n        format         \"%.0f\" ()\n    display-state-name state-right ()\n/display/objects/create/scene scene-total-pressure\n    graphics-objects\n        add  \"wire\" ()\n        add \"contour-total-pressure\" () ()\n    display-state-name state-right ()",
+    "crumbs": [
+      "Ansys Fluent",
+      "<span class='chapter-number'>17</span>  <span class='chapter-title'>Results from TUI</span>"
+    ]
+  },
+  {
+    "objectID": "fluent/tui-results.html#exporting-for-external-processing",
+    "href": "fluent/tui-results.html#exporting-for-external-processing",
+    "title": "17  Results from TUI",
+    "section": "17.2 Exporting for external processing",
+    "text": "17.2 Exporting for external processing\nImportant: the creation of the following plane-surface is part of the solution step 16, but is included here for convenience.\n/surface/plane-surface plane-symmetry\n    yz-plane ; (yz-plane zx-plane xy-plane point-and-normal three-points)\n    0.01     ; x (in [m])\n/file/export/ascii \"results.csv\"\n    plane-symmetry ()  ; Surfaces ()\n    yes                ; Delimiter/Comma?\n    total-pressure\n    dynamic-pressure\n    velocity-magnitude ()\n    no\n/file/export/cgns \"results\"\n    surface-select     ; Scope: (full-domain volume-select surface-select)\n    plane-symmetry ()  ; Surfaces ()\n    no                 ; Cell-Centered [no]\n    yes                ; Format/HDF5?, if HDF5 not chosen, ADF format is set [yes]\n    total-pressure     ; CGNS scalar(1)&gt; ...\n    dynamic-pressure\n    viscosity-ratio\n    velocity-magnitude ()\n    () ()\n; XXX: `history` seems to be broken!\n; XXX: options change depending on the export type!\n/file/export/particle-history-data\n    fieldview             ; cfdpost, fieldview, history, ensight, geometry\n    \"results-particles\"   ; File name\n    \"fibers\" ()           ; Injections ()\n    particle-time-step () ; Variables ()\n    20                    ; Skip tracks\n    2000                  ; Coarsen path by",
+    "crumbs": [
+      "Ansys Fluent",
+      "<span class='chapter-number'>17</span>  <span class='chapter-title'>Results from TUI</span>"
+    ]
+  },
+  {
+    "objectID": "fluent/pyfluent.html",
+    "href": "fluent/pyfluent.html",
+    "title": "18  Getting started with PyFluent",
+    "section": "",
+    "text": "18.1 Journaling\nInstall sequentially the following packages as described here:\nNote: ansys-fluent-parametric requires an outdated version of NumPy (&lt;2.0), so you probably need to consider working in a virtual environment.",
+    "crumbs": [
+      "Ansys Fluent",
+      "<span class='chapter-number'>18</span>  <span class='chapter-title'>Getting started with PyFluent</span>"
+    ]
+  },
+  {
+    "objectID": "fluent/pyfluent.html#journaling",
+    "href": "fluent/pyfluent.html#journaling",
+    "title": "18  Getting started with PyFluent",
+    "section": "",
+    "text": "(api-start-python-journal \"journal.py\")",
+    "crumbs": [
+      "Ansys Fluent",
+      "<span class='chapter-number'>18</span>  <span class='chapter-title'>Getting started with PyFluent</span>"
+    ]
+  },
+  {
+    "objectID": "fluent/pyfluent.html#first-steps",
+    "href": "fluent/pyfluent.html#first-steps",
+    "title": "18  Getting started with PyFluent",
+    "section": "18.2 First steps",
+    "text": "18.2 First steps\nimport ansys.fluent.core as pyfluent\nconfig = dict(\n    ui_mode   = \"gui\",\n    precision = \"double\",\n    dimension = 3,\n    processor_count = 1,\n)\nsession = pyfluent.launch_fluent(mode = \"solver\", **config)\nsession.exit()",
+    "crumbs": [
+      "Ansys Fluent",
+      "<span class='chapter-number'>18</span>  <span class='chapter-title'>Getting started with PyFluent</span>"
+    ]
+  },
+  {
+    "objectID": "tracks/carto.html",
+    "href": "tracks/carto.html",
+    "title": "19  Cartographie",
+    "section": "",
+    "text": "19.1 OruxMaps\nThis page is intentionally written in French.\nPour ajouter des cartes IGN sur OruxMaps il faut créer des entrées au fichier onlinemapsources.xml qui se trouve sous Android/data/com.orux.oruxmapsDonate/files/oruxmaps/mapfiles dans les configurations du logiciel. Ces cartes doivent avoir un identifiant (uid) différent chacune. La numérotation des uid est arbitraire (bonne pratique à suivre: utiliser une séquence de valeurs). Si vous le fusionnez avec un autre, faire attention à adapter les uid au besoin.\nRéférences:",
+    "crumbs": [
+      "Montagne",
+      "<span class='chapter-number'>19</span>  <span class='chapter-title'>Cartographie</span>"
+    ]
+  },
+  {
+    "objectID": "tracks/carto.html#oruxmaps",
+    "href": "tracks/carto.html#oruxmaps",
+    "title": "19  Cartographie",
+    "section": "",
+    "text": "Forum OruxMaps\nTyber Randos\n\n&lt;onlinemapsource uid=\"1\"&gt;&lt;!-- Modifier `uid` selon besoin! --&gt;\n    &lt;name&gt;Geoplateforme IGN SCAN25&lt;/name&gt;\n    &lt;url&gt;&lt;![CDATA[https://data.geopf.fr/private/wmts?Service=WMTS&apikey=ign_scan_ws&LAYER=GEOGRAPHICALGRIDSYSTEMS.MAPS.SCAN25TOUR&Style=normal&TileMatrixSet=PM&Request=GetTile&Version=1.0.0&Format=image/jpeg&TileMatrix={$z}&TileCol={$x}&TileRow={$y}]]&gt;&lt;/url&gt;\n    &lt;website&gt;&lt;![CDATA[&lt;a href=\"https://www.ign.fr/geoplateforme\" target=\"_blank\"&gt;Géoplateforme IGN&lt;/a&gt;]]&gt;&lt;/website&gt;\n    &lt;minzoom&gt;2&lt;/minzoom&gt;\n    &lt;maxzoom&gt;16&lt;/maxzoom&gt;\n    &lt;projection&gt;MERCATORESFERICA&lt;/projection&gt;\n    &lt;servers&gt;&lt;/servers&gt;\n    &lt;httpparam name=\"User-Agent\"&gt;{om}&lt;/httpparam&gt;\n    &lt;cacheable&gt;1&lt;/cacheable&gt;\n    &lt;downloadable&gt;1&lt;/downloadable&gt;\n    &lt;maxtilesday&gt;0&lt;/maxtilesday&gt;\n    &lt;maxthreads&gt;0&lt;/maxthreads&gt;\n    &lt;xop&gt;&lt;/xop&gt;\n    &lt;yop&gt;&lt;/yop&gt;\n    &lt;zop&gt;&lt;/zop&gt;\n    &lt;qop&gt;&lt;/qop&gt;\n    &lt;sop&gt;&lt;/sop&gt;\n&lt;/onlinemapsource&gt;",
+    "crumbs": [
+      "Montagne",
+      "<span class='chapter-number'>19</span>  <span class='chapter-title'>Cartographie</span>"
+    ]
+  },
+  {
+    "objectID": "tracks/carto.html#liens-utiles",
+    "href": "tracks/carto.html#liens-utiles",
+    "title": "19  Cartographie",
+    "section": "19.2 Liens utiles",
+    "text": "19.2 Liens utiles\n\nGPX Studio\nGPS Visualizer",
+    "crumbs": [
+      "Montagne",
+      "<span class='chapter-number'>19</span>  <span class='chapter-title'>Cartographie</span>"
+    ]
+  },
+  {
+    "objectID": "tracks/carto.html#visualisation-des-traces-gpx",
+    "href": "tracks/carto.html#visualisation-des-traces-gpx",
+    "title": "19  Cartographie",
+    "section": "19.3 Visualisation des traces GPX",
+    "text": "19.3 Visualisation des traces GPX\n\nfrom majordome_cartography import GpxManager\nfrom majordome_cartography import display_track\n\n\ndef process_dump(fname: str) -&gt; None:\n    gpx_mgnr = GpxManager.from_file(f\"{fname}.gpx\")\n    gpx_mngr = gpx_mgnr.sanitize(dump=f\"{fname}-sanitized.gpx\")\n\n    track_map = display_track(gpx_mngr, colored=True, vmin=750, vmax=1000)\n    track_map.save(f\"{fname}.html\")\n\n\nprocess_dump(\"gpx/2026-03-07-aretes-du-gerbier\")\nprocess_dump(\"gpx/2026-03-08-mont-aiguille\")",
+    "crumbs": [
+      "Montagne",
+      "<span class='chapter-number'>19</span>  <span class='chapter-title'>Cartographie</span>"
+    ]
+  },
+  {
+    "objectID": "tracks/liens.html",
+    "href": "tracks/liens.html",
+    "title": "20  Liens utiles",
+    "section": "",
+    "text": "20.1 Géneral\nThis page is intentionally written in French.",
+    "crumbs": [
+      "Montagne",
+      "<span class='chapter-number'>20</span>  <span class='chapter-title'>Liens utiles</span>"
+    ]
+  },
+  {
+    "objectID": "tracks/liens.html#géneral",
+    "href": "tracks/liens.html#géneral",
+    "title": "20  Liens utiles",
+    "section": "",
+    "text": "Sports de Nature",
+    "crumbs": [
+      "Montagne",
+      "<span class='chapter-number'>20</span>  <span class='chapter-title'>Liens utiles</span>"
+    ]
+  },
+  {
+    "objectID": "tracks/liens.html#cartographie",
+    "href": "tracks/liens.html#cartographie",
+    "title": "20  Liens utiles",
+    "section": "20.2 Cartographie",
+    "text": "20.2 Cartographie\nOpenStreetMap:\n\nOpenStreetMap Wiki\nOpenStreetMap Wiki - FR:Projet Plein Air\nOpenStreetMap live edits\nForum OSM France\nA summary of things happening in the OpenStreetMap world\n\nCartes pour Garmin:\n\nOpenTopopMap\nnumeriquement\nmkgmap\n\nOther sites:\n\nFreizeitkarte\nOpenTopoMap\nUtagawaVTT\nCyclOSM\nOpenWhateverMap\nWaymarked Trails\nJeux de données - data.gouv.fr\nMyOSMatic\nMapRoulette",
+    "crumbs": [
+      "Montagne",
+      "<span class='chapter-number'>20</span>  <span class='chapter-title'>Liens utiles</span>"
+    ]
+  },
+  {
+    "objectID": "tracks/liens.html#mobilité-douce",
+    "href": "tracks/liens.html#mobilité-douce",
+    "title": "20  Liens utiles",
+    "section": "20.3 Mobilité douce",
+    "text": "20.3 Mobilité douce\n\nPartir Ici\nSNCF Rhône Alpes - Réservation vélo",
+    "crumbs": [
+      "Montagne",
+      "<span class='chapter-number'>20</span>  <span class='chapter-title'>Liens utiles</span>"
+    ]
+  },
+  {
+    "objectID": "tracks/liens.html#cyclisme",
+    "href": "tracks/liens.html#cyclisme",
+    "title": "20  Liens utiles",
+    "section": "20.4 Cyclisme",
+    "text": "20.4 Cyclisme\nVélo de montagne:\n\nSites FFC\nCotations de difficulté\nAutour du Pilat\nGravel Passion\n\nVélo de route:\n\nCols-Cyclisme\nInforoutes FR\nInforoutes 04\nInforoutes 06",
+    "crumbs": [
+      "Montagne",
+      "<span class='chapter-number'>20</span>  <span class='chapter-title'>Liens utiles</span>"
+    ]
+  },
+  {
+    "objectID": "tracks/liens.html#trail-running",
+    "href": "tracks/liens.html#trail-running",
+    "title": "20  Liens utiles",
+    "section": "20.5 Trail running",
+    "text": "20.5 Trail running\n\nFinishers\nPremier Marathon",
+    "crumbs": [
+      "Montagne",
+      "<span class='chapter-number'>20</span>  <span class='chapter-title'>Liens utiles</span>"
+    ]
+  },
+  {
+    "objectID": "tracks/liens.html#neige-et-glace",
+    "href": "tracks/liens.html#neige-et-glace",
+    "title": "20  Liens utiles",
+    "section": "20.6 Neige et glace",
+    "text": "20.6 Neige et glace\n\nData Avalanche\nCRISTAL\nIce Climbing Cogne\nANENA\nSkitourenguru",
+    "crumbs": [
+      "Montagne",
+      "<span class='chapter-number'>20</span>  <span class='chapter-title'>Liens utiles</span>"
+    ]
+  },
+  {
+    "objectID": "tracks/liens.html#autour-de-chamonix",
+    "href": "tracks/liens.html#autour-de-chamonix",
+    "title": "20  Liens utiles",
+    "section": "20.7 Autour de Chamonix",
+    "text": "20.7 Autour de Chamonix\n\nMont-Blanc Natural Resort",
+    "crumbs": [
+      "Montagne",
+      "<span class='chapter-number'>20</span>  <span class='chapter-title'>Liens utiles</span>"
     ]
   }
 ]

@@ -1,0 +1,487 @@
+{
+    //////////////////////////////////////////////////////////////////////////
+    // GENERAL
+    //////////////////////////////////////////////////////////////////////////
+
+    // No update: we wish to keep Kompanion portable and self-contained.
+    "update.mode": "none",
+
+    //////////////////////////////////////////////////////////////////////////
+    // EXPLORER
+    //////////////////////////////////////////////////////////////////////////
+
+    // Do not expand file tree for the current file path
+    "explorer.autoReveal": false,
+
+    // Do not ask about reordering projects:
+    "explorer.confirmDragAndDrop": false,
+
+    //////////////////////////////////////////////////////////////////////////
+    // EXTENSIONS
+    //////////////////////////////////////////////////////////////////////////
+
+    // Ignore all extension proposals; also block auto-update so that
+    // personal/local extensions are not deleted on start-up.
+    "extensions.ignoreRecommendations": true,
+    "extensions.autoUpdate": false,
+
+    //////////////////////////////////////////////////////////////////////////
+    // WORKBENCH
+    //////////////////////////////////////////////////////////////////////////
+
+    // On startup do not show anything:
+    "workbench.startupEditor": "none",
+
+    // Do hide label, show icons:
+    "workbench.panel.showLabels": false,
+
+    // Make tree levels more readable when expanded:
+    "workbench.tree.indent": 12,
+    "workbench.iconTheme": "bearded-icons",
+    "workbench.colorTheme": "Bearded Theme Anthracite",
+
+    // Add a clearly visible ruler (language dependent position):
+    "workbench.colorCustomizations": {
+        "editorRuler.foreground": "#3d17e4",
+        // "editor.background": "#f2f2f2"
+    },
+
+    // Just the icon for pinned tabs:
+    "workbench.editor.pinnedTabSizing": "compact",
+
+    // Place elements on top of side bar:
+    // "workbench.activityBar.location": "top",
+
+    //////////////////////////////////////////////////////////////////////////
+    // EDITOR / DIFFEDITOR
+    //////////////////////////////////////////////////////////////////////////
+
+    // Do not ignore white space:
+    "diffEditor.ignoreTrimWhitespace": false,
+
+    // Do not display minimap on side of document:
+    "editor.minimap.enabled": false,
+
+    // Do not show pop-ups all the time:
+    "editor.parameterHints.enabled": false,
+
+    // Use Ctrl to multi-selection:
+    "editor.multiCursorModifier": "ctrlCmd",
+
+    // Folding parameters:
+    "editor.foldingStrategy": "auto",
+    "editor.showFoldingControls": "always",
+
+    // Rulers at specific character counts:
+    "editor.rulers": [72, 79, 90, 100],
+
+    // Indentation and font size settings:
+    "editor.fontFamily": "Cascadia Mono",
+    "editor.detectIndentation": false,
+    "editor.insertSpaces": true,
+    "editor.tabSize": 4,
+    "editor.fontSize": 14,
+    "editor.lineHeight": 16,
+    "editor.fontWeight": "normal",
+
+    // Enable semantic highlighting (for Rust mainly):
+    "editor.semanticTokenColorCustomizations": {
+        "enabled": true
+    },
+
+    // Specific settings for JSONC files (mainly this file):
+    "[jsonc]": {
+        "editor.tabSize": 4,
+        "editor.defaultFormatter": "vscode.json-language-features"
+    },
+
+    //////////////////////////////////////////////////////////////////////////
+    // FILES
+    //////////////////////////////////////////////////////////////////////////
+
+    "files.eol": "\n",
+    "files.trimTrailingWhitespace": true,
+    "files.trimFinalNewlines": true,
+
+    "files.associations": {
+        ".jou": "lisp",
+        ".scm": "lisp",
+        "*.matc": "FortranFreeForm",
+        "*Dict": "OpenFOAM",
+        "*Properties": "OpenFOAM",
+        "fvSchemes": "OpenFOAM",
+        "fvSolution": "OpenFOAM",
+        "**/constant/g": "OpenFOAM",
+        "**/0/*": "OpenFOAM",
+    },
+
+    "files.exclude": {
+        // Python virtual environments:
+        "**/.venv/": true,
+
+        // Common cache/build folders:
+        "**/__pycache__/": true,
+        "**/.ipynb_checkpoints/": true,
+        "**/.jupyter_cache/": true,
+
+        // Fortran module files:
+        "**/*.mod": true,
+
+        // Quarto cache files:
+        "**/.quarto/": true,
+        "**/.vdoc.*": true,
+
+        // Rust targets:
+        "**/target/": true,
+
+        // Build and distribution folders:
+        "**/build/": true,
+        "**/dist/": true,
+        "**/*.egg-info/": true,
+
+        // Diagram temporary files:
+        "**/*.drawio.bkp": true,
+    },
+
+    "files.watcherExclude": {
+        // Majordome specifics:
+        ".cargo/":true,
+        ".copilot/":true,
+        ".hyperspy/":true,
+        ".ipython/":true,
+        ".julia/":true,
+        ".jupyter/":true,
+        ".kompanion/":true,
+        ".matplotlib/":true,
+        ".miktex/":true,
+        ".stack/":true,
+        ".vscode/":true,
+        ".zettlr/":true,
+        "AppData/":true,
+        "Desktop/":true,
+        "pip/":true,
+        "repos/":true,
+
+        // Common programming:
+        "**/node_modules": true,
+        "**/.git": true,
+        "**/dist": true,
+        "**/build": true,
+        "**/target": true,
+        "**/.venv": true
+    },
+
+    //////////////////////////////////////////////////////////////////////////
+    // GIT
+    //////////////////////////////////////////////////////////////////////////
+
+    "git.enabled": true,
+    "git.autofetch": true,
+    "git.confirmSync": false,
+    "git.openRepositoryInParentFolders": "never",
+    "git.ignoreMissingGitWarning": true,
+
+    //////////////////////////////////////////////////////////////////////////
+    // MARKDOWN
+    //////////////////////////////////////////////////////////////////////////
+
+    "[markdown]": {
+        "editor.foldingStrategy": "auto",
+        "editor.wordWrap": "wordWrapColumn",
+        "editor.wordWrapColumn": 80,
+        "rewrap.autoWrap.enabled": false,
+    },
+
+    //////////////////////////////////////////////////////////////////////////
+    // RUST
+    //////////////////////////////////////////////////////////////////////////
+
+    "[rust]": {
+        "editor.tabSize": 4,
+
+        // XXX: keep this as auto to allow region-based folding in Rust files.
+        // This is contrary to what a research suggests...
+        "editor.foldingStrategy": "auto",
+        "editor.semanticHighlighting.enabled": true,
+        "editor.wordWrap": "wordWrapColumn",
+        "editor.wordWrapColumn": 100,
+        "editor.rulers": [79, 100],
+    },
+
+    //////////////////////////////////////////////////////////////////////////
+    // QUARTO
+    //////////////////////////////////////////////////////////////////////////
+
+    "[quarto]": {
+        "editor.wordWrap": "wordWrapColumn",
+        "editor.wordWrapColumn": 80,
+        "editor.quickSuggestions": {
+            "comments": "on",
+            "other": "on",
+            "strings": "on"
+        },
+        "editor.quickSuggestionsDelay": 250,
+        "editor.wordBasedSuggestions": "off",
+        "editor.suggestOnTriggerCharacters": true,
+        "editor.unicodeHighlight.ambiguousCharacters": false,
+        "editor.unicodeHighlight.invisibleCharacters": false
+    },
+
+    //////////////////////////////////////////////////////////////////////////
+    // JUPYTER
+    //////////////////////////////////////////////////////////////////////////
+
+    "notebook.lineNumbers": "on",
+
+    "jupyter.askForKernelRestart": false,
+    "jupyter.interactiveWindow.creationMode": "perFile",
+    "jupyter.kernels.excludePythonEnvironments": [
+        "${env:INKSCAPE_HOME}\\bin\\python.exe"
+    ],
+
+    //////////////////////////////////////////////////////////////////////////
+    // PYTHON
+    //////////////////////////////////////////////////////////////////////////
+
+    "python-envs.pythonProjects": [
+        {
+            "path": "",
+            "envManager": "ms-python.python:system",
+            "packageManager": "ms-python.python:pip"
+        }
+    ],
+
+    "python-envs.globalSearchPaths": [
+        ".venv/**",
+        "venv**",
+    ],
+
+    "[python]": {
+        "editor.tabSize": 4,
+        "editor.foldingStrategy": "indentation",
+        "editor.wordWrap": "wordWrapColumn",
+        "editor.wordWrapColumn": 80,
+    },
+
+    "python.analysis.autoSearchPaths": true,
+    "python.analysis.indexing": false,
+    "python.analysis.stubPath": "./typings",
+    "python.analysis.typeCheckingMode": "standard",
+    "python.analysis.updateImportsOnFileMove.enabled": "never",
+    "python.createEnvironment.trigger": "off",
+    "python.defaultInterpreterPath": "${env:PYTHON_HOME}\\python.exe",
+    "python.useEnvironmentsExtension": true,
+    "python.terminal.activateEnvInCurrentTerminal": true,
+    "python.languageServer": "Default",
+
+    //////////////////////////////////////////////////////////////////////////
+    // JULIA
+    //////////////////////////////////////////////////////////////////////////
+
+    "[julia]": {
+        "editor.tabSize": 4
+    },
+
+    "julia.symbolCacheDownload": true,
+    "julia.enableCrashReporter": false,
+    "julia.enableTelemetry": false,
+    "julia.useProgressFrontend": true,
+    "julia.workspace.showModules": true,
+
+    "julia.lint.disabledDirs": [
+        "**/julia-depot/**",
+        "docs",
+        "test"
+    ],
+
+    //////////////////////////////////////////////////////////////////////////
+    // HASKELL
+    //////////////////////////////////////////////////////////////////////////
+
+    //////////////////////////////////////////////////////////////////////////
+    // RACKET
+    //////////////////////////////////////////////////////////////////////////
+
+    //////////////////////////////////////////////////////////////////////////
+    // FORTRAN
+    //////////////////////////////////////////////////////////////////////////
+
+    "fortran.notifications.releaseNotes": false,
+    "fortran.preferredCase": "lowercase",
+    "fortran.fortls.directories":[
+        "**/build/*",
+        "**/src/**/*"
+    ],
+    "fortran.linter.compilerPath": "gfortran",
+    "fortran.linter.includePaths": [
+        "**/build/*",
+        "**/src/**/*"
+    ],
+    "fortran.linter.modOutput": "${workspaceFolder}/.modules/",
+    "fortran.linter.compiler": "gfortran",
+    "fortran.linter.extraArgs": [
+        "-fdefault-real-8",
+        "-fdefault-double-8",
+        "-Wunused-variable",
+        "-Wunused-dummy-argument"
+    ],
+
+
+    //////////////////////////////////////////////////////////////////////////
+    // GITHUB COPILOT
+    //////////////////////////////////////////////////////////////////////////
+
+    "github.copilot.nextEditSuggestions.enabled": true,
+
+    "github.copilot.enable": {
+        "*": true,
+        "quarto": true,
+        "python": true,
+        "plaintext": false,
+        "markdown": false,
+        "scminput": false,
+    },
+
+    // XXX: use Copilot behing a proxy!
+    "win-ca.inject": "append",
+
+    //////////////////////////////////////////////////////////////////////////
+    // TERMINAL
+    //////////////////////////////////////////////////////////////////////////
+
+    // Do not ask for confirmation when pasting multiple lines:
+    "terminal.integrated.enableMultiLinePasteWarning": "never",
+
+    // Do not show sticky scroll:
+    "terminal.integrated.stickyScroll.enabled": false,
+
+    // Use a bit smaller font in terminal:
+    "terminal.integrated.fontSize": 12,
+
+    "terminal.integrated.profiles.windows": {
+        "Git Bash": null,
+        "JavaScript Debug Terminal": null,
+        "MATLAB": null,
+
+        "Kompanion PowerShell": {
+            "path": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+            "args": [
+                "-NoProfile",
+                "-NoExit",
+                "-Command",
+                ". ${env:KOMPANION_DIR}\\kompanion.ps1"
+            ]
+        },
+    },
+
+    "terminal.integrated.defaultProfile.windows": "Kompanion PowerShell",
+
+    "terminal.integrated.commandsToSkipShell": [
+        "language-julia.interrupt"
+    ],
+
+    //////////////////////////////////////////////////////////////////////////
+    // LATEX
+    //////////////////////////////////////////////////////////////////////////
+
+    "[latex]": {
+        "editor.tabSize": 2,
+        "editor.wordWrap": "wordWrapColumn",
+        "editor.wordWrapColumn": 80,
+        "rewrap.autoWrap.enabled": false
+    },
+
+    "latex-workshop.latex.recipes": [
+        {
+            "name": "kompanion-bare-pdflatex",
+            "tools": [
+                "pdflatex",
+                "pdflatex"
+            ]
+        },
+        {
+            "name": "kompanion-pdflatex-bibtex",
+            "tools": [
+                "pdflatex",
+                "bibtex",
+                "pdflatex",
+                "pdflatex"
+            ]
+        },
+        {
+            "name": "kompanion-xelatex-bibtex",
+            "tools": [
+                "xelatex",
+                "xelatex",
+                "bibtex",
+                "xelatex",
+                "bibtex",
+                "xelatex"
+            ]
+        },
+        {
+            "name": "kompanion-xelatex-biber",
+            "tools": [
+                "xelatex",
+                "xelatex",
+                "biber",
+                "xelatex",
+                "biber",
+                "xelatex"
+            ]
+        }
+    ],
+
+    "latex-workshop.latex.tools": [
+        {
+            "name": "pdflatex",
+            "command": "pdflatex",
+            "args": [
+                "-shell-escape",
+                "-synctex=1",
+                "-interaction=nonstopmode",
+                "-file-line-error",
+                "%DOC%.tex"
+            ]
+        },
+        {
+            "name": "xelatex",
+            "command": "xelatex",
+            "args": [
+                "-shell-escape",
+                "-synctex=1",
+                "-interaction=nonstopmode",
+                "-file-line-error",
+                "%DOC%.tex"
+            ]
+        },
+        {
+            "name": "bibtex",
+            "command": "bibtex",
+            "args": ["%DOC%"]
+        },
+        {
+            "name": "biber",
+            "command": "biber",
+            "args": ["%DOC%"]
+        }
+    ],
+
+    //////////////////////////////////////////////////////////////////////////
+    // OTHER
+    //////////////////////////////////////////////////////////////////////////
+
+    "redhat.telemetry.enabled": false,
+    "vsicons.dontShowNewVersionMessage": true,
+
+    "security.workspace.trust.untrustedFiles": "open",
+    "security.allowedUNCHosts": [
+        "10.13.52.2"
+    ],
+
+    "remote.SSH.remotePlatform": {
+        "10.13.52.2": "linux",
+        "frontal": "linux"
+    },
+    "chat.viewSessions.orientation": "stacked",
+}

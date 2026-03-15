@@ -1,0 +1,124 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% DOSSIERCMDS
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\NeedsTeXFormat{LaTeX2e}[1994/06/01]
+\ProvidesPackage{dossiercmds}[2024/07/01 Shared functionaties for reports.]
+
+% -----------------------------------------------------------------------------
+% PACKAGES
+% -----------------------------------------------------------------------------
+
+% For colorboxes and related.
+\RequirePackage{color}
+\RequirePackage[most]{tcolorbox}
+
+% For physical units.
+\RequirePackage{siunitx}
+
+% For textregistered.
+\RequirePackage{textcomp}
+
+% -----------------------------------------------------------------------------
+% TCOLORBOX
+% -----------------------------------------------------------------------------
+
+\newtcolorbox[auto counter,number within=section]{caja}[1][]{
+  enhanced jigsaw,
+  colback=white,
+  colframe=themeOrang,
+  coltitle=themeOrang,
+  fonttitle=\bfseries\sffamily,
+  sharp corners,
+  detach title,
+  leftrule=22mm,
+  underlay unbroken and first={%
+    \node[below,text=black,anchor=east] at ([xshift=-22.5pt]interior.base west) {%
+      \Huge\textbf{!}%
+      };%
+    },
+  breakable,
+  pad at break=1mm,
+  #1,
+  code={\ifdefempty{\tcbtitletext}{}{\tcbset{before upper={\tcbtitle\par\medskip}}}},
+}
+
+\newtcolorbox[]{pstatement}[1][]{
+  colback  = {themeOrang!10!white},%
+  colframe = {themeColor!90!white},%
+  #1,
+}
+
+% -----------------------------------------------------------------------------
+% UNITS
+% -----------------------------------------------------------------------------
+
+% Make units detect font.
+\sisetup{detect-mode}
+
+% PRESSURE
+\DeclareSIUnit{\bar}{\si{bar}}
+\DeclareSIUnit{\millibar}{\milli\bar}%
+\DeclareSIUnit{\atmosphere}{\si{atm}}%
+
+% FLOW RATE
+\DeclareSIUnit{\scfm}{\si{SCFM}}%
+\DeclareSIUnit{\normalflowrate}{{N}\si{\cubic\meter\per\hour}}%
+\DeclareSIUnit{\massflowrate}{\si{\kilo\gram\per\second}}%
+\DeclareSIUnit{\massflowratehr}{\si{\kilo\gram\per\hour}}%
+\DeclareSIUnit{\fuelflowrate}{\si{\kilo\gram\per\hour}}%
+
+\newcommand{\gasNormalFlowRate}[1]{\SI{#1}{\normalflowrate}}
+\newcommand{\fuelFlowRate}[1]{\SI{#1}{\massflowratehr}}
+
+% KILN SPECIFIC
+\DeclareSIUnit{\kilnspeed}{{rev}\:\si{\per\minute}}%
+\DeclareSIUnit{\kilnfeedrate}{\si{\kilo\gram\per\hour}}%
+
+\newcommand{\kilnSpeed}[1]{\SI{#1}{\kilnspeed}}
+\newcommand{\kilnFeedRate}[1]{\SI{#1}{\kilnfeedrate}}
+
+% COMBUSTION
+\DeclareSIUnit{\heatingvalue}{{kcal}\:\si{\per\kilo\gram}}%
+\DeclareSIUnit{\heatingvaluesi}{\si{\mega\joule\per\kilo\gram}}%
+
+% HEAT TRANSFER
+\DeclareSIUnit{\heattransfercoef}{\si{\watt\per\square\meter\per\kelvin}}%
+
+% MATERIALS PROPERTIES
+\DeclareSIUnit{\density}{\si{\kilo\gram\per\cubic\meter}}%
+\DeclareSIUnit{\specificheat}{\si{\joule\per\kilo\gram\per\kelvin}}%
+\DeclareSIUnit{\thermalconductivity}{\si{\watt\per\meter\per\kelvin}}%
+\DeclareSIUnit{\viscosity}{\si{\pascal\second}}%
+\DeclareSIUnit{\molecularmass}{\si{\gram\per\mole}}%
+
+\newcommand{\matDensity}[1]{\SI{#1}{\density}}%
+\newcommand{\matSpecificHeat}[1]{\SI{#1}{\specificheat}}%
+\newcommand{\matThermalConductivity}[1]{\SI{#1}{\thermalconductivity}}%
+\newcommand{\matViscosity}[1]{\SI{#1}{\viscosity}}%
+\newcommand{\matMolecularMass}[1]{\SI{#1}{\molecularmass}}%
+
+% -----------------------------------------------------------------------------
+% SPECIFIC COMMANDS
+% -----------------------------------------------------------------------------
+
+% Placeholder for missing data.
+\newcommand{\TBD}{{\color{red}TBD}}
+
+% Markers for checklists.
+\newcommand{\openitem}{\item[$\square$]}
+\newcommand{\markitem}{\item[$\boxtimes$]}
+
+% -----------------------------------------------------------------------------
+% SOFTWARE NAMES
+% -----------------------------------------------------------------------------
+
+\newcommand{\ansysFluent}{Ansys~Fluent{\sffamily\textregistered}}
+
+\newcommand{\openFoam}{OpenFOAM{\sffamily\textregistered}}
+
+\endinput
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% EOF
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

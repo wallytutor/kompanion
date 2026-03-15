@@ -1,0 +1,72 @@
+#######################################################################
+# General
+#######################################################################
+
+# Any sandbox
+*sandbox*
+
+# User repositories:
+repos/
+
+# Created by Kompanion:
+.kompanion/bin/
+.kompanion/logs/
+.kompanion/temp/
+.kompanion/*.lock
+
+# User-specific configuration:
+.kompanion/kompanion.json
+
+# Editor cache:
+.vscode/*
+.copilot/*
+.zettlr/*
+
+# Rust directories:
+.cargo/
+.rustup/
+
+# Interactive environments:
+.ipython/*
+.jupyter/*
+
+# Python:
+.hyperspy/
+.matplotlib/
+.python_history
+pip/
+
+# Other languages:
+.julia/*
+.miktex/*
+.rlang/*
+.stack/*
+
+# User profile directories/files:
+AppData/
+Desktop/
+Microsoft/
+*.lock
+.ssh/
+
+#######################################################################
+# User profile: overrides
+#######################################################################
+
+# Ipython startup configuration:
+!.ipython/profile_default/
+!.ipython/profile_default/startup/*
+.ipython/profile_default/startup/README
+.ipython/profile_default/*.sqlite
+
+# Julia startup configuration:
+!.julia/config/
+!.julia/config/startup.jl
+
+# VSCode user settings (XXX: using a wildcard so any future files or
+# folders keep ignored except for the explicitly unignored):
+!.vscode/user-data/
+.vscode/user-data/*
+!.vscode/user-data/User/
+.vscode/user-data/User/*
+!.vscode/user-data/User/settings.json

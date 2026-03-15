@@ -20,6 +20,41 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -258,7 +293,7 @@ ul.task-list li input[type="checkbox"] {
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false">
- <span class="menu-text">Montagne</span></a>
+ <span class="menu-text">Reactor Engineering</span></a>
           <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -266,14 +301,43 @@ ul.task-list li input[type="checkbox"] {
       <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../reactors/acetylene-pyrolysis-reactor.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Acetylene pyrolysis reactor</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reactors/counter-current-pfr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Counter-current plug flow</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reactors/converting-nasa-poly.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Fitting NASA9 data</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false">
+ <span class="menu-text">Montagne</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../tracks/carto.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Cartographie</span></span></a>
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Cartographie</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../tracks/liens.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Liens utiles</span></span></a>
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Liens utiles</span></span></a>
   </div>
 </li>
       </ul>
@@ -303,7 +367,12 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#graphviz" id="toc-graphviz" class="nav-link" data-scroll-target="#graphviz"><span class="header-section-number">9.3.3</span> Graphviz</a></li>
   <li><a href="#mfix" id="toc-mfix" class="nav-link" data-scroll-target="#mfix"><span class="header-section-number">9.3.4</span> MFiX</a></li>
   </ul></li>
-  <li><a href="#creating-a-portable-environment" id="toc-creating-a-portable-environment" class="nav-link" data-scroll-target="#creating-a-portable-environment"><span class="header-section-number">9.4</span> Creating a portable environment</a></li>
+  <li><a href="#creating-a-portable-environment" id="toc-creating-a-portable-environment" class="nav-link" data-scroll-target="#creating-a-portable-environment"><span class="header-section-number">9.4</span> Creating a portable environment</a>
+  <ul class="collapse">
+  <li><a href="#initial-setup" id="toc-initial-setup" class="nav-link" data-scroll-target="#initial-setup"><span class="header-section-number">9.4.1</span> Initial setup</a></li>
+  <li><a href="#programming-languages" id="toc-programming-languages" class="nav-link" data-scroll-target="#programming-languages"><span class="header-section-number">9.4.2</span> Programming languages</a></li>
+  <li><a href="#msys2" id="toc-msys2" class="nav-link" data-scroll-target="#msys2"><span class="header-section-number">9.4.3</span> MSYS2</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -421,8 +490,90 @@ mfix</code></pre>
 </section>
 <section id="creating-a-portable-environment" class="level2" data-number="9.4">
 <h2 data-number="9.4" class="anchored" data-anchor-id="creating-a-portable-environment"><span class="header-section-number">9.4</span> Creating a portable environment</h2>
+<p>This section illustrates the generalities of how do create a portable software toolbox. Before proceding with any installation, make sure to read all the elements provided below; simply trying to follow instructions in a step-by-step fashion will certainly lead to failure and frustration.</p>
+<p>For each of the applications you will install, make sure to perform the following generic steps:</p>
+<ol type="1">
+<li><p>Download the portable version of the application, generally a <code>.zip</code> compressed file, and save it to some temporary location. Sometimes the normal installer of an application already supports portable mode.</p></li>
+<li><p>Extract the compressed file to a dedicated directory. From there, you can move the content to the final location. See the notes below for details about compression practices.</p></li>
+<li><p>Configure the application in a dedicated script or add a routine to the application script that manages all the paths and settings. The latter approach is recommended for putting everything together and is how Kompanion currently works.</p></li>
+</ol>
+<p><strong>Important:</strong> You need to be aware that there are two common practices of compressing (zip) a portable software: (1) some editors place everything in a directory and compress the directory, while others (2) pack everything under the root of the compressed file. Windows built-in system allows your to navigate compressed files as part of the filesystem, so inspect which of the above methods was used. If the later is detected, take care to select the right option to ensure the contents are extracted to a new directory. Several packages are stored directly at <em>zip</em> root and that may be messy to clean if extracted without the above precautions.</p>
+<p><strong>Important:</strong> since setting up the environment may require editing <a href="https://www.tutorialspoint.com/batch_script/index.htm">batch scripts</a>, be aware that to open them you cannot <em>click</em> the file, but <em>right-click</em> and <em>edit</em>, as Windows see these as executables. In these files, lines starting by <code>@REM</code> are seem as comments and generally explain something about what follow them. If you are starting from scratch and do not master batch scripting, prefer learning <a href="https://www.tutorialspoint.com/powershell/index.htm">PowerShell</a> instead, as it is more modern and powerful, and you can easily call PowerShell scripts from batch scripts. It is how the current version of Kompanion is implemented and it is the recommended way to go.</p>
+<section id="initial-setup" class="level3" data-number="9.4.1">
+<h3 data-number="9.4.1" class="anchored" data-anchor-id="initial-setup"><span class="header-section-number">9.4.1</span> Initial setup</h3>
+<p>These are the required steps to get your system working for the first time:</p>
+<ol type="1">
+<li><p>Go to VS Code <a href="https://code.visualstudio.com/download">download page</a> and get the <code>.zip</code> version for <code>x64</code> system (<code>Arm64</code> is not supported here). Extract it to the binaries directory and copy the path of VS Code directory the set the variable <code>VSCODE_DIR</code>.</p></li>
+<li><p>Go to Git <a href="https://git-scm.com/download/win">download page</a> and select <em>64-bit Git for Windows Portable</em>, download it. Notice that this is not a compressed file <em>per se</em>, but it is desguised as an executable. Double-click it and accept the default <code>PortableGit</code> installation directory. After extraction finishes, move it to binaries directory. Add it to the path by setting the variable <code>GIT_DIR</code> to the path of the directory.</p></li>
+</ol>
+<p><strong>Important:</strong> After installing <code>VS Code</code>, do <strong>NOT</strong> enable its <a href="https://code.visualstudio.com/docs/editor/portable">portable mode</a> because the VBS file for launching it will point to a specific user-data folder.</p>
+<p><strong>Important:</strong> these notes are quite general and skip details. Refer to <code>kompanion.ps1</code> and look for the functions <code>Invoke-Configure*</code> and <code>Invoke-Install*</code> for the exact steps to configure each application.</p>
+</section>
+<section id="programming-languages" class="level3" data-number="9.4.2">
+<h3 data-number="9.4.2" class="anchored" data-anchor-id="programming-languages"><span class="header-section-number">9.4.2</span> Programming languages</h3>
+<p>The following provides instructions for some languages you might wish to have fully integrated to your environment. For lower level languages, please consider using MSYS2 as described in its dedicated section.</p>
+<section id="python" class="level4" data-number="9.4.2.1">
+<h4 data-number="9.4.2.1" class="anchored" data-anchor-id="python"><span class="header-section-number">9.4.2.1</span> Python</h4>
+<p>Go to WinPython <a href="https://github.com/winpython/winpython/releases">download page</a> and find the latest version tagged with a <em>Latest</em> green flag (avoid <em>Pre-release</em> versions on top). Expand the <em>Assets</em> and download the <code>.exe</code> version (also a disguised compressed file). Follow steps similar to Git above. See <code>Invoke-ConfigurePython</code> in <code>kompanion.ps1</code> for the configuration of paths and environment variables.</p>
+</section>
+<section id="julia" class="level4" data-number="9.4.2.2">
+<h4 data-number="9.4.2.2" class="anchored" data-anchor-id="julia"><span class="header-section-number">9.4.2.2</span> Julia</h4>
+<p>Go to Julia <a href="https://julialang.org/downloads/">download page</a> and select the latest stable Windows 64-bit portable version. See <code>Invoke-ConfigureJulia</code> in <code>kompanion.ps1</code> for the configuration of paths and environment variables.</p>
+<p>Download <a href="https://static.rust-lang.org/rustup/dist/x86_64-pc-windows-gnu/rustup-init.exe">rustup-init</a> following the installation. See <code>Invoke-ConfigureRust</code> in <code>kompanion.ps1</code> for the configuration of paths and environment variables.</p>
+</section>
+<section id="octave" class="level4" data-number="9.4.2.3">
+<h4 data-number="9.4.2.3" class="anchored" data-anchor-id="octave"><span class="header-section-number">9.4.2.3</span> Octave</h4>
+<p>Go to Octave <a href="https://octave.org/download">download page</a> and identify the <code>.zip</code> package for <code>w64</code>. As the main use of Octave is through its user interface, you can extract the content directly to <code>bin/octave</code>.</p>
+</section>
+<section id="ruby" class="level4" data-number="9.4.2.4">
+<h4 data-number="9.4.2.4" class="anchored" data-anchor-id="ruby"><span class="header-section-number">9.4.2.4</span> Ruby</h4>
+<p>Go to Ruby <a href="https://rubyinstaller.org/downloads/">download page</a> and identify the <code>Devkit</code> package for <code>x64</code>. During installation change the path to point to binaries and unselect the options to associate extensions and adding to the path.</p>
+</section>
+<section id="lisp" class="level4" data-number="9.4.2.5">
+<h4 data-number="9.4.2.5" class="anchored" data-anchor-id="lisp"><span class="header-section-number">9.4.2.5</span> LISP</h4>
+<p>LISP may be installed through <a href="https://portacle.github.io/">Portacle</a>. Instead of right-clicking and installing the executable, Shift-click and select to extract the contents; place the resulting <code>portacle</code> directory. You may choose not to add it to the path if using through its EMACs interface.</p>
+</section>
+<section id="latex-and-related" class="level4" data-number="9.4.2.6">
+<h4 data-number="9.4.2.6" class="anchored" data-anchor-id="latex-and-related"><span class="header-section-number">9.4.2.6</span> LaTeX and related</h4>
+<p>Although LaTeX is not mandatory, it is highly encouraged; otherwise, what is the point of doing any scientific computing and not publishing its results?</p>
+<ul>
+<li><p>Start by following the instructions provided <a href="https://miktex.org/howto/portable-edition">here</a> to install MikTeX. Point the installation to a directory <code>miktex-portable</code> under <code>apps</code> and select <em>on-the-fly</em> installation of new packages.</p></li>
+<li><p>Consider installing the following additional software:</p>
+<ul>
+<li><a href="https://www.fosshub.com/JabRef.html">JabRef</a></li>
+<li><a href="https://github.com/jgm/pandoc/releases">pandoc</a></li>
+<li><a href="https://inkscape.org/release/1.4/windows/64-bit/">inkscape</a></li>
+</ul></li>
+<li><p>Globally install <a href="https://pygments.org/"><code>pip install Pygments</code></a> for enabling syntax highlight in LaTeX using <code>minted</code>; that is the most flexible highlighting method for adding code snippets to your documents.</p></li>
+<li><p>Also consider installing extension <a href="https://marketplace.visualstudio.com/items?itemName=James-Yu.latex-workshop">LaTeX Workshop</a> for automatic compilation in editor with built-in PDF visualization.</p></li>
+</ul>
+<p>To append to <code>TEXMF</code> variable one can use the MiKTeX Console graphical interface and under <code>Settings &gt; Directories</code> navigate and select the local path.</p>
+<!-- Alternativelly on can add to the `[Paths]` section of  `bin/apps/miktex-portable/texmfs/install/miktex/config/miktexstartup.ini` a line as `CommonRoots=C:/Path/To/Kompanion/bin/data/texmf` pointing to a directory implementing the project [TeX Directory Structure](https://miktex.org/kb/tds). You might need to add the section to the file, as `[Paths]` is not present in the as-installed condition. -->
+<p>If you prefer a dedicated LaTeX editor, you may wish to install <a href="https://www.texstudio.org/#download">texstudio</a>; some configuration of paths with the application may be required as it is not directly integrated to this environment.</p>
+<p><strong>Warning:</strong> for now having both Rust and Octave fully operational in command-line is not working. This should not be a problem as Octave can be launched with its user-interface and that remain the most popular/recommended way of using it.</p>
+<p><strong>Warning:</strong> For a fully operational <em>Jupyter notebook</em> environment, other the LaTeX support discussed in its dedicatet section, you also need both <code>pandoc</code> and <code>inkscape</code>.</p>
+<p><strong>Important:</strong> It is strongly recommended to install <a href="https://quarto.org/docs/download/">Quarto</a> as a supporting tool for publishing reports from Julia and Python.</p>
+</section>
+</section>
+<section id="msys2" class="level3" data-number="9.4.3">
+<h3 data-number="9.4.3" class="anchored" data-anchor-id="msys2"><span class="header-section-number">9.4.3</span> MSYS2</h3>
+<p>MSYS2 environment is useful for developing native Windows applications and programming in languages as C, C++, Fortran, and Rust. Kompanion VS Code configuration will automatically include this environment to its available terminal lists, what might fail if you do not install it. To get it working do the following:</p>
+<ul>
+<li><p>Go to MSYS2 <a href="https://www.msys2.org/">page</a> and save the installer to <code>downloads</code>.</p></li>
+<li><p>Run the installer and change installation path to point to a local <code>msys64</code> directory instead of the default <code>C:/msys64</code> (requiring admin rights).</p></li>
+<li><p>Once finished, launch an <a href="https://www.msys2.org/docs/environments/">UCRT64</a> environment as proposed in the installation guide. Install at least the following:</p></li>
+</ul>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pacman</span> <span class="at">-S</span> <span class="dt">\</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    mingw-w64-ucrt-x86_64-toolchain <span class="dt">\</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    mingw-w64-ucrt-x86_64-binutils <span class="dt">\</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    mingw-w64-ucrt-x86_64-gcc <span class="dt">\</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    mingw-w64-ucrt-x86_64-gcc-fortran</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<ul>
+<li>Full package list is provided <a href="https://packages.msys2.org/queue">here</a>.</li>
+</ul>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->

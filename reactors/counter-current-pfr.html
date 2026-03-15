@@ -1,0 +1,1247 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.26">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>20&nbsp; Counter-current plug flow – Kompanion</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script><script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../reactors/converting-nasa-poly.html" rel="next">
+<link href="../reactors/acetylene-pyrolysis-reactor.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-597958c53c93a607afca12fd375c57ed.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-49bf9995813b73fc9d466afa58da3ad1.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script src="https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.min.js" integrity="sha384-c9c+LnTbwQ3aujuU7ULEPVvgLs+Fn6fJUvIGTsuu1ZcCf11fiEubah0ttpca4ntM sha384-6V1/AdqZRWk1KAlWbKBlGhN7VG4iE/yAZcO6NZPMF8od0vukrvr0tg4qY6NSrItx" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar docked quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../reactors/acetylene-pyrolysis-reactor.html">Reactor Engineering</a></li><li class="breadcrumb-item"><a href="../reactors/counter-current-pfr.html"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Counter-current plug flow</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../">Kompanion</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Kompanion</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../computing/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Computing</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../computing/git.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Git version control</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../computing/ssh.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Using SSH</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../computing/coding.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Scientific programming</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../computing/vscode.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Visual Studio Code</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../computing/windows.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Working on Windows</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../computing/containers.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Using containers</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../computing/tips.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">General Tips</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../computing/selection.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Selection of tools</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../computing/portable.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Portable applications</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../elmer/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Elmer Multiphysics</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../elmer/elmer.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Elmer Fundamentals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../elmer/sif.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Solver Input Files (SIF)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../elmer/matc.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">MATC</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../fluent/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Ansys Fluent</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fluent/tui-basics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Text user interface (TUI)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fluent/tui-config.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">User profile</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fluent/tui-setup.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Setup from TUI</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fluent/tui-solution.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Solution from TUI</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fluent/tui-results.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Results from TUI</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../fluent/pyfluent.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Getting started with PyFluent</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+ <span class="menu-text">Reactor Engineering</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reactors/acetylene-pyrolysis-reactor.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Acetylene pyrolysis reactor</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reactors/counter-current-pfr.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Counter-current plug flow</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reactors/converting-nasa-poly.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Fitting NASA9 data</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false">
+ <span class="menu-text">Montagne</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tracks/carto.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Cartographie</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tracks/liens.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Liens utiles</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="header-section-number">20.1</span> Introduction</a></li>
+  <li><a href="#shared-functionalities" id="toc-shared-functionalities" class="nav-link" data-scroll-target="#shared-functionalities"><span class="header-section-number">20.2</span> Shared functionalities</a></li>
+  <li><a href="#single-plug-flow-reactor" id="toc-single-plug-flow-reactor" class="nav-link" data-scroll-target="#single-plug-flow-reactor"><span class="header-section-number">20.3</span> Single plug-flow reactor</a>
+  <ul class="collapse">
+  <li><a href="#example---single-pfr-simulation" id="toc-example---single-pfr-simulation" class="nav-link" data-scroll-target="#example---single-pfr-simulation"><span class="header-section-number">20.3.1</span> Example - single PFR simulation</a></li>
+  </ul></li>
+  <li><a href="#counter-current-flow-reactors" id="toc-counter-current-flow-reactors" class="nav-link" data-scroll-target="#counter-current-flow-reactors"><span class="header-section-number">20.4</span> Counter-current flow reactors</a>
+  <ul class="collapse">
+  <li><a href="#example---pair-of-coupled-pfr" id="toc-example---pair-of-coupled-pfr" class="nav-link" data-scroll-target="#example---pair-of-coupled-pfr"><span class="header-section-number">20.4.1</span> Example - pair of coupled PFR</a></li>
+  </ul></li>
+  <li><a href="#adding-losses-to-the-environment" id="toc-adding-losses-to-the-environment" class="nav-link" data-scroll-target="#adding-losses-to-the-environment"><span class="header-section-number">20.5</span> Adding losses to the environment</a>
+  <ul class="collapse">
+  <li><a href="#example---environment-coupling" id="toc-example---environment-coupling" class="nav-link" data-scroll-target="#example---environment-coupling"><span class="header-section-number">20.5.1</span> Example - environment coupling</a></li>
+  </ul></li>
+  <li><a href="#registering-flow-for-a-single-reactor" id="toc-registering-flow-for-a-single-reactor" class="nav-link" data-scroll-target="#registering-flow-for-a-single-reactor"><span class="header-section-number">20.6</span> Registering flow for a single reactor</a>
+  <ul class="collapse">
+  <li><a href="#example---prototype-with-a-single-reactor" id="toc-example---prototype-with-a-single-reactor" class="nav-link" data-scroll-target="#example---prototype-with-a-single-reactor"><span class="header-section-number">20.6.1</span> Example - prototype with a single reactor</a></li>
+  </ul></li>
+  <li><a href="#registering-flow-for-a-pair-of-reactors" id="toc-registering-flow-for-a-pair-of-reactors" class="nav-link" data-scroll-target="#registering-flow-for-a-pair-of-reactors"><span class="header-section-number">20.7</span> Registering flow for a pair of reactors</a>
+  <ul class="collapse">
+  <li><a href="#example---extension-to-coupled-system" id="toc-example---extension-to-coupled-system" class="nav-link" data-scroll-target="#example---extension-to-coupled-system"><span class="header-section-number">20.7.1</span> Example - extension to coupled system</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../reactors/acetylene-pyrolysis-reactor.html">Reactor Engineering</a></li><li class="breadcrumb-item"><a href="../reactors/counter-current-pfr.html"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Counter-current plug flow</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Counter-current plug flow</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="introduction" class="level2" data-number="20.1">
+<h2 data-number="20.1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">20.1</span> Introduction</h2>
+<p>The goal of this tutorial is to discuss a sequence of increasingly complex plug-flow reactor (PFR) models. These are all built upon <code>PlugFlowChainCantera</code> which approximates a PFR as a cascade of perfect-stirred reactors (PSR), as illustrated <a href="https://cantera.org/stable/examples/python/reactors/pfr.html#sphx-glr-examples-python-reactors-pfr-py">here</a>. Care must be taken when using such an approach because this zero-dimensional modeling does not formally represent a PFR, but approaches one - so grid convergence studies might be required to validate a model, what is beyond our scope here (and has been done during the conception of this report), which limits itself to studying the coupling of reactors. Nonetheless, this representation proves very interesting when assembling complex systems as it remains modular, allowing for extensibility of models.</p>
+<p>In what follows we will be guided through the following models:</p>
+<ul>
+<li><p>A single PFR with possibility of distributed mass sources along its length; this case is often encountered in industry when modeling reactors coupled through a permeable membrane, or in a rotary kiln, where solids may eventually release gases, what is especially important in the field of biomatter gaseification.</p></li>
+<li><p>Next we will couple a pair of reactors as conceived in the first example, which will be allowed to exchange energy through a pseudo-convective model; there is no major difficulty at this point as the coupling can be stabilized through a relaxation routine. We investigate how the ordering of reactor solution affects convergence rate.</p></li>
+<li><p>At the last level of complexity studied here, we add a shared common wall around the pair of reactors of the previous step; one might argue that such a system would require two <em>wall</em> temperatures to be described at steady state; here we will assume that this wall is <em>rotating</em> around the pair of reactors in such a way that it remains in contact with a reactor during part of a cycle, and a <em>statistically significant mean temperature</em> is solely used as a process measurable.</p></li>
+</ul>
+<p>Because writting long classes is not didatic for the purposes of a tutorial, we will use a <em>semi-object-oriented</em> programming approach here. That means, there will be minimal classes just holding the basic elements representing the state of a problem, and functions that resemble class methods (receiving the class instance as first argument) to perform the required operations.</p>
+<p>Below we start by importing all required tools at once:</p>
+<p>Because some cells take some time to execute, during development you can set this to <code>"true"</code> so that they are not run. You can recognize these cells by the presence of magic <code>%%skipper</code>. Setting this to <code>"false"</code> will not skip the cells (this is the logic of the booleans here, we are saying true to skip, not true to execute!).</p>
+</section>
+<section id="shared-functionalities" class="level2" data-number="20.2">
+<h2 data-number="20.2" class="anchored" data-anchor-id="shared-functionalities"><span class="header-section-number">20.2</span> Shared functionalities</h2>
+<p>This section is not commented, variables and functions should speak by themselves.</p>
+</section>
+<section id="single-plug-flow-reactor" class="level2" data-number="20.3">
+<h2 data-number="20.3" class="anchored" data-anchor-id="single-plug-flow-reactor"><span class="header-section-number">20.3</span> Single plug-flow reactor</h2>
+<p>For the single reactor <code>ReactorModel</code> we write a simple wrapper around <code>PlugFlowChainCantera</code>; this model holds an instance of a <code>solution</code> object conceived with the same mechanism as provided to the PFR, and a simple <code>source</code> structure for the distributed source terms.</p>
+<p>Both the <code>solution</code> and <code>source</code> are used in <code>add_source</code> to inject a mass flow rate <code>mdot</code> at temperature <code>T</code>, and composition <code>X</code> (given in mole fractions) at a set of cell indices <code>where</code> along the reactor. We will see later how discretization is performed and thus how to link <code>where</code> to an actual axial coordinate along the reactor.</p>
+<p>The underlining PFR model has already its own solution method (which is actually called <code>update</code>) that <em>seeks</em> a steady state for the reactor given a certaing <code>source</code>; sometimes it fail to converge and multiple calls may be required to find the steady state of a reactor. In <code>solve_reactor</code> below we wrap the aforementioned method and add some reporting.</p>
+<section id="example---single-pfr-simulation" class="level3" data-number="20.3.1">
+<h3 data-number="20.3.1" class="anchored" data-anchor-id="example---single-pfr-simulation"><span class="header-section-number">20.3.1</span> Example - single PFR simulation</h3>
+<p>As this first case is already fully supported by the underlining library class, we are ready to solve a first example problem. Comments are provided in the function <code>sample_single</code> to guide you through the setup. A distributed power supply is added to the reactor as an analytical function as:</p>
+<p><span class="math display">\[
+Q(z) = \begin{cases}
+A \left[1 - \exp\left(-\dfrac{z}{z_0}\right)\right] &amp; z &lt; \dfrac{L}{2}\\[12pt]
+0 &amp; \text{otherwise}
+\end{cases}
+\]</span></p>
+<p>This is arbitrarily parametrized and is intended just to show that accessing <code>model.source.Q</code> allows to provide any heat source function to a reactor.</p>
+<p>We said no convergence study was going to be performed; that was a lie. Below we inspect the evolution of final temperature in terms of reactor cell length in range <span class="math inline">\(l\in[0.001;0.1]\)</span> m. Solution quickly approaches 340.6 K, and for practical purposes a discretization of 1 cm seems a good compromise between execution time and accuracy. Also notice that total supplied power may depend on discretization because of how it is provided.</p>
+<div id="7537adac" class="cell" data-execution_count="12">
+<div class="cell-output cell-output-stdout">
+<pre><code>|----------------------|-----|---------------|
+| Total mass flow rate | g/s | +2.500000e+02 |
+| Total external power | W   | +6.035993e+03 |
+| Final temperature    | K   | +3.404046e+02 |</code></pre>
+</div>
+</div>
+<div id="7b8a6e8c" class="cell" data-execution_count="13">
+<div class="cell-output cell-output-stdout">
+<pre><code>|----------------------|-----|---------------|
+| Total mass flow rate | g/s | +2.500000e+02 |
+| Total external power | W   | +6.000357e+03 |
+| Final temperature    | K   | +3.405258e+02 |</code></pre>
+</div>
+</div>
+<div id="1227af62" class="cell" data-execution_count="14">
+<div class="cell-output cell-output-stdout">
+<pre><code>Skipping cell: MJ_SOLVE_FINEST=True</code></pre>
+</div>
+</div>
+<p>Below we show the report of first solution, which here is no better than an initial guess; sequential solution of reactor towards steady state is recommended in practice.</p>
+<div id="95067599" class="cell" data-execution_count="15">
+<div class="cell-output cell-output-stdout">
+<pre><code>|----------------------|-----|---------------|
+| Total mass flow rate | g/s | +2.500000e+02 |
+| Total external power | W   | +6.000085e+03 |
+| Final temperature    | K   | +3.395247e+02 |
+|----------------------|-----|---------------|
+| Total mass flow rate | g/s | +2.500000e+02 |
+| Total external power | W   | +6.000085e+03 |
+| Final temperature    | K   | +3.405501e+02 |</code></pre>
+</div>
+</div>
+<p>Finally we illustate the composition and temperature profiles induced by the simultaneous mass and heat transfer:</p>
+<div id="09cbc4e5" class="cell" data-execution_count="16">
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="counter-current-pfr_files/figure-html/cell-16-output-1.png" width="627" height="467" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>You can also access the data in base reactor for post-processing as desired:</p>
+<div id="94cc3134" class="cell" data-execution_count="17">
+<div class="cell-output cell-output-display" data-execution_count="16">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">0</th>
+<th data-quarto-table-cell-role="th">1</th>
+<th data-quarto-table-cell-role="th">2</th>
+<th data-quarto-table-cell-role="th">3</th>
+<th data-quarto-table-cell-role="th">4</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">z_cell</th>
+<td>0.002500</td>
+<td>0.007500</td>
+<td>0.012500</td>
+<td>0.017500</td>
+<td>0.022500</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">V_cell</th>
+<td>0.000039</td>
+<td>0.000039</td>
+<td>0.000039</td>
+<td>0.000039</td>
+<td>0.000039</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">Q_cell</th>
+<td>1.177767</td>
+<td>3.489592</td>
+<td>5.744338</td>
+<td>7.943414</td>
+<td>10.088195</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">m_cell</th>
+<td>0.000046</td>
+<td>0.000046</td>
+<td>0.000046</td>
+<td>0.000046</td>
+<td>0.000046</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">mdot_cell</th>
+<td>0.050000</td>
+<td>0.050000</td>
+<td>0.050000</td>
+<td>0.050000</td>
+<td>0.050000</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">T</th>
+<td>300.023321</td>
+<td>300.092416</td>
+<td>300.206156</td>
+<td>300.363436</td>
+<td>300.563179</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">density</th>
+<td>1.171880</td>
+<td>1.171610</td>
+<td>1.171166</td>
+<td>1.170553</td>
+<td>1.169775</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">Y_O2</th>
+<td>0.232909</td>
+<td>0.232909</td>
+<td>0.232909</td>
+<td>0.232909</td>
+<td>0.232909</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">Y_N2</th>
+<td>0.767091</td>
+<td>0.767091</td>
+<td>0.767091</td>
+<td>0.767091</td>
+<td>0.767091</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">Y_AR</th>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="counter-current-flow-reactors" class="level2" data-number="20.4">
+<h2 data-number="20.4" class="anchored" data-anchor-id="counter-current-flow-reactors"><span class="header-section-number">20.4</span> Counter-current flow reactors</h2>
+<p>The tooling required to compute a pair of reactors is already provided by <code>ReactorModel</code>; all we have to do is wrap a pair of reactors in <code>CounterCurrentReactors</code>. For convenience we store a copy of the axial coordinate (which is the same for both reactors). Notice here the introduction of <code>U</code>, a global heat transfer coefficient between phases, <code>Q</code>, the associated heat flux, and a relaxation manager.</p>
+<p>One cannot compute heat fluxes between reactors before having an initial temperature profile established (see it as an initial guess). Function <code>initialize</code> is provided for that end and must be called after mass flows have been setup.</p>
+<p>There are two ways one can solve the relaxation problem here, each with its strengths and weaknesses; one could simply calculate calculate the flux, apply it to both reactors, and solve (<code>iter_direct</code>) or compose a series of flux and solution calculations (<code>iter_alternate</code>). When initial guess is not good enough, the alternating approach tends to deliver results in a more reliable fashion (because it is compatible with high relaxation factors), but it is slower. On the other hand, direct solution may converge faster as solution is already relaxed.</p>
+<p><strong>IMPORTANT:</strong> notice here that we get the reverse of <code>T2</code> to compute flux (as the reactors are in counter-current) and then <code>model.Q</code> is reversed againt to set heat flux to reactor 2. This class could easily be generalized by adding a flag on whether temperature and flux should be treated as is (co-current) or reversed.</p>
+<p>Based on the previous discussion, a mixed approach can be proposed: relax the problem with the alternating solution and move to direct one after a certain criteria or maximum number of iterations has been achieved. This is emulated in <code>solve_pair</code> provided below.</p>
+<p>A simple standard ploting function is provided for the counter-current reactor pair:</p>
+<section id="example---pair-of-coupled-pfr" class="level3" data-number="20.4.1">
+<h3 data-number="20.4.1" class="anchored" data-anchor-id="example---pair-of-coupled-pfr"><span class="header-section-number">20.4.1</span> Example - pair of coupled PFR</h3>
+<p>This second example replaces the user-defined heat flow function by a convective heat exchange through a fin separating the reactions; this is modeled through a heat transfer coefficient <code>h</code> which is made constant here for illustration purposes only. To test the robustness of the approach, a relativelly high dilution flow is applied to a concentrated region in reactor 2 (hot stream).</p>
+<p>After building the reactor pair, inlet and distributed conditions and the reactors are initialized, <em>.i.e.</em> solved individually, before iterative solution is performed. The user may require a final solution step for printing reactor quantities in a table.</p>
+<p>For low relaxation values (<span class="math inline">\(\alpha&lt;0.5\)</span>), both methods may eventually converge under the same number of iterations.</p>
+<div id="bc543c25" class="cell" data-execution_count="26">
+<div class="cell-output cell-output-stdout">
+<pre><code>|----------------------|-----|---------------|
+| Total mass flow rate | g/s | +5.000000e+00 |
+| Total external power | W   | +1.216871e+03 |
+| Final temperature    | K   | +5.372994e+02 |
+|----------------------|-----|---------------|
+| Total mass flow rate | g/s | +1.600000e+02 |
+| Total external power | W   | -1.216871e+03 |
+| Final temperature    | K   | +5.615588e+02 |</code></pre>
+</div>
+</div>
+<div id="394b64b4" class="cell" data-execution_count="27">
+<div class="cell-output cell-output-stdout">
+<pre><code>Skipping cell: MJ_SOLVE_FINEST=True</code></pre>
+</div>
+</div>
+<p>Refining the grid for the present case has an impact of a few degrees over final solution (but takes much longer to solve), as illustrated below. Below 2 mm there is little change in the final solution and this value is a practical limit for grid refinement here.</p>
+<div id="ac9328aa" class="cell" data-execution_count="28">
+<div class="cell-output cell-output-stdout">
+<pre><code>Skipping cell: MJ_SOLVE_FINEST=True</code></pre>
+</div>
+</div>
+<div id="80b9ad15" class="cell" data-execution_count="29">
+<div class="cell-output cell-output-stdout">
+<pre><code>Skipping cell: MJ_SOLVE_FINEST=True</code></pre>
+</div>
+</div>
+<p>Finally we display the results; for the hot stream we observe a sharp decrease in temperature (and associated specific heat capacity) due to argon dilution. Cold stream progressivelly heats up along the channel length as expected.</p>
+<div id="a4ac7b84" class="cell" data-execution_count="30">
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="counter-current-pfr_files/figure-html/cell-30-output-1.png" width="785" height="628" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="adding-losses-to-the-environment" class="level2" data-number="20.5">
+<h2 data-number="20.5" class="anchored" data-anchor-id="adding-losses-to-the-environment"><span class="header-section-number">20.5</span> Adding losses to the environment</h2>
+<p>So far we have developed the ideas required to reach the final goal of conceiving a fully coupled system with a pair of reactors and walls. Again we proceed with a wrapper class which countains our problem variables, but in this case we fully develop it as a single block. Also, this time documentation is provided in the class itself as that seems clearer to the author in this case, and provides some closure to the study.</p>
+<p>The main increment in problem solution here is the extra step of solving for the wall temperature, which can be found from the global flux definition:</p>
+<p><span class="math display">\[
+\dot{Q}_{w} = \dfrac{T_w - T_e}{R_{tot}}
+\quad\text{where}\quad
+R_{tot} = \dfrac{1}{hA}+\dfrac{1}{2\pi{}lk}\log\dfrac{R_{ext}}{R_{int}}
+\]</span></p>
+<p>We make use of the main takes of the previous sections, which have shown that alternating reactor solution order is not always an advantage; here the problem has been programmed to use direct solution. Relaxation is applied to reactor fluxes, but not to wall flux, which is computed from a balance of the relaxed quantities for the sake of energy conservation.</p>
+<section id="example---environment-coupling" class="level3" data-number="20.5.1">
+<h3 data-number="20.5.1" class="anchored" data-anchor-id="example---environment-coupling"><span class="header-section-number">20.5.1</span> Example - environment coupling</h3>
+<div id="9a69576e" class="cell" data-execution_count="33">
+<div class="cell-output cell-output-stdout">
+<pre><code>|----------------------|-----|---------------|
+| Total mass flow rate | g/s | +5.000000e+00 |
+| Total external power | W   | +1.003972e+03 |
+| Final temperature    | K   | +4.963894e+02 |
+|----------------------|-----|---------------|
+| Total mass flow rate | g/s | +3.000000e+02 |
+| Total external power | W   | -2.210504e+03 |
+| Final temperature    | K   | +5.216989e+02 |</code></pre>
+</div>
+</div>
+<div id="b8f0ff2d" class="cell" data-execution_count="34">
+<div class="cell-output cell-output-stdout">
+<pre><code>|----------------------|-----|---------------|
+| Total mass flow rate | g/s | +5.000000e+00 |
+| Total external power | W   | +1.153462e+03 |
+| Final temperature    | K   | +5.251459e+02 |
+|----------------------|-----|---------------|
+| Total mass flow rate | g/s | +1.600000e+02 |
+| Total external power | W   | -2.516963e+03 |
+| Final temperature    | K   | +5.519201e+02 |</code></pre>
+</div>
+</div>
+<div id="09dd3b98" class="cell" data-execution_count="35">
+<div class="cell-output cell-output-stdout">
+<pre><code>Skipping cell: MJ_SOLVE_FINEST=True</code></pre>
+</div>
+</div>
+<div id="6aa4f770" class="cell" data-execution_count="36">
+<div class="cell-output cell-output-stdout">
+<pre><code>Skipping cell: MJ_SOLVE_FINEST=True</code></pre>
+</div>
+</div>
+<div id="4d4e64e5" class="cell" data-execution_count="37">
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="counter-current-pfr_files/figure-html/cell-37-output-1.png" width="784" height="628" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="registering-flow-for-a-single-reactor" class="level2" data-number="20.6">
+<h2 data-number="20.6" class="anchored" data-anchor-id="registering-flow-for-a-single-reactor"><span class="header-section-number">20.6</span> Registering flow for a single reactor</h2>
+<p>Below we develop further the idea into registering heat flows as an alternative to relaxation. The method may prove useful because heat flows are computed from current state of the reactors instead of an external guess.</p>
+<section id="example---prototype-with-a-single-reactor" class="level3" data-number="20.6.1">
+<h3 data-number="20.6.1" class="anchored" data-anchor-id="example---prototype-with-a-single-reactor"><span class="header-section-number">20.6.1</span> Example - prototype with a single reactor</h3>
+<div id="0719bec4" class="cell" data-execution_count="39">
+<div class="cell-output cell-output-stdout">
+<pre><code>|----------------------|-----|---------------|
+| Total mass flow rate | g/s | +2.500000e+02 |
+| Total external power | W   | +4.237303e+03 |
+| Final temperature    | K   | +4.232112e+02 |</code></pre>
+</div>
+</div>
+<div id="304a2174" class="cell" data-execution_count="40">
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="counter-current-pfr_files/figure-html/cell-40-output-1.png" width="626" height="467" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="registering-flow-for-a-pair-of-reactors" class="level2" data-number="20.7">
+<h2 data-number="20.7" class="anchored" data-anchor-id="registering-flow-for-a-pair-of-reactors"><span class="header-section-number">20.7</span> Registering flow for a pair of reactors</h2>
+<p>As a last level of improvement, we generalize the approach for a pair of reactors. After some experimentation it was concluded that falling back to the alternating approach with intermediate wall solution lead to the best performance, probably because of decreased system stifness. Relaxing the wall heat flow allows for faster convergence.</p>
+<section id="example---extension-to-coupled-system" class="level3" data-number="20.7.1">
+<h3 data-number="20.7.1" class="anchored" data-anchor-id="example---extension-to-coupled-system"><span class="header-section-number">20.7.1</span> Example - extension to coupled system</h3>
+<div id="51fca5dc" class="cell" data-execution_count="43">
+<div class="cell-output cell-output-stdout">
+<pre><code>|----------------------|-----|---------------|
+| Total mass flow rate | g/s | +5.000000e+00 |
+| Total external power | W   | +1.153462e+03 |
+| Final temperature    | K   | +5.251459e+02 |
+|----------------------|-----|---------------|
+| Total mass flow rate | g/s | +1.600000e+02 |
+| Total external power | W   | -2.516963e+03 |
+| Final temperature    | K   | +5.519201e+02 |
+CPU times: total: 17.8 s
+Wall time: 17.9 s</code></pre>
+</div>
+</div>
+<div id="141fdf54" class="cell" data-execution_count="44">
+<div class="cell-output cell-output-stdout">
+<pre><code>|----------------------|-----|---------------|
+| Total mass flow rate | g/s | +5.000000e+00 |
+| Total external power | W   | +1.153462e+03 |
+| Final temperature    | K   | +5.251459e+02 |
+|----------------------|-----|---------------|
+| Total mass flow rate | g/s | +1.600000e+02 |
+| Total external power | W   | -2.516963e+03 |
+| Final temperature    | K   | +5.519201e+02 |
+CPU times: total: 19.5 s
+Wall time: 19.6 s</code></pre>
+</div>
+</div>
+<div id="d6079955" class="cell" data-execution_count="45">
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="counter-current-pfr_files/figure-html/cell-45-output-1.png" width="784" height="628" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div id="a5dec9d4" class="cell" data-execution_count="46">
+<div class="cell-output cell-output-stdout">
+<pre><code>|----------------------|-----|---------------|
+| Total mass flow rate | g/s | +5.000000e+00 |
+| Total external power | W   | +1.153462e+03 |
+| Final temperature    | K   | +5.251459e+02 |
+|----------------------|-----|---------------|
+| Total mass flow rate | g/s | +1.600000e+02 |
+| Total external power | W   | -2.516963e+03 |
+| Final temperature    | K   | +5.519201e+02 |
+CPU times: total: 17.5 s
+Wall time: 17.7 s</code></pre>
+</div>
+</div>
+<div id="d58acac4" class="cell" data-execution_count="47">
+<div class="cell-output cell-output-stdout">
+<pre><code>|----------------------|-----|---------------|
+| Total mass flow rate | g/s | +5.000000e+00 |
+| Total external power | W   | +1.153462e+03 |
+| Final temperature    | K   | +5.251459e+02 |
+|----------------------|-----|---------------|
+| Total mass flow rate | g/s | +1.600000e+02 |
+| Total external power | W   | -2.516963e+03 |
+| Final temperature    | K   | +5.519201e+02 |
+CPU times: total: 18.5 s
+Wall time: 18.5 s</code></pre>
+</div>
+</div>
+<div id="ffb5be49" class="cell" data-execution_count="48">
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="counter-current-pfr_files/figure-html/cell-48-output-1.png" width="784" height="628" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div id="41880106" class="cell" data-execution_count="49">
+<div class="cell-output cell-output-stdout">
+<pre><code>|----------------------|-----|---------------|
+| Total mass flow rate | g/s | +5.000000e+00 |
+| Total external power | W   | +1.153462e+03 |
+| Final temperature    | K   | +5.251459e+02 |
+|----------------------|-----|---------------|
+| Total mass flow rate | g/s | +1.600000e+02 |
+| Total external power | W   | -2.516963e+03 |
+| Final temperature    | K   | +5.519201e+02 |
+CPU times: total: 4.09 s
+Wall time: 4.1 s</code></pre>
+</div>
+</div>
+<div id="5c230154" class="cell" data-execution_count="50">
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="counter-current-pfr_files/figure-html/cell-50-output-1.png" width="784" height="628" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../reactors/acetylene-pyrolysis-reactor.html" class="pagination-link" aria-label="Acetylene pyrolysis reactor">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Acetylene pyrolysis reactor</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../reactors/converting-nasa-poly.html" class="pagination-link" aria-label="Fitting NASA9 data">
+        <span class="nav-page-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Fitting NASA9 data</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

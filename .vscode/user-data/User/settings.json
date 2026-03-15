@@ -143,6 +143,34 @@
         "**/*.drawio.bkp": true,
     },
 
+    "files.watcherExclude": {
+        // Majordome specifics:
+        ".cargo/":true,
+        ".copilot/":true,
+        ".hyperspy/":true,
+        ".ipython/":true,
+        ".julia/":true,
+        ".jupyter/":true,
+        ".kompanion/":true,
+        ".matplotlib/":true,
+        ".miktex/":true,
+        ".stack/":true,
+        ".vscode/":true,
+        ".zettlr/":true,
+        "AppData/":true,
+        "Desktop/":true,
+        "pip/":true,
+        "repos/":true,
+
+        // Common programming:
+        "**/node_modules": true,
+        "**/.git": true,
+        "**/dist": true,
+        "**/build": true,
+        "**/target": true,
+        "**/.venv": true
+    },
+
     //////////////////////////////////////////////////////////////////////////
     // GIT
     //////////////////////////////////////////////////////////////////////////
@@ -200,6 +228,18 @@
     },
 
     //////////////////////////////////////////////////////////////////////////
+    // JUPYTER
+    //////////////////////////////////////////////////////////////////////////
+
+    "notebook.lineNumbers": "on",
+
+    "jupyter.askForKernelRestart": false,
+    "jupyter.interactiveWindow.creationMode": "perFile",
+    "jupyter.kernels.excludePythonEnvironments": [
+        "${env:INKSCAPE_HOME}\\bin\\python.exe"
+    ],
+
+    //////////////////////////////////////////////////////////////////////////
     // PYTHON
     //////////////////////////////////////////////////////////////////////////
 
@@ -227,6 +267,7 @@
     "python.analysis.indexing": false,
     "python.analysis.stubPath": "./typings",
     "python.analysis.typeCheckingMode": "standard",
+    "python.analysis.updateImportsOnFileMove.enabled": "never",
     "python.createEnvironment.trigger": "off",
     "python.defaultInterpreterPath": "${env:PYTHON_HOME}\\python.exe",
     "python.useEnvironmentsExtension": true,
@@ -283,6 +324,60 @@
         "-fdefault-double-8",
         "-Wunused-variable",
         "-Wunused-dummy-argument"
+    ],
+
+
+    //////////////////////////////////////////////////////////////////////////
+    // GITHUB COPILOT
+    //////////////////////////////////////////////////////////////////////////
+
+    "github.copilot.nextEditSuggestions.enabled": true,
+
+    "github.copilot.enable": {
+        "*": true,
+        "quarto": true,
+        "python": true,
+        "plaintext": false,
+        "markdown": false,
+        "scminput": false,
+    },
+
+    // XXX: use Copilot behing a proxy!
+    "win-ca.inject": "append",
+
+    //////////////////////////////////////////////////////////////////////////
+    // TERMINAL
+    //////////////////////////////////////////////////////////////////////////
+
+    // Do not ask for confirmation when pasting multiple lines:
+    "terminal.integrated.enableMultiLinePasteWarning": "never",
+
+    // Do not show sticky scroll:
+    "terminal.integrated.stickyScroll.enabled": false,
+
+    // Use a bit smaller font in terminal:
+    "terminal.integrated.fontSize": 12,
+
+    "terminal.integrated.profiles.windows": {
+        "Git Bash": null,
+        "JavaScript Debug Terminal": null,
+        "MATLAB": null,
+
+        "Kompanion PowerShell": {
+            "path": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+            "args": [
+                "-NoProfile",
+                "-NoExit",
+                "-Command",
+                ". ${env:KOMPANION_DIR}\\kompanion.ps1"
+            ]
+        },
+    },
+
+    "terminal.integrated.defaultProfile.windows": "Kompanion PowerShell",
+
+    "terminal.integrated.commandsToSkipShell": [
+        "language-julia.interrupt"
     ],
 
     //////////////////////////////////////////////////////////////////////////
@@ -370,71 +465,6 @@
             "command": "biber",
             "args": ["%DOC%"]
         }
-    ],
-
-    //////////////////////////////////////////////////////////////////////////
-    // GITHUB COPILOT
-    //////////////////////////////////////////////////////////////////////////
-
-    "github.copilot.nextEditSuggestions.enabled": true,
-
-    "github.copilot.enable": {
-        "*": true,
-        "quarto": true,
-        "python": true,
-        "plaintext": false,
-        "markdown": false,
-        "scminput": false,
-    },
-
-    // XXX: use Copilot behing a proxy!
-    "win-ca.inject": "append",
-
-    //////////////////////////////////////////////////////////////////////////
-    // TERMINAL
-    //////////////////////////////////////////////////////////////////////////
-
-    // Do not ask for confirmation when pasting multiple lines:
-    "terminal.integrated.enableMultiLinePasteWarning": "never",
-
-    // Do not show sticky scroll:
-    "terminal.integrated.stickyScroll.enabled": false,
-
-    // Use a bit smaller font in terminal:
-    "terminal.integrated.fontSize": 12,
-
-    "terminal.integrated.profiles.windows": {
-        "Git Bash": null,
-        "JavaScript Debug Terminal": null,
-        "MATLAB": null,
-
-        "Kompanion PowerShell": {
-            "path": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
-            "args": [
-                "-NoProfile",
-                "-NoExit",
-                "-Command",
-                ". ${env:KOMPANION_DIR}\\kompanion.ps1"
-            ]
-        },
-    },
-
-    "terminal.integrated.defaultProfile.windows": "Kompanion PowerShell",
-
-    "terminal.integrated.commandsToSkipShell": [
-        "language-julia.interrupt"
-    ],
-
-    //////////////////////////////////////////////////////////////////////////
-    // JUPYTER
-    //////////////////////////////////////////////////////////////////////////
-
-    "notebook.lineNumbers": "on",
-
-    "jupyter.askForKernelRestart": false,
-    "jupyter.interactiveWindow.creationMode": "perFile",
-    "jupyter.kernels.excludePythonEnvironments": [
-        "${env:INKSCAPE_HOME}\\bin\\python.exe"
     ],
 
     //////////////////////////////////////////////////////////////////////////

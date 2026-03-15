@@ -1,1 +1,104 @@
 # Portable applications {#sec-portable}
+
+## How does it work?
+
+*Kompanion* is intended to be used as a portable environment with *almost* all batteries included. Applications are placed under `.kompanion/bin/` directory and all configuration of paths and other required environment variables are provided by *kompanion.ps1* script.
+
+It mostly revolves around [VS Code](https://code.visualstudio.com/download). You launch the editor through a dedicated script and everything else is available in its terminal. That said, the whole of the ecosystem is command line based - but this is scientific computing, if you don't know command line you are in the wrong job. If you followed the instructions to source Kompanion from $PROFILE, then you can also launch the terminal from the start menu and everything will be available there as well.
+
+It is intended to leave minimal track on host system (probably a few files and directories on your user home directory or under *AppData*), but this is not enforced in its development, so take care if you are not allowed to execute some software in a given computer.
+
+## Other possibly supported applications
+
+The following packages are not currently included in Kompanion, but they are known to be somewhat portable and they might be added in the future. Those displayed in italics cannot be currently automated, but they can be installed in a machine then copied to Kompanion (ongoing investigation on how to automate that). Also check the @sec-selection-of-tools for a software selection that might be of interest for you and maybe not listed here.
+
+- DualSPHysics
+- Dyssol
+- Fiji
+- FileZilla
+- *FreeFEM++*
+- gnuplot
+- Graphviz
+- [iperf](https://iperf.fr/)
+- Ipopt
+- Jamovi
+- JASP
+- lazarus
+- [lite-xl](https://github.com/lite-xl/lite-xl)
+- LAMMPS
+- MFiX
+- MSYS2
+- MUSEN
+- [Notepad++](https://notepad-plus-plus.org/downloads/)
+- Octave
+- OpenCALPHAD
+- OpenModelica
+- Orange3
+- Portable LISP
+- puTTy
+- Ruby
+- Rufus (requires admin privileges to be used though)
+- SALOME (needs to be manually downloaded)
+- *Scilab*
+- strawberry-perl
+- VMD
+- [ZeroBraneStudio](https://studio.zerobrane.com/)
+- [Zettlr](https://www.zettlr.com/)
+- [Xpra](https://xpra.org/index.html)
+
+## Software specific instructions
+
+### DualSPHysics
+
+For [DualSPHysics](https://dual.sphysics.org/downloads/) one might also want to install [this FreeCAD addon](https://github.com/DualSPHysics/DesignSPHysics) and [this Blender addon](https://github.com/EPhysLab-UVigo/VisualSPHysics).
+
+### gmsh
+
+Because it was chosen that SDK version of gmsh was more adapted to integrate Kompanion, if you want to be able to pin the executable to your taskbar you need to copy the DLL from its `lib/` directory to `bin/`. If you think you will not need Python/Julia interfaces of gmsh, then you can move the DLL instead to save ~80MB of disk (and you can always install gmsh with pip for those cases).
+
+### Graphviz
+
+If the first time you run `dot` you get a message as
+
+```text
+There is no layout engine support for "dot"
+Perhaps "dot -c" needs to be run (with installer's privileges) to register the plugins?
+```
+
+Simply run `dot -c` as suggested and it should work fine (without admin privileges).
+
+### MFiX
+
+This package is [installed](https://mfix.netl.doe.gov/products/mfix/download/) in a separate environment and not added to the toolbox path; that is because other Python environments could interact with each other and lead to unpredictable behavior. The following instructions are provided:
+
+- Install [miniforge3](https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Windows-x86_64.exe) under a dedicated directory.
+
+- Add a script with the following content to launch miniforge console:
+
+```shell
+%windir%\system32\cmd.exe "/K" ^
+    %~dp0\miniforge3\Scripts\activate.bat ^
+    %~dp0\miniforge3
+```
+
+- Go to the [downloads](https://mfix.netl.doe.gov/mfix/download-mfix) page, login and copy the personal installation command that looks like the following:
+
+```shell
+conda create -n mfix-<version> ^
+    mfix==<version>            ^
+    mfix-doc==<version>        ^
+    mfix-gui==<version>        ^
+    mfix-solver==<version>     ^
+    mfix-src==<version>        ^
+    -c conda-forge -c          ^
+    https://mfix.netl.doe.gov/s3/<personal-token>//conda/dist
+```
+
+- To run the software activate the created environment and call its executable:
+
+```shell
+conda activate mfix-<version>
+mfix
+```
+
+## Creating a portable environment

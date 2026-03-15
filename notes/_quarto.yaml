@@ -20,9 +20,37 @@ book:
   chapters:
     - index.qmd
 
-    - part: "Computing"
+    - part: computing/index.qmd
       chapters:
+        - computing/git.qmd
+        - computing/ssh.qmd
+        - computing/coding.qmd
+        - computing/vscode.qmd
+        - computing/windows.qmd
+        - computing/containers.qmd
+        - computing/tips.qmd
+        - computing/selection.qmd
         - computing/portable.qmd
+
+    - part: elmer/index.qmd
+      chapters:
+        - elmer/elmer.qmd
+        - elmer/sif.qmd
+        - elmer/matc.qmd
+
+    - part: fluent/index.qmd
+      chapters:
+        - fluent/tui-basics.qmd
+        - fluent/tui-config.qmd
+        - fluent/tui-setup.qmd
+        - fluent/tui-solution.qmd
+        - fluent/tui-results.qmd
+        - fluent/pyfluent.qmd
+
+    - part: "Montagne"
+      chapters:
+        - tracks/carto.qmd
+        - tracks/liens.qmd
 
     - references.qmd
 

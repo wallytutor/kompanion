@@ -1,0 +1,13 @@
+# Ansys Fluent
+
+## License usage
+
+``` bash
+ansys_root=/path/to/ansys/installation
+ansys_version=version-number
+
+export LMUTIL="${ansys_root}$/ansys_inc/${ansys_version}/licensingclient/linx64/lmutil"
+
+"${LMUTIL}" lmstat -c 1055@<ip> -a | grep "Users of" | \
+    awk -F"[ ]" "{printf "%-25s %3s /%3s\n", $3, $13, $7}"
+```

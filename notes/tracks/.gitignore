@@ -1,2 +1,2 @@
-*.html
-*-sanitized.gpx
+gpx/*.html
+gpx/*-sanitized.gpx

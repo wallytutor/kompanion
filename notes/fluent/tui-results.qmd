@@ -1,0 +1,107 @@
+# Results from TUI
+
+## Figures in graphical mode only
+
+You are probably loosing your time here; maybe skip straight to the next section and export results for post-processing with PyVista.
+
+```scheme
+/display/display-states/create state-right
+    "disable"      ; Front face transparent ("enable" "disable" "dont-save")
+    "orthographic" ; Projection ("perspective" "orthographic" "dont-save")
+    "enable"       ; Axes ("enable" "disable" "dont-save")
+    "disable"      ; Ruler ("enable" "disable" "dont-save")
+    "disable"      ; Title ("enable" "disable" "dont-save")
+    "enable"       ; Boundary markers ("enable" "disable" "dont-save")
+    "enable"       ; Anti-aliasing ("enable" "disable" "dont-save")
+    "disable"      ; Reflections ("enable" "disable" "dont-save")
+    "disable"      ; Static shadows ("enable" "disable" "dont-save"
+    "disable"      ; Dynamic shadows  ("enable" "disable" "dont-save")
+    "disable"      ; Grid plane ("enable" "disable" "dont-save")
+    "on"           ; Headlights ("on" "off" "automatic" "dont-save")
+    "automatic"    ; Lighting ("automatic" "flat" "gouraud" "phong" "dont-save" "off")
+    "right"        ; View name ("active" "dont-save" "wf-view" "front" "back"
+                   ;            "right" "left" "top" "bottom" "isometric" "view-0")
+    "0"            ; (dont-save 0) ["0"]
+
+; Produces an .stt file (do not add exension in the command!).
+/display/display-states/write "journaling/display-states" state-right ()
+```
+
+```scheme
+/display/objects/create/mesh wire
+    options
+        edges? yes
+        faces? no ()
+    edge-type outline
+    coloring uniform edges black ()
+    display-state-name state-right ()
+```
+
+```scheme
+/display/objects/create/contour contour-total-pressure
+    surfaces-list "plane-name" ()
+    field total-pressure
+    range-option autorange-off
+        minimum -200
+        maximum  200
+        clip-to-range? no ()
+    color-map
+        title-elements "Variable Only"
+        color          "field-pressure"
+        position       0
+        format         "%.0f" ()
+    display-state-name state-right ()
+```
+
+```scheme
+/display/objects/create/scene scene-total-pressure
+    graphics-objects
+        add  "wire" ()
+        add "contour-total-pressure" () ()
+    display-state-name state-right ()
+```
+
+## Exporting for external processing
+
+**Important:** the creation of the following plane-surface is part of the [solution step @sec-solution-from-tui], but is included here for convenience.
+
+```scheme
+/surface/plane-surface plane-symmetry
+    yz-plane ; (yz-plane zx-plane xy-plane point-and-normal three-points)
+    0.01     ; x (in [m])
+```
+
+```scheme
+/file/export/ascii "results.csv"
+    plane-symmetry ()  ; Surfaces ()
+    yes                ; Delimiter/Comma?
+    total-pressure
+    dynamic-pressure
+    velocity-magnitude ()
+    no
+```
+
+```scheme
+/file/export/cgns "results"
+    surface-select     ; Scope: (full-domain volume-select surface-select)
+    plane-symmetry ()  ; Surfaces ()
+    no                 ; Cell-Centered [no]
+    yes                ; Format/HDF5?, if HDF5 not chosen, ADF format is set [yes]
+    total-pressure     ; CGNS scalar(1)> ...
+    dynamic-pressure
+    viscosity-ratio
+    velocity-magnitude ()
+    () ()
+```
+
+```scheme
+; XXX: `history` seems to be broken!
+; XXX: options change depending on the export type!
+/file/export/particle-history-data
+    fieldview             ; cfdpost, fieldview, history, ensight, geometry
+    "results-particles"   ; File name
+    "fibers" ()           ; Injections ()
+    particle-time-step () ; Variables ()
+    20                    ; Skip tracks
+    2000                  ; Coarsen path by
+```

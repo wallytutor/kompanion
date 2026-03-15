@@ -1,0 +1,87 @@
+# Text user interface (TUI)
+
+_An extremelly opinionated introduction_.
+
+
+Using Ansys Fluent can be a huge nightmare; the software is simply _bad_. There's no way someone should commercialize such a garbage of user experience, shame on you! It happens that as CFD engineers we often need to use it and in some cases it surprisingly works as its solver is not as bad as the graphical interface. One just needs to refrain themselves from using the graphical interface and go straight to the text user interface, hereafter our friend TUI.
+
+If you are beginning in the CFD world, stop here and go learn some good code, as [OpenFOAM](https://openfoam.org/) or [SU2](https://su2code.github.io/); continue only if you really need Fluent because of your company or job opportunities require it. If you started learing with the GUI, I have the good-bad news that you lost your time and to be productive with this garbage tool you really need to use the TUI.
+
+For what follows let's keep in mind the following:
+
+- When aiming at creating a new model, it is worth entering manually commands in the TUI terminal of Fluent running in graphical mode; one just need to keep in mind to store those commands in a plain text _journal_ file for later automating the workflow.
+
+- Commands issued in the TUI are some sort of [Scheme](https://www.scheme.org/) dialect; it is possible to code functions directly in journals for pre-processing case parameters. Unfortunately, Fluent's manuals list available TUI commands, but doesn't expose the full Scheme interpreter internals.
+
+- Knowing that, if you save your journals with `.scm` extension instead of the traditional `.jou` most text editors will provide you with syntax highlighting.
+
+- For learing Scheme one find good resources in [Racket](https://racket-lang.org/); just keep in mind that Fluent's Scheme is not Racket (it is some Ansys proprietary implementation), so just the main ideas will apply.
+
+- If you check the project tree in Fluent, you will notice that there are three main sections, _Setup_, _Solution_, and _Results_; when I create a case I split journals in blocks corresponding to these sections and add a _Parameters_ section beforehand. Most of my `model.scm` journal files will look like:
+
+```scheme
+; Here goes plain Scheme code and parameter definitions:
+/file/read-journal "0-params.scm"   ()
+
+; One file per Fluent project section:
+/file/read-journal "1-setup.scm"    ()
+/file/read-journal "2-solution.scm" ()
+/file/read-journal "3-results.scm"  ()
+
+; Do not forget this if working in a shared cluster/HPC:
+/exit ()
+```
+
+- It's worth mentioning that the above approach drastically reduces the use of user-defined expressions, as values that are computed in `0-params.scm` can replace initialization UDE's.
+
+- Forget about Fluent built-in post-processing; it is too cumbersome and limited in the `TUI` and will require you to run in graphical mode for some commands to be available. Instead, export results as CGNS or other format and automate the workflow with [PyVista](https://docs.pyvista.org/).
+
+## Parameters
+
+In the aforementioned `0-params.scm` file I often start by declaring a few constants that are often useful in case setup. The following snippet illustrates the basics of what you need to know about Scheme to do something useful in Fluent: commands are declared within parenthesis, as Scheme is of LISP's family, and parameter definitions follow a `(define <symbol> <value>)` syntax.
+
+```scheme
+; Pi
+(define pi 3.141592653589793)
+
+; Gravity magnitude [m/s^2]
+(define gravity-acceleration 9.81)
+
+; Atmospheric pressure [Pa]
+(define pressure-atm 101325.0)
+
+; Universal gas constant [J/(mol*K)]
+(define gas-constant 8.31446261815324)
+```
+
+One thing about Scheme that might be not familiar for people coming from other languages (or too young to have used an HP graphical calculator) is [Polish notation](https://en.wikipedia.org/wiki/Polish_notation) for numerical operations: you preprend the operator to the operands. That has the advantage that `(+ 1 2 3)` is valid code and will add up all numbers.
+
+```scheme
+; Compute some angle [deg] -> [rad]
+(define theta (/ (* pi 15.0) 180.0))
+
+; Gravity components [m/s^2]
+(define gx 0.0)
+(define gy (* -1 gravity-acceleration (cos theta)))
+(define gz (* -1 gravity-acceleration (sin theta)))
+```
+
+**Side-note:** you might be asking yourself why the hell I project gravity acceleration components over the different axes. In some cases it is very useful if a geometry has corners or something that resembles a rectangle to keep it horizontal and apply body forces as components. For instance, when conceiving a geometry with [Gmsh](https://gmsh.info/) it will avoid a lot of trigonometry and round-off errors if you draw the body oriented as the screen. For some post-processing is is also useful to have horizontal bodies.
+
+## Troubleshooting
+
+### Terminal lacking interactivity
+
+You can use `rlwrap` tool that adds readline functionality to any program:
+
+```bash
+# Install rlwrap (if not already installed)
+sudo yum install rlwrap  # RHEL/CentOS
+sudo apt install rlwrap  # Debian/Ubuntu
+
+# Run Fluent with readline support
+rlwrap fluent 3d -g
+
+# Or create an alias
+alias fluent-rl='rlwrap fluent'
+```

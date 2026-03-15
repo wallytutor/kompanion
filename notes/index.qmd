@@ -20,11 +20,74 @@ The other part of the nightmare concerns *PortableApps*: you can't simply trust 
 
 ### Before you start
 
-The minimal Kompanion setup includes a Python and Rust environment, Git version control and Visual Studio code. If that's all you need, simply open a PowerShell terminal (preferred over the legacy *Windows PowerShell*) at this directory and run `.\kompanion.ps1` (or `.\kompanion.ps1 -RebuildOnStart` if the first run fails) to install the defaults. In most cases this will work out of the box, as the links for these tools are from well known sources and are generally not filtered by corporate firewalls. If that fails, you might need to build Kompanion elsewhere and drop it in a USB drive to transfer to your workstation.
+The minimal Kompanion setup includes:
+
+- Visual Studio Code
+- Python
+- Git
+- 7-Zip
+- Curl
+
+If that's all you need, simply open a PowerShell terminal (preferred over the legacy *Windows PowerShell*) at this directory and run `.\kompanion.ps1` (or `.\kompanion.ps1 -RebuildOnStart` if the first run fails) to install the defaults. In most cases this will work out of the box, as the links for these tools are from well known sources and are generally not filtered by corporate firewalls. If that fails, you might need to build Kompanion elsewhere and drop it in a USB drive to transfer to your workstation.
 
 Installing the basic setup before tweaking the packages you need is a good choice, as generally you will have no proper code editor (other than the trashy Notepad) to configure `kompanion.json` file, as described in what follows. Also, if there are any errors, a minimal configuration will produce less messages and it will be easier to debug.
 
 After succeding the preliminary installation, you can start tweaking the packages you need. For that, run `.\kompanion.ps1 -RunVsCode` from this directory. That will start VSCode with the current project open. Under `.kompanion` directory you will find a `kompanion-sample.json` which allows one to configure packages to be installed. Copy this file and rename it to `kompanion.json`, where you can play with the `true/false` flags for selecting packages.  After saving the file run `.\kompanion.ps1 -RebuildOnStart` once again and wait for completion.
+
+```{python}
+from IPython.display import HTML
+import pandas as pd
+import json
+
+
+def set_width(width):
+    return lambda x: f'<div style="width:{width}px">{x}</div>'
+
+
+def tabulate(data):
+    data = dict(sorted(data.items(), key=lambda x: x[0]))
+
+    df = pd.DataFrame({
+        "Tool": data.keys(),
+        "Install": data.values()
+    })
+
+    html = df.to_html(
+        index      = False,
+        escape     = False,
+        formatters = {
+            "Tool":    set_width(150),
+            "Install": set_width(150),
+        }
+    )
+
+    return HTML(f"<div style=\"width: 300px;\">{html}</div>")
+
+
+with open("../.kompanion/kompanion-sample.json") as f:
+    data = json.load(f)
+    base = tabulate(data["base"])
+    lang = tabulate(data["lang"])
+    simu = tabulate(data["simu"])
+```
+
+- General purpose tools:
+
+```{python}
+base
+```
+
+- Programming languages:
+
+```{python}
+lang
+```
+
+- Scientific libraries:
+
+```{python}
+simu
+```
 
 **Note:** please notice that if some package fails to download, *e.g.* firewall issues, you might need to manually clean the respective folder under `.kompanion\bin` before running again. Simply delete the directory named after the failed package. You may also need to delete the file named after that package under `.kompanion\temp` as there be a partial download there.
 
@@ -67,6 +130,12 @@ if (Test-Path $env:KOMPANION_SOURCE) {
 ```
 
 Now all PowerShell sessions will automatically source Kompanion, and you can start using it right away. You can run `Kode` from any directory to open the root of this repository in VSCode.
+
+### Known limitations
+
+- Windows MPI support (as required by SU2 in their distributed version) still requires administrator rights, as you need to install the [Microsoft MPI](https://learn.microsoft.com/en-us/message-passing-interface/microsoft-mpi).
+
+- You cannot pin the editor to the taskbar (because of how sourcing environment works), but you can create a shortcut to `kode.vbs` in your desktop.
 
 ## Building the notes
 

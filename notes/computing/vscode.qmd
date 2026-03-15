@@ -1,0 +1,79 @@
+# Visual Studio Code {#sec-vscode}
+
+If you are reading this, you are probably using [VS Code](https://code.visualstudio.com/) for the first time or need a refresher! VS Code is Microsoft's open source text editor that has become the most popular editor in the past decade. It is portable (meaning it works in Windows, Linux, and Mac) and relatively light-weight (it won't use all you RAM as some proprietary tools would do). If you are doing Data Science or wish a more interactive environment, Posit has made a spin-off VS Code called [Positron](https://positron.posit.co/) that is very similar to use and comes bundled with a few extra functionalities.
+
+There are a few shortcuts you might want to keep in mind for using this tool in an efficient manner:
+
+-   `Ctrl+J`: show/hide the terminal
+-   `Ctrl+B`: show/hide the project tree
+-   `Ctrl+Shift+V`: display this file in rendered mode
+-   `Ctrl+Shift+P`: access the command pallet
+-   `Ctrl+K Ctrl+T`: change color theme
+-   `Alt+Z`: toggle column wrapping
+
+A few more tips concerning the terminal:
+
+-   `Ctrl+L` gives you a clean terminal (also works inside Julia prompt)
+-   `Ctrl+D` breaks a program execution (*i.e.* use to quit Julia prompt)
+
+If you copied a command from a tutorial, you **CANNOT** use `Ctrl+V` to paste it into the terminal; in Windows simply right-click the command prompt and it will paste the copied contents. Linux users can `Ctrl+Shift+V` instead.
+
+Notice that `Ctrl+M` will toggle the visibility of the integrated terminal; if you accidentally press it, autocompletion will stop working in terminal. Just press it again and normal behavior will be recovered.
+
+## VS Code extensions
+
+VS Code supports a number of extensions to facilitate coding and data analysis, among other tasks. Local (user-created) extensions can be manually installed by placing their folder under `%USERPROFILE%/.vscode/extensions` or in the equivalent directory documented [here](https://code.visualstudio.com/docs/editor/extension-marketplace#_where-are-extensions-installed). Below you find my recommended extensions for different purposes and languages.
+
+The following extensions are recommended.
+
+-   General purpose:
+
+    -   [ms-vscode.PowerShell](https://marketplace.visualstudio.com/items?itemName=ms-vscode.PowerShell)
+    -   [ms-vscode-remote.remote-ssh](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-ssh)
+    -   [GitHub.copilot](https://marketplace.visualstudio.com/items?itemName=GitHub.copilot)
+    -   [ukoloff.win-ca](https://marketplace.visualstudio.com/items?itemName=ukoloff.win-ca)
+    -   [vscode-icons-team.vscode-icons](https://marketplace.visualstudio.com/items?itemName=vscode-icons-team.vscode-icons)
+    -   [ritwickdey.LiveServer](https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer)
+    -   [dnut.rewrap-revived](https://marketplace.visualstudio.com/items?itemName=dnut.rewrap-revived)
+
+-   Python development:
+
+    -   [ms-python.python](https://marketplace.visualstudio.com/items?itemName=ms-python.python)
+    -   [ms-toolsai.jupyter](https://marketplace.visualstudio.com/items?itemName=ms-toolsai.jupyter)
+    -   [tamasfe.even-better-toml](https://marketplace.visualstudio.com/items?itemName=tamasfe.even-better-toml)
+    -   [Pyrefly](https://marketplace.visualstudio.com/items?itemName=meta.pyrefly)
+    -   [Ruff](https://marketplace.visualstudio.com/items?itemName=charliermarsh.ruff)
+
+-   Other languages support
+
+    -   [C/C++](https://marketplace.visualstudio.com/items?itemName=ms-vscode.cpptools)
+    -   [Erlang](https://marketplace.visualstudio.com/items?itemName=pgourlain.erlang)
+    -   [Gmsh](https://marketplace.visualstudio.com/items?itemName=Bertrand-Thierry.vscode-gmsh)
+    -   [Julia](https://marketplace.visualstudio.com/items?itemName=julialang.language-julia)
+    -   [LaTeX Workshop](https://marketplace.visualstudio.com/items?itemName=James-Yu.latex-workshop)
+    -   [Matlab](https://marketplace.visualstudio.com/items?itemName=MathWorks.language-matlab)
+    -   [Modern Fortran](https://marketplace.visualstudio.com/items?itemName=fortran-lang.linter-gfortran)
+    -   [Quarto](https://marketplace.visualstudio.com/items?itemName=quarto.quarto)
+    -   [Ruby](https://marketplace.visualstudio.com/items?itemName=Shopify.ruby-extensions-pack)
+
+-   Data inspection:
+
+    -   [Data Wrangler](https://marketplace.visualstudio.com/items?itemName=ms-toolsai.datawrangler)
+    -   [Excel Viewer](https://marketplace.visualstudio.com/items?itemName=GrapeCity.gc-excelviewer)
+    -   [Rainbow CSV](https://marketplace.visualstudio.com/items?itemName=mechatroner.rainbow-csv)
+
+-   VS Code themes:
+
+    -   [lakshits11.ayu-monokai](https://marketplace.visualstudio.com/items?itemName=lakshits11.ayu-monokai)
+    -   [cameronbieganek.julia-color-themes](https://marketplace.visualstudio.com/items?itemName=cameronbieganek.julia-color-themes)
+    -   [GitHub.github-vscode-theme](https://marketplace.visualstudio.com/items?itemName=GitHub.github-vscode-theme)
+
+I have also developed a few (drag-and-drop) extensions; in the future I plan to provided them through the extension manager.
+
+-   [wallytutor/elmer-sif-vscode: VS Code extension for Elmer Multiphysics SIF](https://github.com/wallytutor/elmer-sif-vscode)
+
+A few tips for installing extensions:
+
+- If installing local extensions (such as *elmer-sif-vscode*), consider using [Developer: Install Extension from Location](https://github.com/microsoft/vscode/issues/178667#issuecomment-1495625943) instead of placing it under `.vscode/extensions` manually.
+
+- For installing extensions from within a VSCode terminal, rather than the main executable one must use `%VSCODE_HOME%\bin\Code.cmd`. Currently, Visual Studio Code's command-line interface doesn't directly support installing extensions from a local directory without packaging them into .vsix files. The recommended method is to package your extension into a .vsix file using vsce and then install it.

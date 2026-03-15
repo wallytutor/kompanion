@@ -1,0 +1,221 @@
+# Setup from TUI
+
+## Configuration
+
+```scheme
+/file/set-batch-options
+    no ; Do you want to confirm overwrite? [yes]
+    no ; Do you want to exit on error? [no]
+    no ; Do you want to hide questions? [no]
+```
+
+## Loading and checking a mesh
+
+```scheme
+; This is a comment (starting by a semi-colon).
+/file/read-case "domain/tunnel.msh.h5" ()
+/mesh/check
+/mesh/mesh-info 0
+
+; Write the case (or overwrite if existing)
+/file/write-case "tunnel-model.cas.h5" ()
+```
+
+## Merging zones
+
+```scheme
+/mesh/modify-zones/merge-zones
+	block
+    block:2
+    block:3
+    ()
+```
+
+## Handling named expressions
+
+These are really bad examples; as stated in the beginning, for constant values it is better to use plain Scheme definitions. _TODO_ add actual useful examples here:
+
+```scheme
+/define/named-expressions/add "diam"  definition "0.01 [m]"       parameter yes ()
+/define/named-expressions/add "dens"  definition "1.29 [kg/m^3]"  parameter no  ()
+/define/named-expressions/add "visc"  definition "1.84 [Pa*s]"    parameter no  ()
+/define/named-expressions/add "theta" definition "25 [deg]"       parameter no  ()
+/define/named-expressions/export-to-tsv "expressions.tsv" ()
+```
+
+## Defining operating conditions
+
+```scheme
+/define/operating-conditions/gravity yes
+    "0 [m/s^2]"
+    "-cos(theta) * 9.81 [m/s^2]"
+    "-sin(theta) * 9.81 [m/s^2]"
+```
+
+## Setting up some models
+
+```scheme
+; Select a viscous model
+/define/models/viscous/ke-realizable yes
+/define/models/viscous/kw-sst yes
+
+; Activate DPM calculations
+/define/models/dpm/interaction/coupled-calculations yes
+/define/models/dpm/interaction/dpm-iteration-interval 10
+/define/models/dpm/options/two-way-coupling yes
+```
+
+## Modify materials
+
+```scheme
+(define gas-rho 1.29)
+
+/define/materials/change-create "air" "air"
+    yes                  ; change Density? [no]
+    constant gas-rho     ; Density
+    no                   ; change Cp (Specific Heat)? [no]
+    no                   ; change Thermal Conductivity? [no]
+    yes                  ; change Viscosity? [no]
+    expression "gas_mu"  ; Viscosity
+    no                   ; change Molecular Weight? [no]
+    no                   ; change Thermal Expansion Coefficient? [no]
+    no                   ; change Speed of Sound? [no]
+```
+
+## Setting boundary conditions
+
+```scheme
+/define/boundary-conditions/set/mass-flow-inlet
+    "inlet"  () mass-flow no 1.0  ()
+
+/define/boundary-conditions/set/mass-flow-inlet
+    "inlet"  () mass-flow no "mdot_inlet"  ()
+
+/define/boundary-conditions/set/wall "gluish-wall" ()
+    dpm-bc-type yes trap ()
+
+/define/boundary-conditions/modify-zones/zone-type
+    "environment-entry" wall ()
+```
+
+## Creating a DPM injection
+
+```scheme
+(define xc 0.0)
+(define yc 1.0)
+(define zc 0.2)
+
+(define fiber-mdot (/ 200 3600))
+(define fiber-diam 0.0005)
+(define fiber-streams 50)
+```
+
+- Using `group`:
+
+```scheme
+/define/models/dpm/injections/create-injection/fibers
+    no            ; Particle type [inert]: Change current value? [no]
+    yes           ; Injection type [single]: Change current value? [no]
+    group         ; Injection type [single]>
+    no            ; Injection Material [anthracite]: Change current value? [no]
+    fiber-streams ; Number of Streams [2]
+    yes           ; Stochastic Tracking? [no]
+    yes           ; Random Eddy Lifetime? [no]
+    1             ; Number of Tries [1]
+    0.15          ; Time Scale Constant [0.15]
+    no            ; Modify Laws? [no]
+    no            ; Set user defined initialization function? [no]
+    no            ; Cloud Tracking? [no]
+    no            ; Rosin Rammler diameter distribution? [no]
+    -0.01         ; First Point X-Position (in [m]) [0]
+    0.01          ; Last Point X-Position (in [m]) [0]
+    yc            ; First Point Y-Position (in [m]) [0]
+    yc            ; Last Point Y-Position (in [m]) [0]
+    zc            ; First Point Z-Position (in [m]) [0]
+    zc            ; Last Point Z-Position (in [m]) [0]
+    0             ; First Point X-Velocity (in [m/s]) [0]
+    0             ; Last Point X-Velocity (in [m/s]) [0]
+    0             ; First Point Y-Velocity (in [m/s]) [0]
+    0             ; Last Point Y-Velocity (in [m/s]) [0]
+    0             ; First Point Z-Velocity (in [m/s]) [0]
+    0             ; Last Point Z-Velocity (in [m/s]) [0]
+    fiber-diam    ; First Point Diameter (in [m]) [0.0001]
+    fiber-diam    ; Last Point Diameter (in [m]) [0.0001]
+    fiber-mdot    ; First Point Flow Rate (in [kg/s]) [9.999999999999999e-21]
+    fiber-mdot    ; Last Point Flow Rate (in [kg/s]) [9.999999999999999e-21]
+```
+
+- Using `solid-cone`:
+
+```scheme
+/define/models/dpm/injections/create-injection/fibers
+    no            ; Particle type [inert]: Change current value? [no]
+    yes           ; Injection type [single]: Change current value? [no]
+    solid-cone    ; Injection type [single]>
+    no            ; Injection Material [anthracite]: Change current value? [no]
+    fiber-streams ; Number of Streams [2]
+    yes           ; Stochastic Tracking? [no]
+    yes           ; Random Eddy Lifetime? [no]
+    1             ; Number of Tries [1]
+    0.15          ; Time Scale Constant [0.15]
+    no            ; Modify Laws? [no]
+    no            ; Set user defined initialization function? [no]
+    no            ; Cloud Tracking? [no]
+    no            ; Rosin Rammler diameter distribution? [no]
+    xc            ; X-Position (in [m]) [0]
+    yc            ; Y-Position (in [m]) [0]
+    zc            ; Z-Position (in [m]) [0]
+    fiber-diam    ; Diameter (in [m]) [0.0001] 454.28e-06
+    0             ; Azimuthal Start Angle (in [deg]) [0]
+    360           ; Azimuthal Stop Angle (in [deg]) [360.0000005729578]
+    0             ; X-Axis [0]
+    -1            ; Y-Axis [0]
+    0             ; Z-Axis [1]
+    0             ; Velocity Magnitude (in [m/s]) [0]
+    2             ; Cone Half Angle (in [deg]) [0]
+    0.01          ; Outer Radius (in [m]) [0]
+    fiber-mdot    ; Total Flow Rate (in [kg/s]) [9.999999999999999e-21]
+```
+
+- Using `surface`:
+
+```scheme
+/define/models/dpm/injections/create-injection/fibers
+    no           ; Particle type [inert]: Change current value? [no]
+    yes          ; Injection type [single]: Change current value? [no]
+    surface      ; Injection type [single]>
+    no           ; Injection Material [anthracite]: Change current value? [no]
+    injection () ; Surface(1) [()] injection ()
+    no           ; Scale Flow Rate by Face Area [no]
+    yes          ; Use Face Normal for Velocity Components [no]
+    yes          ; Stochastic Tracking? [no]
+    yes          ; Random Eddy Lifetime? [no]
+    1            ; Number of Tries [1]
+    0.15         ; Time Scale Constant [0.15]
+    no           ; Modify Laws? [no]
+    no           ; Set user defined initialization function? [no]
+    no           ; Cloud Tracking? [no]
+    no           ; Rosin Rammler diameter distribution? [no]
+    fibers-diam  ; Diameter (in [m]) [0.0001]
+    0            ; Velocity Magnitude (in [m/s]) [0]
+    fibers-mdot  ; Total Flow Rate (in [kg/s]) [9.999999999999999e-21]
+```
+
+```scheme
+/define/materials/change-create/anthracite "fibers" yes constant 2800 no yes
+
+/define/models/dpm/injections/properties/set/pick-injections-to-set
+    no     ; List all available injections before picking one or more of them?
+    fibers ; pick injections:(1) [()]
+    ()     ; pick injections:(2) [()]
+    no     ; Review list of picked injections?
+
+/define/models/dpm/injections/injection-properties/set/physical-models
+    drag-parameters nonspherical 0.1
+```
+
+## Saving the case
+
+```scheme
+/file/write-case-data "model-setup.cas.h5" yes
+```

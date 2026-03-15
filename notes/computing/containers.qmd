@@ -1,0 +1,267 @@
+# Using containers {#sec-using-containers}
+
+Containers allow for reproducible workflows that can be shared among different users and computing environments. They encapsulate applications and their dependencies, ensuring consistent behavior across various systems. This is particularly useful in scientific computing, where complex software stacks are common. Keeping the focus on open source tools, this section introduces two popular containerization technologies: [Podman](https://podman.io/) and [Apptainer](https://apptainer.org/).
+
+For isolating applications and still allow a nice user-space interaction, mixing both tools is great approach; one first creates and dump a container with `podman`, then converts it to Singularity format with `apptainer` for portable deployment. Installation instructions for both tools can be found on their respective websites; for `podman` the package manager is often the way to go, while for `apptainer` downloading pre-compiled binaries is usually the easiest path. The tool started at [Lawrence Berkeley National Laboratory](https://www.lbl.gov/) can be [downloaded](https://github.com/apptainer/apptainer/releases) for several Linux systems and deployed locally.
+
+Under Debian (or its variants, as Ubuntu), navigate to the download directory and install with the following, taking care to replace the right version (check the repository above for the right version and possible name changes or alternative versions):
+
+``` bash
+version="1.4.4"
+url="https://github.com/apptainer/apptainer/releases/download"
+pkg="apptainer_${version}_amd64.deb"
+
+wget "${url}/v${version}/${pkg}"
+sudo apt install fakeroot
+sudo dpkg -i ${pkg}
+```
+
+Below we summarize the most relevant commands and workflows for daily use.
+
+## Containerfile creation
+
+*WiP*: a section on how to create a Containerfile should be added here.
+
+## Using Podman
+
+In the open source community [podman](https://podman.io/) takes the place of [docker](https://www.docker.com/) for the creation of application containers. It mimics the commercial software to allow developers work with both tools *almost* interchangeably. It is not uncommon to find people creating aliases of `docker` in their sandbox environments to point to their `podman` executable (some Linux distributions even have packages dedicated to this automatic override). One must be aware that although the command interfaces are very similar, they are not the *exactly* same and advance usage requires mastering each of them individually.
+
+The following summarizes some daily life commands with `podman`.
+
+-   List available images in a local machine:
+
+``` bash
+podman images
+```
+
+-   Run image `<img>` interactively using bash:
+
+``` bash
+podman run -it '<img>' /bin/bash
+```
+
+-   Run image exposing port `<container>` to host at `<host>`:
+
+``` bash
+podman run -p '<container>:<host>' '<img>'
+```
+
+-   Dump image `<img>` to `<img>.tar` for portability:
+
+``` bash
+podman save -o '<img>.tar' '<img>'
+```
+
+-   List all available containers (there might be external/hidden, so use `-a`):
+
+``` bash
+podman container ls -a
+```
+
+-   Remove a given container by ID (only the first 2-3 characters of ID are required):
+
+``` bash
+podman container rm '<ID>'
+```
+
+-   Remove a given image by ID:
+
+``` bash
+podman rmi '<ID>'
+# podman image rm '<ID>'
+```
+
+-   Clean all the cache:
+
+``` bash
+podman builder prune
+```
+
+## Podman with GPU
+
+::: {.callout-warning title="WSL not supported"}
+Notice that `podman` GPU support will not work on WSL. In that case you need to use the actual [docker](https://docs.docker.com/engine/install/ubuntu/); please refer to the next section for details.
+:::
+
+For supporting GPU (NVidia) you need to install `nvidia-container-toolkit` first:
+
+``` bash
+NVIDIA_BASE="https://nvidia.github.io/libnvidia-container"
+NVIDIA_GPG="/usr/share/keyrings/nvidia-container-toolkit-keyring.gpg"
+
+curl -fsSL "${NVIDIA_BASE}/gpgkey" | sudo gpg --dearmor -o ${NVIDIA_GPG}
+curl -s -L "${NVIDIA_BASE}/stable/deb/nvidia-container-toolkit.list" \
+    | sed "s#deb https://#deb [signed-by=${NVIDIA_GPG}] https://#g"  \
+    | sudo tee /etc/apt/sources.list.d/nvidia-container-toolkit.list
+
+sudo apt-get update
+sudo apt-get install -y nvidia-container-toolkit
+```
+
+The Achiles heel is the configuration below, that might break from times to times:
+
+``` bash
+sudo nvidia-ctk runtime configure --runtime=podman
+sudo systemctl restart podman
+```
+
+::: {.callout-tip title="Some tips for fixing it"}
+First inspect if `podman` is using `crun` instead of `runc`; the NVIDIA hook will not attach to `crun`.
+
+``` bash
+podman info --format '{{.Host.OCIRuntime}}'
+```
+
+If that is the case edit `/etc/containers/containers.conf` by changing the engine as follows:
+
+``` ini
+[engine]
+runtime = "runc"
+```
+
+You mignt also need to install `runc` before restarting `podman`:
+
+``` bash
+sudo apt-get install -y runc
+sudo systemctl restart podman
+sudo systemctl status podman
+```
+
+Maybe also consider reinstalling `nvidia-container-toolkit`:
+
+``` bash
+sudo apt-get purge nvidia-container-toolkit
+sudo apt-get update && sudo apt-get install -y nvidia-container-toolkit
+```
+:::
+
+Now you can test with an image matching your driver version (change below):
+
+``` bash
+podman run --rm -it \
+  --security-opt=label=disable \
+  --hooks-dir=/usr/share/containers/oci/hooks.d \
+  docker.io/nvidia/cuda:12.6.3-cudnn-runtime-ubuntu24.04 \
+  bash
+```
+
+## Sidenote on Docker
+
+As we saw in the previous section, sometimes we are obliged to fall back to `docker`. In general the CLI of both `docker` and `podman` are quite similar (at least with regards to what was presented in the introduction). When working with `docker` a first thing you might want to to is enable *rootless* containers by adding your own user name to the `docker` group:
+
+``` bash
+sudo usermod -aG docker $USER
+```
+
+Once done, you will need to close and restart WSL or your shell session (in case of native Linux). That will allow containers to be run without rights elevation.
+
+Below we illustrate the use of `--gpus` flag that allows exposing a device to the container (as a fallback to what we cannot do with `podman` in WSL). Before testing, please keep in mind that the image `IMAGE` must have the same driver version as your local machine, so locally run `nvidia-smi` to check for that then visit [NVidia docker page](https://hub.docker.com/r/nvidia/cuda) to identify the image you need.
+
+``` bash
+IMAGE="docker.io/nvidia/cuda:12.6.3-cudnn-runtime-ubuntu24.04"
+docker run --gpus all ${IMAGE} nvidia-smi
+```
+
+Sometimes you might encounter a situation where there is no possibility to change the host of an application running in a container, *i.e.* it binds only to `localhost/127.0.0.1`, so port forwarding in *bridge* mode is not an option. For instance, you need to build [ParticleAnalyzer](https://github.com/rybakov-ks/ParticleAnalyzer.git) yourself to have it modified to run from a container. In that case you can add the `--network host` option without port mapping so that the same local network is shared. That option is a security issue and must be avoided.
+
+::: {.callout-warning title="Docker on Rocky Linux 9"}
+For installing `docker` on Rocky Linux 9, follow the steps below:
+
+``` bash
+dnf check-update
+dnf config-manager \
+    --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+
+dnf install docker-ce docker-ce-cli containerd.io
+
+systemctl start docker
+systemctl status docker
+systemctl enable docker
+
+# Optional : allow non-root user to run docker commands
+# usermod -aG docker $USER
+```
+
+To enable GPU support with `docker` on Rocky Linux 9, install Nvidia container toolkit as follows:
+
+``` bash
+toolkit="https://nvidia.github.io/libnvidia-container/stable/rpm/nvidia-container-toolkit.repo"
+curl -s -L $toolkit | tee /etc/yum.repos.d/nvidia-container-toolkit.repo
+
+dnf install -y nvidia-container-toolkit
+
+nvidia-ctk runtime configure --runtime=docker
+systemctl restart docker
+```
+:::
+
+## Using Apptainer
+
+Using `podman` locally is great, but packaging redistributable containers for reuse in HPC is much smoother with [Apptainer](https://apptainer.org/). Although Apptainer has its own image scripting system through [*definition files*](https://apptainer.org/docs/user/latest/definition_files.html), personal experience has shown that the workflow is much smoother by generating container files and then converting them to Singularity format as explained above.
+
+There reason is that container files generate intermediate check-points from which they will continue the build if some failure is encountered, *i.e.* each `RUN` command in a container will generate a partial image.
+
+When working with Apptainer definition files, failures imply full rebuild of the image, what might become extremely boring when trying to compile new code. A workaround is to use a sequence of definition files, one importing from the dump of the previous one, but that not only will generate a large size of temporary dumps as it will become difficult to manage.
+
+After getting excited by the Apptainer definition files because they do not need chaining of commands with a `&& \` to make a shell block, I personally gave up on them after loosing a few days of my life recompiling again and again... so for now I stick with the container creation and conversion workflow discussed in more detail below.
+
+-   Converting a local `podman` *tar-dump* into a Singularity image:
+
+``` bash
+apptainer build "<img>.sif" "docker-archive://<img>.tar"
+```
+
+-   Running an `apptainer` image as a non-root user is as simple as:
+
+``` bash
+apptainer run '<img>.sif'
+```
+
+-   Another option with Apptainer is to run instances on the background, as follows:
+
+``` bash
+# Provide the instance name:
+instancename='<file-name>'
+
+# Start instance on the background:
+apptainer instance start -B $PWD "${instancename}.sif" "${instancename}"
+
+# Enter instance in shell mode:
+apptainer shell "instance://${instancename}"
+
+# Stop instance after working:
+apptainer stop "${instancename}"
+```
+
+Other useful/relevant commands in this context are `apptainer instance list` and `apptainer instance stop <instance-name>`. In case additional packages may be required after the instance creation, one can use a temporary file system with `--writable-tmpfs`. For configuring its maximum size, check the [docs](https://apptainer.org/docs/admin/latest/configfiles.html#session-directory-and-system-mounts) before modifying `/etc/apptainer/apptainer.conf` parameter `sessiondir max size`.
+
+Since `apptainer` makes use of *user space*, sourcing of applications is not done as root, so one must edit add to their `~/.bashrc` if path configuration is desired and re-source that file when activating a container. For instance, the required environment variables for #OpenFOAM are provided by `FOAM_SOURCE` file given below; in the *host system* outside the container it does not exist, so adding a test in `~/.bashrc` is required. Once you activate the container with `apptainer run <image-name>.sif`, by calling `source ~/.bashrc` the environment will be properly set.
+
+``` bash
+FOAM_SOURCE=/opt/openfoam13/OpenFOAM-13/etc/bashrc
+
+[[ -f ${FOAM_SOURCE} ]] && source ${FOAM_SOURCE}
+```
+
+Another approach is to execute the SIF image once, source the required variables required in the container, dump `env > draft.env`, [edit the file](https://github.com/wallytutor/learning-by-teaching/blob/main/containers/clean-env.py) as required and then wrap a call with contextualized environment as:
+
+``` bash
+function openfoam12() {
+    FOAM_NAME=$HOME/Applications/openfoam12-rockylinux9
+    apptainer run --cleanenv --env-file ${FOAM}.env ${FOAM}.sif
+}
+```
+
+## Build workflow
+
+Using both tools can be roughly automated by generating a `podman` image, dumping it into a portable format, then converting to Singularity format. Below we illustrate the workflow for an arbitrary container file; this is summarized in a bash script [containerfile.sh](https://github.com/wallytutor/notes-book/blob/main/chap-computing/containerfile.sh) which makes use of [Containerfile](https://github.com/wallytutor/notes-book/blob/main/chap-computing/Containerfile).
+
+Now you can move the SIF image to another computer (for instance, you prepared this in a PC with access to the Internet for later using it in an isolated HPC), launch a terminal and run:
+
+``` bash
+apptainer run -B $PWD '/path/to/project/image.sif'
+```
+
+Notice that `apptainer` does not resolve symbolic links, so `$PWD` above will fail if trying to run from a path that contains a link; navigate to the actual directory containing the project before running the image to get your files visible.
+
+**Note:** use `apptainer run` when you want to execute the container's default application or task; on the other hand, use `apptainer shell` when you need an interactive session to explore or debug the container.

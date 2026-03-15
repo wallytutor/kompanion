@@ -125,23 +125,35 @@ $GIT_MAJORDOME = "https://github.com/wallytutor/python-majordome.git"
 #endregion: default_config
 
 #region: kompanion
+# Global list of environment variable names created by this script
+$KOMPANION_CREATED_ENVS = New-Object System.Collections.ArrayList
+
 function Start-KompanionMain {
     # Fake user profile to avoid applications access:
-    $env:USERPROFILE    = "$PSScriptRoot"
-    $env:APPDATA        = "$PSScriptRoot\AppData"
+    Set-KompanionEnvVar -Name "USERPROFILE" `
+        -Value "$PSScriptRoot"
+    Set-KompanionEnvVar -Name "APPDATA" `
+        -Value "$PSScriptRoot\AppData"
 
     # Path to the root directory:
-    $env:KOMPANION_DIR = $PSScriptRoot
-    Write-Good "> Starting Kompanion from $env:KOMPANION_DIR"
+    Set-KompanionEnvVar -Name "KOMPANION_DIR" `
+        -Value "$PSScriptRoot"
 
     # Path to store user data and configuration:
-    $env:KOMPANION_DOT  = "$env:KOMPANION_DIR\.kompanion"
+    Set-KompanionEnvVar -Name "KOMPANION_DOT" `
+        -Value "$env:KOMPANION_DIR\.kompanion"
 
     # Path to automatic subdirectories:
-    $env:KOMPANION_BIN  = "$env:KOMPANION_DOT\bin"
-    $env:KOMPANION_LOGS = "$env:KOMPANION_DOT\logs"
-    $env:KOMPANION_TEMP = "$env:KOMPANION_DOT\temp"
-    $env:KOMPANION_REPO = "$env:KOMPANION_DIR\repos"
+    Set-KompanionEnvVar -Name "KOMPANION_BIN" `
+        -Value "$env:KOMPANION_DOT\bin"
+    Set-KompanionEnvVar -Name "KOMPANION_LOGS" `
+        -Value "$env:KOMPANION_DOT\logs"
+    Set-KompanionEnvVar -Name "KOMPANION_TEMP" `
+        -Value "$env:KOMPANION_DOT\temp"
+    Set-KompanionEnvVar -Name "KOMPANION_REPO" `
+        -Value "$env:KOMPANION_DIR\repos"
+
+    Write-Good "> Starting Kompanion from $env:KOMPANION_DIR"
 
     # Ensure important directories exist:
     Initialize-EnsureDirectory $env:KOMPANION_BIN
@@ -164,6 +176,8 @@ function Start-KompanionMain {
     Write-Output "KOMPANION_BIN       $env:KOMPANION_BIN"
     Write-Output "KOMPANION_LOGS      $env:KOMPANION_LOGS"
     Write-Output "KOMPANION_TEMP      $env:KOMPANION_TEMP"
+
+    Save-KompanionEnvVarsToFile
 
     # Run Kompanion VS Code instance
     if ($RunVsCode) {
@@ -237,6 +251,39 @@ function Start-KompanionConfigure {
     Start-KompanionBaseConfigure $Config.base
     Start-KompanionSimuConfigure $Config.simu
     Start-KompanionLangConfigure $Config.lang
+}
+
+function Set-KompanionEnvVar {
+    param(
+        [Parameter(Mandatory=$true)][string]$Name,
+        [Parameter(Mandatory=$true)][string]$Value
+    )
+
+    # Set the process environment variable (dynamic name)
+    Set-Item -Path ("env:$Name") -Value $Value
+
+    # Track the variable name if not already tracked
+    if (-not ($KOMPANION_CREATED_ENVS.Contains($Name))) {
+        [void]$KOMPANION_CREATED_ENVS.Add($Name)
+    } else {
+        $val = (Get-Item -Path ("env:$Name")).Value
+        Write-Warn "Environment variable '$Name' is being overwritten."
+        Write-Warn "- Previous value: '$val'"
+        Write-Warn "- New value: '$Value'"
+    }
+}
+
+function Save-KompanionEnvVarsToFile {
+    $path = "$env:KOMPANION_DOT\envs.ps1"
+    $lines = @()
+
+    foreach ($name in $GLOBAL:KOMPANION_CREATED_ENVS) {
+        # TODO add formatting to align the equal signs.
+        $val = (Get-Item -Path ("env:$name") -ErrorAction SilentlyContinue).Value
+        $lines += "`$env:$name = '$val'"
+    }
+
+    $lines | Set-Content -Path $Path -Encoding UTF8
 }
 
 function KompanionSource {
@@ -875,9 +922,15 @@ function Start-KompanionSimuConfigure {
 
 #region: install_configure_base
 function Invoke-ConfigureVsCode {
-    $env:VSCODE_HOME       = "$env:KOMPANION_BIN\vscode"
-    $env:VSCODE_EXTENSIONS = "$env:KOMPANION_DIR\.vscode\extensions"
-    $env:VSCODE_SETTINGS   = "$env:KOMPANION_DIR\.vscode\user-data"
+    Write-Head "* Configuring Visual Studio Code..."
+
+    Set-KompanionEnvVar -Name "VSCODE_HOME" `
+        -Value "$env:KOMPANION_BIN\vscode"
+    Set-KompanionEnvVar -Name "VSCODE_EXTENSIONS" `
+        -Value "$env:KOMPANION_DIR\.vscode\extensions"
+    Set-KompanionEnvVar -Name "VSCODE_SETTINGS" `
+        -Value "$env:KOMPANION_DIR\.vscode\user-data"
+
     Initialize-AddToPath -Directory "$env:VSCODE_HOME"
 }
 
@@ -894,12 +947,20 @@ function Invoke-InstallVsCode {
 }
 
 function Invoke-ConfigureGit {
-    $env:GIT_HOME = "$env:KOMPANION_BIN\git"
+    Write-Head "* Configuring Git..."
+
+    Set-KompanionEnvVar -Name "GIT_HOME" `
+        -Value "$env:KOMPANION_BIN\git"
+
     Initialize-AddToPath -Directory "$env:GIT_HOME\cmd"
 }
 
 function Invoke-ConfigureTabby {
-    $env:TABBY_HOME = "$env:KOMPANION_BIN\tabby"
+    Write-Head "* Configuring Tabby..."
+
+    Set-KompanionEnvVar -Name "TABBY_HOME" `
+        -Value "$env:KOMPANION_BIN\tabby"
+
     Initialize-AddToPath -Directory "$env:TABBY_HOME"
 }
 

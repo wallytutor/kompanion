@@ -2,5 +2,7 @@
 -e ../repos/majordome[full]
 
 # Specific dependencies for the notes
+casadi
+numpy
 pandas
 sympy

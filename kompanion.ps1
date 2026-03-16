@@ -126,7 +126,7 @@ $GIT_MAJORDOME = "https://github.com/wallytutor/python-majordome.git"
 
 #region: kompanion
 # Global list of environment variable names created by this script
-$KOMPANION_CREATED_ENVS = New-Object System.Collections.ArrayList
+$GLOBAL:KOMPANION_CREATED_ENVS = New-Object System.Collections.ArrayList
 
 function Start-KompanionMain {
     # Fake user profile to avoid applications access:
@@ -258,19 +258,20 @@ function Set-KompanionEnvVar {
         [Parameter(Mandatory=$true)][string]$Name,
         [Parameter(Mandatory=$true)][string]$Value
     )
-
     # Set the process environment variable (dynamic name)
     Set-Item -Path ("env:$Name") -Value $Value
 
-    # Track the variable name if not already tracked
-    if (-not ($KOMPANION_CREATED_ENVS.Contains($Name))) {
-        [void]$KOMPANION_CREATED_ENVS.Add($Name)
-    } else {
-        $val = (Get-Item -Path ("env:$Name")).Value
-        Write-Warn "Environment variable '$Name' is being overwritten."
-        Write-Warn "- Previous value: '$val'"
-        Write-Warn "- New value: '$Value'"
-    }
+    # if (-not ($KOMPANION_CREATED_ENVS.Contains($Name))) {
+    #     Write-Good "Creating `$env:$Name = '$Value'"
+    # } else {
+    #     $val = (Get-Item -Path ("env:$Name")).Value
+    #     Write-Warn "Environment variable '$Name' is being overwritten."
+    #     Write-Warn "- Previous value: '$val'"
+    #     Write-Warn "- New value: '$Value'"
+    # }
+
+    # Track the variable name in the global list to save it later:
+    [void]$GLOBAL:KOMPANION_CREATED_ENVS.Add($Name)
 }
 
 function Save-KompanionEnvVarsToFile {
@@ -988,8 +989,12 @@ function Invoke-InstallGit {
 }
 
 function Invoke-ConfigureCurl {
-    $env:CURl_HOME = "$env:KOMPANION_BIN\curl\curl-8.16.0_13-win64-mingw\bin"
-    Initialize-AddToPath -Directory "$env:CURl_HOME"
+    Write-Head "* Configuring curl..."
+
+    Set-KompanionEnvVar -Name "CURL_HOME" `
+        -Value "$env:KOMPANION_BIN\curl\curl-8.16.0_13-win64-mingw"
+
+    Initialize-AddToPath -Directory "$env:CURl_HOME\bin"
 }
 
 function Invoke-InstallCurl {
@@ -1005,7 +1010,11 @@ function Invoke-InstallCurl {
 }
 
 function Invoke-ConfigureSevenZip {
-    $env:SEVENZIP_HOME = "$env:KOMPANION_BIN\7z"
+    Write-Head "* Configuring 7-Zip..."
+
+    Set-KompanionEnvVar -Name "SEVENZIP_HOME" `
+        -Value "$env:KOMPANION_BIN\7z"
+
     Initialize-AddToPath -Directory "$env:SEVENZIP_HOME"
 
     # Legacy: prefer the one from stack if available:
@@ -1049,7 +1058,11 @@ function Invoke-InstallSevenZip {
 }
 
 function Invoke-ConfigureLessMsi {
-    $env:LESSMSI_HOME = "$env:KOMPANION_BIN\lessmsi"
+    Write-Head "* Configuring lessmsi..."
+
+    Set-KompanionEnvVar -Name "LESSMSI_HOME" `
+        -Value "$env:KOMPANION_BIN\lessmsi"
+
     Initialize-AddToPath -Directory "$env:LESSMSI_HOME"
 }
 
@@ -1066,7 +1079,11 @@ function Invoke-InstallLessMsi {
 }
 
 function Invoke-ConfigurePandoc {
-    $env:PANDOC_HOME = "$env:KOMPANION_BIN\pandoc\pandoc-3.8"
+    Write-Head "* Configuring Pandoc..."
+
+    Set-KompanionEnvVar -Name "PANDOC_HOME" `
+         -Value "$env:KOMPANION_BIN\pandoc\pandoc-3.8"
+
     Initialize-AddToPath -Directory "$env:PANDOC_HOME"
 }
 
@@ -1083,7 +1100,11 @@ function Invoke-InstallPandoc {
 }
 
 function Invoke-ConfigureJabRef {
-    $env:JABREF_HOME = "$env:KOMPANION_BIN\jabref\JabRef"
+    Write-Head "* Configuring JabRef..."
+
+    Set-KompanionEnvVar -Name "JABREF_HOME" `
+         -Value "$env:KOMPANION_BIN\jabref\JabRef"
+
     Initialize-AddToPath -Directory "$env:JABREF_HOME"
 }
 
@@ -1100,7 +1121,11 @@ function Invoke-InstallJabRef {
 }
 
 function Invoke-ConfigurePoppler {
-    $env:POPLER_HOME = "$env:KOMPANION_BIN\poppler\poppler-25.11.0\Library"
+    Write-Head "* Configuring Poppler..."
+
+    Set-KompanionEnvVar -Name "POPLER_HOME" `
+         -Value "$env:KOMPANION_BIN\poppler\poppler-25.11.0\Library"
+
     Initialize-AddToPath -Directory "$env:POPLER_HOME\bin"
     Initialize-AddToManPath -Directory "$env:POPLER_HOME\share\man"
 }
@@ -1118,7 +1143,11 @@ function Invoke-InstallPoppler {
 }
 
 function Invoke-ConfigureQuarto {
-    $env:QUARTO_HOME = "$env:KOMPANION_BIN\quarto"
+    Write-Head "* Configuring Quarto..."
+
+    Set-KompanionEnvVar -Name "QUARTO_HOME" `
+        -Value "$env:KOMPANION_BIN\quarto"
+
     Initialize-AddToPath -Directory "$env:QUARTO_HOME\bin"
 }
 
@@ -1137,8 +1166,14 @@ function Invoke-InstallQuarto {
 }
 
 function Invoke-ConfigureZettlr {
-    $env:ZETTLR_HOME = "$env:KOMPANION_BIN\zettlr"
-    $env:ZETTLR_DATA = "$env:KOMPANION_DIR\.zettlr"
+    Write-Head "* Configuring Zettlr..."
+
+    Set-KompanionEnvVar -Name "ZETTLR_HOME" `
+        -Value "$env:KOMPANION_BIN\zettlr"
+
+    Set-KompanionEnvVar -Name "ZETTLR_DATA" `
+        -Value "$env:KOMPANION_DIR\.zettlr"
+
     Initialize-AddToPath -Directory "$env:ZETTLR_HOME"
 }
 
@@ -1161,7 +1196,11 @@ function Invoke-InstallZettlr {
 }
 
 function Invoke-ConfigureDrawio {
-    $env:DRAWIO_HOME = "$env:KOMPANION_BIN\drawio"
+    Write-Head "* Configuring draw.io..."
+
+    Set-KompanionEnvVar -Name "DRAWIO_HOME" `
+        -Value "$env:KOMPANION_BIN\drawio"
+
     Initialize-AddToPath -Directory "$env:DRAWIO_HOME"
 }
 
@@ -1178,8 +1217,12 @@ function Invoke-InstallDrawio {
 }
 
 function Invoke-ConfigureNvim {
-    $env:NVIM_HOME = "$env:KOMPANION_BIN\nvim\nvim-win64\bin"
-    Initialize-AddToPath -Directory "$env:NVIM_HOME"
+    Write-Head "* Configuring Neovim..."
+
+    Set-KompanionEnvVar -Name "NVIM_HOME" `
+        -Value "$env:KOMPANION_BIN\nvim\nvim-win64"
+
+    Initialize-AddToPath -Directory "$env:NVIM_HOME\bin"
 }
 
 function Invoke-InstallNvim {
@@ -1225,8 +1268,12 @@ function Invoke-InstallMsys2 {
 }
 
 function Invoke-ConfigureInkscape {
-    $env:INKSCAPE_HOME = "$env:KOMPANION_BIN\inkscape\inkscape\bin"
-    Initialize-AddToPath -Directory "$env:INKSCAPE_HOME"
+    Write-Head "* Configuring Inkscape..."
+
+    Set-KompanionEnvVar -Name "INKSCAPE_HOME" `
+        -Value "$env:KOMPANION_BIN\inkscape\inkscape"
+
+    Initialize-AddToPath -Directory "$env:INKSCAPE_HOME\bin"
 }
 
 function Invoke-InstallInkscape {
@@ -1242,7 +1289,11 @@ function Invoke-InstallInkscape {
 }
 
 function Invoke-ConfigureMikTex {
-    $env:MIKTEX_HOME = "$env:KOMPANION_BIN\miktex"
+    Write-Head "* Configuring MikTex..."
+
+    Set-KompanionEnvVar -Name "MIKTEX_HOME" `
+         -Value "$env:KOMPANION_BIN\miktex"
+
     Initialize-AddToPath -Directory "$env:MIKTEX_HOME"
 
     $path = "$env:MIKTEX_HOME\miktex-portable.cmd"
@@ -1300,7 +1351,11 @@ function Invoke-InstallMikTex {
 }
 
 function Invoke-ConfigureNteract {
-    $env:NTERACT_HOME = "$env:KOMPANION_BIN\nteract\"
+    Write-Head "* Configuring nteract..."
+
+    Set-KompanionEnvVar -Name "NTERACT_HOME" `
+         -Value "$env:KOMPANION_BIN\nteract"
+
     Initialize-AddToPath -Directory "$env:NTERACT_HOME"
 }
 
@@ -1317,8 +1372,12 @@ function Invoke-InstallNteract {
 }
 
 function Invoke-ConfigureFfmpeg {
-    $env:FFMPEG_HOME = "$env:KOMPANION_BIN\ffmpeg\bin"
-    Initialize-AddToPath -Directory "$env:FFMPEG_HOME"
+    Write-Head "* Configuring ffmpeg..."
+
+    Set-KompanionEnvVar -Name "FFMPEG_HOME" `
+         -Value "$env:KOMPANION_BIN\ffmpeg"
+
+    Initialize-AddToPath -Directory "$env:FFMPEG_HOME\bin"
 }
 
 function Invoke-InstallFfmpeg {
@@ -1337,6 +1396,15 @@ function Invoke-InstallFfmpeg {
     Invoke-ConfigureFfmpeg
 }
 
+function Invoke-ConfigureImageMagick {
+    Write-Head "* Configuring ImageMagick..."
+
+    Set-KompanionEnvVar -Name "IMAGEMAGICK_HOME" `
+         -Value "$env:KOMPANION_BIN\imagemagick"
+
+    Initialize-AddToPath -Directory "$env:IMAGEMAGICK_HOME"
+}
+
 function Invoke-InstallImageMagick {
     $output = "$env:KOMPANION_TEMP\imagemagick.zip"
     $path   = "$env:KOMPANION_BIN\imagemagick"
@@ -1347,11 +1415,6 @@ function Invoke-InstallImageMagick {
     Invoke-DownloadIfNeeded -URL $url -Output $output
     Invoke-Uncompress7zIfNeeded -Source $output -Destination $path
     Invoke-ConfigureImageMagick
-}
-
-function Invoke-ConfigureImageMagick {
-    $env:IMAGEMAGICK_HOME = "$env:KOMPANION_BIN\imagemagick"
-    Initialize-AddToPath -Directory "$env:IMAGEMAGICK_HOME"
 }
 #endregion: install_configure_base
 

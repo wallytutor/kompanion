@@ -684,6 +684,7 @@ $$
 
 ```{python}
 %load_ext majordome_utilities.skipper
+%skipper_verbosity 0
 
 import os
 os.environ["SKIP_DRAFTS"] = "true"

@@ -1,4 +1,14 @@
-## Variational calculus
+# Variational calculus
+
+In this section we will introduce the fundamentals of variational calculus. This subject is fundamental in classical mechanics and field theories. It is also at the heart of the finite element method (FEM) for solving partial differential equations. For those interested in the former, the books by @Goldstein2001 and @Tong2025v1 are excellent resources. For the latter, the use of variational principles in the context of FEM is well covered in @Langtangen2019.
+
+These notes are intended to be self-contained and present as little details as possible, so pen and paper is recommended to follow the derivations, or if you prefer, SymPy is well suited for symbolic calculations and can be used to verify the results. Focus will be given to the ideas as discussed in the more physical of the aforementioned books by @Tong2025v1 and @Goldstein2001. These are confronted as each provides some complementary insights on *how to think* about the problem.
+
+<!-- The main idea is to find the function that minimizes (or maximizes) a given functional, which is a mapping from a space of functions to the real numbers. This is often done by finding the stationary points of the functional, which leads to the Euler-Lagrange equations. -->
+
+```{python}
+import sympy as sm
+```
 
 - Function:
 

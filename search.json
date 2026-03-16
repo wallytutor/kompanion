@@ -1231,135 +1231,299 @@
     ]
   },
   {
+    "objectID": "fvm/index.html",
+    "href": "fvm/index.html",
+    "title": "22  Finite Volume Method",
+    "section": "",
+    "text": "22.1 Diffusion equation\nIn these notes we provide a Finite Volume Method relecture to the famous The 12 steps to Navier-Stokes equations, by Lorena A. Barba and Gilbert F. Forsyth. It is not a bare translation, but a different approach to the problems with the addition of new elements, some sort of Twelve-steps to Navier Stokes rewind.\nAlso the final goal has been changed and now it is not only as reaching the implementation of Navier-Stokes equations, but learning the key ideas of finite volumes applied to other fields of interest in Materials Science. Students who are undergoing Calculus training should already meet the minimum requirements to follow this course.\nFocus will be given not only on the numerical methods, but also how a computer implementation should look like. This last point is the most distinctive point from the work upon which it is based. A vast amount of learning resources is available for scientific computing, but rare sources really provide guidance for conceiving quality and maintainable code. Here we try to contribute for better coding practices through a think-before-coding approach.\nThis part describes the implementation of diffusion using finite volume method. It is intended mainly to treat topics of interest in Materials Science, thus composition and spatial dependencies of diffusivity are a pre-requisite for any practical use case. A progressive level of complexity in the described physics will be considered. It assumes the reader is already familiar with basic concepts of diffusion in solids, much of which will be exposed in the text without further explanations.\nThe following lists the goals and status of current text:\nThe interested reader may wish to consult the work by Mehrer (2007) for more details; any Materials Scientist is also recommended at some point to check the classic works of (Onsager 1931a, 1931b).",
+    "crumbs": [
+      "Finite Volume Method",
+      "<span class='chapter-number'>22</span>  <span class='chapter-title'>Finite Volume Method</span>"
+    ]
+  },
+  {
+    "objectID": "fvm/index.html#diffusion-equation",
+    "href": "fvm/index.html#diffusion-equation",
+    "title": "22  Finite Volume Method",
+    "section": "",
+    "text": "Simple Fick’s Law with possible nonlinear behavior in one-dimension on chapter 23.\nGeneralization of Fickean diffusion to higher dimensions and other coordinate systems.\nIrreversible Thermodynamics approach for chemical potentials.\nAnisotropy of diffusivities in three-dimensional space.",
+    "crumbs": [
+      "Finite Volume Method",
+      "<span class='chapter-number'>22</span>  <span class='chapter-title'>Finite Volume Method</span>"
+    ]
+  },
+  {
+    "objectID": "fvm/index.html#convection-equation",
+    "href": "fvm/index.html#convection-equation",
+    "title": "22  Finite Volume Method",
+    "section": "22.2 Convection equation",
+    "text": "22.2 Convection equation\nUpcoming in Chapter 24!\n\n\n\n\nMehrer, Helmut. 2007. Diffusion in Solids : Fundamentals, Methods, Materials, Diffusion-Controlled Processes. Vol. 155. Springer Series in Solid-State Sciences. Springer Berlin Heidelberg. https://doi.org/10.1007/978-3-540-71488-0.\n\n\nOnsager, Lars. 1931a. “Reciprocal Relations in Irreversible Processes. i.” Physical Review 37: 405–26.\n\n\n———. 1931b. “Reciprocal relations in irreversible processes. II.” Physical Review 38: 2265–79.",
+    "crumbs": [
+      "Finite Volume Method",
+      "<span class='chapter-number'>22</span>  <span class='chapter-title'>Finite Volume Method</span>"
+    ]
+  },
+  {
+    "objectID": "fvm/diffusion-1d.html",
+    "href": "fvm/diffusion-1d.html",
+    "title": "23  Diffusion in 1-D",
+    "section": "",
+    "text": "23.1 Import toolbox\nfrom abc import ABC\nfrom sympy import symbols, init_printing\nfrom sympy import Eq as SymEq, expand, solve\nfrom pandas import DataFrame\nimport casadi as cs\nimport numpy as np\n\ninit_printing(use_latex=\"mathjax\")",
+    "crumbs": [
+      "Finite Volume Method",
+      "<span class='chapter-number'>23</span>  <span class='chapter-title'>Diffusion in 1-D</span>"
+    ]
+  },
+  {
+    "objectID": "fvm/diffusion-1d.html#introductory-fickean-diffusion",
+    "href": "fvm/diffusion-1d.html#introductory-fickean-diffusion",
+    "title": "23  Diffusion in 1-D",
+    "section": "23.2 Introductory Fickean diffusion",
+    "text": "23.2 Introductory Fickean diffusion\nAssume a simple concentration-dependent diffusion in the absence of external driving forces; in this introduction we chose to model the diffusive flux through Fick’s constitutive (first) law stated below, where \\(D\\) is the diffusion coefficient that may depend on position \\(x\\) and/or concentration \\(c\\), i.e. \\(D\\equiv{}D(x, c)\\). It states that diffusive flux of an species has the composition gradient as a driver force; the negative sign indicates that diffusion occurs from high to low concentration regions.\n\\[\nJ=-D\\dfrac{\\partial{}c}{\\partial{}x}\n\\]\nWe can anticipate here that this can be the case for simple diluted systems, but interactions between species must be considered in concentrated solutions, what is generalized by the Irreversible Thermodynamics by Onsager (1931a) and Onsager (1931b). Here we emphasize again the word model: empirical observation has led scientists to represent reality through such an approximation; different models can be used for the same physics with their applicability limited to certain scenarios. Properly selecting an applicable model is the role of the researcher/engineer, what is outside our scope here; in what follows we will focus on how to solve balance equations for a given model.\nSimply put, diffusion equation solves for a local mass balance; and mathematically, a local balance leads to a divergence operation. Following this idea, it can be shown that the time derivative of concentration \\(c\\) at one location is given by the divergence - which collapses to the spatial derivative - of the negative of mass flux given by Fick’s (first) law (or in general any other constitutive law/model describing the mass flux); sometimes this form is called Fick’s second law in the literature. Given the possible non-linearity introduced by diffusion coefficient \\(D\\), the derivative in the right-hand side is not expanded. In Cartesian coordinate system, the governing diffusion equation in one dimension writes:\n\\[\n\\dfrac{\\partial{}c}{\\partial{}t}=\n\\dfrac{\\partial{}}{\\partial{}x}\n\\left(D\\dfrac{\\partial{}c}{\\partial{}x}\\right)\n\\]\nThis is the form of the diffusion equation that is discussed in what follows.",
+    "crumbs": [
+      "Finite Volume Method",
+      "<span class='chapter-number'>23</span>  <span class='chapter-title'>Diffusion in 1-D</span>"
+    ]
+  },
+  {
+    "objectID": "fvm/diffusion-1d.html#internal-discretization",
+    "href": "fvm/diffusion-1d.html#internal-discretization",
+    "title": "23  Diffusion in 1-D",
+    "section": "23.3 Internal discretization",
+    "text": "23.3 Internal discretization\nTo solve the diffusion equation numerically, we employ the finite volume method (FVM). The first step to establish a FVM scheme consists of integrating the governing equation over a control volume \\(P\\) from \\(w\\) (west face) to \\(e\\) (east face) and over a time interval from \\(0\\) to \\(\\tau\\). The left-hand side is first integrated over time as it represents a storage term, meaning that it measures how much the average concentration changes in the control volume over the time-step. The right-hand side is a flux term, and using similar arguments its natural integration is performed over space. Also, the order of integration can be exchanged due to the smoothness assumptions considered here. For more details, please check Patankar (1980).\n\\[\n\\int_{w}^{e}\\int_{0}^{\\tau}\n\\dfrac{\\partial{}c}{\\partial{}t}\\:dt\\:dx=\n\\int_{0}^{\\tau}\\int_{w}^{e}\n\\dfrac{\\partial{}}{\\partial{}x}\n\\left(D\\dfrac{\\partial{}c}{\\partial{}x}\\right)\\:dx\\:dt\n\\]\nThis double integration allows us to convert the partial differential equation into a form suitable for numerical discretization. Evaluating the innermost integrals leads to:\n\\[\n\\int_{w}^{e}\n\\left(c_{P}-c_{P}^{0}\\right)\\:dx=\n\\int_{0}^{\\tau}\n\\left[\n    \\left(D\\dfrac{\\partial{}c}{\\partial{}x}\\right)_{e}-\n    \\left(D\\dfrac{\\partial{}c}{\\partial{}x}\\right)_{w}\n\\right]\n\\:dt\n\\]\nHere, \\(c_P^0\\) and \\(c_P\\) represent the concentration at the center of the control volume \\(P\\) at times \\(0\\) and \\(\\tau\\), respectively. A convention of not adding a superscript to time \\(\\tau\\) is adopted here, unless required by the context. The right-hand side represents the net flux into the control volume through its east and west faces. Assuming the concentration is uniform within each control volume and the fluxes are constant over the time interval, we obtain:\n\\[\n\\left(c_{P}-c_{P}^{0}\\right)\n\\dfrac{\\delta}{\\tau}=\n\\left(D\\dfrac{\\partial{}c}{\\partial{}x}\\right)_{e}-\n\\left(D\\dfrac{\\partial{}c}{\\partial{}x}\\right)_{w}\n\\]\nwhere \\(\\delta\\) is the width of the control volume. This equation represents a discrete time-step of the diffusion equation for a single control volume, where one still needs to specify a discretization of the gradients, i.e. how the fluxes are evaluated at a cell face. A simple introductory approach is to use forward differences, where the composition gradients are approximated as first differences between neighbors.\nBefore starting we declare a few classes grouping the required symbols for what follows:\n\nclass FvmVars:\n    \"\"\" General FVM parameters and variables. \"\"\"\n    delta = symbols(\"delta\")\n    tau = symbols(\"tau\")\n\n\nclass BcVars:\n    \"\"\" Boundary condition parameters and variables. \"\"\"\n    h = symbols(\"h\")\n    c_inf = symbols(\"c_{\\\\infty}\")\n\n\nclass CellVars:\n    \"\"\" Cell-centered coefficients and variables. \"\"\"\n    c_0 = symbols(\"c_0\")\n    c_E = symbols(\"c_E\")\n    c_P = symbols(\"c_P\")\n    c_W = symbols(\"c_W\")\n\n    D_E = symbols(\"D_E\")\n    D_P = symbols(\"D_P\")\n    D_W = symbols(\"D_W\")\n\n    c_G = symbols(\"c_G\")\n    c_B = symbols(\"c_B\")  # sort of cell (0-D cell)...\n\n    D_G = symbols(\"D_G\")\n    D_B = symbols(\"D_B\")\n\n    @staticmethod\n    def composition():\n        \"\"\"Return all cell compositions as a list.\"\"\"\n        return [\n            CellVars.c_0,\n            CellVars.c_E,\n            CellVars.c_P,\n            CellVars.c_W,\n            CellVars.c_G,\n            CellVars.c_B,\n        ]\n\n\nclass FaceVars:\n    \"\"\" Face-centered coefficients and variables. \"\"\"\n    D_e = symbols(\"D_e\")\n    D_w = symbols(\"D_w\")\n    D_g = symbols(\"D_g\")\n    D_b = symbols(\"D_b\")\n\n    Fo_e = symbols(\"alpha_e\")\n    Fo_w = symbols(\"alpha_w\")\n    Fo_g = symbols(\"alpha_g\")\n    Fo_b = symbols(\"alpha_b\")\n\nTo approximate the aforementioned gradients, the next cell introduces the expressions for the fluxes at east and west faces. These helper functions ensure the order of arguments is consistent with the finite difference definition given above.\n\ndef diffusion_flux(D, c_left, c_right, delta=FvmVars.delta):\n    \"\"\" Compute the (forward difference) diffusion flux between two points. \"\"\"\n    return -D * (c_right - c_left) / delta\n\n\ndef diffusion_flux_east(D=FaceVars.D_e, c_right=CellVars.c_E,\n                        delta=FvmVars.delta):\n    \"\"\" Compute the diffusion flux to the east cell. \"\"\"\n    return diffusion_flux(D, CellVars.c_P, c_right, delta=delta)\n\n\ndef diffusion_flux_west(D=FaceVars.D_w, c_left=CellVars.c_W,\n                        delta=FvmVars.delta):\n    \"\"\" Compute the diffusion flux to the west cell. \"\"\"\n    return diffusion_flux(D, c_left, CellVars.c_P, delta=delta)\n\nFor standardizing equations as organized as \\(F(x)=0\\) we override sympy.Eq with StandardEquation class:\n\nclass StandardEquation(SymEq):\n    \"\"\" Standard LHS format of finite volume equation. \"\"\"\n    def __new__(cls, lhs, rhs=0, **kwargs):\n        return SymEq.__new__(cls, expand(lhs), 0, **kwargs)\n\n    def __truediv__(self, other):\n        return StandardEquation(self.lhs / other)\n\n    def __rtruediv__(self, other):\n        return StandardEquation(other / self.lhs)\n\n    def __mul__(self, other):\n        return StandardEquation(self.lhs * other)\n\n    def __rmul__(self, other):\n        return StandardEquation(other * self.lhs)\n\n    def subs(self, *args, **kwargs):\n        \"\"\" Substitute into the equation LHS. \"\"\"\n        return StandardEquation(self.lhs.subs(*args, **kwargs))\n\n    def solve_for(self, var):\n        \"\"\" Solve the equation for the specified variable. \"\"\"\n        return solve(self, var)\n\n    def coefficients(self, variables=None, op=lambda x: x):\n        \"\"\" Extract coefficients for the specified variables. \"\"\"\n        variables = CellVars.composition() if variables is None else variables\n        variables = [v for v in variables if v in self.lhs.free_symbols]\n        return {var: op(self.lhs.coeff(var)) for var in variables}\n\n    def tabulate(self, **kwargs):\n        \"\"\" Helper to display a table of coefficients for the problem. \"\"\"\n        coefs = self.coefficients(**kwargs).items()\n        return DataFrame(coefs, columns=[\"Variable\", \"Coefficient\"])\n\n\n# Alias:\nEq = StandardEquation\n\nBelow we compose the diffusion equation with help of SymPy and the above extensions. Notice that when compositing the right-hand side rhs we multiply by -1 because we are integrating the negative of the fluxes.\n\nJ_w = diffusion_flux_west()\nJ_e = diffusion_flux_east()\n\nlhs = (CellVars.c_P - CellVars.c_0) * FvmVars.delta / FvmVars.tau\nrhs = -1 * (J_e - J_w)\n\neq = Eq(lhs - rhs)\neq\n\n\\(\\displaystyle - \\frac{D_{e} c_{E}}{\\delta} + \\frac{D_{e} c_{P}}{\\delta} + \\frac{D_{w} c_{P}}{\\delta} - \\frac{D_{w} c_{W}}{\\delta} - \\frac{c_{0} \\delta}{\\tau} + \\frac{c_{P} \\delta}{\\tau} = 0\\)\n\n\nHere, \\(c_E\\) and \\(c_W\\) are the concentrations at the eastern and western neighboring control volumes, respectively, and \\(D_e\\) and \\(D_w\\) are the effective diffusion coefficients at the east and west faces of the control volume. Patankar (1980) shows that the evaluation of these diffusion coefficients is not arbitrary and for conservation (here the continuity of flux across the interface) to be respected one must take the harmonic mean of neighboring cells:\n\\[\nD_{k}=2\\frac{D_{i}D_{j}}{D_{i}+D_{j}}\n\\]\nOr as code:\n\ndef harmonic_mean(a, b):\n    \"\"\" Compute the harmonic mean of two values. \"\"\"\n    return 2 * a * b / (a + b)\n\nA final step to get a linear form of the problem is multiplying both sides by \\(\\tau/\\delta\\) and rearranging terms. This form clearly shows the contribution of each neighboring concentration to the rate of change at point P. The coefficient of \\(c_P\\) is negative, representing the outflow from the central node, while the coefficients of \\(c_E\\) and \\(c_W\\) are positive, representing inflow from the neighboring nodes.\n\n\n\\(\\displaystyle - \\frac{D_{e} c_{E} \\tau}{\\delta^{2}} + \\frac{D_{e} c_{P} \\tau}{\\delta^{2}} + \\frac{D_{w} c_{P} \\tau}{\\delta^{2}} - \\frac{D_{w} c_{W} \\tau}{\\delta^{2}} - c_{0} + c_{P} = 0\\)\n\n\nIntroducing dimensionless coefficients \\(\\alpha_{k}\\), the Fourier number for mass transfer (more generally referred to as \\(\\mathcal{Fo}_{m}\\)), we obtain the final discrete form. It represents the dimensionless diffusion number, which determines the stability and accuracy of the numerical scheme. The subscript \\(k\\) refers to either the east (\\(e\\)) or west (\\(w\\)) face.\n\\[\n\\alpha_{k}=\\dfrac{\\tau{}D_{k}}{\\delta^2}\n\\]\nThis definition is provided below for helping with the replacements that follow.\n\ndef fourier_number(D, tau=FvmVars.tau, delta=FvmVars.delta):\n    \"\"\" Compute the Fourier number for the given parameters. \"\"\"\n    return D * tau / delta**2\n\n\nSUBS_FOURIER = [\n    (fourier_number(FaceVars.D_e), FaceVars.Fo_e),\n    (fourier_number(FaceVars.D_w), FaceVars.Fo_w),\n    (fourier_number(FaceVars.D_g), FaceVars.Fo_g),\n    (fourier_number(FaceVars.D_b), FaceVars.Fo_b),\n]\n\nPerforming the replacements with help of SymPy:\n\neq = eq.subs(SUBS_FOURIER)\neq\n\n\\(\\displaystyle - \\alpha_{e} c_{E} + \\alpha_{e} c_{P} + \\alpha_{w} c_{P} - \\alpha_{w} c_{W} - c_{0} + c_{P} = 0\\)\n\n\nNotice that so far nothing has been said with respect to the instant at which the right-hand side is evaluated. The obvious solution would be to take \\(c_{0}\\equiv{}c_{P}^{0}\\) as it is currently known, but for numerical stability reasons we will continue here with an implicit scheme so that all values other than \\(c_{0}\\) are defined to be evaluated at time \\(\\tau\\), i.e. \\(c_{K}\\equiv{}c_{K}^{\\tau}\\), in phase with the notation convention introduced above.\nBecause it is more convenient for symbolic manipulations with SymPy, the problem is currently written as \\(F(c)=0\\), i.e. all elements are on the left-hand side. Care must be taken to properly interpret the signs of the coefficients below.\n\ncoefs = eq.coefficients()\ncoefs\n\n\\(\\displaystyle \\left\\{ c_{0} : -1, \\  c_{E} : - \\alpha_{e}, \\  c_{P} : \\alpha_{e} + \\alpha_{w} + 1, \\  c_{W} : - \\alpha_{w}\\right\\}\\)\n\n\nBecause it is more readable, a helper utility is provided to tabulate them:\n\neq.tabulate()\n\n\n\n\n\n\n\n\nVariable\nCoefficient\n\n\n\n\n0\nc_0\n-1\n\n\n1\nc_E\n-alpha_e\n\n\n2\nc_P\nalpha_e + alpha_w + 1\n\n\n3\nc_W\n-alpha_w",
+    "crumbs": [
+      "Finite Volume Method",
+      "<span class='chapter-number'>23</span>  <span class='chapter-title'>Diffusion in 1-D</span>"
+    ]
+  },
+  {
+    "objectID": "fvm/diffusion-1d.html#boundary-conditions",
+    "href": "fvm/diffusion-1d.html#boundary-conditions",
+    "title": "23  Diffusion in 1-D",
+    "section": "23.4 Boundary conditions",
+    "text": "23.4 Boundary conditions\nSo far all we have derived are the internal balances of the system, we still lack proper boundary conditions. It should be evident by now that we have formulated a tridiagonal matrix for representing the 1-D system: there are 3 unknowns at step \\(\\tau\\) (\\(c_W\\), \\(c_P\\), and \\(c_E\\)) and a currently known field \\(c_0\\).\nIn what follows we will workout the three families of boundary conditions: Dirichlet (type 1), Neumann (type 2), and the more general Robin (type 3). Following this sequence will create the required intuition for deriving the progressively more complex conditions. In practice, for diffusion in solids often only the implementation of Robin conditions is required, as it will be discussed later. Our goal at presenting types 1 and 2 is simply to introduce the tooling required for working out type 3 boundary condition; they will not be treated in full detail, leaving the full discussion for later.\nThe implementation of boundary conditions requires special treatment of the control volumes at the domain boundaries. The general form for a boundary control volume is:\n\\[\n\\left(c_{P}-c_{P}^{0}\\right)\n\\dfrac{\\delta}{\\tau}=\n\\text{flux}_{\\text{interior}} - \\text{flux}_{\\text{boundary}}\n\\]\nIt is worth here repeating the partial development derived above for an analogy:\n\\[\n\\left(c_{P}^{\\tau}-c_{P}^{0}\\right)\n\\dfrac{\\delta}{\\tau}=\nD_{e}\\dfrac{c_{E}-c_{P}}{\\delta}-\nD_{w}\\dfrac{c_{P}-c_{W}}{\\delta}\n\\]\nPlease, notice that from now on we make use of class StandardProblem for the end of representing a canonical discrete equation. It encodes the results obtained in the previous section and is also repeated below:\n\nclass StandardProblem:\n    \"\"\" Standard format of finite volume diffusion problem in 1-D. \"\"\"\n    @staticmethod\n    def get_lhs(**kw):\n        \"\"\" Standard format of inner LHS of problem. \"\"\"\n        return (CellVars.c_P - CellVars.c_0) * FvmVars.delta / FvmVars.tau\n\n    @staticmethod\n    def get_rhs(**kw):\n        \"\"\" Standard format of inner RHS of problem.\"\"\"\n        J_e = kw.get(\"J_e\", diffusion_flux_east())\n        J_w = kw.get(\"J_w\", diffusion_flux_west())\n        return -1 * (J_e - J_w)\n\n    @staticmethod\n    def full_expression(subs_lhs=[], subs_rhs=[], subs_fourier=False, **kw):\n        \"\"\" Canonical form of problem set as `f(c)=0`. \"\"\"\n        lhs = StandardProblem.get_lhs(**kw).subs(subs_lhs)\n        rhs = StandardProblem.get_rhs(**kw).subs(subs_rhs)\n\n        eq = StandardEquation(lhs - rhs)\n        eq = eq * FvmVars.tau / FvmVars.delta\n\n        if subs_fourier:\n            eq = eq.subs(SUBS_FOURIER)\n\n        return eq\n\n\nStandardProblem.full_expression()\n\n\\(\\displaystyle - \\frac{D_{e} c_{E} \\tau}{\\delta^{2}} + \\frac{D_{e} c_{P} \\tau}{\\delta^{2}} + \\frac{D_{w} c_{P} \\tau}{\\delta^{2}} - \\frac{D_{w} c_{W} \\tau}{\\delta^{2}} - c_{0} + c_{P} = 0\\)",
+    "crumbs": [
+      "Finite Volume Method",
+      "<span class='chapter-number'>23</span>  <span class='chapter-title'>Diffusion in 1-D</span>"
+    ]
+  },
+  {
+    "objectID": "fvm/diffusion-1d.html#sec-type-1-bc-dirichlet",
+    "href": "fvm/diffusion-1d.html#sec-type-1-bc-dirichlet",
+    "title": "23  Diffusion in 1-D",
+    "section": "23.5 Type 1 BC - Dirichlet",
+    "text": "23.5 Type 1 BC - Dirichlet\nLet’s start by the Dirichlet, or fixed concentration, boundary condition (type 1), for which the concentration at the boundary face is prescribed, i.e. \\(c_{\\text{B}} = c_{\\text{prescribed}}\\). Notice that before using this we need to make a choice regarding the computational grid (mesh); you could have half-volumes on boundaries, fictitious volumes (sometimes called ghost cells), or immersed nodes over the boundary.\nPartial control volumes on boundaries are not desirable as they introduce implementation complexities in code and lack conservation (especially in higher dimensions), see a discussion by Maliska (2004) (section 3.7) for details. In what follows we discuss immersed nodes and extended domains with ghost cells. This last solution implies considerably more unknowns in 3-D problems, for which different variants of FVM will be discussed at a more advanced point.\nImmersed boundary: Assume the last cell on west boundary is indexed as \\(P\\); over its west boundary we find a node where prescribed composition \\(c_{B}\\) is enforced - and the corresponding diffusion coefficient \\(D_{b}\\). Notice that this node does not belong to the cell, nor represents a half-cell, but lies over its boundary. To keep it simple, let’s assume \\(c_{B}\\) is constant (time-dependency would slightly complicate the development and it is worth postponing it to the algorithm development discussion), so keeping our fully implicit scheme leads to We start by computing the mass flux from the boundary node to the first cell center; this flux is computed using half-cell length \\(\\delta/2\\) for the derivative approximation.\n\nJ_w = diffusion_flux_west(FaceVars.D_b, CellVars.c_B, FvmVars.delta/2)\nJ_w\n\n\\(\\displaystyle - \\frac{2 D_{b} \\left(- c_{B} + c_{P}\\right)}{\\delta}\\)\n\n\nThis expression of flux is used as replacement for the west boundary in the full equation:\n\neq = StandardProblem.full_expression(J_w=J_w, subs_fourier=True)\neq\n\n\\(\\displaystyle - 2 \\alpha_{b} c_{B} + 2 \\alpha_{b} c_{P} - \\alpha_{e} c_{E} + \\alpha_{e} c_{P} - c_{0} + c_{P} = 0\\)\n\n\nThe coefficients for the first row of the matrix problem are summarized below:\n\neq.tabulate()\n\n\n\n\n\n\n\n\nVariable\nCoefficient\n\n\n\n\n0\nc_0\n-1\n\n\n1\nc_E\n-alpha_e\n\n\n2\nc_P\n2*alpha_b + alpha_e + 1\n\n\n3\nc_B\n-2*alpha_b\n\n\n\n\n\n\n\nThere are two main features in this equation: the coefficient of cell \\(P\\) now depends on the prescribed composition through \\(\\alpha_{b}\\) and a modification is applied to the right-hand side at boundaries where solution is prescribed. That’s a good reminder that the array of coefficients must correspond to the number of interfaces, not cells - more on this later.\nThe immersed boundary approach presented above is simple. Nonetheless, it requires a different calculation of boundary nodes with respect to the volume, but that comes with the advantage that no additional equation has been added to the system. Let’s now explore the extended domain alternative.\nGhost cell: As above, assume the last cell on west boundary is indexed as \\(P\\). Consider another ghost cell to its left being denoted \\(G\\) (fictitious cell in place of \\(W\\)). The node \\(c_{B}\\) where composition is enforced and the same details presented above still apply here. Here we repeat the immersed node flux computation and do the same with respect to ghost cell \\(G\\).\nOur goal is to identify an equation for \\(c_{G}\\) so that it is solved along with the interior points and ensures the same flux as the immersed node. To identify the compatible ghost composition we equate the fluxes by both definitions and solve for \\(c_{G}\\). The following steps repeat what we have seem so far and should be self-explanatory.\n\nJ_w1 = diffusion_flux_west(FaceVars.D_b, CellVars.c_B, FvmVars.delta/2)\nJ_w2 = diffusion_flux_west(FaceVars.D_g, CellVars.c_G, FvmVars.delta)\n\nEq(J_w1 - J_w2).tabulate()\n\n\n\n\n\n\n\n\nVariable\nCoefficient\n\n\n\n\n0\nc_P\n-2*D_b/delta + D_g/delta\n\n\n1\nc_G\n-D_g/delta\n\n\n2\nc_B\n2*D_b/delta\n\n\n\n\n\n\n\nCare must be taken for interpreting the above result; here \\(c_{G}\\) takes the diagonal position and \\(c_{P}\\) is the first east cell in the first row of the problem’s matrix. There is no previous state (no coefficient on \\(c_{0}\\)), but a source term based on \\(c_{B}\\) that must be placed on the right-hand side for solution. This is the equation we are looking for to extend the system.\nSince this equation has \\(D_{g}\\) as a coefficient, an initial guess for \\(c_{G}\\) is required. The boundary \\(B\\) being the same interface for evaluation of \\(D_{g}\\), for both fluxes to equate one needs to make sure the same diffusivity is evaluated there. Thus we make \\(D_{b}\\equiv{}D_{g}\\), what seems physically reasonable but so far not supported by any mathematical argument:\n\nc_G_sol = Eq(J_w1 - J_w2).solve_for(CellVars.c_G)[0]\nc_G_sol = c_G_sol.subs(FaceVars.D_b, FaceVars.D_g)\nc_G_sol\n\n\\(\\displaystyle \\frac{2 D_{g} c_{B} - D_{g} c_{P}}{D_{g}}\\)\n\n\nThis simply says that the composition is linearly extrapolated, with the distances from cell centers to the boundary being used as weighting factors. It ensures the problem is initialized the same as the immersed boundary as we made \\(D_g=D_b\\).\n\n\n\n\n\n\nCautionCommon mistake\n\n\n\nOne could think about solving for \\(c_G\\) and using the result in the standard balance equation, but doing so falls back to the immersed boundary approach. Replacing the solution in J_w2 simply gets back to the initial point and does not produce one extra equation!\n\nJ_w = J_w2.subs(CellVars.c_G, c_G_sol)\n\neq = StandardProblem.full_expression(J_w=J_w, subs_fourier=True)\neq.tabulate()\n\n\n\n\n\n\n\n\nVariable\nCoefficient\n\n\n\n\n0\nc_0\n-1\n\n\n1\nc_E\n-alpha_e\n\n\n2\nc_P\nalpha_e + 2*alpha_g + 1\n\n\n3\nc_B\n-2*alpha_g",
+    "crumbs": [
+      "Finite Volume Method",
+      "<span class='chapter-number'>23</span>  <span class='chapter-title'>Diffusion in 1-D</span>"
+    ]
+  },
+  {
+    "objectID": "fvm/diffusion-1d.html#type-2-bc---neumann",
+    "href": "fvm/diffusion-1d.html#type-2-bc---neumann",
+    "title": "23  Diffusion in 1-D",
+    "section": "23.6 Type 2 BC - Neumann",
+    "text": "23.6 Type 2 BC - Neumann\nNext, let’s handle Neumann boundary condition (type 2). For a fixed flux boundary condition, the flux at the boundary is prescribed at \\(q_{B}\\). A special case arises when one imposes zero flux (impermeable boundary for mass transfer, adiabatic boundary for heat transfer) where \\(q_{B}=0\\). It is worthless formulating the problem for this case as the equation is trivial, so we will assume a general \\(q_{B}\\) in what follows.\n\\[\n-D\\dfrac{\\partial{}c}{\\partial{}x}\\bigg|_{B} = q_{B}\n\\]\nWhen dealing with Neumann boundary conditions one must take care of the sign of fluxes, especially in 1-D. In higher dimensions, when applying Gauss theorem to convert the volume integral into a surface integral one normally works with vector calculus formulations; here we have dropped the vector notation when integrating over \\(dx\\), but the concept of surface orientation must be recalled at this point. At the west boundary the flux into domain is positive and conversely, at the east boundary the flux out of domain is positive.\n\\[\n\\begin{aligned}\n\\text{(west)}\\qquad &\n\\left(c_{P}^{\\tau}-c_{P}^{0}\\right)\\dfrac{\\delta}{\\tau}=\nD_{e}\\dfrac{c_{E}-c_{P}}{\\delta} + q_{B}\n\\\\[12pt]\n\\text{(east)}\\qquad &\n\\left(c_{P}^{\\tau}-c_{P}^{0}\\right)\\dfrac{\\delta}{\\tau}=\n-q_{B} - D_{w}\\dfrac{c_{P}-c_{W}}{\\delta}\n\\end{aligned}\n\\]\nWe will not elaborate more as the most relevant condition represented by this class, the impermeable condition, can be represented with a type 3 boundary condition by setting the mass transfer coefficient \\(h\\) to zero.",
+    "crumbs": [
+      "Finite Volume Method",
+      "<span class='chapter-number'>23</span>  <span class='chapter-title'>Diffusion in 1-D</span>"
+    ]
+  },
+  {
+    "objectID": "fvm/diffusion-1d.html#type-3-bc---robin",
+    "href": "fvm/diffusion-1d.html#type-3-bc---robin",
+    "title": "23  Diffusion in 1-D",
+    "section": "23.7 Type 3 BC - Robin",
+    "text": "23.7 Type 3 BC - Robin\nFinally, we generalize the above discussion for a Robin boundary condition (type 3). Also known as a convective or mixed boundary condition. In this case the flux is proportional to the concentration difference between the boundary and a reference external composition \\(c_{\\infty}\\). This often models mass transfer between a reacting fluid and a solid, but the discussion of boundary layer formation is out of the present scope and we summarize it simply by the mass transfer coefficient \\(h\\).\n\\[\n-D\\dfrac{\\partial c}{\\partial x}\\bigg|_{B} = h(c_{B} - c_{\\infty})\n\\]\n\n\n\n\n\n\nNoteFallback to other kinds\n\n\n\nIn fact, this is not the canonical form of such a boundary condition, but the reasonable engineering statement. Below we transform the equation to a format more commonly found the in mathematical literature, where all elements should be interpreted as being evaluated at boundary \\(B\\).\n\\[\n\\alpha{}c + \\beta\\dfrac{\\partial{}c}{\\partial{}x} = g\n\\]\nwhere\n\\[\n\\alpha = 1\n\\quad\\text{and}\\quad\n\\beta = \\dfrac{D}{h}\n\\quad\\text{and}\\quad\ng = c_{\\infty}\n\\]\nUnder this form we can easily jump to conclusions with respect to its relationship to the other types of boundary conditions. First, simply by setting \\(\\beta=0\\) we find ourselves with a type 1 condition where \\(c=\\alpha^{-1}g\\) - or in engineering notation \\(c_{B}=c_{\\infty}\\); this happens as mass transfer efficiency is ideal, as \\(\\beta\\to{}0\\) when \\(h\\to{}\\infty\\). In computational practice it is enough to enforce that \\(h\\gg{}D\\) to approach a Dirichlet boundary condition.\nA type 2 condition would be established with \\(\\alpha=0\\), but that is not possible straight from the way we have posed the equation. By multiplying everything by \\(h\\) and setting its value to zero we get to an impermeable Neumann condition, the only one we consider here for the mass transfer context (because in general it is not simple to enforce a mass uptake by a material).\nThat said, type 3 condition is all we need for a first solid state diffusion solver. As for the type 2 condition, we need to take care of signs here.\n\n\nThe (scalar) convention we used so far implies a convective flux that is positive outwards the domain, \\(J=h(c_{b}-c_{\\infty})&gt;0\\) if \\(c_{b}&gt;c_{\\infty}\\), i.e., the chemical potential in the solid is higher than the environment. The west boundary being oriented towards the \\(-y\\) axis, we need to account for its sign; in later chapters we will see that the boundary condition reasoning is actually simpler to follow in higher dimensions as we implicitly treat the face normal vectors through the inner product.\n\ndef convection_flux(cb, h=BcVars.h, c_inf=BcVars.c_inf):\n    \"\"\" Compute the convection flux between environment and surface. \"\"\"\n    return h * (c_inf - cb)\n\n\nq_bw = -convection_flux(CellVars.c_B)\nq_be = +convection_flux(CellVars.c_B)\n\nIn what follows we derive the immersed boundary equation for type 3 condition. The extension to ghost cells is trivial and can be worked out with the ideas presented in section Section 23.5. We solve for \\(c_{B}\\) at both sides of the domain by equating the convective flux to the one established internally with the immersed boundary node:\n\nJ_w = diffusion_flux_west(FaceVars.D_b, CellVars.c_B, FvmVars.delta/2)\nJ_e = diffusion_flux_east(FaceVars.D_b, CellVars.c_B, FvmVars.delta/2)\n\nc_Bw = Eq(J_w - q_bw).solve_for(CellVars.c_B)[0]\nc_Be = Eq(J_e - q_be).solve_for(CellVars.c_B)[0]\n\nThis leads to\n\nc_Bw\n\n\\(\\displaystyle \\frac{2 D_{b} c_{P} - c_{\\infty} \\delta h}{2 D_{b} - \\delta h}\\)\n\n\nand\n\nc_Be\n\n\\(\\displaystyle \\frac{2 D_{b} c_{P} - c_{\\infty} \\delta h}{2 D_{b} - \\delta h}\\)\n\n\nIf we take, e.g., the west boundary equation with the previous definition of flux evaluated from the immersed boundary node, we retrieve the corresponding equation for the system. Notice that \\(c_{B}\\) is a known value at the current iteration, so in solution it can be moved to the right-hand side and act as a flux term. This gives a grasp of the solution algorithm that makes the subject for the next section.\n\neq = StandardProblem.full_expression(J_w=J_w, subs_fourier=True)\neq.tabulate()\n\n\n\n\n\n\n\n\nVariable\nCoefficient\n\n\n\n\n0\nc_0\n-1\n\n\n1\nc_E\n-alpha_e\n\n\n2\nc_P\n2*alpha_b + alpha_e + 1\n\n\n3\nc_B\n-2*alpha_b",
+    "crumbs": [
+      "Finite Volume Method",
+      "<span class='chapter-number'>23</span>  <span class='chapter-title'>Diffusion in 1-D</span>"
+    ]
+  },
+  {
+    "objectID": "fvm/diffusion-1d.html#arbitrary-grid-spacing",
+    "href": "fvm/diffusion-1d.html#arbitrary-grid-spacing",
+    "title": "23  Diffusion in 1-D",
+    "section": "23.8 Arbitrary grid spacing",
+    "text": "23.8 Arbitrary grid spacing\nFor establishing the equations for an arbitrary grid spacing in 1-D, we move forward to a more general derivation. Instead of expressing the problem over a single coordinate, we introduce the control volume \\(V\\) that will be revisited again when solving for 3-D geometries. For convenience the minus sign is moved outside the integral in what follows.\n\\[\n\\int_{V}\\int_{0}^{\\tau}\n\\dfrac{\\partial{}c}{\\partial{}t}\\:dt\\:dV=\n-\\int_{0}^{\\tau}\\int_{V}\n\\nabla\\cdot\\vec{J}\\:dV\\:dt\n\\]\nThe inner integration on the right-hand side is treated first. Using the divergence theorem, we convert the volume integral of the divergence of flux into a surface integral over the control volume’s faces. Since in FVM we are dealing with a finite number of faces, we can express the surface integral as a sum over all faces \\(f\\) of the control volume, where \\(J_{f}\\) is the flux through face \\(f\\) and \\(A_{f}\\) is the area of that face.\n\\[\n\\int_{V}\\nabla\\cdot\\vec{J}\\:dV=\n\\int_{S}\\vec{J}\\cdot\\vec{n}\\:dS=\n\\sum_{f}J_{f}A_{f}\n\\]\nSubstituting this result back into the original equation and integrating the left-hand side over time gives:\n\\[\n\\int_{V}\\left(c_{P}-c_{P}^{0}\\right)\\:dV=\n-\\int_{0}^{\\tau}\\sum_{f}J_{f}A_{f}\\:dt\n\\]\nAnd finally integrating the last level:\n\\[\n\\left(c_{P}-c_{P}^{0}\\right)\\dfrac{V}{\\tau}=\n-\\vec{J}_{f}\\cdotp\\vec{A}_{f}\n\\]\nIn 1-D, there are only two faces: the west face (\\(w\\)) and the east face (\\(e\\)). Thus, the summation over faces simplifies to just these two contributions:\n\\[\n\\left(c_{P}-c_{P}^{0}\\right)\\dfrac{V}{\\tau}=\n    -J_{w}(-\\hat{i})A_{w}(-\\hat{i})\n    -J_{e}(+\\hat{i})A_{e}(+\\hat{i})\n\\]\nNotice that as we are dealing with the actual surfaces, the signs of the terms will be naturally handled by the flux definitions. The final step consists of substituting the expressions for the diffusive fluxes at each face, which can be approximated using finite differences. Below we account already for the face orientation (sign). For the west face:\n\\[\n-J_{w}(-\\hat{i})A_{w}(-\\hat{i})=D_{w}\\dfrac{c_{W}-c_{P}}{\\delta_{w}}A_{w}\n\\]\nAnd for the east face:\n\\[\n-J_{e}(+\\hat{i})A_{e}(+\\hat{i})=D_{e}\\dfrac{c_{E}-c_{P}}{\\delta_{e}}A_{e}\n\\]\nSubstituting these flux expressions back into the integrated equation gives:\n\\[\n\\left(c_{P}-c_{P}^{0}\\right)\\dfrac{V}{\\tau}=\nD_{w}\\dfrac{c_{W}-c_{P}}{\\delta_{w}}A_{w}\nD_{e}\\dfrac{c_{E}-c_{P}}{\\delta_{e}}A_{e}\n\\]\nRearranging terms leads to the final discrete equation for an arbitrary grid spacing in 1-D implicit formulation:\n\\[\n-\\dfrac{D_{w}A_{w}}{\\delta_{w}}c_{W}\n+\\left(\n    \\dfrac{V}{\\tau}+\n    \\dfrac{D_{w}A_{w}}{\\delta_{w}}+\n    \\dfrac{D_{e}A_{e}}{\\delta_{e}}\n\\right)c_{P}\n-\\dfrac{D_{e}A_{e}}{\\delta_{e}}c_{E}=\n\\dfrac{V}{\\tau}c_{P}^{0}\n\\]\nor assuming a unit cross-sectional area \\(A\\) so that \\(V=A\\delta_{P}\\), we have:\n\\[\n-\\dfrac{D_{w}\\tau}{\\delta_{w}\\delta_{P}}c_{W}\n+\\left(\n    1 +\n    \\dfrac{D_{w}\\tau}{\\delta_{w}\\delta_{P}}+\n    \\dfrac{D_{e}\\tau}{\\delta_{e}\\delta_{P}}\n\\right)c_{P}\n-\\dfrac{D_{e}\\tau}{\\delta_{e}\\delta_{P}}c_{E}=\nc_{P}^{0}\n\\]\nFor the boundary conditions we apply the same approach as before:\n\\[\n-J_{b}(-\\hat{i})A_{b}(-\\hat{i})=\nD_{b}\\dfrac{c_{B}-c_{P}}{\\frac{1}{2}\\delta_{P}}A_{b}=\nhA_{b}(c_{\\infty}-c_{B})\n\\]\nBefore simplifying this expression to find out \\(c_{B}\\) it is worth introducing the Sherwood number \\(\\mathcal{Sh}\\) defined as follows, where \\(L\\) represents a characteristic length of the problem and \\(D\\) the diffusion coefficient; here \\(L=\\delta_{P}/2\\) as half-cell length was used in flux computations and\n\\[\n\\mathcal{Sh}=\\dfrac{hL}{D}\n\\quad\\text{and}\\quad\n\\mathcal{Sh}_{b}=\\dfrac{h\\delta_{P}}{2D_{b}}\n\\]\nleading to the final boundary node concentration\n\\[\nc_{B}=\n\\dfrac{c_{P}+\\mathcal{Sh}_{b}\\:c_{\\infty}}{1 + \\mathcal{Sh}_{b}}\n\\]",
+    "crumbs": [
+      "Finite Volume Method",
+      "<span class='chapter-number'>23</span>  <span class='chapter-title'>Diffusion in 1-D</span>"
+    ]
+  },
+  {
+    "objectID": "fvm/diffusion-1d.html#solution-algorithm",
+    "href": "fvm/diffusion-1d.html#solution-algorithm",
+    "title": "23  Diffusion in 1-D",
+    "section": "23.9 Solution algorithm",
+    "text": "23.9 Solution algorithm\nUsing a segregated solution of non-linear boundaries or immersed nodes:\n\\[\n\\begin{bmatrix}\nA_{(0)} & A_{E}  & 0      &        &        & \\dots  & 0      & 0       \\vphantom{\\dfrac{1}{1}}\\\\\nA_{W}   & A_{P}  & A_{E}  &        &        & \\dots  & 0      & 0       \\vphantom{\\dfrac{1}{1}}\\\\\n0       & A_{W}  & A_{P}  & A_{E}  & 0      & \\dots  & 0      & 0       \\vphantom{\\dfrac{1}{1}}\\\\\n0       & 0      & \\ddots & \\ddots & \\ddots & \\ddots & \\vdots & \\vdots  \\vphantom{\\dfrac{1}{1}}\\\\\n\\vdots  & \\vdots & \\ddots & \\ddots & \\ddots & \\ddots & 0      & 0       \\vphantom{\\dfrac{1}{1}}\\\\\n0       & 0      & \\dots  & 0      & A_{W}  & A_{P}  & A_{E}  & 0       \\vphantom{\\dfrac{1}{1}}\\\\\n0       & 0      & \\dots  & 0      & 0      & A_{W}  & A_{P}  & A_{E}   \\vphantom{\\dfrac{1}{1}}\\\\\n0       & 0      & \\dots  & 0      & 0      & 0      & A_{W}  & A_{(n)} \\vphantom{\\dfrac{1}{1}}\\\\\n\\end{bmatrix}\\cdotp\n%--------------------------------------\n\\begin{bmatrix}\nc_{(0)}^{\\tau}   \\vphantom{\\dfrac{1}{1}}\\\\\nc_{(1)}^{\\tau}   \\vphantom{\\dfrac{1}{1}}\\\\\nc_{(2)}^{\\tau}   \\vphantom{\\dfrac{1}{1}}\\\\\nc_{(3)}^{\\tau}   \\vphantom{\\dfrac{1}{1}}\\\\\n\\vdots           \\vphantom{\\dfrac{1}{1}}\\\\\nc_{(N-3)}^{\\tau} \\vphantom{\\dfrac{1}{1}}\\\\\nc_{(N-2)}^{\\tau} \\vphantom{\\dfrac{1}{1}}\\\\\nc_{(N-1)}^{\\tau} \\vphantom{\\dfrac{1}{1}}\\\\\n\\end{bmatrix}=\n%--------------------------------------\n\\begin{bmatrix}\nc_{(0)}^{0}   \\vphantom{\\dfrac{1}{1}}\\\\\nc_{(1)}^{0}   \\vphantom{\\dfrac{1}{1}}\\\\\nc_{(2)}^{0}   \\vphantom{\\dfrac{1}{1}}\\\\\nc_{(3)}^{0}   \\vphantom{\\dfrac{1}{1}}\\\\\n\\vdots        \\vphantom{\\dfrac{1}{1}}\\\\\nc_{(N-3)}^{0} \\vphantom{\\dfrac{1}{1}}\\\\\nc_{(N-2)}^{0} \\vphantom{\\dfrac{1}{1}}\\\\\nc_{(N-1)}^{0} \\vphantom{\\dfrac{1}{1}}\\\\\n\\end{bmatrix}+\n%--------------------------------------\n\\begin{bmatrix}\nB_{(0)}   \\vphantom{\\dfrac{1}{1}}\\\\\n0         \\vphantom{\\dfrac{1}{1}}\\\\\n0         \\vphantom{\\dfrac{1}{1}}\\\\\n0         \\vphantom{\\dfrac{1}{1}}\\\\\n\\vdots    \\vphantom{\\dfrac{1}{1}}\\\\\n0         \\vphantom{\\dfrac{1}{1}}\\\\\n0         \\vphantom{\\dfrac{1}{1}}\\\\\nB_{(N-1)} \\vphantom{\\dfrac{1}{1}}\\\\\n\\end{bmatrix}\n\\]",
+    "crumbs": [
+      "Finite Volume Method",
+      "<span class='chapter-number'>23</span>  <span class='chapter-title'>Diffusion in 1-D</span>"
+    ]
+  },
+  {
+    "objectID": "fvm/diffusion-1d.html#python-prototype",
+    "href": "fvm/diffusion-1d.html#python-prototype",
+    "title": "23  Diffusion in 1-D",
+    "section": "23.10 Python prototype",
+    "text": "23.10 Python prototype\n\n\n\n\n\n\n\n\nMaliska, Clovis R. 2004. Transferência de Calor e Mecânica Dos Fluidos Computacional. 2nd ed. Rio de Janeiro: LTC.\n\n\nOnsager, Lars. 1931a. “Reciprocal Relations in Irreversible Processes. i.” Physical Review 37: 405–26.\n\n\n———. 1931b. “Reciprocal relations in irreversible processes. II.” Physical Review 38: 2265–79.\n\n\nPatankar, Suhas V. 1980. Numerical Heat Transfer and Fluid Flow. Taylor & Francis. https://doi.org/10.1201/9781482234213.",
+    "crumbs": [
+      "Finite Volume Method",
+      "<span class='chapter-number'>23</span>  <span class='chapter-title'>Diffusion in 1-D</span>"
+    ]
+  },
+  {
+    "objectID": "fvm/convection-1d.html",
+    "href": "fvm/convection-1d.html",
+    "title": "24  Convection in 1-D",
+    "section": "",
+    "text": "Upcoming",
+    "crumbs": [
+      "Finite Volume Method",
+      "<span class='chapter-number'>24</span>  <span class='chapter-title'>Convection in 1-D</span>"
+    ]
+  },
+  {
     "objectID": "tracks/carto.html",
     "href": "tracks/carto.html",
-    "title": "22  Cartographie",
+    "title": "25  Cartographie",
     "section": "",
-    "text": "22.1 OruxMaps\nThis page is intentionally written in French.\nPour ajouter des cartes IGN sur OruxMaps il faut créer des entrées au fichier onlinemapsources.xml qui se trouve sous Android/data/com.orux.oruxmapsDonate/files/oruxmaps/mapfiles dans les configurations du logiciel. Ces cartes doivent avoir un identifiant (uid) différent chacune. La numérotation des uid est arbitraire (bonne pratique à suivre: utiliser une séquence de valeurs). Si vous le fusionnez avec un autre, faire attention à adapter les uid au besoin.\nRéférences:",
+    "text": "25.1 OruxMaps\nThis page is intentionally written in French.\nPour ajouter des cartes IGN sur OruxMaps il faut créer des entrées au fichier onlinemapsources.xml qui se trouve sous Android/data/com.orux.oruxmapsDonate/files/oruxmaps/mapfiles dans les configurations du logiciel. Ces cartes doivent avoir un identifiant (uid) différent chacune. La numérotation des uid est arbitraire (bonne pratique à suivre: utiliser une séquence de valeurs). Si vous le fusionnez avec un autre, faire attention à adapter les uid au besoin.\nRéférences:",
     "crumbs": [
       "Montagne",
-      "<span class='chapter-number'>22</span>  <span class='chapter-title'>Cartographie</span>"
+      "<span class='chapter-number'>25</span>  <span class='chapter-title'>Cartographie</span>"
     ]
   },
   {
     "objectID": "tracks/carto.html#oruxmaps",
     "href": "tracks/carto.html#oruxmaps",
-    "title": "22  Cartographie",
+    "title": "25  Cartographie",
     "section": "",
     "text": "Forum OruxMaps\nTyber Randos\n\n&lt;onlinemapsource uid=\"1\"&gt;&lt;!-- Modifier `uid` selon besoin! --&gt;\n    &lt;name&gt;Geoplateforme IGN SCAN25&lt;/name&gt;\n    &lt;url&gt;&lt;![CDATA[https://data.geopf.fr/private/wmts?Service=WMTS&apikey=ign_scan_ws&LAYER=GEOGRAPHICALGRIDSYSTEMS.MAPS.SCAN25TOUR&Style=normal&TileMatrixSet=PM&Request=GetTile&Version=1.0.0&Format=image/jpeg&TileMatrix={$z}&TileCol={$x}&TileRow={$y}]]&gt;&lt;/url&gt;\n    &lt;website&gt;&lt;![CDATA[&lt;a href=\"https://www.ign.fr/geoplateforme\" target=\"_blank\"&gt;Géoplateforme IGN&lt;/a&gt;]]&gt;&lt;/website&gt;\n    &lt;minzoom&gt;2&lt;/minzoom&gt;\n    &lt;maxzoom&gt;16&lt;/maxzoom&gt;\n    &lt;projection&gt;MERCATORESFERICA&lt;/projection&gt;\n    &lt;servers&gt;&lt;/servers&gt;\n    &lt;httpparam name=\"User-Agent\"&gt;{om}&lt;/httpparam&gt;\n    &lt;cacheable&gt;1&lt;/cacheable&gt;\n    &lt;downloadable&gt;1&lt;/downloadable&gt;\n    &lt;maxtilesday&gt;0&lt;/maxtilesday&gt;\n    &lt;maxthreads&gt;0&lt;/maxthreads&gt;\n    &lt;xop&gt;&lt;/xop&gt;\n    &lt;yop&gt;&lt;/yop&gt;\n    &lt;zop&gt;&lt;/zop&gt;\n    &lt;qop&gt;&lt;/qop&gt;\n    &lt;sop&gt;&lt;/sop&gt;\n&lt;/onlinemapsource&gt;",
     "crumbs": [
       "Montagne",
-      "<span class='chapter-number'>22</span>  <span class='chapter-title'>Cartographie</span>"
+      "<span class='chapter-number'>25</span>  <span class='chapter-title'>Cartographie</span>"
     ]
   },
   {
     "objectID": "tracks/carto.html#liens-utiles",
     "href": "tracks/carto.html#liens-utiles",
-    "title": "22  Cartographie",
-    "section": "22.2 Liens utiles",
-    "text": "22.2 Liens utiles\n\nGPX Studio\nGPS Visualizer",
+    "title": "25  Cartographie",
+    "section": "25.2 Liens utiles",
+    "text": "25.2 Liens utiles\n\nGPX Studio\nGPS Visualizer",
     "crumbs": [
       "Montagne",
-      "<span class='chapter-number'>22</span>  <span class='chapter-title'>Cartographie</span>"
+      "<span class='chapter-number'>25</span>  <span class='chapter-title'>Cartographie</span>"
     ]
   },
   {
     "objectID": "tracks/carto.html#visualisation-des-traces-gpx",
     "href": "tracks/carto.html#visualisation-des-traces-gpx",
-    "title": "22  Cartographie",
-    "section": "22.3 Visualisation des traces GPX",
-    "text": "22.3 Visualisation des traces GPX\n\nfrom majordome_cartography import GpxManager\nfrom majordome_cartography import display_track\n\n\ndef process_dump(fname: str) -&gt; None:\n    gpx_mgnr = GpxManager.from_file(f\"{fname}.gpx\")\n    gpx_mngr = gpx_mgnr.sanitize(dump=f\"{fname}-sanitized.gpx\")\n\n    track_map = display_track(gpx_mngr, colored=True, vmin=750, vmax=1000)\n    track_map.save(f\"{fname}.html\")\n\n\nprocess_dump(\"gpx/2026-03-07-aretes-du-gerbier\")\nprocess_dump(\"gpx/2026-03-08-mont-aiguille\")",
+    "title": "25  Cartographie",
+    "section": "25.3 Visualisation des traces GPX",
+    "text": "25.3 Visualisation des traces GPX\n\nfrom majordome_cartography import GpxManager\nfrom majordome_cartography import display_track\n\n\ndef process_dump(fname: str) -&gt; None:\n    gpx_mgnr = GpxManager.from_file(f\"{fname}.gpx\")\n    gpx_mngr = gpx_mgnr.sanitize(dump=f\"{fname}-sanitized.gpx\")\n\n    track_map = display_track(gpx_mngr, colored=True, vmin=750, vmax=1000)\n    track_map.save(f\"{fname}.html\")\n\n\nprocess_dump(\"gpx/2026-03-07-aretes-du-gerbier\")\nprocess_dump(\"gpx/2026-03-08-mont-aiguille\")",
     "crumbs": [
       "Montagne",
-      "<span class='chapter-number'>22</span>  <span class='chapter-title'>Cartographie</span>"
+      "<span class='chapter-number'>25</span>  <span class='chapter-title'>Cartographie</span>"
     ]
   },
   {
     "objectID": "tracks/liens.html",
     "href": "tracks/liens.html",
-    "title": "23  Liens utiles",
+    "title": "26  Liens utiles",
     "section": "",
-    "text": "23.1 Géneral\nThis page is intentionally written in French.",
+    "text": "26.1 Géneral\nThis page is intentionally written in French.",
     "crumbs": [
       "Montagne",
-      "<span class='chapter-number'>23</span>  <span class='chapter-title'>Liens utiles</span>"
+      "<span class='chapter-number'>26</span>  <span class='chapter-title'>Liens utiles</span>"
     ]
   },
   {
     "objectID": "tracks/liens.html#géneral",
     "href": "tracks/liens.html#géneral",
-    "title": "23  Liens utiles",
+    "title": "26  Liens utiles",
     "section": "",
     "text": "Sports de Nature",
     "crumbs": [
       "Montagne",
-      "<span class='chapter-number'>23</span>  <span class='chapter-title'>Liens utiles</span>"
+      "<span class='chapter-number'>26</span>  <span class='chapter-title'>Liens utiles</span>"
     ]
   },
   {
     "objectID": "tracks/liens.html#cartographie",
     "href": "tracks/liens.html#cartographie",
-    "title": "23  Liens utiles",
-    "section": "23.2 Cartographie",
-    "text": "23.2 Cartographie\nOpenStreetMap:\n\nOpenStreetMap Wiki\nOpenStreetMap Wiki - FR:Projet Plein Air\nOpenStreetMap live edits\nForum OSM France\nA summary of things happening in the OpenStreetMap world\n\nCartes pour Garmin:\n\nOpenTopopMap\nnumeriquement\nmkgmap\n\nOther sites:\n\nFreizeitkarte\nOpenTopoMap\nUtagawaVTT\nCyclOSM\nOpenWhateverMap\nWaymarked Trails\nJeux de données - data.gouv.fr\nMyOSMatic\nMapRoulette",
+    "title": "26  Liens utiles",
+    "section": "26.2 Cartographie",
+    "text": "26.2 Cartographie\nOpenStreetMap:\n\nOpenStreetMap Wiki\nOpenStreetMap Wiki - FR:Projet Plein Air\nOpenStreetMap live edits\nForum OSM France\nA summary of things happening in the OpenStreetMap world\n\nCartes pour Garmin:\n\nOpenTopopMap\nnumeriquement\nmkgmap\n\nOther sites:\n\nFreizeitkarte\nOpenTopoMap\nUtagawaVTT\nCyclOSM\nOpenWhateverMap\nWaymarked Trails\nJeux de données - data.gouv.fr\nMyOSMatic\nMapRoulette",
     "crumbs": [
       "Montagne",
-      "<span class='chapter-number'>23</span>  <span class='chapter-title'>Liens utiles</span>"
+      "<span class='chapter-number'>26</span>  <span class='chapter-title'>Liens utiles</span>"
     ]
   },
   {
     "objectID": "tracks/liens.html#mobilité-douce",
     "href": "tracks/liens.html#mobilité-douce",
-    "title": "23  Liens utiles",
-    "section": "23.3 Mobilité douce",
-    "text": "23.3 Mobilité douce\n\nPartir Ici\nSNCF Rhône Alpes - Réservation vélo",
+    "title": "26  Liens utiles",
+    "section": "26.3 Mobilité douce",
+    "text": "26.3 Mobilité douce\n\nPartir Ici\nSNCF Rhône Alpes - Réservation vélo",
     "crumbs": [
       "Montagne",
-      "<span class='chapter-number'>23</span>  <span class='chapter-title'>Liens utiles</span>"
+      "<span class='chapter-number'>26</span>  <span class='chapter-title'>Liens utiles</span>"
     ]
   },
   {
     "objectID": "tracks/liens.html#cyclisme",
     "href": "tracks/liens.html#cyclisme",
-    "title": "23  Liens utiles",
-    "section": "23.4 Cyclisme",
-    "text": "23.4 Cyclisme\nVélo de montagne:\n\nSites FFC\nCotations de difficulté\nAutour du Pilat\nGravel Passion\n\nVélo de route:\n\nCols-Cyclisme\nInforoutes FR\nInforoutes 04\nInforoutes 06",
+    "title": "26  Liens utiles",
+    "section": "26.4 Cyclisme",
+    "text": "26.4 Cyclisme\nVélo de montagne:\n\nSites FFC\nCotations de difficulté\nAutour du Pilat\nGravel Passion\n\nVélo de route:\n\nCols-Cyclisme\nInforoutes FR\nInforoutes 04\nInforoutes 06",
     "crumbs": [
       "Montagne",
-      "<span class='chapter-number'>23</span>  <span class='chapter-title'>Liens utiles</span>"
+      "<span class='chapter-number'>26</span>  <span class='chapter-title'>Liens utiles</span>"
     ]
   },
   {
     "objectID": "tracks/liens.html#trail-running",
     "href": "tracks/liens.html#trail-running",
-    "title": "23  Liens utiles",
-    "section": "23.5 Trail running",
-    "text": "23.5 Trail running\n\nFinishers\nPremier Marathon",
+    "title": "26  Liens utiles",
+    "section": "26.5 Trail running",
+    "text": "26.5 Trail running\n\nFinishers\nPremier Marathon",
     "crumbs": [
       "Montagne",
-      "<span class='chapter-number'>23</span>  <span class='chapter-title'>Liens utiles</span>"
+      "<span class='chapter-number'>26</span>  <span class='chapter-title'>Liens utiles</span>"
     ]
   },
   {
     "objectID": "tracks/liens.html#neige-et-glace",
     "href": "tracks/liens.html#neige-et-glace",
-    "title": "23  Liens utiles",
-    "section": "23.6 Neige et glace",
-    "text": "23.6 Neige et glace\n\nData Avalanche\nCRISTAL\nIce Climbing Cogne\nANENA\nSkitourenguru",
+    "title": "26  Liens utiles",
+    "section": "26.6 Neige et glace",
+    "text": "26.6 Neige et glace\n\nData Avalanche\nCRISTAL\nIce Climbing Cogne\nANENA\nSkitourenguru",
     "crumbs": [
       "Montagne",
-      "<span class='chapter-number'>23</span>  <span class='chapter-title'>Liens utiles</span>"
+      "<span class='chapter-number'>26</span>  <span class='chapter-title'>Liens utiles</span>"
     ]
   },
   {
     "objectID": "tracks/liens.html#autour-de-chamonix",
     "href": "tracks/liens.html#autour-de-chamonix",
-    "title": "23  Liens utiles",
-    "section": "23.7 Autour de Chamonix",
-    "text": "23.7 Autour de Chamonix\n\nMont-Blanc Natural Resort",
+    "title": "26  Liens utiles",
+    "section": "26.7 Autour de Chamonix",
+    "text": "26.7 Autour de Chamonix\n\nMont-Blanc Natural Resort",
     "crumbs": [
       "Montagne",
-      "<span class='chapter-number'>23</span>  <span class='chapter-title'>Liens utiles</span>"
+      "<span class='chapter-number'>26</span>  <span class='chapter-title'>Liens utiles</span>"
+    ]
+  },
+  {
+    "objectID": "references.html",
+    "href": "references.html",
+    "title": "References",
+    "section": "",
+    "text": "Maliska, Clovis R. 2004. Transferência de Calor e\nMecânica Dos Fluidos Computacional. 2nd ed. Rio de\nJaneiro: LTC.\n\n\nMehrer, Helmut. 2007. Diffusion in Solids : Fundamentals, Methods,\nMaterials, Diffusion-Controlled Processes. Vol. 155. Springer\nSeries in Solid-State Sciences. Springer Berlin Heidelberg. https://doi.org/10.1007/978-3-540-71488-0.\n\n\nOnsager, Lars. 1931a. “Reciprocal Relations in Irreversible\nProcesses. i.” Physical Review 37: 405–26.\n\n\n———. 1931b. “Reciprocal relations in\nirreversible processes. II.” Physical Review 38:\n2265–79.\n\n\nPatankar, Suhas V. 1980. Numerical Heat Transfer and Fluid\nFlow. Taylor & Francis. https://doi.org/10.1201/9781482234213.",
+    "crumbs": [
+      "References"
     ]
   }
 ]

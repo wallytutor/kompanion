@@ -20,7 +20,26 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
@@ -286,7 +305,7 @@ ul.task-list li input[type="checkbox"] {
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false">
- <span class="menu-text">Montagne</span></a>
+ <span class="menu-text">Finite Volume Method</span></a>
           <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -294,14 +313,43 @@ ul.task-list li input[type="checkbox"] {
       <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="./fvm/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Finite Volume Method</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./fvm/diffusion-1d.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Diffusion in 1-D</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./fvm/convection-1d.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Convection in 1-D</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="false">
+ <span class="menu-text">Montagne</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="./tracks/carto.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Cartographie</span></span></a>
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Cartographie</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./tracks/liens.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Liens utiles</span></span></a>
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Liens utiles</span></span></a>
   </div>
 </li>
       </ul>
@@ -342,7 +390,31 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<pre class="{bibliography}"><code></code></pre>
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-Maliska2004" class="csl-entry" role="listitem">
+Maliska, Clovis R. 2004. <em>Transfer<span>ê</span>ncia de Calor e
+Mec<span>â</span>nica Dos Fluidos Computacional</em>. 2nd ed. Rio de
+Janeiro: LTC.
+</div>
+<div id="ref-Mehrer2007" class="csl-entry" role="listitem">
+Mehrer, Helmut. 2007. <em>Diffusion in Solids : Fundamentals, Methods,
+Materials, Diffusion-Controlled Processes</em>. Vol. 155. Springer
+Series in Solid-State Sciences. Springer Berlin Heidelberg. <a href="https://doi.org/10.1007/978-3-540-71488-0">https://doi.org/10.1007/978-3-540-71488-0</a>.
+</div>
+<div id="ref-Onsager1931" class="csl-entry" role="listitem">
+Onsager, Lars. 1931a. <span>“Reciprocal Relations in Irreversible
+Processes. i.”</span> <em>Physical Review</em> 37: 405–26.
+</div>
+<div id="ref-Onsager1931a" class="csl-entry" role="listitem">
+———. 1931b. <span>“<span class="nocase">Reciprocal relations in
+irreversible processes. II.</span>”</span> <em>Physical Review</em> 38:
+2265–79.
+</div>
+<div id="ref-Patankar1980" class="csl-entry" role="listitem">
+Patankar, Suhas V. 1980. <em>Numerical Heat Transfer and Fluid
+Flow</em>. Taylor &amp; Francis. <a href="https://doi.org/10.1201/9781482234213">https://doi.org/10.1201/9781482234213</a>.
+</div>
+</div>
 
 
 
@@ -750,7 +822,7 @@ ul.task-list li input[type="checkbox"] {
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
       <a href="./tracks/liens.html" class="pagination-link" aria-label="Liens utiles">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Liens utiles</span></span>
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Liens utiles</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">

@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Computing – Kompanion</title>
+<title>22&nbsp; Finite Volume Method – Kompanion</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,7 +20,27 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="../site_libs/quarto-nav/quarto-nav.js"></script>
@@ -30,8 +50,8 @@ ul.task-list li input[type="checkbox"] {
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
-<link href="../computing/git.html" rel="next">
-<link href="../index.html" rel="prev">
+<link href="../fvm/diffusion-1d.html" rel="next">
+<link href="../reactors/converting-nasa-poly.html" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
@@ -83,7 +103,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../computing/index.html">Computing</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../fvm/index.html">Finite Volume Method</a></li><li class="breadcrumb-item"><a href="../fvm/index.html"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Finite Volume Method</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -116,13 +136,13 @@ ul.task-list li input[type="checkbox"] {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a href="../computing/index.html" class="sidebar-item-text sidebar-link active">
+            <a href="../computing/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Computing</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../computing/git.html" class="sidebar-item-text sidebar-link">
@@ -286,16 +306,16 @@ ul.task-list li input[type="checkbox"] {
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
  <span class="menu-text">Finite Volume Method</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 ">  
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../fvm/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../fvm/index.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Finite Volume Method</span></span></a>
   </div>
 </li>
@@ -347,15 +367,22 @@ ul.task-list li input[type="checkbox"] {
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#diffusion-equation" id="toc-diffusion-equation" class="nav-link active" data-scroll-target="#diffusion-equation"><span class="header-section-number">22.1</span> Diffusion equation</a></li>
+  <li><a href="#convection-equation" id="toc-convection-equation" class="nav-link" data-scroll-target="#convection-equation"><span class="header-section-number">22.2</span> Convection equation</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default">
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../fvm/index.html">Finite Volume Method</a></li><li class="breadcrumb-item"><a href="../fvm/index.html"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Finite Volume Method</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title">Computing</h1>
+<h1 class="title"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Finite Volume Method</span></h1>
 </div>
 
 
@@ -372,23 +399,50 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>Notes related to my learning and teaching interests in several fields related to scientific computing (mostly applied mathematics and machine learning) and related applications. This home page is the entry point and those interested in more content and interesting links navigate below between the multiple pages. It can also be used as a general guide for introducing scientific computing as it tries to introduce the minimal skill set any scientific computing engineer or scientist should have:</p>
-<ul>
-<li>Version control comes first, everything else is worthless without it, currently that means Git.</li>
-<li>Next comes software documentation with Doxygen, Sphinx, and/or Documenter.jl.</li>
-<li>A low(er) level programming language among Rust, C, C++, and Fortran, preferably all of them.</li>
-<li>Scripting languages, as of 2026, Python is mandatory, Julia highly recommended.</li>
-<li>Basic machine learning in one of the above scripts, everything is ML these days.</li>
-<li>Shell automation, basis of both Bash/other UNIX shell and PowerShell are required.</li>
-<li>Typesetting equations reports and presentations (beamer) in LaTeX.</li>
-<li>Domain specific skills related to the field of study (CFD, DFT, MD, ML, …).</li>
+<p>In these notes we provide a Finite Volume Method relecture to the famous <a href="https://jose.theoj.org/papers/10.21105/jose.00021">The 12 steps to Navier-Stokes equations</a>, by Lorena A. Barba and Gilbert F. Forsyth. It is not a bare translation, but a different approach to the problems with the addition of new elements, some sort of <em>Twelve-steps to Navier Stokes rewind</em>.</p>
+<p>Also the final goal has been changed and now it is not only as reaching the implementation of Navier-Stokes equations, but learning the key ideas of finite volumes applied to other fields of interest in Materials Science. Students who are undergoing Calculus training should already meet the minimum requirements to follow this course.</p>
+<p>Focus will be given not only on the numerical methods, but also how a computer implementation should look like. This last point is the most distinctive point from the work upon which it is based. A vast amount of learning resources is available for scientific computing, but rare sources really provide guidance for conceiving quality and maintainable code. Here we try to contribute for better coding practices through a <em>think-before-coding</em> approach.</p>
+<!-- Old FD index for guidance:
+1. Introduction to Advection in 1-D
+1. Courant-Friedrichs-Lewy Criterium
+1. Stability Analysis of Advection Equation
+1. Introduction to Diffusion in 1-D
+1. Diffusion-Reaction Equation in 1-D
+1. Burguers Equation in 1-D
+1. Laplace and Poisson equations
+1. Navier-Stokes Equation
+1. Introduction to Finite Volume Method
+1. Fundamentals of Parallel Computing
+-->
+<section id="diffusion-equation" class="level2" data-number="22.1">
+<h2 data-number="22.1" class="anchored" data-anchor-id="diffusion-equation"><span class="header-section-number">22.1</span> Diffusion equation</h2>
+<p>This part describes the implementation of diffusion using finite volume method. It is intended mainly to treat topics of interest in Materials Science, thus composition and spatial dependencies of diffusivity are a pre-requisite for any practical use case. A progressive level of complexity in the described physics will be considered. It assumes the reader is already familiar with basic concepts of diffusion in solids, much of which will be exposed in the text without further explanations.</p>
+<p>The following lists the goals and status of current text:</p>
+<ul class="task-list">
+<li><label><input type="checkbox" checked="">Simple Fick’s Law with possible nonlinear behavior in one-dimension on <a href="diffusion-1d.html" class="quarto-xref">chapter&nbsp;<span>23</span></a>.</label></li>
+<li><label><input type="checkbox">Generalization of Fickean diffusion to higher dimensions and other coordinate systems.</label></li>
+<li><label><input type="checkbox">Irreversible Thermodynamics approach for chemical potentials.</label></li>
+<li><label><input type="checkbox">Anisotropy of diffusivities in three-dimensional space.</label></li>
 </ul>
-<p>A sample setup of an operating system for scientific computing and practicing the above skills is provided in a section dedicated to Ubuntu.</p>
-<p>Some technologies have been mainstream or important in the past, but nowadays, some of them have already died or are becoming too niche to be put in such a list. That is the case of SVN for version control. As for programming languages in science, that is the case of <em>matlabish</em> (MATLAB, Octave, Scilab) environments, which are still used by <em>controls and automation</em> people, but are mostly incompatible with good software practices and should be discouraged.</p>
-<p>It is also worth getting familiar with high-performance computing (HPC); in the <a href="https://top500.org/">Top 500</a> page you can get to know the most powerful computers on Earth. The <a href="https://spec.org/">specification benchmarking</a> page allows for the check of hardware specification, what is interesting when preparing investment in a computing structure. Lastly, when working in multi-user systems it is worth knowing about job management systems such as <a href="https://www.schedmd.com/">Slurm</a>.</p>
-<p>As a last word, I would like to remember that it is humanly impossible to master everything at once; even after more than 10 years in the field as of today I only have a grasp in the tools I do not use everyday. Software and methods evolve, and unless you keep using a specific tool you simply cannot afford to keep up to date with it. That should not be a roadblock for a scientist in the long term. As you get used to scientific software, getting back to a good level of some tool you used in the past is quick (but not extremely fast in some cases) and learning new tools for which you already know the science behind is trivial. Even exploring new fields become easy in some cases.</p>
+<p>The interested reader may wish to consult the work by <span class="citation" data-cites="Mehrer2007">Mehrer (<a href="../references.html#ref-Mehrer2007" role="doc-biblioref">2007</a>)</span> for more details; any Materials Scientist is also recommended at some point to check the classic works of <span class="citation" data-cites="Onsager1931 Onsager1931a">(<a href="../references.html#ref-Onsager1931" role="doc-biblioref">Onsager 1931a</a>, <a href="../references.html#ref-Onsager1931a" role="doc-biblioref">1931b</a>)</span>.</p>
+</section>
+<section id="convection-equation" class="level2" data-number="22.2">
+<h2 data-number="22.2" class="anchored" data-anchor-id="convection-equation"><span class="header-section-number">22.2</span> Convection equation</h2>
+<p><em>Upcoming</em> in <a href="convection-1d.html" class="quarto-xref"><span>Chapter 24</span></a>!</p>
 
 
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
+<div id="ref-Mehrer2007" class="csl-entry" role="listitem">
+Mehrer, Helmut. 2007. <em>Diffusion in Solids : Fundamentals, Methods, Materials, Diffusion-Controlled Processes</em>. Vol. 155. Springer Series in Solid-State Sciences. Springer Berlin Heidelberg. <a href="https://doi.org/10.1007/978-3-540-71488-0">https://doi.org/10.1007/978-3-540-71488-0</a>.
+</div>
+<div id="ref-Onsager1931" class="csl-entry" role="listitem">
+Onsager, Lars. 1931a. <span>“Reciprocal Relations in Irreversible Processes. i.”</span> <em>Physical Review</em> 37: 405–26.
+</div>
+<div id="ref-Onsager1931a" class="csl-entry" role="listitem">
+———. 1931b. <span>“<span class="nocase">Reciprocal relations in irreversible processes. II.</span>”</span> <em>Physical Review</em> 38: 2265–79.
+</div>
+</div>
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -793,13 +847,13 @@ ul.task-list li input[type="checkbox"] {
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../index.html" class="pagination-link" aria-label="Kompanion">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Kompanion</span>
+      <a href="../reactors/converting-nasa-poly.html" class="pagination-link" aria-label="Fitting NASA9 data">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Fitting NASA9 data</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../computing/git.html" class="pagination-link" aria-label="Git version control">
-        <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Git version control</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../fvm/diffusion-1d.html" class="pagination-link" aria-label="Diffusion in 1-D">
+        <span class="nav-page-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Diffusion in 1-D</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

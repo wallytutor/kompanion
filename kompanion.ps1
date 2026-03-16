@@ -1521,8 +1521,11 @@ function Invoke-InstallRust() {
             "--no-modify-path"
         )
 
-        $env:CARGO_HOME  = "$env:KOMPANION_DIR\.cargo"
-        $env:RUSTUP_HOME = "$env:KOMPANION_DIR\.cargo"
+        Set-KompanionEnvVar -Name "CARGO_HOME" `
+            -Value "$env:KOMPANION_DIR\.cargo"
+
+        Set-KompanionEnvVar -Name "RUSTUP_HOME" `
+            -Value "$env:KOMPANION_DIR\.cargo"
 
         Invoke-CapturedCommand -FilePath $output -ArgumentList $arglist -Wait
     }
@@ -1538,11 +1541,15 @@ function Invoke-ConfigureJulia() {
 
     Initialize-AddToPath -Directory "$env:JULIA_HOME\bin"
 
-    $env:JULIA_DEPOT_PATH   = "$env:KOMPANION_DIR\.julia"
-    $env:JULIA_CONDAPKG_ENV = "$env:KOMPANION_DIR\.CondaPkg"
+    Set-KompanionEnvVar -Name "JULIA_DEPOT_PATH" `
+         -Value "$env:KOMPANION_DIR\.julia"
+
+    Set-KompanionEnvVar -Name "JULIA_CONDAPKG_ENV" `
+         -Value "$env:KOMPANION_DIR\.CondaPkg"
 
     # Path to local julia modules
-    $env:AUCHIMISTE_PATH = "$env:KOMPANION_DIR\src\auchimiste"
+    Set-KompanionEnvVar -Name "JULIA_AUCHIMISTE_PATH" `
+         -Value "$env:AUCHIMISTE_PATH"
 
     # Install minimal requirements:
     $lockFile = "$env:KOMPANION_DOT\julia.lock"
@@ -1655,7 +1662,8 @@ function Invoke-ConfigureRlang() {
     Initialize-AddToPath -Directory "$env:RLANG_HOME\bin\x64"
 
     # Path to R libraries
-    $env:R_LIBS_USER = "$env:KOMPANION_DIR\.rlang\4.5"
+    Set-KompanionEnvVar -Name "R_LIBS_USER" `
+         -Value "$env:KOMPANION_DIR\.rlang\4.5"
 
     # Install minimal requirements:
     $lockFile = "$env:KOMPANION_DOT\rlang.lock"

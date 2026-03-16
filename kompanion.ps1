@@ -275,16 +275,30 @@ function Set-KompanionEnvVar {
 }
 
 function Save-KompanionEnvVarsToFile {
-    $path = "$env:KOMPANION_DOT\envs.ps1"
-    $lines = @()
+    # Create a list of custom objects with environment variables; sort by
+    # value so that results will be more readable.
+    $values = $GLOBAL:KOMPANION_CREATED_ENVS |
+        ForEach-Object {
+            [PSCustomObject]@{
+                Name  = $_
+                Value = (
+                    Get-Item -Path ("env:$_") `
+                    -ErrorAction SilentlyContinue
+                ).Value
+            }
+        } | Sort-Object -Property Value
 
-    foreach ($name in $GLOBAL:KOMPANION_CREATED_ENVS) {
-        # TODO add formatting to align the equal signs.
-        $val = (Get-Item -Path ("env:$name") -ErrorAction SilentlyContinue).Value
-        $lines += "`$env:$name = '$val'"
-    }
+    # This is just for pretty output...
+    $maxlen = ($values |
+        ForEach-Object { $_.Name.Length } |
+        Measure-Object -Maximum
+    ).Maximum
 
-    $lines | Set-Content -Path $Path -Encoding UTF8
+    # Write variables to executable script:
+    $values | ForEach-Object {
+        $spaces = " " * (1 + $maxlen - $_.Name.Length)
+        "`$env:$($_.Name)$spaces= '$($_.Value)'"
+    } | Set-Content -Path "$env:KOMPANION_DOT\envs.ps1" -Encoding UTF8
 }
 
 function KompanionSource {

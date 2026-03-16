@@ -3,6 +3,7 @@
 ## Import toolbox
 
 ```{python}
+#| echo: true
 from abc import ABC
 from sympy import symbols, init_printing
 from sympy import Eq as SymEq, expand, solve
@@ -72,6 +73,7 @@ where $\delta$ is the width of the control volume. This equation represents a di
 Before starting we declare a few classes grouping the required symbols for what follows:
 
 ```{python}
+#| echo: true
 class FvmVars:
     """ General FVM parameters and variables. """
     delta = symbols("delta")
@@ -79,6 +81,7 @@ class FvmVars:
 ```
 
 ```{python}
+#| echo: true
 class BcVars:
     """ Boundary condition parameters and variables. """
     h = symbols("h")
@@ -86,6 +89,7 @@ class BcVars:
 ```
 
 ```{python}
+#| echo: true
 class CellVars:
     """ Cell-centered coefficients and variables. """
     c_0 = symbols("c_0")
@@ -117,6 +121,7 @@ class CellVars:
 ```
 
 ```{python}
+#| echo: true
 class FaceVars:
     """ Face-centered coefficients and variables. """
     D_e = symbols("D_e")
@@ -133,6 +138,7 @@ class FaceVars:
 To approximate the aforementioned gradients, the next cell introduces the expressions for the fluxes at east and west faces. These helper functions ensure the order of arguments is consistent with the finite difference definition given above.
 
 ```{python}
+#| echo: true
 def diffusion_flux(D, c_left, c_right, delta=FvmVars.delta):
     """ Compute the (forward difference) diffusion flux between two points. """
     return -D * (c_right - c_left) / delta
@@ -153,6 +159,7 @@ def diffusion_flux_west(D=FaceVars.D_w, c_left=CellVars.c_W,
 For standardizing equations as organized as $F(x)=0$ we override `sympy.Eq` with `StandardEquation` class:
 
 ```{python}
+#| echo: true
 class StandardEquation(SymEq):
     """ Standard LHS format of finite volume equation. """
     def __new__(cls, lhs, rhs=0, **kwargs):
@@ -197,6 +204,7 @@ Eq = StandardEquation
 Below we compose the diffusion equation with help of [SymPy](https://docs.sympy.org/latest/index.html) and the above extensions. Notice that when compositing the right-hand side `rhs` we multiply by -1 because we are integrating the negative of the fluxes.
 
 ```{python}
+#| echo: true
 J_w = diffusion_flux_west()
 J_e = diffusion_flux_east()
 
@@ -216,6 +224,7 @@ $$
 Or as code:
 
 ```{python}
+#| echo: true
 def harmonic_mean(a, b):
     """ Compute the harmonic mean of two values. """
     return 2 * a * b / (a + b)
@@ -237,6 +246,7 @@ $$
 This definition is provided below for helping with the replacements that follow.
 
 ```{python}
+#| echo: true
 def fourier_number(D, tau=FvmVars.tau, delta=FvmVars.delta):
     """ Compute the Fourier number for the given parameters. """
     return D * tau / delta**2
@@ -253,6 +263,7 @@ SUBS_FOURIER = [
 Performing the replacements with help of SymPy:
 
 ```{python}
+#| echo: true
 eq = eq.subs(SUBS_FOURIER)
 eq
 ```
@@ -262,6 +273,7 @@ Notice that so far nothing has been said with respect to the instant at which th
 Because it is more convenient for symbolic manipulations with SymPy, the problem is currently written as $F(c)=0$, *i.e.* all elements are on the left-hand side. Care must be taken to properly interpret the signs of the coefficients below.
 
 ```{python}
+#| echo: true
 coefs = eq.coefficients()
 coefs
 ```
@@ -269,6 +281,7 @@ coefs
 Because it is more readable, a helper utility is provided to tabulate them:
 
 ```{python}
+#| echo: true
 eq.tabulate()
 ```
 
@@ -298,6 +311,7 @@ $$
 Please, notice that from now on we make use of class `StandardProblem` for the end of representing a canonical discrete equation. It encodes the results obtained in the previous section and is also repeated below:
 
 ```{python}
+#| echo: true
 class StandardProblem:
     """ Standard format of finite volume diffusion problem in 1-D. """
     @staticmethod
@@ -328,6 +342,7 @@ class StandardProblem:
 ```
 
 ```{python}
+#| echo: true
 StandardProblem.full_expression()
 ```
 
@@ -340,6 +355,7 @@ Partial control volumes on boundaries are not desirable as they introduce implem
 **Immersed boundary:** Assume the last cell on *west* boundary is indexed as $P$; over its *west* boundary we find a node where prescribed composition $c_{B}$ is enforced - and the corresponding diffusion coefficient $D_{b}$. Notice that this node does not belong to the cell, nor represents a half-cell, but lies over its boundary. To keep it simple, let's assume $c_{B}$ is constant (time-dependency would slightly complicate the development and it is worth postponing it to the algorithm development discussion), so keeping our fully implicit scheme leads to We start by computing the mass flux from the boundary node to the first cell center; this flux is computed using half-cell length $\delta/2$ for the derivative approximation.
 
 ```{python}
+#| echo: true
 J_w = diffusion_flux_west(FaceVars.D_b, CellVars.c_B, FvmVars.delta/2)
 J_w
 ```
@@ -347,6 +363,7 @@ J_w
 This expression of flux is used as replacement for the *west* boundary in the full equation:
 
 ```{python}
+#| echo: true
 eq = StandardProblem.full_expression(J_w=J_w, subs_fourier=True)
 eq
 ```
@@ -354,6 +371,7 @@ eq
 The coefficients for the first row of the matrix problem are summarized below:
 
 ```{python}
+#| echo: true
 eq.tabulate()
 ```
 
@@ -366,6 +384,7 @@ The immersed boundary approach presented above is simple. Nonetheless, it requir
 Our goal is to identify an equation for $c_{G}$ so that it is solved along with the interior points and ensures the same flux as the immersed node. To identify the compatible *ghost* composition we equate the fluxes by both definitions and solve for $c_{G}$. The following steps repeat what we have seem so far and should be self-explanatory.
 
 ```{python}
+#| echo: true
 J_w1 = diffusion_flux_west(FaceVars.D_b, CellVars.c_B, FvmVars.delta/2)
 J_w2 = diffusion_flux_west(FaceVars.D_g, CellVars.c_G, FvmVars.delta)
 
@@ -377,6 +396,7 @@ Care must be taken for interpreting the above result; here $c_{G}$ takes the dia
 Since this equation has $D_{g}$ as a coefficient, an initial guess for $c_{G}$ is required. The boundary $B$ being the same interface for evaluation of $D_{g}$, for both fluxes to equate one needs to make sure the same diffusivity is evaluated there. Thus we make $D_{b}\equiv{}D_{g}$, what seems physically reasonable but so far not supported by any mathematical argument:
 
 ```{python}
+#| echo: true
 c_G_sol = Eq(J_w1 - J_w2).solve_for(CellVars.c_G)[0]
 c_G_sol = c_G_sol.subs(FaceVars.D_b, FaceVars.D_g)
 c_G_sol
@@ -388,6 +408,7 @@ This simply says that the composition is linearly extrapolated, with the distanc
 One could think about solving for $c_G$ and using the result in the standard balance equation, but doing so falls back to the immersed boundary approach. Replacing the solution in `J_w2` simply gets back to the initial point and does not produce one extra equation!
 
 ```{python}
+#| echo: true
 J_w = J_w2.subs(CellVars.c_G, c_G_sol)
 
 eq = StandardProblem.full_expression(J_w=J_w, subs_fourier=True)
@@ -454,12 +475,14 @@ That said, type 3 condition is *all we need* for a first solid state diffusion s
 The (scalar) convention we used so far implies a convective flux that is positive *outwards* the domain, $J=h(c_{b}-c_{\infty})>0$ if $c_{b}>c_{\infty}$, *i.e.*, the chemical potential in the solid is higher than the environment. The *west* boundary being oriented towards the $-y$ axis, we need to account for its sign; in later chapters we will see that the boundary condition reasoning is actually simpler to follow in higher dimensions as we implicitly treat the face normal vectors through the inner product.
 
 ```{python}
+#| echo: true
 def convection_flux(cb, h=BcVars.h, c_inf=BcVars.c_inf):
     """ Compute the convection flux between environment and surface. """
     return h * (c_inf - cb)
 ```
 
 ```{python}
+#| echo: true
 q_bw = -convection_flux(CellVars.c_B)
 q_be = +convection_flux(CellVars.c_B)
 ```
@@ -467,6 +490,7 @@ q_be = +convection_flux(CellVars.c_B)
 In what follows we derive the immersed boundary equation for type 3 condition. The extension to *ghost* cells is trivial and can be worked out with the ideas presented in section @sec-type-1-bc-dirichlet. We solve for $c_{B}$ at both sides of the domain by equating the convective flux to the one established internally with the immersed boundary node:
 
 ```{python}
+#| echo: true
 J_w = diffusion_flux_west(FaceVars.D_b, CellVars.c_B, FvmVars.delta/2)
 J_e = diffusion_flux_east(FaceVars.D_b, CellVars.c_B, FvmVars.delta/2)
 
@@ -477,18 +501,21 @@ c_Be = Eq(J_e - q_be).solve_for(CellVars.c_B)[0]
 This leads to
 
 ```{python}
+#| echo: true
 c_Bw
 ```
 
 and
 
 ```{python}
+#| echo: true
 c_Be
 ```
 
 If we take, *e.g.*, the *west* boundary equation with the previous definition of flux evaluated from the immersed boundary node, we retrieve the corresponding equation for the system. Notice that $c_{B}$ is a known value at the current iteration, so in solution it can be moved to the right-hand side and act as a flux term. This gives a grasp of the solution algorithm that makes the subject for the next section.
 
 ```{python}
+#| echo: true
 eq = StandardProblem.full_expression(J_w=J_w, subs_fourier=True)
 eq.tabulate()
 ```
@@ -655,25 +682,30 @@ $$
 
 ## Python prototype
 
-::: callout-note
+```{python}
+%load_ext majordome_utilities.skipper
+
+import os
+os.environ["SKIP_DRAFTS"] = "true"
+```
+<!-- ::: callout-note
 ## Draft 1 - cell-node approach
-:::
+::: -->
 
 ```{python}
+%%skipper SKIP_DRAFTS
 class Cell:
     __slots__ = ("_x",)
 
     def __init__(self, center) -> None:
         self._x = center
-```
 
-```{python}
+
 class NodeCell(Cell):
     def __repr__(self) -> str:
         return f"<NodeCell x={self._x} />"
-```
 
-```{python}
+
 class LineCell(Cell):
     __slots__ = ("_d",)
 
@@ -683,27 +715,23 @@ class LineCell(Cell):
 
     def __repr__(self) -> str:
         return f"<LineCell x={self._x} d={self._d} />"
-```
 
-```{python}
+
 class CellFace:
     __slots__ = ("_center", "_normal",)
 
     def __init__(self, center, normal) -> None:
         self._center = center
         self._normal = normal
-```
 
-```{python}
+
 class CellFace1D(CellFace):
     def __init__(self, center, normal) -> None:
         super().__init__(center, normal)
 
     def __repr__(self) -> str:
         return f"<CellFace1D center={self._center} normal={self._normal} />"
-```
 
-```{python}
 class Grid1D:
     __slots__ = ["_cells", "_faces"]
 
@@ -732,6 +760,7 @@ class Grid1D:
 ```
 
 ```{python}
+%%skipper SKIP_DRAFTS
 Lx = 1.00
 dx = 0.1
 
@@ -746,6 +775,7 @@ for c in grid._faces:
 ```
 
 ```{python}
+%%skipper SKIP_DRAFTS
 x = np.array(symbols("x:10"))
 
 grid = Grid1D(x)
@@ -756,11 +786,12 @@ for c in grid._faces:
     print(c)
 ```
 
-::: callout-note
+<!-- ::: callout-note
 ## Draft 2 - OpenFOAM approach
-:::
+::: -->
 
 ```{python}
+%%skipper SKIP_DRAFTS
 Coordinate = tuple[float, ...]
 
 
@@ -796,25 +827,27 @@ class GridGraph1D(GridGraph):
         self.vertex = xf
 ```
 
-First we define the $x$ coordinates of faces in grid:
+<!-- First we define the $x$ coordinates of faces in grid: -->
 
 ```{python}
+%%skipper SKIP_DRAFTS
 Lx = 1.00
 dx = 0.1
 
 xf = np.arange(0, Lx+dx/2, dx)
 ```
 
-For a pseudo-one-dimensional mesh we need each point over $x$ to actually be a face of unit area; this can be accomplished, for instance, by surrounding the axis with a unit square such as provided in the pseudo-code below:
+<!-- For a pseudo-one-dimensional mesh we need each point over $x$ to actually be a face of unit area; this can be accomplished, for instance, by surrounding the axis with a unit square such as provided in the pseudo-code below:
 
 ```
 0: (x, -1/2, -1/2)
 1: (x, +1/2, -1/2)
 2: (x, -1/2, +1/2)
 3: (x, +1/2, +1/2)
-```
+``` -->
 
 ```{python}
+%%skipper SKIP_DRAFTS
 square = [
     (-1/2, -1/2),
     (+1/2, -1/2),
@@ -827,6 +860,7 @@ x
 ```
 
 ```{python}
+%%skipper SKIP_DRAFTS
 # grid = GridGraph1D(xf)
 # grid.vertex
 ```

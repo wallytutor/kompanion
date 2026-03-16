@@ -50,16 +50,6 @@ book:
         - chap-controls/mpc-boiling-evaporation.qmd
         - chap-controls/mpc-kinetics-part-a.qmd
 
-  # --------------------------------------------------------------------------
-  # FINITE VOLUME METHOD
-  # --------------------------------------------------------------------------
-
-    - part: "Finite Volume Method"
-      chapters:
-        - chap-finite-volumes/index.qmd
-        - chap-finite-volumes/diffusion-1d/index.qmd
-        - chap-finite-volumes/convection-1d/index.qmd
-
 
   # --------------------------------------------------------------------------
   # ELMER CASES

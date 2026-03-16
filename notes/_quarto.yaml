@@ -53,6 +53,12 @@ book:
         - reactors/counter-current-pfr.qmd
         - reactors/converting-nasa-poly.qmd
 
+    - part: "Finite Volume Method"
+      chapters:
+        - fvm/index.qmd
+        - fvm/diffusion-1d.qmd
+        - fvm/convection-1d.qmd
+
     - part: "Montagne"
       chapters:
         - tracks/carto.qmd

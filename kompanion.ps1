@@ -1420,24 +1420,33 @@ function Invoke-InstallImageMagick {
 
 #region: install_configure_lang
 function Invoke-ConfigurePython() {
-    $env:PYTHON_HOME = "$env:KOMPANION_BIN\python\WPy64-31380\python"
+    Write-Head "* Configuring Python..."
+
+    Set-KompanionEnvVar -Name "PYTHON_HOME" `
+        -Value "$env:KOMPANION_BIN\python\WPy64-31380\python"
+
     Initialize-AddToPath -Directory "$env:PYTHON_HOME\Scripts"
     Initialize-AddToPath -Directory "$env:PYTHON_HOME"
 
     # Path to IPython profiles, history, etc.:
-    $env:IPYTHONDIR = "$env:KOMPANION_DIR\.ipython"
+    Set-KompanionEnvVar -Name "IPYTHONDIR" `
+         -Value "$env:KOMPANION_DIR\.ipython"
 
     # Jupyter to be used with IJulia (if any) and data path:
-    $env:JUPYTER = "$env:PYTHON_HOME\Scripts\jupyter.exe"
+    Set-KompanionEnvVar -Name "JUPYTER" `
+         -Value "$env:PYTHON_HOME\Scripts\jupyter.exe"
 
     # Path to Jupyter kernels, etc.:
-    $env:JUPYTER_DATA_DIR = "$env:KOMPANION_DIR\.jupyter"
+    Set-KompanionEnvVar -Name "JUPYTER_DATA_DIR" `
+         -Value "$env:KOMPANION_DIR\.jupyter"
 
     # This is required for nteract to work:
-    $env:JUPYTER_PATH = $env:JUPYTER_DATA_DIR
+    Set-KompanionEnvVar -Name "JUPYTER_PATH" `
+         -Value "$env:JUPYTER_DATA_DIR"
 
     # Point quarto to the right python:
-    $env:QUARTO_PYTHON = "$env:PYTHON_HOME\python.exe"
+    Set-KompanionEnvVar -Name "QUARTO_PYTHON" `
+         -Value "$env:PYTHON_HOME\python.exe"
 
     # Install minimal requirements:
     $lockFile = "$env:KOMPANION_DOT\python.lock"
@@ -1471,14 +1480,20 @@ function Invoke-InstallPython() {
 }
 
 function Invoke-ConfigureRust() {
-    $env:CARGO_HOME  = "$env:KOMPANION_DIR\.cargo"
-    $env:RUSTUP_HOME = "$env:KOMPANION_DIR\.cargo"
+    Write-Head "* Configuring Rust..."
+
+    Set-KompanionEnvVar -Name "CARGO_HOME" `
+        -Value "$env:KOMPANION_DIR\.cargo"
+
+    Set-KompanionEnvVar -Name "RUSTUP_HOME" `
+        -Value "$env:KOMPANION_DIR\.cargo"
+
     Initialize-AddToPath -Directory "$env:CARGO_HOME\bin"
 
     # XXX: disable certificate revocation check due to possible issues
     # with certain Windows configurations (corporate networks, proxies, etc.)
     # Avoid using this in general, as it lowers security!
-    $env:CARGO_HTTP_CHECK_REVOKE = 'false'
+    Set-KompanionEnvVar -Name "CARGO_HTTP_CHECK_REVOKE" -Value "false"
 }
 
 function Invoke-InstallRust() {
@@ -1514,9 +1529,13 @@ function Invoke-InstallRust() {
 }
 
 function Invoke-ConfigureJulia() {
+    Write-Head "* Configuring Julia..."
+
     # XXX: check if JULIA_HOME has any special meaning, otherwise add
     # \bin directly to its definition (I think I cannot do that...).
-    $env:JULIA_HOME = "$env:KOMPANION_BIN\julia\julia-1.12.1"
+    Set-KompanionEnvVar -Name "JULIA_HOME" `
+         -Value "$env:KOMPANION_BIN\julia\julia-1.12.1"
+
     Initialize-AddToPath -Directory "$env:JULIA_HOME\bin"
 
     $env:JULIA_DEPOT_PATH   = "$env:KOMPANION_DIR\.julia"
@@ -1553,8 +1572,12 @@ function Invoke-InstallJulia() {
 }
 
 function Invoke-ConfigureErlang() {
-    $env:ERLANG_HOME = "$env:KOMPANION_BIN\erlang\bin"
-    Initialize-AddToPath -Directory "$env:ERLANG_HOME"
+    Write-Head "* Configuring Erlang..."
+
+    Set-KompanionEnvVar -Name "ERLANG_HOME" `
+         -Value "$env:KOMPANION_BIN\erlang"
+
+    Initialize-AddToPath -Directory "$env:ERLANG_HOME\bin"
 }
 
 function Invoke-InstallErlang() {
@@ -1569,8 +1592,14 @@ function Invoke-InstallErlang() {
 }
 
 function Invoke-ConfigureHaskell() {
-    $env:STACK_HOME = "$env:KOMPANION_BIN\stack"
-    $env:STACK_ROOT = "$env:KOMPANION_DIR\.stack"
+    Write-Head "* Configuring Haskell..."
+
+    Set-KompanionEnvVar -Name "STACK_HOME" `
+         -Value "$env:KOMPANION_BIN\stack"
+
+    Set-KompanionEnvVar -Name "STACK_ROOT" `
+         -Value "$env:KOMPANION_DIR\.stack"
+
     Initialize-AddToPath -Directory "$env:KOMPANION_BIN\stack"
 
     # Install minimal requirements:
@@ -1618,7 +1647,11 @@ function Invoke-InstallElm() {
 }
 
 function Invoke-ConfigureRlang() {
-    $env:RLANG_HOME = "$env:KOMPANION_BIN\rlang"
+    Write-Head "* Configuring R..."
+
+    Set-KompanionEnvVar -Name "RLANG_HOME" `
+         -Value "$env:KOMPANION_BIN\rlang"
+
     Initialize-AddToPath -Directory "$env:RLANG_HOME\bin\x64"
 
     # Path to R libraries
@@ -1667,7 +1700,11 @@ function Invoke-InstallRlang() {
 }
 
 function Invoke-ConfigureNode() {
-    $env:NODE_HOME = "$env:KOMPANION_BIN\node\node-v24.11.0-win-x64"
+    Write-Head "* Configuring Node.js..."
+
+    Set-KompanionEnvVar -Name "NODE_HOME" `
+         -Value "$env:KOMPANION_BIN\node\node-v24.11.0-win-x64"
+
     Initialize-AddToPath -Directory "$env:NODE_HOME"
 }
 
@@ -1694,7 +1731,11 @@ function Invoke-InstallRacket() {
 }
 
 function Invoke-ConfigureCoq() {
-    $env:COQ_HOME = "$env:KOMPANION_BIN\coq"
+    Write-Head "* Configuring Coq..."
+
+    Set-KompanionEnvVar -Name "COQ_HOME" `
+         -Value "$env:KOMPANION_BIN\coq"
+
     Initialize-AddToPath -Directory "$env:COQ_HOME\bin"
 }
 
@@ -1794,7 +1835,11 @@ function Invoke-InstallOpenCascade {
 
 #region: install_configure_sim_conf
 function Invoke-ConfigureGmsh {
-    $env:GMSH_HOME = "$env:KOMPANION_BIN\gmsh\gmsh-4.14.1-Windows64-sdk"
+    Write-Head "* Configuring Gmsh..."
+
+    Set-KompanionEnvVar -Name "GMSH_HOME" `
+         -Value "$env:KOMPANION_BIN\gmsh\gmsh-4.14.1-Windows64-sdk"
+
     Initialize-AddToPath -Directory "$env:GMSH_HOME\lib"
     Initialize-AddToPath -Directory "$env:GMSH_HOME\bin"
     # TODO add to PYTHONPATH;JULIA_LOAD_PATH
@@ -1813,8 +1858,14 @@ function Invoke-InstallGmsh {
 }
 
 function Invoke-ConfigureElmer {
-    $env:ELMER_HOME = "$env:KOMPANION_BIN\elmer\ElmerFEM-gui-mpi-Windows-AMD64"
-    $env:ELMER_GUI_HOME = "$env:ELMER_HOME\share\ElmerGUI"
+    Write-Head "* Configuring Elmer..."
+
+    Set-KompanionEnvVar -Name "ELMER_HOME" `
+         -Value "$env:KOMPANION_BIN\elmer\ElmerFEM-gui-mpi-Windows-AMD64"
+
+    Set-KompanionEnvVar -Name "ELMER_GUI_HOME" `
+         -Value "$env:ELMER_HOME\share\ElmerGUI"
+
     Initialize-AddToPath -Directory "$env:ELMER_HOME\lib"
     Initialize-AddToPath -Directory "$env:ELMER_HOME\bin"
 }
@@ -1832,7 +1883,11 @@ function Invoke-InstallElmer {
 }
 
 function Invoke-ConfigurePrePoMax {
-    $env:PREPOMAX_HOME = "$env:KOMPANION_BIN\prepomax\PrePoMax v2.5.0"
+    Write-Head "* Configuring PrePoMax..."
+
+    Set-KompanionEnvVar -Name "PREPOMAX_HOME" `
+         -Value "$env:KOMPANION_BIN\prepomax\PrePoMax v2.5.0"
+
     Initialize-AddToPath -Directory "$env:PREPOMAX_HOME"
 }
 
@@ -1848,7 +1903,11 @@ function Invoke-InstallPrePoMax {
 }
 
 function Invoke-ConfigureSu2 {
-    $env:SU2_HOME = "$env:KOMPANION_BIN\su2"
+    Write-Head "* Configuring SU2..."
+
+    Set-KompanionEnvVar -Name "SU2_HOME" `
+         -Value "$env:KOMPANION_BIN\su2"
+
     Initialize-AddToPath -Directory "$env:SU2_HOME\bin"
     # TODO add to PYTHONPATH;JULIA_LOAD_PATH
 }
@@ -1873,7 +1932,11 @@ function Invoke-InstallSu2 {
 }
 
 function Invoke-ConfigureRadcal {
-    $env:FIREMODELS_HOME = "$env:KOMPANION_BIN\firemodels"
+    Write-Head "* Configuring Radcal..."
+
+    Set-KompanionEnvVar -Name "FIREMODELS_HOME" `
+         -Value "$env:KOMPANION_BIN\firemodels"
+
     Initialize-AddToPath -Directory "$env:FIREMODELS_HOME\FDS6\bin"
     Initialize-AddToPath -Directory "$env:FIREMODELS_HOME\SMV6"
     Initialize-AddToPath -Directory "$env:FIREMODELS_HOME"
@@ -1901,8 +1964,14 @@ function Invoke-InstallRadcal {
 }
 
 function Invoke-ConfigureTesseract {
-    $env:TESSERACT_HOME = "$env:KOMPANION_BIN\tesseract"
-    $env:TESSDATA_PREFIX = "$env:KOMPANION_BIN\tessdata"
+    Write-Head "* Configuring Tesseract..."
+
+    Set-KompanionEnvVar -Name "TESSERACT_HOME" `
+         -Value "$env:KOMPANION_BIN\tesseract"
+
+    Set-KompanionEnvVar -Name "TESSDATA_PREFIX" `
+         -Value "$env:KOMPANION_BIN\tessdata"
+
     Initialize-AddToPath -Directory "$env:TESSERACT_HOME"
 }
 

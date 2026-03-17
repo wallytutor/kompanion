@@ -6,6 +6,9 @@
     // No update: we wish to keep Kompanion portable and self-contained.
     "update.mode": "none",
 
+    // Remove breadcrumbs for vertical space:
+    "breadcrumbs.enabled": false,
+
     //////////////////////////////////////////////////////////////////////////
     // EXPLORER
     //////////////////////////////////////////////////////////////////////////
@@ -483,6 +486,5 @@
         "10.13.52.2": "linux",
         "frontal": "linux"
     },
-    "chat.viewSessions.orientation": "stacked",
-
+    "chat.viewSessions.orientation": "stacked"
 }

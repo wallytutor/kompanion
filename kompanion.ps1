@@ -1562,8 +1562,8 @@ function Invoke-ConfigureJulia() {
          -Value "$env:KOMPANION_DIR\.CondaPkg"
 
     # Path to local julia modules
-    Set-KompanionEnvVar -Name "JULIA_AUCHIMISTE_PATH" `
-         -Value "$env:AUCHIMISTE_PATH"
+    Set-KompanionEnvVar -Name "AUCHIMISTE_PATH" `
+         -Value "$env:KOMPANION_DIR\src\auchimiste"
 
     # Install minimal requirements:
     $lockFile = "$env:KOMPANION_DOT\julia.lock"

@@ -1,0 +1,3 @@
+default_jupytext_formats = "qmd"
+notebook_metadata_filter = "kernelspec,-all"
+cell_metadata_filter = "-all"

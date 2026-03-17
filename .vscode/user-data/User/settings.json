@@ -50,7 +50,7 @@
     "workbench.editor.pinnedTabSizing": "compact",
 
     // Place elements on top of side bar:
-    // "workbench.activityBar.location": "top",
+    "workbench.activityBar.location": "top",
 
     //////////////////////////////////////////////////////////////////////////
     // EDITOR / DIFFEDITOR
@@ -484,4 +484,5 @@
         "frontal": "linux"
     },
     "chat.viewSessions.orientation": "stacked",
+
 }

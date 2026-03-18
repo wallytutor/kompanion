@@ -2048,4 +2048,11 @@ if (Test-Path -Path "$env:KOMPANION_DOT\aliases.ps1") {
     Write-Good "`n> Loading user-defined aliases"
     . "$env:KOMPANION_DOT\aliases.ps1"
 }
+
+# Get a simpler prompt:
+function prompt {
+    $leaf = Split-Path -Leaf (Get-Location)
+    Write-Host "kompanion:$leaf" -ForegroundColor Cyan -NoNewline
+    return "> "
+}
 #endregion: main

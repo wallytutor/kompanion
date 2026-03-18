@@ -129,6 +129,13 @@ if (Test-Path $env:KOMPANION_SOURCE) {
 } else {
     Write-Host "KOMPANION_SOURCE not found at '$env:KOMPANION_SOURCE'"
 }
+
+# Optional to get a simpler prompt:
+function prompt {
+    $leaf = Split-Path -Leaf (Get-Location)
+    Write-Host "$leaf" -ForegroundColor Cyan -NoNewline
+    return "> "
+}
 ```
 
 Now all PowerShell sessions will automatically source Kompanion, and you can start using it right away. You can run `Kode` from any directory to open the root of this repository in VSCode.

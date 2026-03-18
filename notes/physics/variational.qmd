@@ -6,9 +6,16 @@ These notes are intended to be self-contained and present as little details as p
 
 The main element of variational calculus is the concept of a functional. While a function $f$ maps a number to another number, $f(x):{}\Re\to\Re$, a functional $F$ is a mapping from a function to a number, $F[f(x)]:{}(\Re\to\Re)\to\Re$. Such mapping can be achieved through integration of $f$ over a domain. The main interest of doing so is to seek for a function that establishes a stationary point of the functional, what ultimately leads to the Euler-Lagrange equations.
 
+## External resources
+
+- [Calculus of Variations (Faculty of Khan)](https://www.youtube.com/playlist?list=PLdgVBOaXkb9CD8igcUr9Fmn5WXLpE8ZE_)
+- [The Calculus of Variations and the Euler-Lagrange Equation (Xander Gouws)](https://www.youtube.com/watch?v=V0wx0JBEgZc&t=237s)
+- [Minimization In Infinite Dimensions With The Calculus Of Variations (Dr. Simulate)](https://www.youtube.com/watch?v=F8c1Sp2A8QE)
+- [Finite differences in SymPy](https://docs.sympy.org/latest/explanation/special_topics/finite_diff_derivatives.html)
+- [Taylor Series in Multiple Variables (Wikipedia)](https://en.wikipedia.org/wiki/Taylor_series#Taylor_series_in_multiple_variables)
+
 ```{python}
-from sympy import Function
-import sympy as sm
+from sympy import *
 ```
 
 ## Euler-Lagrange equations
@@ -46,6 +53,32 @@ F[y+\delta{y}] - F[y] =
 $$
 
 <!-- The main idea is to find the function that minimizes (or maximizes) a given functional, which is a mapping from a space of functions to the real numbers. This is often done by finding the stationary points of the functional, which leads to the Euler-Lagrange equations. -->
+
+```{python}
+def univariate_taylor_expansion(f, x, order=2):
+    pass
+
+def multivariate_taylor_expansion(f, x, order=2):
+    pass
+
+```
+
+```{python}
+x, x0, h = symbols('x, x_0, h')
+Fi, Fip1, Fip2 = symbols('F_{i}, F_{i+1}, F_{i+2}')
+
+n = 3 # there are the coefficients c_0=Fi, c_1=dF/dx, c_2=d**2F/dx**2
+c = symbols('c:3')
+
+def P(x, x0, c, n):
+    return sum( ((1/factorial(i))*c[i] * (x-x0)**i for i in range(n)) )
+
+P(Fi, x, c, n)
+```
+
+```{python}
+c
+```
 
 ```{python}
 n = 1

@@ -105,12 +105,16 @@ $URL_ERLANG      = "https://github.com/erlang/otp/releases/download/OTP-27.3.4.4
 $URL_STACK       = "https://github.com/commercialhaskell/stack/releases/download/v3.7.1/stack-3.7.1-windows-x86_64.zip"
 $URL_ELM         = "https://github.com/elm/compiler/releases/download/0.19.1/binary-for-windows-64-bit.gz"
 $URL_RLANG       = "https://cran.asnr.fr/bin/windows/base/R-4.5.2-win.exe"
+$URL_RREPOS      = "https://pbil.univ-lyon1.fr/CRAN/"
+$URL_NODE        = "https://nodejs.org/dist/v24.11.0/node-v24.11.0-win-x64.zip"
+$URL_COQ         = "https://github.com/rocq-prover/platform/releases/download/2025.01.0/Coq-Platform-release-2025.01.0-version.8.20.2025.01-Windows-x86_64.exe"
 
 $URL_PARAVIEW    = "https://www.paraview.org/paraview-downloads/download.php?submit=Download&version=v6.0&type=binary&os=Windows&downloadFile=ParaView-6.0.1-Windows-Python3.12-msvc2017-AMD64.zip"
 $URL_FREECAD     = "https://github.com/FreeCAD/FreeCAD/releases/download/1.0.2/FreeCAD_1.0.2-conda-Windows-x86_64-py311.7z"
 $URL_BLENDER     = "https://ftp.halifax.rwth-aachen.de/blender/release/Blender4.5/blender-4.5.4-windows-x64.zip"
 $URL_MESHLAB     = "https://github.com/cnr-isti-vclab/meshlab/releases/download/MeshLab-2025.07/MeshLab2025.07-windows_x86_64.zip"
 $URL_DWSIM       = "https://github.com/DanWBR/dwsim/releases/download/v9.0.4/DWSIM_v904_win64_portable.7z"
+$URL_FREEFEM     = "https://github.com/FreeFem/FreeFem-sources/releases/download/v4.15/FreeFem++-4.15-b-win64.exe"
 
 $URL_OPENCASCADE = "https://github.com/Open-Cascade-SAS/OCCT/releases/download/V7_9_3/opencascade-7.9.3-vc14-64-combined.zip"
 $URL_GMSH        = "https://gmsh.info/bin/Windows/gmsh-4.14.1-Windows64-sdk.zip"
@@ -120,6 +124,7 @@ $URL_SU2         = "https://github.com/su2code/SU2/releases/download/v8.4.0/SU2-
 $URL_FIREMODELS  = "https://github.com/firemodels/fds/releases/download/FDS-6.10.1/FDS-6.10.1_SMV-6.10.1_win.exe"
 $URL_RADCAL      = "https://github.com/firemodels/radcal/releases/download/v2.0/radcal_win_64.exe"
 $URL_TESSERACT   = "https://github.com/tesseract-ocr/tesseract/releases/download/5.5.0/tesseract-ocr-w64-setup-5.5.0.20241111.exe"
+$URL_TESSDATA    = "https://github.com/tesseract-ocr/tessdata_best.git"
 
 $GIT_KOMPANION = "https://github.com/wallytutor/kompanion.git"
 $GIT_MAJORDOME = "https://github.com/wallytutor/python-majordome.git"
@@ -1750,12 +1755,11 @@ function Invoke-ConfigureRlang() {
 
     if (!(Test-Path $lockFile)) {
         $rscriptPath = "$env:RLANG_HOME\bin\x64\Rscript.exe"
-        $repos = "https://pbil.univ-lyon1.fr/CRAN/"
 
-        $installCmd = "install.packages('tidyverse', repos='$repos')"
+        $installCmd = "install.packages('tidyverse', repos='$URL_RREPOS')"
         Invoke-CapturedCommand $rscriptPath @("-e", $installCmd)
 
-        $installCmd = "install.packages('IRkernel', repos='$repos')"
+        $installCmd = "install.packages('IRkernel', repos='$URL_RREPOS')"
         Invoke-CapturedCommand $rscriptPath @("-e", $installCmd)
 
         # Register IRkernel
@@ -1799,11 +1803,10 @@ function Invoke-ConfigureNode() {
 function Invoke-InstallNode() {
     $output = "$env:KOMPANION_TEMP\node.zip"
     $path   = "$env:KOMPANION_BIN\node"
-    $url    = "https://nodejs.org/dist/v24.11.0/node-v24.11.0-win-x64.zip"
 
     if (Test-Path -Path $path) { return }
 
-    Invoke-DownloadIfNeeded -URL $url -Output $output
+    Invoke-DownloadIfNeeded -URL $URL_NODE -Output $output
     Invoke-UncompressZipIfNeeded -Source $output -Destination $path
 }
 
@@ -1830,11 +1833,10 @@ function Invoke-ConfigureCoq() {
 function Invoke-InstallCoq() {
     $output = "$env:KOMPANION_TEMP\coq.zip"
     $path   = "$env:KOMPANION_BIN\coq"
-    $url    = "https://github.com/rocq-prover/platform/releases/download/2025.01.0/Coq-Platform-release-2025.01.0-version.8.20.2025.01-Windows-x86_64.exe"
 
     if (Test-Path -Path $path) { return }
 
-    Invoke-DownloadIfNeeded -URL $url -Output $output
+    Invoke-DownloadIfNeeded -URL $URL_COQ -Output $output
     Invoke-Uncompress7zIfNeeded -Source $output -Destination $path
 
     $target = Join-Path $path '$PLUGINSDIR'
@@ -1867,9 +1869,10 @@ function Invoke-InstallFreeCAD {
     Invoke-DownloadIfNeeded -URL $url -Output $output
     Invoke-Uncompress7zIfNeeded -Source $output -Destination $path
 
-    $output = "$env:KOMPANION_TEMP\odafileconverter.msi"
-    $path   = "$env:KOMPANION_BIN\odafileconverter"
-    $url    = "https://www.opendesign.com/guestfiles/get?filename=ODAFileConverter_QT6_vc16_amd64dll_26.10.msi"
+    # $output = "$env:KOMPANION_TEMP\odafileconverter.msi"
+    # $path   = "$env:KOMPANION_BIN\odafileconverter"
+    # $query  = "filename=ODAFileConverter_QT6_vc16_amd64dll_26.10.msi"
+    # $url    = "https://www.opendesign.com/guestfiles/get?$query"
 
     # TODO: not working because of page redirection
     # Invoke-DownloadIfNeeded -URL $url -Output $output
@@ -2092,7 +2095,7 @@ function Invoke-InstallTesseract {
     $path = "$env:KOMPANION_BIN\tessdata"
 
     if (-not (Test-Path "$path")) {
-        git clone "https://github.com/tesseract-ocr/tessdata_best.git" "$path"
+        git clone $URL_TESSDATA "$path"
     }
 
     Invoke-ConfigureTesseract
@@ -2109,11 +2112,10 @@ function Invoke-ConfigureFreeFem {
 function Invoke-InstallFreeFem {
     $output = "$env:KOMPANION_TEMP\freefem.exe"
     $path   = "$env:KOMPANION_BIN\freefem"
-    $url    = "https://github.com/FreeFem/FreeFem-sources/releases/download/v4.15/FreeFem++-4.15-b-win64.exe"
 
     if (Test-Path -Path $path) { return }
 
-    Invoke-DownloadIfNeeded -URL $url -Output $output
+    Invoke-DownloadIfNeeded -URL $URL_FREEFEM -Output $output
     # Invoke-UncompressZipIfNeeded -Source $output -Destination $path
     Invoke-ConfigureFreeFem
 }

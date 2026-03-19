@@ -323,6 +323,9 @@ function Get-TargetPath {
         [string]$Path,
         [string]$Target = $null
     )
+    # If a target is specified, that means we know that the zip will
+    # extract a folder, not a bunch of files. This is to avoid nesting
+    # of multiple folders when the zip already contains one.
     if ([string]::IsNullOrWhiteSpace($Target)) {
         $Path
     } else {
@@ -334,19 +337,21 @@ function Invoke-HandledInstall {
     param (
         [string]$Path,
         [string]$Output,
-        [scriptblock]$InstallScript
+        [scriptblock]$InstallScript,
+        [string]$Target = $null
     )
+    $FinalPath = Get-TargetPath -Path $Path -Target $Target
 
     try {
-        if (Test-Path -Path $Path) { return }
+        if (Test-Path -Path $FinalPath) { return }
 
         & $InstallScript
 
-        Write-Good "Successfully installed $Path."
+        Write-Good "Successfully installed $FinalPath."
     } catch {
-        Write-Bad "Failed to install $Path : $_"
-        Remove-Item -Path $Output -ErrorAction SilentlyContinue
-        Remove-Item -Path $Path -Recurse -ErrorAction SilentlyContinue
+        Write-Bad "Failed to install $FinalPath : $_"
+        Remove-Item -Path $Output    -ErrorAction SilentlyContinue
+        Remove-Item -Path $FinalPath -ErrorAction SilentlyContinue -Recurse
     }
 }
 #endregion: kompanion
@@ -433,64 +438,13 @@ function Invoke-UncompressZipIfNeeded() {
         [string]$Destination,
         [string]$Target = $null
     )
-    # If a target is specified, that means we know that the zip will
-    # extract a folder, not a bunch of files. This is to avoid nesting
-    # of multiple folders when the zip already contains one.
-    $pathToTest = Get-TargetPath -Path $Destination -Target $Target
+    $FinalPath = Get-TargetPath -Path $Destination -Target $Target
 
-    if (!(Test-Path -Path $pathToTest)) {
+    if (!(Test-Path -Path $FinalPath)) {
         Write-Host "Expanding $Source into $Destination"
         Expand-Archive -Path $Source -DestinationPath $Destination
     }
 }
-
-# function Invoke-UncompressZipIfNeeded() {
-#     param (
-#         [string]$Source,
-#         [string]$Destination,
-#         [string]$Target = $null
-#     )
-
-#     # Where the user expects the *final* files to be
-#     $finalPath = Get-TargetPath -Path $Destination -Target $Target
-
-#     if (Test-Path -Path $finalPath) {
-#         Write-Host "Skipping $Source, '$finalPath' already exists."
-#         return
-#     }
-
-#     # Make sure the base destination exists
-#     Initialize-EnsureDirectory -Path (Split-Path -Parent $finalPath)
-
-#     # Extract to a temp directory first
-#     $tempDir = Join-Path -Path ([System.IO.Path]::GetTempPath()) -ChildPath ("kompanion_unzip_" + [guid]::NewGuid().ToString("N"))
-#     New-Item -ItemType Directory -Path $tempDir | Out-Null
-
-#     try {
-#         Write-Host "Expanding $Source into temp path $tempDir"
-#         Expand-Archive -LiteralPath $Source -DestinationPath $tempDir -Force
-
-#         $rootItems = Get-ChildItem -LiteralPath $tempDir -Force
-
-#         # If ZIP has a single top-level folder, unwrap it
-#         if ($rootItems.Count -eq 1 -and $rootItems[0].PSIsContainer) {
-#             $rootItems = Get-ChildItem -LiteralPath $rootItems[0].FullName -Force
-#         }
-
-#         Initialize-EnsureDirectory -Path $finalPath
-
-#         foreach ($item in $rootItems) {
-#             Move-Item -LiteralPath $item.FullName -Destination $finalPath -Force
-#         }
-
-#         Write-Host "Expanded $Source into $finalPath"
-#     }
-#     finally {
-#         if (Test-Path -Path $tempDir) {
-#             Remove-Item -LiteralPath $tempDir -Recurse -Force
-#         }
-#     }
-# }
 
 function Invoke-Uncompress7zIfNeeded() {
     param (
@@ -1030,6 +984,7 @@ function Invoke-InstallVsCode {
 }
 
 function Invoke-ConfigureLiteXL {
+
     Write-Head "* Configuring LiteXL..."
 
     Set-KompanionEnvVar -Name "LITEXL_HOME" `
@@ -1041,20 +996,22 @@ function Invoke-ConfigureLiteXL {
 function Invoke-InstallLiteXL {
     $output = "$env:KOMPANION_TEMP\litexl.zip"
     $path   = "$env:KOMPANION_BIN"
-
     $target = "lite-xl"
-    $installedAs = Join-Path -Path $path -ChildPath $target
 
     Invoke-HandledInstall `
-        -Path $installedAs  `
-        -Output $output `
-        -InstallScript {
-        Invoke-DownloadIfNeeded -URL $URL_LITEXL -Output $output
+        -Path   $path     `
+        -Output $output   `
+        -Target $target   `
+        -InstallScript    `
+    {
+        Invoke-DownloadIfNeeded `
+            -URL    $URL_LITEXL `
+            -Output $output
 
         Invoke-UncompressZipIfNeeded `
-            -Source $output          `
+            -Source      $output     `
             -Destination $path       `
-            -Target $target
+            -Target      $target
 
         Invoke-ConfigureLiteXL
     }
@@ -1082,9 +1039,19 @@ function Invoke-InstallTabby {
     $output = "$env:KOMPANION_TEMP\tabby.zip"
     $path   = "$env:KOMPANION_BIN\tabby"
 
-    Invoke-HandledInstall -Path $path -Output $output -InstallScript {
-        Invoke-DownloadIfNeeded -URL $URL_TABBY -Output $output
-        Invoke-UncompressZipIfNeeded -Source $output -Destination $path
+    Invoke-HandledInstall `
+        -Path   $path     `
+        -Output $output   `
+        -InstallScript    `
+    {
+        Invoke-DownloadIfNeeded `
+            -URL    $URL_TABBY  `
+            -Output $output
+
+        Invoke-UncompressZipIfNeeded `
+            -Source      $output     `
+            -Destination $path
+
         Invoke-ConfigureTabby
     }
 }
@@ -2007,18 +1974,31 @@ function Invoke-ConfigurePrePoMax {
     Write-Head "* Configuring PrePoMax..."
 
     Set-KompanionEnvVar -Name "PREPOMAX_HOME" `
-         -Value "$env:KOMPANION_BIN\prepomax\PrePoMax v2.5.0"
+         -Value "$env:KOMPANION_BIN\PrePoMax v2.5.0"
 
     Initialize-AddToPath -Directory "$env:PREPOMAX_HOME"
 }
 
 function Invoke-InstallPrePoMax {
     $output = "$env:KOMPANION_TEMP\prepomax.zip"
-    $path   = "$env:KOMPANION_BIN\prepomax"
+    $path   = "$env:KOMPANION_BIN"
+    $target = "PrePoMax v2.5.0"
 
-    Invoke-HandledInstall -Path $path -Output $output -InstallScript {
-        Invoke-DownloadIfNeeded -URL $URL_PREPOMAX -Output $output
-        Invoke-UncompressZipIfNeeded -Source $output -Destination $path
+    Invoke-HandledInstall `
+        -Path   $path     `
+        -Output $output   `
+        -Target $target   `
+        -InstallScript    `
+    {
+        Invoke-DownloadIfNeeded   `
+            -URL    $URL_PREPOMAX `
+            -Output $output
+
+        Invoke-UncompressZipIfNeeded `
+            -Source      $output     `
+            -Destination $path       `
+            -Target      $target
+
         Invoke-ConfigurePrePoMax
     }
 }

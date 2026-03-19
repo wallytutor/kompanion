@@ -78,6 +78,7 @@ $DEFAULT_RUST_INSTALL = [PSCustomObject]@{
 }
 
 $URL_VSCODE      = "https://update.code.visualstudio.com/latest/win32-x64-archive/stable"
+$URL_LITEXL      = "https://github.com/lite-xl/lite-xl/releases/download/v2.1.8/lite-xl-v2.1.8-addons-windows-x86_64.zip"
 $URL_GIT         = "https://github.com/git-for-windows/git/releases/download/v2.51.0.windows.1/PortableGit-2.51.0-64-bit.7z.exe"
 $URL_CURL        = "https://curl.se/windows/dl-8.16.0_13/curl-8.16.0_13-win64-mingw.zip"
 $URL_SEVENZIP    = "https://github.com/commercialhaskell/stackage-content/releases/download/7z-22.01/"
@@ -317,6 +318,18 @@ function Kode {
         --user-data-dir  $env:VSCODE_SETTINGS
 }
 
+function Get-TargetPath {
+    param (
+        [string]$Path,
+        [string]$Target = $null
+    )
+    if ([string]::IsNullOrWhiteSpace($Target)) {
+        $Path
+    } else {
+        Join-Path -Path $Path -ChildPath $Target
+    }
+}
+
 function Invoke-HandledInstall {
     param (
         [string]$Path,
@@ -325,7 +338,7 @@ function Invoke-HandledInstall {
     )
 
     try {
-        if (Test-Path -Path $path) { return }
+        if (Test-Path -Path $Path) { return }
 
         & $InstallScript
 
@@ -417,14 +430,67 @@ function Initialize-AddToManPath() {
 function Invoke-UncompressZipIfNeeded() {
     param (
         [string]$Source,
-        [string]$Destination
+        [string]$Destination,
+        [string]$Target = $null
     )
+    # If a target is specified, that means we know that the zip will
+    # extract a folder, not a bunch of files. This is to avoid nesting
+    # of multiple folders when the zip already contains one.
+    $pathToTest = Get-TargetPath -Path $Destination -Target $Target
 
-    if (!(Test-Path -Path $Destination)) {
+    if (!(Test-Path -Path $pathToTest)) {
         Write-Host "Expanding $Source into $Destination"
         Expand-Archive -Path $Source -DestinationPath $Destination
     }
 }
+
+# function Invoke-UncompressZipIfNeeded() {
+#     param (
+#         [string]$Source,
+#         [string]$Destination,
+#         [string]$Target = $null
+#     )
+
+#     # Where the user expects the *final* files to be
+#     $finalPath = Get-TargetPath -Path $Destination -Target $Target
+
+#     if (Test-Path -Path $finalPath) {
+#         Write-Host "Skipping $Source, '$finalPath' already exists."
+#         return
+#     }
+
+#     # Make sure the base destination exists
+#     Initialize-EnsureDirectory -Path (Split-Path -Parent $finalPath)
+
+#     # Extract to a temp directory first
+#     $tempDir = Join-Path -Path ([System.IO.Path]::GetTempPath()) -ChildPath ("kompanion_unzip_" + [guid]::NewGuid().ToString("N"))
+#     New-Item -ItemType Directory -Path $tempDir | Out-Null
+
+#     try {
+#         Write-Host "Expanding $Source into temp path $tempDir"
+#         Expand-Archive -LiteralPath $Source -DestinationPath $tempDir -Force
+
+#         $rootItems = Get-ChildItem -LiteralPath $tempDir -Force
+
+#         # If ZIP has a single top-level folder, unwrap it
+#         if ($rootItems.Count -eq 1 -and $rootItems[0].PSIsContainer) {
+#             $rootItems = Get-ChildItem -LiteralPath $rootItems[0].FullName -Force
+#         }
+
+#         Initialize-EnsureDirectory -Path $finalPath
+
+#         foreach ($item in $rootItems) {
+#             Move-Item -LiteralPath $item.FullName -Destination $finalPath -Force
+#         }
+
+#         Write-Host "Expanded $Source into $finalPath"
+#     }
+#     finally {
+#         if (Test-Path -Path $tempDir) {
+#             Remove-Item -LiteralPath $tempDir -Recurse -Force
+#         }
+#     }
+# }
 
 function Invoke-Uncompress7zIfNeeded() {
     param (
@@ -805,6 +871,7 @@ function Start-KompanionBaseInstall {
     Invoke-InstallSevenZip
     Invoke-InstallCurl
     Invoke-InstallVsCode
+    Invoke-InstallLiteXL
     Invoke-InstallGit
 
     if ($Config.tabby)       { Invoke-InstallTabby }
@@ -834,6 +901,7 @@ function Start-KompanionBaseConfigure {
     Invoke-ConfigureSevenZip
     Invoke-ConfigureCurl
     Invoke-ConfigureVsCode
+    Invoke-ConfigureLiteXL
     Invoke-ConfigureGit
 
     if ($Config.tabby)       { Invoke-ConfigureTabby }
@@ -959,6 +1027,37 @@ function Invoke-InstallVsCode {
     Invoke-DownloadIfNeeded -URL $url -Output $output
     Invoke-UncompressZipIfNeeded -Source $output -Destination $path
     Invoke-ConfigureVsCode
+}
+
+function Invoke-ConfigureLiteXL {
+    Write-Head "* Configuring LiteXL..."
+
+    Set-KompanionEnvVar -Name "LITEXL_HOME" `
+        -Value "$env:KOMPANION_BIN\lite-xl"
+
+    Initialize-AddToPath -Directory "$env:LITEXL_HOME"
+}
+
+function Invoke-InstallLiteXL {
+    $output = "$env:KOMPANION_TEMP\litexl.zip"
+    $path   = "$env:KOMPANION_BIN"
+
+    $target = "lite-xl"
+    $installedAs = Join-Path -Path $path -ChildPath $target
+
+    Invoke-HandledInstall `
+        -Path $installedAs  `
+        -Output $output `
+        -InstallScript {
+        Invoke-DownloadIfNeeded -URL $URL_LITEXL -Output $output
+
+        Invoke-UncompressZipIfNeeded `
+            -Source $output          `
+            -Destination $path       `
+            -Target $target
+
+        Invoke-ConfigureLiteXL
+    }
 }
 
 function Invoke-ConfigureGit {

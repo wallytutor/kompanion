@@ -84,7 +84,6 @@ $URL_GIT         = "https://github.com/git-for-windows/git/releases/download/v2.
 $URL_SEVENZIP    = "https://github.com/commercialhaskell/stackage-content/releases/download/7z-22.01/"
 $URL_LESSMSI     = "https://github.com/activescott/lessmsi/releases/download/v2.10.3/lessmsi-v2.10.3.zip"
 $URL_PANDOC      = "https://github.com/jgm/pandoc/releases/download/3.8/pandoc-3.8-windows-x86_64.zip"
-$URL_JABREF      = "https://github.com/JabRef/jabref/releases/download/v5.15/JabRef-5.15-portable_windows.zip"
 $URL_IMAGEMAGICK = "https://github.com/ImageMagick/ImageMagick/releases/download/7.1.2-8/ImageMagick-7.1.2-8-portable-Q16-HDRI-x64.7z"
 $URL_POPPLER     = "https://github.com/oschwartz10612/poppler-windows/releases/download/v25.11.0-0/Release-25.11.0-0.zip"
 $URL_QUARTO      = "https://github.com/quarto-dev/quarto-cli/releases/download/v1.8.26/quarto-1.8.26-win.zip"
@@ -98,7 +97,6 @@ $URL_MIKTEX      = "https://miktex.org/download/ctan/systems/win32/miktex/setup/
 $URL_PYTHON      = "https://github.com/winpython/winpython/releases/download/17.2.20251012/WinPython64-3.13.8.0dotb1.zip"
 $URL_RUST_GNU    = "https://static.rust-lang.org/rustup/dist/x86_64-pc-windows-gnu/rustup-init.exe"
 $URL_RUST_MSVC   = "https://static.rust-lang.org/rustup/dist/x86_64-pc-windows-msvc/rustup-init.exe"
-$URL_JULIA       = "https://julialang-s3.julialang.org/bin/winnt/x64/1.12/julia-1.12.1-win64.zip"
 $URL_ERLANG      = "https://github.com/erlang/otp/releases/download/OTP-27.3.4.4/otp_win64_27.3.4.4.zip"
 $URL_STACK       = "https://github.com/commercialhaskell/stack/releases/download/v3.7.1/stack-3.7.1-windows-x86_64.zip"
 $URL_ELM         = "https://github.com/elm/compiler/releases/download/0.19.1/binary-for-windows-64-bit.gz"
@@ -107,8 +105,6 @@ $URL_RREPOS      = "https://pbil.univ-lyon1.fr/CRAN/"
 $URL_NODE        = "https://nodejs.org/dist/v24.11.0/node-v24.11.0-win-x64.zip"
 $URL_COQ         = "https://github.com/rocq-prover/platform/releases/download/2025.01.0/Coq-Platform-release-2025.01.0-version.8.20.2025.01-Windows-x86_64.exe"
 
-$URL_PARAVIEW    = "https://www.paraview.org/paraview-downloads/download.php?submit=Download&version=v6.0&type=binary&os=Windows&downloadFile=ParaView-6.0.1-Windows-Python3.12-msvc2017-AMD64.zip"
-$URL_BLENDER     =
 $URL_MESHLAB     = "https://github.com/cnr-isti-vclab/meshlab/releases/download/MeshLab-2025.07/MeshLab2025.07-windows_x86_64.zip"
 $URL_DWSIM       = "https://github.com/DanWBR/dwsim/releases/download/v9.0.4/DWSIM_v904_win64_portable.7z"
 $URL_FREEFEM     = "https://github.com/FreeFem/FreeFem-sources/releases/download/v4.15/FreeFem++-4.15-b-win64.exe"
@@ -186,65 +182,127 @@ function Start-KompanionMain {
     }
 }
 
-function Start-KompanionInstall {
+function Start-KompanionConfigure {
     param (
         [pscustomobject]$Config
     )
 
-    Write-Host "`nStarting Kompanion installation..."
+    # Install components if needed
+    $lockFile = "$env:KOMPANION_DOT\kompanion.lock"
 
-    # XXX: languages come last because some packages might override
+    Write-Host "`nStarting Kompanion configuration..."
+
+    # XXX: languages come first because some packages might override
     # them (especially Python that is used everywhere).
 
-    Write-Host "- starting Kompanion base installation..."
+    Write-Host "- starting Kompanion base configuration..."
 
     # XXX: this order is important: sometimes SSL blocks downloads that
     # could succeed if done with curl, thus it comes before other tools!
     Invoke-InstallSevenZip
-    Invoke-ConfigureCurl  # KEEP HERE DURING MIGRATION, NEEDED EARLY!
+    Invoke-ConfigureSevenZip
+    Invoke-ConfigureCurl
     Invoke-InstallVsCode
+    Invoke-ConfigureVsCode
     Invoke-InstallGit
+    Invoke-ConfigureGit
+    Invoke-ConfigureLiteXL
+
+    if ($Config.base.tabby)       { Invoke-ConfigureTabby }
 
     if ($Config.base.nvim)        { Invoke-InstallNvim }
+    if ($Config.base.nvim)        { Invoke-ConfigureNvim }
+
     if ($Config.base.zettlr)      { Invoke-InstallZettlr }
+    if ($Config.base.zettlr)      { Invoke-ConfigureZettlr }
+
+    if ($Config.base.drawio)      { Invoke-ConfigureDrawio }
+
     if ($Config.base.lessmsi)     { Invoke-InstallLessMsi }
+    if ($Config.base.lessmsi)     { Invoke-ConfigureLessMsi }
+
     if ($Config.base.msys2)       { Invoke-InstallMsys2 }
+    if ($Config.base.msys2)       { Invoke-ConfigureMsys2 }
+
     if ($Config.base.pandoc)      { Invoke-InstallPandoc }
-    if ($Config.base.jabref)      { Invoke-InstallJabRef }
+    if ($Config.base.pandoc)      { Invoke-ConfigurePandoc }
+
+    if ($Config.base.jabref)      { Invoke-ConfigureJabRef }
+
     if ($Config.base.inkscape)    { Invoke-InstallInkscape }
+    if ($Config.base.inkscape)    { Invoke-ConfigureInkscape }
+
     if ($Config.base.miktex)      { Invoke-InstallMikTex }
+    if ($Config.base.miktex)      { Invoke-ConfigureMikTex }
+
     if ($Config.base.ffmpeg)      { Invoke-InstallFfmpeg }
+    if ($Config.base.ffmpeg)      { Invoke-ConfigureFfmpeg }
+
     if ($Config.base.imagemagick) { Invoke-InstallImageMagick }
+    if ($Config.base.imagemagick) { Invoke-ConfigureImageMagick }
+
     if ($Config.base.poppler)     { Invoke-InstallPoppler }
+    if ($Config.base.poppler)     { Invoke-ConfigurePoppler }
+
     if ($Config.base.quarto)      { Invoke-InstallQuarto }
+    if ($Config.base.quarto)      { Invoke-ConfigureQuarto }
 
-    Write-Host "- starting Kompanion simulation tools installation..."
+    Write-Host "- starting Kompanion simulation tools configuration..."
 
-    # No configure (not in path):
-    if ($Config.simu.paraview)     { Invoke-InstallParaView }
     if ($Config.simu.meshlab)      { Invoke-InstallMeshLab }
     if ($Config.simu.dwsim)        { Invoke-InstallDwsim }
     if ($Config.simu.opencascade)  { Invoke-InstallOpenCascade }
 
-    # With configure:
-    if ($Config.simu.su2)          { Invoke-InstallSu2 }
-    if ($Config.simu.tesseract)    { Invoke-InstallTesseract }
-    if ($Config.simu.radcal)       { Invoke-InstallRadcal }
-    if ($Config.simu.freefem)      { Invoke-InstallFreeFem }
+    if ($Config.simu.blender)      { Invoke-ConfigureBlender }
+    if ($Config.simu.elmer)        { Invoke-ConfigureElmer }
+    if ($Config.simu.freecad)      { Invoke-ConfigureFreeCAD }
+    if ($Config.simu.gmsh)         { Invoke-ConfigureGmsh }
+    if ($Config.simu.paraview)     { Invoke-ConfigureParaView }
+    if ($Config.simu.prepomax)     { Invoke-ConfigurePrePoMax }
 
-    Write-Host "- starting Kompanion languages installation..."
+    if ($Config.simu.su2)          { Invoke-InstallSu2 }
+    if ($Config.simu.su2)          { Invoke-ConfigureSu2 }
+
+    if ($Config.simu.tesseract)    { Invoke-InstallTesseract }
+    if ($Config.simu.tesseract)    { Invoke-ConfigureTesseract }
+
+    if ($Config.simu.radcal)       { Invoke-InstallRadcal }
+    if ($Config.simu.radcal)       { Invoke-ConfigureRadcal }
+
+    if ($Config.simu.freefem)      { Invoke-InstallFreeFem }
+    if ($Config.simu.freefem)      { Invoke-ConfigureFreeFem }
+
+    Write-Host "- starting Kompanion languages configuration..."
 
     Invoke-InstallPython
+    Invoke-ConfigurePython
+
 
     if ($Config.lang.rust)    { Invoke-InstallRust }
-    if ($Config.lang.julia)   { Invoke-InstallJulia }
+    if ($Config.lang.rust)    { Invoke-ConfigureRust }
+
+    if ($Config.lang.julia)   { Invoke-ConfigureJulia }
+
     if ($Config.lang.node)    { Invoke-InstallNode }
+    if ($Config.lang.node)    { Invoke-ConfigureNode }
+
     if ($Config.lang.erlang)  { Invoke-InstallErlang }
+    if ($Config.lang.erlang)  { Invoke-ConfigureErlang }
+
     if ($Config.lang.haskell) { Invoke-InstallHaskell }
+    if ($Config.lang.haskell) { Invoke-ConfigureHaskell }
+
     if ($Config.lang.elm)     { Invoke-InstallElm }
+    if ($Config.lang.elm)     { Invoke-ConfigureElm }
+
     if ($Config.lang.racket)  { Invoke-InstallRacket }
+    if ($Config.lang.racket)  { Invoke-ConfigureRacket }
+
     if ($Config.lang.coq)     { Invoke-InstallCoq }
+    if ($Config.lang.coq)     { Invoke-ConfigureCoq }
+
     if ($Config.lang.rlang)   { Invoke-InstallRlang }
+    if ($Config.lang.rlang)   { Invoke-ConfigureRlang }
 
     # Create lock file to avoid reinstalling everything on
     # next start (unless -RebuildOnStart is used):
@@ -276,75 +334,6 @@ function Start-KompanionInstall {
             & git clone $GIT_MAJORDOME "$env:KOMPANION_REPO\majordome"
         }
     }
-
-}
-
-function Start-KompanionConfigure {
-    param (
-        [pscustomobject]$Config
-    )
-
-    # Install components if needed
-    $lockFile = "$env:KOMPANION_DOT\kompanion.lock"
-
-    if ($RebuildOnStart -or -not (Test-Path -Path $lockFile)) {
-        Start-KompanionInstall $Config
-    }
-
-    Write-Host "`nStarting Kompanion configuration..."
-
-    # XXX: languages come first because some packages might override
-    # them (especially Python that is used everywhere).
-
-    Write-Host "- starting Kompanion base configuration..."
-
-    Invoke-ConfigureSevenZip
-    Invoke-ConfigureCurl
-    Invoke-ConfigureVsCode
-    Invoke-ConfigureLiteXL
-    Invoke-ConfigureGit
-
-    if ($Config.base.tabby)       { Invoke-ConfigureTabby }
-    if ($Config.base.nvim)        { Invoke-ConfigureNvim }
-    if ($Config.base.zettlr)      { Invoke-ConfigureZettlr }
-    if ($Config.base.drawio)      { Invoke-ConfigureDrawio }
-    if ($Config.base.lessmsi)     { Invoke-ConfigureLessMsi }
-    if ($Config.base.msys2)       { Invoke-ConfigureMsys2 }
-    if ($Config.base.pandoc)      { Invoke-ConfigurePandoc }
-    if ($Config.base.jabref)      { Invoke-ConfigureJabRef }
-    if ($Config.base.inkscape)    { Invoke-ConfigureInkscape }
-    if ($Config.base.miktex)      { Invoke-ConfigureMikTex }
-    # if ($Config.base.nteract)     { Invoke-ConfigureNteract }
-    if ($Config.base.ffmpeg)      { Invoke-ConfigureFfmpeg }
-    if ($Config.base.imagemagick) { Invoke-ConfigureImageMagick }
-    if ($Config.base.poppler)     { Invoke-ConfigurePoppler }
-    if ($Config.base.quarto)      { Invoke-ConfigureQuarto }
-
-    Write-Host "- starting Kompanion simulation tools configuration..."
-
-    if ($Config.simu.blender)   { Invoke-ConfigureBlender }
-    if ($Config.simu.elmer)     { Invoke-ConfigureElmer }
-    if ($Config.simu.freecad)   { Invoke-ConfigureFreeCAD }
-    if ($Config.simu.gmsh)      { Invoke-ConfigureGmsh }
-    if ($Config.simu.prepomax)  { Invoke-ConfigurePrePoMax }
-    if ($Config.simu.su2)       { Invoke-ConfigureSu2 }
-    if ($Config.simu.tesseract) { Invoke-ConfigureTesseract }
-    if ($Config.simu.radcal)    { Invoke-ConfigureRadcal }
-    if ($Config.simu.freefem)   { Invoke-ConfigureFreeFem }
-
-    Write-Host "- starting Kompanion languages configuration..."
-
-    Invoke-ConfigurePython
-
-    if ($Config.lang.rust)    { Invoke-ConfigureRust }
-    if ($Config.lang.julia)   { Invoke-ConfigureJulia }
-    if ($Config.lang.node)    { Invoke-ConfigureNode }
-    if ($Config.lang.erlang)  { Invoke-ConfigureErlang }
-    if ($Config.lang.haskell) { Invoke-ConfigureHaskell }
-    if ($Config.lang.elm)     { Invoke-ConfigureElm }
-    if ($Config.lang.racket)  { Invoke-ConfigureRacket }
-    if ($Config.lang.coq)     { Invoke-ConfigureCoq }
-    if ($Config.lang.rlang)   { Invoke-ConfigureRlang }
 }
 
 function Set-KompanionEnvVar {
@@ -935,27 +924,6 @@ function Invoke-InstallPandoc {
     Invoke-ConfigurePandoc
 }
 
-function Invoke-ConfigureJabRef {
-    Write-Head "* Configuring JabRef..."
-
-    Set-KompanionEnvVar -Name "JABREF_HOME" `
-         -Value "$env:KOMPANION_BIN\jabref\JabRef"
-
-    Initialize-AddToPath -Directory "$env:JABREF_HOME"
-}
-
-function Invoke-InstallJabRef {
-    $output = "$env:KOMPANION_TEMP\jabref.zip"
-    $path   = "$env:KOMPANION_BIN\jabref"
-    $url    = $URL_JABREF
-
-    if (Test-Path -Path $path) { return }
-
-    Invoke-DownloadIfNeeded -URL $url -Output $output
-    Invoke-UncompressZipIfNeeded -Source $output -Destination $path
-    Invoke-ConfigureJabRef
-}
-
 function Invoke-ConfigurePoppler {
     Write-Head "* Configuring Poppler..."
 
@@ -1346,53 +1314,6 @@ function Invoke-InstallRust() {
     }
 }
 
-function Invoke-ConfigureJulia() {
-    Write-Head "* Configuring Julia..."
-
-    # XXX: check if JULIA_HOME has any special meaning, otherwise add
-    # \bin directly to its definition (I think I cannot do that...).
-    Set-KompanionEnvVar -Name "JULIA_HOME" `
-         -Value "$env:KOMPANION_BIN\julia\julia-1.12.1"
-
-    Initialize-AddToPath -Directory "$env:JULIA_HOME\bin"
-
-    Set-KompanionEnvVar -Name "JULIA_DEPOT_PATH" `
-         -Value "$env:KOMPANION_DIR\.julia"
-
-    Set-KompanionEnvVar -Name "JULIA_CONDAPKG_ENV" `
-         -Value "$env:KOMPANION_DIR\.CondaPkg"
-
-    # Path to local julia modules
-    Set-KompanionEnvVar -Name "AUCHIMISTE_PATH" `
-         -Value "$env:KOMPANION_DIR\src\auchimiste"
-
-    # Install minimal requirements:
-    $lockFile = "$env:KOMPANION_DOT\julia.lock"
-
-    # Ignore deps if requested:
-    if ($NoJuliaDeps) {
-        New-Item -ItemType File -Path $lockFile -Force | Out-Null
-    }
-
-    # Note: manually remove lock file if no deps installed at first:
-    if (!(Test-Path $lockFile)) {
-        # This will invode setup.jl which may take a long time...
-        Invoke-CapturedCommand "$env:JULIA_HOME\bin\julia.exe" @("-e", "exit()")
-        New-Item -ItemType File -Path $lockFile -Force | Out-Null
-    }
-}
-
-function Invoke-InstallJulia() {
-    $output = "$env:KOMPANION_TEMP\julia.zip"
-    $path   = "$env:KOMPANION_BIN\julia"
-    $url    = $URL_JULIA
-
-    if (Test-Path -Path $path) { return }
-
-    Invoke-DownloadIfNeeded -URL $url -Output $output
-    Invoke-UncompressZipIfNeeded -Source $output -Destination $path
-}
-
 function Invoke-ConfigureErlang() {
     Write-Head "* Configuring Erlang..."
 
@@ -1578,17 +1499,6 @@ function Invoke-InstallCoq() {
 #endregion: install_configure_lang
 
 #region: install_configure_sim_nonconf
-function Invoke-InstallParaView {
-    $output = "$env:KOMPANION_TEMP\paraview.zip"
-    $path   = "$env:KOMPANION_BIN\paraview"
-    $url    = $URL_PARAVIEW
-
-    if (Test-Path -Path $path) { return }
-
-    Invoke-DownloadIfNeeded -URL $url -Output $output
-    Invoke-UncompressZipIfNeeded -Source $output -Destination $path
-}
-
 function Invoke-InstallMeshLab {
     $output = "$env:KOMPANION_TEMP\meshlab.zip"
     $path   = "$env:KOMPANION_BIN\meshlab"

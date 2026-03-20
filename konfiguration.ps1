@@ -221,10 +221,10 @@ function Invoke-HandledInstall {
             Write-Bad "DEBUG: Failed to install $FinalPath : $_"
         } else {
             Write-Bad "Failed to install $FinalPath"
+            Remove-Item -Path $Output    -ErrorAction SilentlyContinue
+            Remove-Item -Path $FinalPath -ErrorAction SilentlyContinue -Recurse
         }
 
-        # Remove-Item -Path $Output    -ErrorAction SilentlyContinue
-        # Remove-Item -Path $FinalPath -ErrorAction SilentlyContinue -Recurse
         return $false
     }
 
@@ -384,6 +384,73 @@ function Invoke-ConfigureGmsh {
     }
 }
 
+function Invoke-ConfigureJabRef {
+    Write-Head "* Configuring JabRef..."
+
+    $target = "JabRef"
+    $url    = $KOMPANION_SETUP.url.jabref
+    $output = "$env:KOMPANION_TEMP\jabref.zip"
+    $path   = "$env:KOMPANION_BIN"
+
+    $success = Invoke-DlUnzipInstall $path $url $output -Target $target
+
+    if ($success) {
+        Set-KompanionEnvVar -Name "JABREF_HOME" `
+            -Value "$env:KOMPANION_BIN\$target"
+
+        Initialize-AddToPath -Directory "$env:JABREF_HOME"
+    } else {
+        Write-Warn "Failed to install JabRef, skipping configuration..."
+    }
+}
+
+function Invoke-ConfigureJulia {
+    Write-Head "* Configuring Julia..."
+
+    $target = "julia-1.12.1"
+    $url    = $KOMPANION_SETUP.url.julia
+    $output = "$env:KOMPANION_TEMP\julia.zip"
+    $path   = "$env:KOMPANION_BIN"
+
+    $success = Invoke-DlUnzipInstall $path $url $output -Target $target
+
+    if ($success) {
+        # XXX: check if JULIA_HOME has any special meaning, otherwise add
+        # \bin directly to its definition (I think I cannot do that...).
+        Set-KompanionEnvVar -Name "JULIA_HOME" `
+            -Value "$env:KOMPANION_BIN\$target"
+
+        Initialize-AddToPath -Directory "$env:JULIA_HOME\bin"
+
+        Set-KompanionEnvVar -Name "JULIA_DEPOT_PATH" `
+            -Value "$env:KOMPANION_DIR\.julia"
+
+        Set-KompanionEnvVar -Name "JULIA_CONDAPKG_ENV" `
+            -Value "$env:KOMPANION_DIR\.CondaPkg"
+
+        # Path to local julia modules
+        Set-KompanionEnvVar -Name "AUCHIMISTE_PATH" `
+            -Value "$env:KOMPANION_DIR\src\auchimiste"
+
+        # Install minimal requirements:
+        $lockFile = "$env:KOMPANION_DOT\julia.lock"
+
+        # Ignore deps if requested:
+        if ($NoJuliaDeps) {
+            New-Item -ItemType File -Path $lockFile -Force | Out-Null
+        }
+
+        # Note: manually remove lock file if no deps installed at first:
+        if (!(Test-Path $lockFile)) {
+            # This will invode setup.jl which may take a long time...
+            Invoke-CapturedCommand "$env:JULIA_HOME\bin\julia.exe" @("-e", "exit()")
+            New-Item -ItemType File -Path $lockFile -Force | Out-Null
+        }
+    } else {
+        Write-Warn "Failed to install Julia, skipping configuration..."
+    }
+}
+
 function Invoke-ConfigureLiteXL {
     Write-Head "* Configuring LiteXL..."
 
@@ -401,6 +468,25 @@ function Invoke-ConfigureLiteXL {
         Initialize-AddToPath -Directory "$env:LITEXL_HOME"
     } else {
         Write-Warn "Failed to install LiteXL, skipping configuration..."
+    }
+}
+
+function Invoke-ConfigureParaView {
+    Write-Head "* Configuring ParaView..."
+
+    $target = "ParaView-6.0.1-Windows-Python3.12-msvc2017-AMD64"
+    $url    = $KOMPANION_SETUP.url.paraview
+    $output = "$env:KOMPANION_TEMP\paraview.zip"
+    $path   = "$env:KOMPANION_BIN"
+
+    $success = Invoke-DlUnzipInstall $path $url $output -Target $target
+
+    if ($success) {
+        Set-KompanionEnvVar -Name "PARAVIEW_HOME" `
+            -Value "$env:KOMPANION_BIN\$target"
+        # XXX do not add to PATH, use as GUI
+    } else {
+        Write-Warn "Failed to install ParaView, skipping configuration..."
     }
 }
 

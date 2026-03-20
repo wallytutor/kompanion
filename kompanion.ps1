@@ -196,9 +196,57 @@ function Start-KompanionInstall {
 
     # XXX: languages come last because some packages might override
     # them (especially Python that is used everywhere).
-    Start-KompanionBaseInstall $Config.base
-    Start-KompanionLangInstall $Config.lang
-    Start-KompanionSimuInstall $Config.simu
+
+    Write-Host "- starting Kompanion base installation..."
+
+    # XXX: this order is important: sometimes SSL blocks downloads that
+    # could succeed if done with curl, thus it comes before other tools!
+    Invoke-InstallSevenZip
+    Invoke-InstallCurl
+    Invoke-InstallVsCode
+    Invoke-InstallGit
+
+    if ($Config.base.nvim)        { Invoke-InstallNvim }
+    if ($Config.base.zettlr)      { Invoke-InstallZettlr }
+    if ($Config.base.lessmsi)     { Invoke-InstallLessMsi }
+    if ($Config.base.msys2)       { Invoke-InstallMsys2 }
+    if ($Config.base.pandoc)      { Invoke-InstallPandoc }
+    if ($Config.base.jabref)      { Invoke-InstallJabRef }
+    if ($Config.base.inkscape)    { Invoke-InstallInkscape }
+    if ($Config.base.miktex)      { Invoke-InstallMikTex }
+    if ($Config.base.ffmpeg)      { Invoke-InstallFfmpeg }
+    if ($Config.base.imagemagick) { Invoke-InstallImageMagick }
+    if ($Config.base.poppler)     { Invoke-InstallPoppler }
+    if ($Config.base.quarto)      { Invoke-InstallQuarto }
+
+    Write-Host "- starting Kompanion simulation tools installation..."
+
+    # No configure (not in path):
+    if ($Config.simu.paraview)     { Invoke-InstallParaView }
+    if ($Config.simu.blender)      { Invoke-InstallBlender }
+    if ($Config.simu.meshlab)      { Invoke-InstallMeshLab }
+    if ($Config.simu.dwsim)        { Invoke-InstallDwsim }
+    if ($Config.simu.opencascade)  { Invoke-InstallOpenCascade }
+
+    # With configure:
+    if ($Config.simu.su2)          { Invoke-InstallSu2 }
+    if ($Config.simu.tesseract)    { Invoke-InstallTesseract }
+    if ($Config.simu.radcal)       { Invoke-InstallRadcal }
+    if ($Config.simu.freefem)      { Invoke-InstallFreeFem }
+
+    Write-Host "- starting Kompanion languages installation..."
+
+    Invoke-InstallPython
+
+    if ($Config.lang.rust)    { Invoke-InstallRust }
+    if ($Config.lang.julia)   { Invoke-InstallJulia }
+    if ($Config.lang.node)    { Invoke-InstallNode }
+    if ($Config.lang.erlang)  { Invoke-InstallErlang }
+    if ($Config.lang.haskell) { Invoke-InstallHaskell }
+    if ($Config.lang.elm)     { Invoke-InstallElm }
+    if ($Config.lang.racket)  { Invoke-InstallRacket }
+    if ($Config.lang.coq)     { Invoke-InstallCoq }
+    if ($Config.lang.rlang)   { Invoke-InstallRlang }
 
     # Create lock file to avoid reinstalling everything on
     # next start (unless -RebuildOnStart is used):
@@ -242,16 +290,62 @@ function Start-KompanionConfigure {
     $lockFile = "$env:KOMPANION_DOT\kompanion.lock"
 
     if ($RebuildOnStart -or -not (Test-Path -Path $lockFile)) {
-        Start-KompanionInstall $config
+        Start-KompanionInstall $Config
     }
 
     Write-Host "`nStarting Kompanion configuration..."
 
     # XXX: languages come first because some packages might override
     # them (especially Python that is used everywhere).
-    Start-KompanionBaseConfigure $Config.base
-    Start-KompanionSimuConfigure $Config.simu
-    Start-KompanionLangConfigure $Config.lang
+
+    Write-Host "- starting Kompanion base configuration..."
+
+    Invoke-ConfigureSevenZip
+    Invoke-ConfigureCurl
+    Invoke-ConfigureVsCode
+    Invoke-ConfigureLiteXL
+    Invoke-ConfigureGit
+
+    if ($Config.base.tabby)       { Invoke-ConfigureTabby }
+    if ($Config.base.nvim)        { Invoke-ConfigureNvim }
+    if ($Config.base.zettlr)      { Invoke-ConfigureZettlr }
+    if ($Config.base.drawio)      { Invoke-ConfigureDrawio }
+    if ($Config.base.lessmsi)     { Invoke-ConfigureLessMsi }
+    if ($Config.base.msys2)       { Invoke-ConfigureMsys2 }
+    if ($Config.base.pandoc)      { Invoke-ConfigurePandoc }
+    if ($Config.base.jabref)      { Invoke-ConfigureJabRef }
+    if ($Config.base.inkscape)    { Invoke-ConfigureInkscape }
+    if ($Config.base.miktex)      { Invoke-ConfigureMikTex }
+    # if ($Config.base.nteract)     { Invoke-ConfigureNteract }
+    if ($Config.base.ffmpeg)      { Invoke-ConfigureFfmpeg }
+    if ($Config.base.imagemagick) { Invoke-ConfigureImageMagick }
+    if ($Config.base.poppler)     { Invoke-ConfigurePoppler }
+    if ($Config.base.quarto)      { Invoke-ConfigureQuarto }
+
+    Write-Host "- starting Kompanion simulation tools configuration..."
+
+    if ($Config.simu.elmer)     { Invoke-ConfigureElmer }
+    if ($Config.simu.freecad)   { Invoke-ConfigureFreeCAD }
+    if ($Config.simu.gmsh)      { Invoke-ConfigureGmsh }
+    if ($Config.simu.prepomax)  { Invoke-ConfigurePrePoMax }
+    if ($Config.simu.su2)       { Invoke-ConfigureSu2 }
+    if ($Config.simu.tesseract) { Invoke-ConfigureTesseract }
+    if ($Config.simu.radcal)    { Invoke-ConfigureRadcal }
+    if ($Config.simu.freefem)   { Invoke-ConfigureFreeFem }
+
+    Write-Host "- starting Kompanion languages configuration..."
+
+    Invoke-ConfigurePython
+
+    if ($Config.lang.rust)    { Invoke-ConfigureRust }
+    if ($Config.lang.julia)   { Invoke-ConfigureJulia }
+    if ($Config.lang.node)    { Invoke-ConfigureNode }
+    if ($Config.lang.erlang)  { Invoke-ConfigureErlang }
+    if ($Config.lang.haskell) { Invoke-ConfigureHaskell }
+    if ($Config.lang.elm)     { Invoke-ConfigureElm }
+    if ($Config.lang.racket)  { Invoke-ConfigureRacket }
+    if ($Config.lang.coq)     { Invoke-ConfigureCoq }
+    if ($Config.lang.rlang)   { Invoke-ConfigureRlang }
 }
 
 function Set-KompanionEnvVar {
@@ -395,8 +489,6 @@ function Initialize-AddToManPath() {
 #endregion: path
 
 #region: compression
-
-
 function Invoke-UncompressGzipIfNeeded() {
     param(
         [string]$Source,
@@ -706,144 +798,6 @@ function Rename-FilesToStandard {
     }
 }
 #endregion: utils_other
-
-#region: install_configure
-function Start-KompanionBaseInstall {
-    param (
-        [pscustomobject]$Config
-    )
-
-    Write-Host "- starting Kompanion base installation..."
-
-    # XXX: this order is important: sometimes SSL blocks downloads that
-    # could succeed if done with curl, thus it comes before other tools!
-    Invoke-InstallSevenZip
-    Invoke-InstallCurl
-    Invoke-InstallVsCode
-    Invoke-InstallGit
-
-    if ($Config.nvim)        { Invoke-InstallNvim }
-    if ($Config.zettlr)      { Invoke-InstallZettlr }
-    if ($Config.lessmsi)     { Invoke-InstallLessMsi }
-    if ($Config.msys2)       { Invoke-InstallMsys2 }
-    if ($Config.pandoc)      { Invoke-InstallPandoc }
-    if ($Config.jabref)      { Invoke-InstallJabRef }
-    if ($Config.inkscape)    { Invoke-InstallInkscape }
-    if ($Config.miktex)      { Invoke-InstallMikTex }
-    if ($Config.ffmpeg)      { Invoke-InstallFfmpeg }
-    if ($Config.imagemagick) { Invoke-InstallImageMagick }
-    if ($Config.poppler)     { Invoke-InstallPoppler }
-    if ($Config.quarto)      { Invoke-InstallQuarto }
-}
-
-function Start-KompanionBaseConfigure {
-    param (
-        [pscustomobject]$Config
-    )
-
-    Write-Host "- starting Kompanion base configuration..."
-
-    Invoke-ConfigureSevenZip
-    Invoke-ConfigureCurl
-    Invoke-ConfigureVsCode
-    Invoke-ConfigureLiteXL
-    Invoke-ConfigureGit
-
-    if ($Config.tabby)       { Invoke-ConfigureTabby }
-    if ($Config.nvim)        { Invoke-ConfigureNvim }
-    if ($Config.zettlr)      { Invoke-ConfigureZettlr }
-    if ($Config.drawio)      { Invoke-ConfigureDrawio }
-    if ($Config.lessmsi)     { Invoke-ConfigureLessMsi }
-    if ($Config.msys2)       { Invoke-ConfigureMsys2 }
-    if ($Config.pandoc)      { Invoke-ConfigurePandoc }
-    if ($Config.jabref)      { Invoke-ConfigureJabRef }
-    if ($Config.inkscape)    { Invoke-ConfigureInkscape }
-    if ($Config.miktex)      { Invoke-ConfigureMikTex }
-    # if ($Config.nteract)     { Invoke-ConfigureNteract }
-    if ($Config.ffmpeg)      { Invoke-ConfigureFfmpeg }
-    if ($Config.imagemagick) { Invoke-ConfigureImageMagick }
-    if ($Config.poppler)     { Invoke-ConfigurePoppler }
-    if ($Config.quarto)      { Invoke-ConfigureQuarto }
-}
-
-function Start-KompanionLangInstall() {
-    param (
-        [pscustomobject]$Config
-    )
-
-    Write-Host "- starting Kompanion languages installation..."
-
-    Invoke-InstallPython
-
-    if ($Config.rust)    { Invoke-InstallRust }
-    if ($Config.julia)   { Invoke-InstallJulia }
-    if ($Config.node)    { Invoke-InstallNode }
-    if ($Config.erlang)  { Invoke-InstallErlang }
-    if ($Config.haskell) { Invoke-InstallHaskell }
-    if ($Config.elm)     { Invoke-InstallElm }
-    if ($Config.racket)  { Invoke-InstallRacket }
-    if ($Config.coq)     { Invoke-InstallCoq }
-    if ($Config.rlang)   { Invoke-InstallRlang }
-}
-
-function Start-KompanionLangConfigure() {
-    param (
-        [pscustomobject]$Config
-    )
-
-    Write-Host "- starting Kompanion languages configuration..."
-
-    Invoke-ConfigurePython
-
-    if ($Config.rust)    { Invoke-ConfigureRust }
-    if ($Config.julia)   { Invoke-ConfigureJulia }
-    if ($Config.node)    { Invoke-ConfigureNode }
-    if ($Config.erlang)  { Invoke-ConfigureErlang }
-    if ($Config.haskell) { Invoke-ConfigureHaskell }
-    if ($Config.elm)     { Invoke-ConfigureElm }
-    if ($Config.racket)  { Invoke-ConfigureRacket }
-    if ($Config.coq)     { Invoke-ConfigureCoq }
-    if ($Config.rlang)   { Invoke-ConfigureRlang }
-}
-
-function Start-KompanionSimuInstall {
-    param (
-        [pscustomobject]$Config
-    )
-
-    Write-Host "- starting Kompanion simulation tools installation..."
-
-    # No configure (not in path):
-    if ($Config.paraview)     { Invoke-InstallParaView }
-    if ($Config.blender)      { Invoke-InstallBlender }
-    if ($Config.meshlab)      { Invoke-InstallMeshLab }
-    if ($Config.dwsim)        { Invoke-InstallDwsim }
-    if ($Config.opencascade)  { Invoke-InstallOpenCascade }
-
-    # With configure:
-    if ($Config.su2)          { Invoke-InstallSu2 }
-    if ($Config.tesseract)    { Invoke-InstallTesseract }
-    if ($Config.radcal)       { Invoke-InstallRadcal }
-    if ($Config.freefem)      { Invoke-InstallFreeFem }
-}
-
-function Start-KompanionSimuConfigure {
-    param (
-        [pscustomobject]$Config
-    )
-
-    Write-Host "- starting Kompanion simulation tools configuration..."
-
-    if ($Config.elmer)     { Invoke-ConfigureElmer }
-    if ($Config.freecad)   { Invoke-ConfigureFreeCAD }
-    if ($Config.gmsh)      { Invoke-ConfigureGmsh }
-    if ($Config.prepomax)  { Invoke-ConfigurePrePoMax }
-    if ($Config.su2)       { Invoke-ConfigureSu2 }
-    if ($Config.tesseract) { Invoke-ConfigureTesseract }
-    if ($Config.radcal)    { Invoke-ConfigureRadcal }
-    if ($Config.freefem)   { Invoke-ConfigureFreeFem }
-}
-#endregion: install_configure
 
 #region: install_configure_base
 function Invoke-ConfigureVsCode {

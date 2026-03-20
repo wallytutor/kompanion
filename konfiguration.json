@@ -9,6 +9,7 @@
         "jabref":   "https://github.com/JabRef/jabref/releases/download/v5.15/JabRef-5.15-portable_windows.zip",
         "julia":    "https://julialang-s3.julialang.org/bin/winnt/x64/1.12/julia-1.12.1-win64.zip",
         "litexl":   "https://github.com/lite-xl/lite-xl/releases/download/v2.1.8/lite-xl-v2.1.8-addons-windows-x86_64.zip",
+        "lpm":      "https://github.com/lite-xl/lite-xl-plugin-manager/releases/download/continuous/lpm.x86_64-windows.exe",
         "paraview": "https://www.paraview.org/paraview-downloads/download.php?submit=Download&version=v6.0&type=binary&os=Windows&downloadFile=ParaView-6.0.1-Windows-Python3.12-msvc2017-AMD64.zip",
         "prepomax": "https://prepomax.fs.um.si/Files/Downloads/PrePoMax%20v2.5.0.zip",
         "tabby":    "https://github.com/Eugeny/tabby/releases/download/v1.0.230/tabby-1.0.230-portable-x64.zip"

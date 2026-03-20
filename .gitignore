@@ -48,10 +48,12 @@ AppData/
 Desktop/
 Microsoft/
 *.lock
+.cache/
 .ssh/
 
 # Lite-XL editor:
 .config/lite-xl/*
+.config/lpm/*
 !.config/lite-xl/init.lua
 
 #######################################################################

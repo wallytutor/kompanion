@@ -465,7 +465,11 @@ function Invoke-ConfigureLiteXL {
         Set-KompanionEnvVar -Name "LITEXL_HOME" `
             -Value "$env:KOMPANION_BIN\$target"
 
-        $_ = Invoke-DownloadIfNeeded $KOMPANION_SETUP.url.lpm "$env:LITEXL_HOME\lpm.exe"
+        # Invoke-WebRequest -Uri "https://github.com/lite-xl/lite-xl-plugin-manager/releases/download/latest/lpm.x86_64-windows.exe" -OutFile "lpm.exe"
+        # lpm.exe install plugin_manager --assume-yes
+        # Remove-Item lpm.exe
+
+        # $_ = Invoke-DownloadIfNeeded $KOMPANION_SETUP.url.lpm "$env:LITEXL_HOME\lpm.exe"
         # & "$env:LITEXL_HOME\lpm.exe" install plugin_manager --assume-yes
 
         Initialize-AddToPath -Directory "$env:LITEXL_HOME"

@@ -19,6 +19,8 @@ param (
     [switch]$NoMajordome
 )
 
+. "$PSScriptRoot\konfiguration.ps1"
+
 #region: default_config
 $DEFAULT_CONFIG = [PSCustomObject]@{
     base = [PSCustomObject]@{
@@ -322,43 +324,6 @@ function Kode {
         --extensions-dir $env:VSCODE_EXTENSIONS `
         --user-data-dir  $env:VSCODE_SETTINGS
 }
-
-function Get-TargetPath {
-    param (
-        [string]$Path,
-        [string]$Target = $null
-    )
-    # If a target is specified, that means we know that the zip will
-    # extract a folder, not a bunch of files. This is to avoid nesting
-    # of multiple folders when the zip already contains one.
-    if ([string]::IsNullOrWhiteSpace($Target)) {
-        $Path
-    } else {
-        Join-Path -Path $Path -ChildPath $Target
-    }
-}
-
-function Invoke-HandledInstall {
-    param (
-        [string]$Path,
-        [string]$Output,
-        [scriptblock]$InstallScript,
-        [string]$Target = $null
-    )
-    $FinalPath = Get-TargetPath -Path $Path -Target $Target
-
-    try {
-        if (Test-Path -Path $FinalPath) { return }
-
-        & $InstallScript
-
-        Write-Good "Successfully installed $FinalPath."
-    } catch {
-        Write-Bad "Failed to install $FinalPath : $_"
-        Remove-Item -Path $Output    -ErrorAction SilentlyContinue
-        Remove-Item -Path $FinalPath -ErrorAction SilentlyContinue -Recurse
-    }
-}
 #endregion: kompanion
 
 #region: messages
@@ -437,20 +402,6 @@ function Initialize-AddToManPath() {
 #endregion: path
 
 #region: compression
-function Invoke-UncompressZipIfNeeded() {
-    param (
-        [string]$Source,
-        [string]$Destination,
-        [string]$Target = $null
-    )
-    $FinalPath = Get-TargetPath -Path $Destination -Target $Target
-
-    if (!(Test-Path -Path $FinalPath)) {
-        Write-Host "Expanding $Source into $Destination"
-        Expand-Archive -Path $Source -DestinationPath $Destination
-    }
-}
-
 function Invoke-Uncompress7zIfNeeded() {
     param (
         [string]$Source,
@@ -687,25 +638,6 @@ function Invoke-CapturedCommand() {
     | Add-Content "$env:KOMPANION_LOGS\kompanion.err"
 }
 
-function Invoke-DownloadIfNeeded() {
-    param (
-        [string]$URL,
-        [string]$Output
-    )
-
-    if (!(Test-Path -Path $Output)) {
-        Write-Host "Downloading $URL as $Output"
-
-        try {
-            # XXX: -ErrorAction Stop is required to catch errors
-            Start-BitsTransfer -Source $URL -Destination $Output -ErrorAction Stop
-        } catch {
-            # Invoke-WebRequest -Uri $URL -OutFile $Output --> TOO SLOW
-            curl.exe --ssl-no-revoke $URL --output $Output
-        }
-    }
-}
-
 function Invoke-DirectoryBackupNoAdmin() {
     param (
         [string]$Source,
@@ -830,10 +762,8 @@ function Start-KompanionBaseInstall {
     Invoke-InstallSevenZip
     Invoke-InstallCurl
     Invoke-InstallVsCode
-    Invoke-InstallLiteXL
     Invoke-InstallGit
 
-    if ($Config.tabby)       { Invoke-InstallTabby }
     if ($Config.nvim)        { Invoke-InstallNvim }
     if ($Config.zettlr)      { Invoke-InstallZettlr }
     if ($Config.drawio)      { Invoke-InstallDrawio }
@@ -843,7 +773,6 @@ function Start-KompanionBaseInstall {
     if ($Config.jabref)      { Invoke-InstallJabRef }
     if ($Config.inkscape)    { Invoke-InstallInkscape }
     if ($Config.miktex)      { Invoke-InstallMikTex }
-    # if ($Config.nteract)     { Invoke-InstallNteract }
     if ($Config.ffmpeg)      { Invoke-InstallFfmpeg }
     if ($Config.imagemagick) { Invoke-InstallImageMagick }
     if ($Config.poppler)     { Invoke-InstallPoppler }
@@ -938,7 +867,6 @@ function Start-KompanionSimuInstall {
     # With configure:
     if ($Config.gmsh)         { Invoke-InstallGmsh }
     if ($Config.elmer)        { Invoke-InstallElmer }
-    if ($Config.prepomax)     { Invoke-InstallPrePoMax }
     if ($Config.su2)          { Invoke-InstallSu2 }
     if ($Config.tesseract)    { Invoke-InstallTesseract }
     if ($Config.radcal)       { Invoke-InstallRadcal }
@@ -988,40 +916,6 @@ function Invoke-InstallVsCode {
     Invoke-ConfigureVsCode
 }
 
-function Invoke-ConfigureLiteXL {
-
-    Write-Head "* Configuring LiteXL..."
-
-    Set-KompanionEnvVar -Name "LITEXL_HOME" `
-        -Value "$env:KOMPANION_BIN\lite-xl"
-
-    Initialize-AddToPath -Directory "$env:LITEXL_HOME"
-}
-
-function Invoke-InstallLiteXL {
-    $output = "$env:KOMPANION_TEMP\litexl.zip"
-    $path   = "$env:KOMPANION_BIN"
-    $target = "lite-xl"
-
-    Invoke-HandledInstall `
-        -Path   $path     `
-        -Output $output   `
-        -Target $target   `
-        -InstallScript    `
-    {
-        Invoke-DownloadIfNeeded `
-            -URL    $URL_LITEXL `
-            -Output $output
-
-        Invoke-UncompressZipIfNeeded `
-            -Source      $output     `
-            -Destination $path       `
-            -Target      $target
-
-        Invoke-ConfigureLiteXL
-    }
-}
-
 function Invoke-ConfigureGit {
     Write-Head "* Configuring Git..."
 
@@ -1029,36 +923,6 @@ function Invoke-ConfigureGit {
         -Value "$env:KOMPANION_BIN\git"
 
     Initialize-AddToPath -Directory "$env:GIT_HOME\cmd"
-}
-
-function Invoke-ConfigureTabby {
-    Write-Head "* Configuring Tabby..."
-
-    Set-KompanionEnvVar -Name "TABBY_HOME" `
-        -Value "$env:KOMPANION_BIN\tabby"
-
-    Initialize-AddToPath -Directory "$env:TABBY_HOME"
-}
-
-function Invoke-InstallTabby {
-    $output = "$env:KOMPANION_TEMP\tabby.zip"
-    $path   = "$env:KOMPANION_BIN\tabby"
-
-    Invoke-HandledInstall `
-        -Path   $path     `
-        -Output $output   `
-        -InstallScript    `
-    {
-        Invoke-DownloadIfNeeded `
-            -URL    $URL_TABBY  `
-            -Output $output
-
-        Invoke-UncompressZipIfNeeded `
-            -Source      $output     `
-            -Destination $path
-
-        Invoke-ConfigureTabby
-    }
 }
 
 function Invoke-InstallGit {
@@ -1971,39 +1835,6 @@ function Invoke-InstallElmer {
     Invoke-DownloadIfNeeded -URL $url -Output $output
     Invoke-UncompressZipIfNeeded -Source $output -Destination $path
     Invoke-ConfigureElmer
-}
-
-function Invoke-ConfigurePrePoMax {
-    Write-Head "* Configuring PrePoMax..."
-
-    Set-KompanionEnvVar -Name "PREPOMAX_HOME" `
-         -Value "$env:KOMPANION_BIN\PrePoMax v2.5.0"
-
-    Initialize-AddToPath -Directory "$env:PREPOMAX_HOME"
-}
-
-function Invoke-InstallPrePoMax {
-    $output = "$env:KOMPANION_TEMP\prepomax.zip"
-    $path   = "$env:KOMPANION_BIN"
-    $target = "PrePoMax v2.5.0"
-
-    Invoke-HandledInstall `
-        -Path   $path     `
-        -Output $output   `
-        -Target $target   `
-        -InstallScript    `
-    {
-        Invoke-DownloadIfNeeded   `
-            -URL    $URL_PREPOMAX `
-            -Output $output
-
-        Invoke-UncompressZipIfNeeded `
-            -Source      $output     `
-            -Destination $path       `
-            -Target      $target
-
-        Invoke-ConfigurePrePoMax
-    }
 }
 
 function Invoke-ConfigureSu2 {

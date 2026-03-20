@@ -1,0 +1,226 @@
+$KOMPANION_DEBUG = $true
+
+#region: utilities
+function Get-TargetPath {
+    param (
+        [Parameter(Mandatory, Position=0)]
+        [string]$Path,
+
+        [string]$Target = $null
+    )
+    # If a target is specified, that means we know that the zip will
+    # extract a folder, not a bunch of files. This is to avoid nesting
+    # of multiple folders when the zip already contains one.
+    if ([string]::IsNullOrWhiteSpace($Target)) {
+        $Path
+    } else {
+        Join-Path -Path $Path -ChildPath $Target
+    }
+}
+
+function Invoke-DownloadIfNeeded {
+    param (
+        [Parameter(Mandatory, Position=0)]
+        [string]$URL,
+
+        [Parameter(Mandatory, Position=1)]
+        [string]$Output
+    )
+
+    if (Test-Path -Path $Output) {
+        return $true
+    }
+
+    Write-Host "Downloading $URL as $Output"
+
+    $success = $false
+
+    # Start-BitsTransfer
+    if (!$success) {
+        try {
+            # XXX: -ErrorAction Stop is required to catch errors
+            Start-BitsTransfer -Source $URL -Destination $Output -ErrorAction Stop
+            $success = $true
+        } catch {
+            Write-Bad "Failed to download $URL as $Output (Start-BitsTransfer)"
+        }
+    }
+
+    # curl.exe
+    if (!$success) {
+        try {
+            # Invoke-WebRequest -Uri $URL -OutFile $Output --> TOO SLOW
+            curl.exe --ssl-no-revoke $URL --output $Output
+            $success = ($LASTEXITCODE -eq 0)
+        } catch {
+            Write-Bad "Failed to download $URL as $Output (curl)"
+        }
+    }
+
+    return $success
+}
+
+function Invoke-UncompressZipIfNeeded {
+    param (
+        [Parameter(Mandatory, Position=0)]
+        [string]$Source,
+
+        [Parameter(Mandatory, Position=1)]
+        [string]$Destination,
+
+        [string]$Target = $null
+    )
+
+    $FinalPath = Get-TargetPath $Destination -Target $Target
+
+    if (!(Test-Path -Path $FinalPath)) {
+        Write-Host "Expanding $Source into $Destination"
+
+        try {
+            Expand-Archive -Path $Source -DestinationPath $Destination
+        } catch {
+            Write-Bad "Failed to expand $Source into $Destination : $_"
+            return $false
+        }
+
+        return (Test-Path -Path $FinalPath)
+    }
+}
+
+function Invoke-HandledInstall {
+    # This is a helper function to run an installation script and handle
+    # errors in a consistent way. It will identify the final path of the
+    # installation (if the user provided target, more below), then try to
+    # run the installation script. If something goes wrong, both the source
+    # installation file `Output` and the final installation path `FinalPath`
+    # will be removed to avoid leaving broken files around. The user will
+    # be notified of the error and the function will return $false. If
+    # everything goes well, the function will return $true and the user
+    # will be notified of the successful installation.
+    param (
+        [Parameter(Mandatory, Position=0)]
+        [string]$Path,
+
+        [Parameter(Mandatory, Position=1)]
+        [string]$Output,
+
+        [Parameter(Mandatory, Position=2)]
+        [scriptblock]$InstallScript,
+
+        [string]$Target = $null
+    )
+
+    $FinalPath = Get-TargetPath $Path -Target $Target
+
+    if (Test-Path -Path $FinalPath) {
+        if ($KOMPANION_DEBUG) {
+            Write-Warn "* Installation target $FinalPath already exists..."
+        }
+        return $true
+    }
+
+    try {
+        & $InstallScript
+
+        Write-Good "Successfully installed $FinalPath."
+    } catch {
+        if ($KOMPANION_DEBUG) {
+            Write-Bad "DEBUG: Failed to install $FinalPath : $_"
+        } else {
+            Write-Bad "Failed to install $FinalPath"
+        }
+
+        Remove-Item -Path $Output    -ErrorAction SilentlyContinue
+        Remove-Item -Path $FinalPath -ErrorAction SilentlyContinue -Recurse
+        return $false
+    }
+
+    return $true
+}
+#endregion: utilities
+
+#region: configuration
+function Invoke-ConfigureLiteXL {
+    Write-Head "* Configuring LiteXL..."
+
+    $target = "lite-xl"
+    $url    = "$URL_LITEXL"
+    $output = "$env:KOMPANION_TEMP\litexl.zip"
+    $path   = "$env:KOMPANION_BIN"
+
+    $success = Invoke-HandledInstall $path $output -InstallScript {
+        if (!(Invoke-DownloadIfNeeded -URL $url -Output $output)) {
+            throw "Failed to download $url as $output"
+        }
+
+        if (!(Invoke-UncompressZipIfNeeded $output $path -Target $target)) {
+            throw "Failed to expand $output into $path with target $target"
+        }
+    } -Target $target
+
+    if ($success) {
+        Set-KompanionEnvVar -Name "LITEXL_HOME" `
+            -Value "$env:KOMPANION_BIN\$target"
+
+        Initialize-AddToPath -Directory "$env:LITEXL_HOME"
+    } else {
+        Write-Warn "Failed to install LiteXL, skipping configuration..."
+    }
+}
+
+function Invoke-ConfigurePrePoMax {
+    Write-Head "* Configuring PrePoMax..."
+
+    $target = "PrePoMax v2.5.0"
+    $url    = "$URL_PREPOMAX"
+    $output = "$env:KOMPANION_TEMP\prepomax.zip"
+    $path   = "$env:KOMPANION_BIN"
+
+    $success = Invoke-HandledInstall $path $output -InstallScript {
+        if (!(Invoke-DownloadIfNeeded -URL $url -Output $output)) {
+            throw "Failed to download $url as $output"
+        }
+
+        if (!(Invoke-UncompressZipIfNeeded $output $path -Target $target)) {
+            throw "Failed to expand $output into $path with target $target"
+        }
+    } -Target $target
+
+    if ($success) {
+        Set-KompanionEnvVar -Name "PREPOMAX_HOME" `
+            -Value "$env:KOMPANION_BIN\$target"
+
+        Initialize-AddToPath -Directory "$env:PREPOMAX_HOME"
+    } else {
+        Write-Warn "Failed to install PrePoMax, skipping configuration..."
+    }
+}
+
+function Invoke-ConfigureTabby {
+    Write-Head "* Configuring Tabby..."
+
+    $target = $null
+    $url    = "$URL_TABBY"
+    $output = "$env:KOMPANION_TEMP\tabby.zip"
+    $path   = "$env:KOMPANION_BIN\tabby"
+
+    $success = Invoke-HandledInstall $path $output -InstallScript {
+        if (!(Invoke-DownloadIfNeeded -URL $url -Output $output)) {
+            throw "Failed to download $url as $output"
+        }
+
+        if (!(Invoke-UncompressZipIfNeeded $output $path -Target $target)) {
+            throw "Failed to expand $output into $path with target $target"
+        }
+    } -Target $target
+
+    if ($success) {
+        Set-KompanionEnvVar -Name "TABBY_HOME" `
+            -Value "$env:KOMPANION_BIN\tabby"
+
+        Initialize-AddToPath -Directory "$env:TABBY_HOME"
+    } else {
+        Write-Warn "Failed to install Tabby, skipping configuration..."
+    }
+}
+#endregion: configuration

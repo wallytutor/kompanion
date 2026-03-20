@@ -80,7 +80,6 @@ $DEFAULT_RUST_INSTALL = [PSCustomObject]@{
 }
 
 $URL_VSCODE      = "https://update.code.visualstudio.com/latest/win32-x64-archive/stable"
-$URL_LITEXL      = "https://github.com/lite-xl/lite-xl/releases/download/v2.1.8/lite-xl-v2.1.8-addons-windows-x86_64.zip"
 $URL_GIT         = "https://github.com/git-for-windows/git/releases/download/v2.51.0.windows.1/PortableGit-2.51.0-64-bit.7z.exe"
 $URL_CURL        = "https://curl.se/windows/dl-8.16.0_13/curl-8.16.0_13-win64-mingw.zip"
 $URL_SEVENZIP    = "https://github.com/commercialhaskell/stackage-content/releases/download/7z-22.01/"
@@ -93,10 +92,8 @@ $URL_QUARTO      = "https://github.com/quarto-dev/quarto-cli/releases/download/v
 $URL_NVIM        = "https://github.com/neovim/neovim/releases/download/nightly/nvim-win64.zip"
 $URL_ZETTLR      = "https://github.com/Zettlr/Zettlr/releases/download/v4.2.0/Zettlr-4.2.0-x64.exe"
 $URL_FFMPEG      = "https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-full.7z"
-$URL_DRAWIO      = "https://github.com/jgraph/drawio-desktop/releases/download/v29.0.3/draw.io-29.0.3-windows.zip"
 $URL_INKSCAPE    = "https://inkscape.org/gallery/item/53695/inkscape-1.4_2024-10-11_86a8ad7-x64.7z"
 $URL_MIKTEX      = "https://miktex.org/download/ctan/systems/win32/miktex/setup/windows-x64/miktexsetup-5.5.0+1763023-x64.zip"
-$URL_TABBY       = "https://github.com/Eugeny/tabby/releases/download/v1.0.230/tabby-1.0.230-portable-x64.zip"
 # $URL_NTERACT     = "https://github.com/nteract/nteract/releases/download/v0.28.0/nteract-0.28.0-win.zip"
 
 $URL_PYTHON      = "https://github.com/winpython/winpython/releases/download/17.2.20251012/WinPython64-3.13.8.0dotb1.zip"
@@ -120,8 +117,6 @@ $URL_FREEFEM     = "https://github.com/FreeFem/FreeFem-sources/releases/download
 
 $URL_OPENCASCADE = "https://github.com/Open-Cascade-SAS/OCCT/releases/download/V7_9_3/opencascade-7.9.3-vc14-64-combined.zip"
 $URL_GMSH        = "https://gmsh.info/bin/Windows/gmsh-4.14.1-Windows64-sdk.zip"
-$URL_ELMER       = "https://www.nic.funet.fi/pub/sci/physics/elmer/bin/windows/ElmerFEM-gui-mpi-Windows-AMD64.zip"
-$URL_PREPOMAX    = "https://prepomax.fs.um.si/Files/Downloads/PrePoMax%20v2.5.0.zip"
 $URL_SU2         = "https://github.com/su2code/SU2/releases/download/v8.4.0/SU2-v8.4.0-win64-mpi.zip"
 $URL_FIREMODELS  = "https://github.com/firemodels/fds/releases/download/FDS-6.10.1/FDS-6.10.1_SMV-6.10.1_win.exe"
 $URL_RADCAL      = "https://github.com/firemodels/radcal/releases/download/v2.0/radcal_win_64.exe"
@@ -766,7 +761,6 @@ function Start-KompanionBaseInstall {
 
     if ($Config.nvim)        { Invoke-InstallNvim }
     if ($Config.zettlr)      { Invoke-InstallZettlr }
-    if ($Config.drawio)      { Invoke-InstallDrawio }
     if ($Config.lessmsi)     { Invoke-InstallLessMsi }
     if ($Config.msys2)       { Invoke-InstallMsys2 }
     if ($Config.pandoc)      { Invoke-InstallPandoc }
@@ -866,7 +860,6 @@ function Start-KompanionSimuInstall {
 
     # With configure:
     if ($Config.gmsh)         { Invoke-InstallGmsh }
-    if ($Config.elmer)        { Invoke-InstallElmer }
     if ($Config.su2)          { Invoke-InstallSu2 }
     if ($Config.tesseract)    { Invoke-InstallTesseract }
     if ($Config.radcal)       { Invoke-InstallRadcal }
@@ -1142,27 +1135,6 @@ function Invoke-InstallZettlr {
 
     Remove-Item -Path $temp -Recurse -Force
     Invoke-ConfigureZettlr
-}
-
-function Invoke-ConfigureDrawio {
-    Write-Head "* Configuring draw.io..."
-
-    Set-KompanionEnvVar -Name "DRAWIO_HOME" `
-        -Value "$env:KOMPANION_BIN\drawio"
-
-    Initialize-AddToPath -Directory "$env:DRAWIO_HOME"
-}
-
-function Invoke-InstallDrawio {
-    $output = "$env:KOMPANION_TEMP\drawio.zip"
-    $path   = "$env:KOMPANION_BIN\drawio"
-    $url    = $URL_DRAWIO
-
-    if (Test-Path -Path $path) { return }
-
-    Invoke-DownloadIfNeeded -URL $url -Output $output
-    Invoke-UncompressZipIfNeeded -Source $output -Destination $path
-    Invoke-ConfigureDrawio
 }
 
 function Invoke-ConfigureNvim {
@@ -1810,31 +1782,6 @@ function Invoke-InstallGmsh {
     Invoke-DownloadIfNeeded -URL $url -Output $output
     Invoke-UncompressZipIfNeeded -Source $output -Destination $path
     Invoke-ConfigureGmsh
-}
-
-function Invoke-ConfigureElmer {
-    Write-Head "* Configuring Elmer..."
-
-    Set-KompanionEnvVar -Name "ELMER_HOME" `
-         -Value "$env:KOMPANION_BIN\elmer\ElmerFEM-gui-mpi-Windows-AMD64"
-
-    Set-KompanionEnvVar -Name "ELMER_GUI_HOME" `
-         -Value "$env:ELMER_HOME\share\ElmerGUI"
-
-    Initialize-AddToPath -Directory "$env:ELMER_HOME\lib"
-    Initialize-AddToPath -Directory "$env:ELMER_HOME\bin"
-}
-
-function Invoke-InstallElmer {
-    $output = "$env:KOMPANION_TEMP\elmer.zip"
-    $path   = "$env:KOMPANION_BIN\elmer"
-    $url    = $URL_ELMER
-
-    if (Test-Path -Path $path) { return }
-
-    Invoke-DownloadIfNeeded -URL $url -Output $output
-    Invoke-UncompressZipIfNeeded -Source $output -Destination $path
-    Invoke-ConfigureElmer
 }
 
 function Invoke-ConfigureSu2 {

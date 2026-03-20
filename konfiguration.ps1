@@ -1,6 +1,15 @@
 $KOMPANION_DEBUG = $true
 
 #region: utilities
+function Read-Json {
+    param (
+        [Parameter(Mandatory, Position=0)]
+        [string]$Path
+    )
+
+    Get-Content -Path $Path -Raw | ConvertFrom-Json
+}
+
 function Get-TargetPath {
     param (
         [Parameter(Mandatory, Position=0)]
@@ -140,11 +149,73 @@ function Invoke-HandledInstall {
 #endregion: utilities
 
 #region: configuration
+$KOMPANION_SETUP = Read-Json "$PSScriptRoot\konfiguration.json"
+
+function Invoke-ConfigureDrawio {
+    Write-Head "* Configuring Draw.io..."
+
+    $target = $null
+    $url    = $KOMPANION_SETUP.url.drawio
+    $output = "$env:KOMPANION_TEMP\drawio.zip"
+    $path   = "$env:KOMPANION_BIN\drawio"
+
+    $success = Invoke-HandledInstall $path $output -InstallScript {
+        if (!(Invoke-DownloadIfNeeded -URL $url -Output $output)) {
+            throw "Failed to download $url as $output"
+        }
+
+        if (!(Invoke-UncompressZipIfNeeded $output $path -Target $target)) {
+            throw "Failed to expand $output into $path with target $target"
+        }
+    } -Target $target
+
+    if ($success) {
+        Set-KompanionEnvVar -Name "DRAWIO_HOME" `
+            -Value "$env:KOMPANION_BIN\drawio"
+
+        Initialize-AddToPath -Directory "$env:DRAWIO_HOME"
+    } else {
+        Write-Warn "Failed to install Draw.io, skipping configuration..."
+    }
+}
+
+function Invoke-ConfigureElmer {
+    Write-Head "* Configuring Elmer..."
+
+    $target = "ElmerFEM-gui-mpi-Windows-AMD64"
+    $url    = $KOMPANION_SETUP.url.elmer
+    $output = "$env:KOMPANION_TEMP\elmer.zip"
+    $path   = "$env:KOMPANION_BIN"
+
+    $success = Invoke-HandledInstall $path $output -InstallScript {
+        if (!(Invoke-DownloadIfNeeded -URL $url -Output $output)) {
+            throw "Failed to download $url as $output"
+        }
+
+        if (!(Invoke-UncompressZipIfNeeded $output $path -Target $target)) {
+            throw "Failed to expand $output into $path with target $target"
+        }
+    } -Target $target
+
+    if ($success) {
+        Set-KompanionEnvVar -Name "ELMER_HOME" `
+            -Value "$env:KOMPANION_BIN\$target"
+
+        Set-KompanionEnvVar -Name "ELMER_GUI_HOME" `
+            -Value "$env:ELMER_HOME\share\ElmerGUI"
+
+        Initialize-AddToPath -Directory "$env:ELMER_HOME\lib"
+        Initialize-AddToPath -Directory "$env:ELMER_HOME\bin"
+    } else {
+        Write-Warn "Failed to install Elmer, skipping configuration..."
+    }
+}
+
 function Invoke-ConfigureLiteXL {
     Write-Head "* Configuring LiteXL..."
 
     $target = "lite-xl"
-    $url    = "$URL_LITEXL"
+    $url    = $KOMPANION_SETUP.url.litexl
     $output = "$env:KOMPANION_TEMP\litexl.zip"
     $path   = "$env:KOMPANION_BIN"
 
@@ -172,7 +243,7 @@ function Invoke-ConfigurePrePoMax {
     Write-Head "* Configuring PrePoMax..."
 
     $target = "PrePoMax v2.5.0"
-    $url    = "$URL_PREPOMAX"
+    $url    = $KOMPANION_SETUP.url.prepomax
     $output = "$env:KOMPANION_TEMP\prepomax.zip"
     $path   = "$env:KOMPANION_BIN"
 
@@ -200,7 +271,7 @@ function Invoke-ConfigureTabby {
     Write-Head "* Configuring Tabby..."
 
     $target = $null
-    $url    = "$URL_TABBY"
+    $url    = $KOMPANION_SETUP.url.tabby
     $output = "$env:KOMPANION_TEMP\tabby.zip"
     $path   = "$env:KOMPANION_BIN\tabby"
 

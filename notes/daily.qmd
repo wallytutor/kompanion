@@ -11,3 +11,7 @@ J^{\ast} = -D\frac{dC}{dz}
 $$
 
 *Mixture-averaged* properties are not accurate and are correct asymptotically only in some special cases; they also fail to preserve mass-conservation in species equations and require corrective measures. On the other hand, multicomponent properties require solving linear systems and are general.
+
+## 2026-03-20
+
+Code review for `Kompanion`: currently packing all installation and configuration blocks as a single function as it adds little overhead (just test for a few folders) and simplified maintenance. For implementing the goals, perfectionned a few functions and added `[Parameter(Mandatory, Position=0)]` for positional arguments, allowing for less verbose code. Also improved error reporting of failed downloads and added a global debug flag for more verbose output while migrating all installations to `Invoke-HandledInstall`.

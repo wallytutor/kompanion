@@ -27,6 +27,32 @@ function Get-TargetPath {
     }
 }
 
+function Invoke-CapturedCommand {
+    param (
+        [Parameter(Mandatory, Position=0)]
+        [string]$FilePath,
+
+        [Parameter(Mandatory, Position=1)]
+        [string[]]$ArgumentList
+    )
+
+    $logOut = "$env:KOMPANION_LOGS\temp-log.out"
+    $logErr = "$env:KOMPANION_LOGS\temp-log.err"
+
+    $proc = Start-Process -FilePath $FilePath -ArgumentList $ArgumentList `
+        -RedirectStandardOutput $logOut `
+        -RedirectStandardError  $logErr `
+        -NoNewWindow -Wait
+
+    Get-Content $logOut | Add-Content "$env:KOMPANION_LOGS\kompanion.log"
+    Remove-Item $logOut -ErrorAction SilentlyContinue
+
+    Get-Content $logErr | Add-Content "$env:KOMPANION_LOGS\kompanion.err"
+    Remove-Item $logErr -ErrorAction SilentlyContinue
+
+    return $proc.ExitCode
+}
+
 function Invoke-DownloadIfNeeded {
     param (
         [Parameter(Mandatory, Position=0)]
@@ -59,6 +85,8 @@ function Invoke-DownloadIfNeeded {
     if (!$success) {
         try {
             # Invoke-WebRequest -Uri $URL -OutFile $Output --> TOO SLOW
+            # TODO implement the captured output for curl as well, to log the process:
+            # Invoke-CapturedCommand "curl.exe" @("--ssl-no-revoke", $URL, "--output", $Output)
             curl.exe --ssl-no-revoke $URL --output $Output
             $success = ($LASTEXITCODE -eq 0)
         } catch {
@@ -87,6 +115,39 @@ function Invoke-UncompressZipIfNeeded {
 
         try {
             Expand-Archive -Path $Source -DestinationPath $Destination
+        } catch {
+            Write-Bad "Failed to expand $Source into $Destination : $_"
+            return $false
+        }
+
+        return (Test-Path -Path $FinalPath)
+    }
+}
+
+function Invoke-Uncompress7zIfNeeded {
+    param (
+        [Parameter(Mandatory, Position=0)]
+        [string]$Source,
+
+        [Parameter(Mandatory, Position=1)]
+        [string]$Destination,
+
+        [string]$Target = $null
+    )
+
+    $FinalPath = Get-TargetPath $Destination -Target $Target
+
+    $SevenZipPath = if (Test-Path "$env:SEVENZIP_HOME\7z.exe") {
+        "$env:SEVENZIP_HOME\7z.exe"
+    } else {
+        "7zr.exe"
+    }
+
+    if (!(Test-Path -Path $FinalPath)) {
+        Write-Host "Expanding $Source into $Destination"
+
+        try {
+            Invoke-CapturedCommand $SevenZipPath @("x", $Source , "-o$Destination")
         } catch {
             Write-Bad "Failed to expand $Source into $Destination : $_"
             return $false
@@ -139,8 +200,8 @@ function Invoke-HandledInstall {
             Write-Bad "Failed to install $FinalPath"
         }
 
-        Remove-Item -Path $Output    -ErrorAction SilentlyContinue
-        Remove-Item -Path $FinalPath -ErrorAction SilentlyContinue -Recurse
+        # Remove-Item -Path $Output    -ErrorAction SilentlyContinue
+        # Remove-Item -Path $FinalPath -ErrorAction SilentlyContinue -Recurse
         return $false
     }
 
@@ -208,6 +269,64 @@ function Invoke-ConfigureElmer {
         Initialize-AddToPath -Directory "$env:ELMER_HOME\bin"
     } else {
         Write-Warn "Failed to install Elmer, skipping configuration..."
+    }
+}
+
+function Invoke-ConfigureFreeCAD {
+    Write-Head "* Configuring FreeCAD..."
+
+    $target = "FreeCAD_1.0.2-conda-Windows-x86_64-py311"
+    $url    = $KOMPANION_SETUP.url.freecad
+    $output = "$env:KOMPANION_TEMP\freecad.7z"
+    $path   = "$env:KOMPANION_BIN"
+
+    $success = Invoke-HandledInstall $path $output -InstallScript {
+        if (!(Invoke-DownloadIfNeeded -URL $url -Output $output)) {
+            throw "Failed to download $url as $output"
+        }
+
+        if (!(Invoke-Uncompress7zIfNeeded $output $path -Target $target)) {
+            throw "Failed to expand $output into $path with target $target"
+        }
+    } -Target $target
+
+    if ($success) {
+        Set-KompanionEnvVar -Name "FREECAD_HOME" `
+            -Value "$env:KOMPANION_BIN\$target"
+
+        # XXX do not add to PATH, use as GUI
+    } else {
+        Write-Warn "Failed to install FreeCAD, skipping configuration..."
+    }
+}
+
+function Invoke-ConfigureGmsh {
+    Write-Head "* Configuring Gmsh..."
+
+    $target = "gmsh-4.14.1-Windows64-sdk"
+    $url    = $KOMPANION_SETUP.url.gmsh
+    $output = "$env:KOMPANION_TEMP\gmsh.zip"
+    $path   = "$env:KOMPANION_BIN"
+
+    $success = Invoke-HandledInstall $path $output -InstallScript {
+        if (!(Invoke-DownloadIfNeeded -URL $url -Output $output)) {
+            throw "Failed to download $url as $output"
+        }
+
+        if (!(Invoke-UncompressZipIfNeeded $output $path -Target $target)) {
+            throw "Failed to expand $output into $path with target $target"
+        }
+    } -Target $target
+
+    if ($success) {
+        Set-KompanionEnvVar -Name "GMSH_HOME" `
+            -Value "$env:KOMPANION_BIN\$target"
+
+        Initialize-AddToPath -Directory "$env:GMSH_HOME\lib"
+        Initialize-AddToPath -Directory "$env:GMSH_HOME\bin"
+        # TODO add to PYTHONPATH;JULIA_LOAD_PATH
+    } else {
+        Write-Warn "Failed to install Gmsh, skipping configuration..."
     }
 }
 

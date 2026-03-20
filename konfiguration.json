@@ -2,6 +2,8 @@
     "url": {
         "drawio": "https://github.com/jgraph/drawio-desktop/releases/download/v29.0.3/draw.io-29.0.3-windows.zip",
         "elmer": "https://www.nic.funet.fi/pub/sci/physics/elmer/bin/windows/ElmerFEM-gui-mpi-Windows-AMD64.zip",
+        "freecad": "https://github.com/FreeCAD/FreeCAD/releases/download/1.0.2/FreeCAD_1.0.2-conda-Windows-x86_64-py311.7z",
+        "gmsh": "https://gmsh.info/bin/Windows/gmsh-4.14.1-Windows64-sdk.zip",
         "litexl": "https://github.com/lite-xl/lite-xl/releases/download/v2.1.8/lite-xl-v2.1.8-addons-windows-x86_64.zip",
         "prepomax": "https://prepomax.fs.um.si/Files/Downloads/PrePoMax%20v2.5.0.zip",
         "tabby": "https://github.com/Eugeny/tabby/releases/download/v1.0.230/tabby-1.0.230-portable-x64.zip"

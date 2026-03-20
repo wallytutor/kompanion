@@ -109,14 +109,12 @@ $URL_NODE        = "https://nodejs.org/dist/v24.11.0/node-v24.11.0-win-x64.zip"
 $URL_COQ         = "https://github.com/rocq-prover/platform/releases/download/2025.01.0/Coq-Platform-release-2025.01.0-version.8.20.2025.01-Windows-x86_64.exe"
 
 $URL_PARAVIEW    = "https://www.paraview.org/paraview-downloads/download.php?submit=Download&version=v6.0&type=binary&os=Windows&downloadFile=ParaView-6.0.1-Windows-Python3.12-msvc2017-AMD64.zip"
-$URL_FREECAD     = "https://github.com/FreeCAD/FreeCAD/releases/download/1.0.2/FreeCAD_1.0.2-conda-Windows-x86_64-py311.7z"
 $URL_BLENDER     = "https://ftp.halifax.rwth-aachen.de/blender/release/Blender4.5/blender-4.5.4-windows-x64.zip"
 $URL_MESHLAB     = "https://github.com/cnr-isti-vclab/meshlab/releases/download/MeshLab-2025.07/MeshLab2025.07-windows_x86_64.zip"
 $URL_DWSIM       = "https://github.com/DanWBR/dwsim/releases/download/v9.0.4/DWSIM_v904_win64_portable.7z"
 $URL_FREEFEM     = "https://github.com/FreeFem/FreeFem-sources/releases/download/v4.15/FreeFem++-4.15-b-win64.exe"
 
 $URL_OPENCASCADE = "https://github.com/Open-Cascade-SAS/OCCT/releases/download/V7_9_3/opencascade-7.9.3-vc14-64-combined.zip"
-$URL_GMSH        = "https://gmsh.info/bin/Windows/gmsh-4.14.1-Windows64-sdk.zip"
 $URL_SU2         = "https://github.com/su2code/SU2/releases/download/v8.4.0/SU2-v8.4.0-win64-mpi.zip"
 $URL_FIREMODELS  = "https://github.com/firemodels/fds/releases/download/FDS-6.10.1/FDS-6.10.1_SMV-6.10.1_win.exe"
 $URL_RADCAL      = "https://github.com/firemodels/radcal/releases/download/v2.0/radcal_win_64.exe"
@@ -397,24 +395,7 @@ function Initialize-AddToManPath() {
 #endregion: path
 
 #region: compression
-function Invoke-Uncompress7zIfNeeded() {
-    param (
-        [string]$Source,
-        [string]$Destination
-    )
 
-    if (!(Test-Path -Path $Destination)) {
-        Write-Host "Expanding $Source into $Destination"
-
-        if (Test-Path "$env:SEVENZIP_HOME\7z.exe") {
-            $sevenZipPath = "$env:SEVENZIP_HOME\7z.exe"
-        } else {
-            $sevenZipPath = "7zr.exe"
-        }
-
-        Invoke-CapturedCommand $sevenZipPath @("x", $Source , "-o$Destination")
-    }
-}
 
 function Invoke-UncompressGzipIfNeeded() {
     param(
@@ -615,24 +596,6 @@ function Show-ModuleList() {
 #endregion: modules
 
 #region: utils_other
-function Invoke-CapturedCommand() {
-    param (
-        [string]$FilePath,
-        [string[]]$ArgumentList
-    )
-
-    Start-Process -FilePath $FilePath -ArgumentList $ArgumentList `
-        -NoNewWindow -Wait `
-        -RedirectStandardOutput "$env:KOMPANION_LOGS\temp-log.out" `
-        -RedirectStandardError  "$env:KOMPANION_LOGS\temp-log.err"
-
-    Get-Content "$env:KOMPANION_LOGS\temp-log.out" `
-    | Add-Content "$env:KOMPANION_LOGS\kompanion.log"
-
-    Get-Content "$env:KOMPANION_LOGS\temp-log.err" `
-    | Add-Content "$env:KOMPANION_LOGS\kompanion.err"
-}
-
 function Invoke-DirectoryBackupNoAdmin() {
     param (
         [string]$Source,
@@ -852,14 +815,12 @@ function Start-KompanionSimuInstall {
 
     # No configure (not in path):
     if ($Config.paraview)     { Invoke-InstallParaView }
-    if ($Config.freecad)      { Invoke-InstallFreeCAD }
     if ($Config.blender)      { Invoke-InstallBlender }
     if ($Config.meshlab)      { Invoke-InstallMeshLab }
     if ($Config.dwsim)        { Invoke-InstallDwsim }
     if ($Config.opencascade)  { Invoke-InstallOpenCascade }
 
     # With configure:
-    if ($Config.gmsh)         { Invoke-InstallGmsh }
     if ($Config.su2)          { Invoke-InstallSu2 }
     if ($Config.tesseract)    { Invoke-InstallTesseract }
     if ($Config.radcal)       { Invoke-InstallRadcal }
@@ -873,8 +834,9 @@ function Start-KompanionSimuConfigure {
 
     Write-Host "- starting Kompanion simulation tools configuration..."
 
-    if ($Config.gmsh)      { Invoke-ConfigureGmsh }
     if ($Config.elmer)     { Invoke-ConfigureElmer }
+    if ($Config.freecad)   { Invoke-ConfigureFreeCAD }
+    if ($Config.gmsh)      { Invoke-ConfigureGmsh }
     if ($Config.prepomax)  { Invoke-ConfigurePrePoMax }
     if ($Config.su2)       { Invoke-ConfigureSu2 }
     if ($Config.tesseract) { Invoke-ConfigureTesseract }
@@ -1695,26 +1657,6 @@ function Invoke-InstallParaView {
     Invoke-UncompressZipIfNeeded -Source $output -Destination $path
 }
 
-function Invoke-InstallFreeCAD {
-    $output = "$env:KOMPANION_TEMP\freecad.7z"
-    $path   = "$env:KOMPANION_BIN\freecad"
-    $url    = $URL_FREECAD
-
-    if (Test-Path -Path $path) { return }
-
-    Invoke-DownloadIfNeeded -URL $url -Output $output
-    Invoke-Uncompress7zIfNeeded -Source $output -Destination $path
-
-    # $output = "$env:KOMPANION_TEMP\odafileconverter.msi"
-    # $path   = "$env:KOMPANION_BIN\odafileconverter"
-    # $query  = "filename=ODAFileConverter_QT6_vc16_amd64dll_26.10.msi"
-    # $url    = "https://www.opendesign.com/guestfiles/get?$query"
-
-    # TODO: not working because of page redirection
-    # Invoke-DownloadIfNeeded -URL $url -Output $output
-    # Invoke-UncompressMsiIfNeeded -Source $output -Destination $path
-}
-
 function Invoke-InstallBlender {
     $output = "$env:KOMPANION_TEMP\blender.zip"
     $path   = "$env:KOMPANION_BIN\blender"
@@ -1761,29 +1703,6 @@ function Invoke-InstallOpenCascade {
 #endregion: install_configure_sim_nonconf
 
 #region: install_configure_sim_conf
-function Invoke-ConfigureGmsh {
-    Write-Head "* Configuring Gmsh..."
-
-    Set-KompanionEnvVar -Name "GMSH_HOME" `
-         -Value "$env:KOMPANION_BIN\gmsh\gmsh-4.14.1-Windows64-sdk"
-
-    Initialize-AddToPath -Directory "$env:GMSH_HOME\lib"
-    Initialize-AddToPath -Directory "$env:GMSH_HOME\bin"
-    # TODO add to PYTHONPATH;JULIA_LOAD_PATH
-}
-
-function Invoke-InstallGmsh {
-    $output = "$env:KOMPANION_TEMP\gmsh.zip"
-    $path   = "$env:KOMPANION_BIN\gmsh"
-    $url    =  $URL_GMSH
-
-    if (Test-Path -Path $path) { return }
-
-    Invoke-DownloadIfNeeded -URL $url -Output $output
-    Invoke-UncompressZipIfNeeded -Source $output -Destination $path
-    Invoke-ConfigureGmsh
-}
-
 function Invoke-ConfigureSu2 {
     Write-Head "* Configuring SU2..."
 

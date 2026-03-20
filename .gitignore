@@ -50,6 +50,10 @@ Microsoft/
 *.lock
 .ssh/
 
+# Lite-XL editor:
+.config/lite-xl/*
+!.config/lite-xl/init.lua
+
 #######################################################################
 # User profile: overrides
 #######################################################################

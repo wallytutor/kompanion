@@ -14,4 +14,6 @@ $$
 
 ## 2026-03-20
 
-Code review for `Kompanion`: currently packing all installation and configuration blocks as a single function as it adds little overhead (just test for a few folders) and simplified maintenance. For implementing the goals, perfectionned a few functions and added `[Parameter(Mandatory, Position=0)]` for positional arguments, allowing for less verbose code. Also improved error reporting of failed downloads and added a global debug flag for more verbose output while migrating all installations to `Invoke-HandledInstall`.
+Code review for `Kompanion`: currently packing all installation and configuration blocks as a single function as it adds little overhead (just test for a few folders) and simplified maintenance. For implementing the goals, perfectionned a few functions and added `[Parameter(Mandatory, Position=0)]` for positional arguments, allowing for less verbose code. Also improved error reporting of failed downloads and added a global debug flag for more verbose output while migrating all installations to `Invoke-HandledInstall`. After some improvements today, the whole of `Kompanion` is being refactored with better error handling.
+
+I am currently investigating a proper way of getting a local file-based database in Rust. Initial candidates are [redb](https://github.com/cberner/redb) and [sled](https://github.com/spacejam/sled), but the former seems more mature. I currently try to understand if I could serialize arbitrary objects with their B-tree approaches.

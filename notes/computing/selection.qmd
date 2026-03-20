@@ -1,5 +1,46 @@
 # Selection of tools {#sec-selection-of-tools}
 
+## Scientific publishing
+
+The following tools might be of interest for creating scientific content with embedded code.
+
+-   [Jupytext documentation](https://jupytext.readthedocs.io/en/latest/)
+-   [Jupyter Book](https://jupyterbook.org/en/stable/intro.html)
+-   [Weave.jl - Scientific Reports Using Julia](https://weavejl.mpastell.com/stable/)
+-   [Franklin - Building static websites in Julia](https://franklinjl.org/)
+-   [Pluto.jl - interactive Julia programming environment](https://plutojl.org/)
+-   [Quarto](https://quarto.org/)
+
+## Scientific web apps
+
+Some practical tools for creating web applications for scientific applications:
+
+- [Gradio](https://www.gradio.app/guides/quickstart)
+- [Panel](https://panel.holoviz.org/index.html)
+- [Streamlit](https://streamlit.io/)
+- [Trame](https://kitware.github.io/trame/guide/)
+- [Voilà](https://voila.readthedocs.io/en/latest)
+
+## API and databases
+
+Python:
+
+- [FastAPI](https://fastapi.tiangolo.com/)
+- [Pydantic](https://docs.pydantic.dev/latest/)
+- [TinyDB](https://tinydb.readthedocs.io/en/latest/index.html)
+
+Rust (frameworks):
+
+- [Actix](https://actix.rs/)
+- [Axum](https://github.com/tokio-rs/axum)
+- [Rocket](https://rocket.rs/)
+
+Rust databases:
+
+- [redb](https://github.com/cberner/redb)
+- [ReefDB](https://github.com/sachaarbonel/reefdb)
+- [sled](https://github.com/spacejam/sled)
+
 ## Graphics
 
 - [Fiji](https://imagej.net/software/fiji/downloads)

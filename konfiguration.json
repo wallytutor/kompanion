@@ -1,5 +1,7 @@
 {
     "url": {
+        "blender": "https://ftp.halifax.rwth-aachen.de/blender/release/Blender4.5/blender-4.5.4-windows-x64.zip",
+        "curl": "https://curl.se/windows/dl-8.16.0_13/curl-8.16.0_13-win64-mingw.zip",
         "drawio": "https://github.com/jgraph/drawio-desktop/releases/download/v29.0.3/draw.io-29.0.3-windows.zip",
         "elmer": "https://www.nic.funet.fi/pub/sci/physics/elmer/bin/windows/ElmerFEM-gui-mpi-Windows-AMD64.zip",
         "freecad": "https://github.com/FreeCAD/FreeCAD/releases/download/1.0.2/FreeCAD_1.0.2-conda-Windows-x86_64-py311.7z",

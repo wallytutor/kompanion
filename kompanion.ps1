@@ -81,7 +81,6 @@ $DEFAULT_RUST_INSTALL = [PSCustomObject]@{
 
 $URL_VSCODE      = "https://update.code.visualstudio.com/latest/win32-x64-archive/stable"
 $URL_GIT         = "https://github.com/git-for-windows/git/releases/download/v2.51.0.windows.1/PortableGit-2.51.0-64-bit.7z.exe"
-$URL_CURL        = "https://curl.se/windows/dl-8.16.0_13/curl-8.16.0_13-win64-mingw.zip"
 $URL_SEVENZIP    = "https://github.com/commercialhaskell/stackage-content/releases/download/7z-22.01/"
 $URL_LESSMSI     = "https://github.com/activescott/lessmsi/releases/download/v2.10.3/lessmsi-v2.10.3.zip"
 $URL_PANDOC      = "https://github.com/jgm/pandoc/releases/download/3.8/pandoc-3.8-windows-x86_64.zip"
@@ -109,7 +108,7 @@ $URL_NODE        = "https://nodejs.org/dist/v24.11.0/node-v24.11.0-win-x64.zip"
 $URL_COQ         = "https://github.com/rocq-prover/platform/releases/download/2025.01.0/Coq-Platform-release-2025.01.0-version.8.20.2025.01-Windows-x86_64.exe"
 
 $URL_PARAVIEW    = "https://www.paraview.org/paraview-downloads/download.php?submit=Download&version=v6.0&type=binary&os=Windows&downloadFile=ParaView-6.0.1-Windows-Python3.12-msvc2017-AMD64.zip"
-$URL_BLENDER     = "https://ftp.halifax.rwth-aachen.de/blender/release/Blender4.5/blender-4.5.4-windows-x64.zip"
+$URL_BLENDER     =
 $URL_MESHLAB     = "https://github.com/cnr-isti-vclab/meshlab/releases/download/MeshLab-2025.07/MeshLab2025.07-windows_x86_64.zip"
 $URL_DWSIM       = "https://github.com/DanWBR/dwsim/releases/download/v9.0.4/DWSIM_v904_win64_portable.7z"
 $URL_FREEFEM     = "https://github.com/FreeFem/FreeFem-sources/releases/download/v4.15/FreeFem++-4.15-b-win64.exe"
@@ -202,7 +201,7 @@ function Start-KompanionInstall {
     # XXX: this order is important: sometimes SSL blocks downloads that
     # could succeed if done with curl, thus it comes before other tools!
     Invoke-InstallSevenZip
-    Invoke-InstallCurl
+    Invoke-ConfigureCurl  # KEEP HERE DURING MIGRATION, NEEDED EARLY!
     Invoke-InstallVsCode
     Invoke-InstallGit
 
@@ -223,7 +222,6 @@ function Start-KompanionInstall {
 
     # No configure (not in path):
     if ($Config.simu.paraview)     { Invoke-InstallParaView }
-    if ($Config.simu.blender)      { Invoke-InstallBlender }
     if ($Config.simu.meshlab)      { Invoke-InstallMeshLab }
     if ($Config.simu.dwsim)        { Invoke-InstallDwsim }
     if ($Config.simu.opencascade)  { Invoke-InstallOpenCascade }
@@ -324,6 +322,7 @@ function Start-KompanionConfigure {
 
     Write-Host "- starting Kompanion simulation tools configuration..."
 
+    if ($Config.simu.blender)   { Invoke-ConfigureBlender }
     if ($Config.simu.elmer)     { Invoke-ConfigureElmer }
     if ($Config.simu.freecad)   { Invoke-ConfigureFreeCAD }
     if ($Config.simu.gmsh)      { Invoke-ConfigureGmsh }
@@ -844,27 +843,6 @@ function Invoke-InstallGit {
     Invoke-DownloadIfNeeded -URL $url -Output $output
     Invoke-CapturedCommand $output @("-y", "-o$path")
     Invoke-ConfigureGit
-}
-
-function Invoke-ConfigureCurl {
-    Write-Head "* Configuring curl..."
-
-    Set-KompanionEnvVar -Name "CURL_HOME" `
-        -Value "$env:KOMPANION_BIN\curl\curl-8.16.0_13-win64-mingw"
-
-    Initialize-AddToPath -Directory "$env:CURl_HOME\bin"
-}
-
-function Invoke-InstallCurl {
-    $output = "$env:KOMPANION_TEMP\curl.zip"
-    $path   = "$env:KOMPANION_BIN\curl"
-    $url    = $URL_CURL
-
-    if (Test-Path -Path $path) { return }
-
-    Invoke-DownloadIfNeeded -URL $url -Output $output
-    Invoke-UncompressZipIfNeeded -Source $output -Destination $path
-    Invoke-ConfigureCurl
 }
 
 function Invoke-ConfigureSevenZip {
@@ -1604,17 +1582,6 @@ function Invoke-InstallParaView {
     $output = "$env:KOMPANION_TEMP\paraview.zip"
     $path   = "$env:KOMPANION_BIN\paraview"
     $url    = $URL_PARAVIEW
-
-    if (Test-Path -Path $path) { return }
-
-    Invoke-DownloadIfNeeded -URL $url -Output $output
-    Invoke-UncompressZipIfNeeded -Source $output -Destination $path
-}
-
-function Invoke-InstallBlender {
-    $output = "$env:KOMPANION_TEMP\blender.zip"
-    $path   = "$env:KOMPANION_BIN\blender"
-    $url    = $URL_BLENDER
 
     if (Test-Path -Path $path) { return }
 

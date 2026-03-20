@@ -157,6 +157,29 @@ function Invoke-Uncompress7zIfNeeded {
     }
 }
 
+function Invoke-UncompressIfNeeded {
+    param (
+        [Parameter(Mandatory, Position=0)]
+        [string]$Source,
+
+        [Parameter(Mandatory, Position=1)]
+        [string]$Destination,
+
+        [string]$Target = $null
+    )
+
+    $extension = [System.IO.Path]::GetExtension($Source).ToLower()
+
+    switch ($extension) {
+        ".zip" { Invoke-UncompressZipIfNeeded $Source $Destination -Target $Target }
+        ".7z"  { Invoke-Uncompress7zIfNeeded  $Source $Destination -Target $Target }
+        default {
+            Write-Bad "Unsupported archive format: $extension"
+            return $false
+        }
+    }
+}
+
 function Invoke-HandledInstall {
     # This is a helper function to run an installation script and handle
     # errors in a consistent way. It will identify the final path of the
@@ -207,10 +230,73 @@ function Invoke-HandledInstall {
 
     return $true
 }
+
+function Invoke-DlUnzipInstall {
+    param (
+        [Parameter(Mandatory, Position=0)]
+        [string]$Path,
+
+        [Parameter(Mandatory, Position=1)]
+        [string]$URL,
+
+        [Parameter(Mandatory, Position=2)]
+        [string]$Output,
+
+        [string]$Target = $null
+    )
+    Invoke-HandledInstall $path $output -InstallScript {
+        if (!(Invoke-DownloadIfNeeded -URL $url -Output $output)) {
+            throw "Failed to download $url as $output"
+        }
+
+        if (!(Invoke-UncompressIfNeeded $output $path -Target $target)) {
+            throw "Failed to expand $output into $path with target $target"
+        }
+    } -Target $target
+}
 #endregion: utilities
 
 #region: configuration
 $KOMPANION_SETUP = Read-Json "$PSScriptRoot\konfiguration.json"
+
+function Invoke-ConfigureBlender {
+    Write-Head "* Configuring Blender..."
+
+    $target = "blender-4.5.4-windows-x64"
+    $url    = $KOMPANION_SETUP.url.blender
+    $output = "$env:KOMPANION_TEMP\blender.zip"
+    $path   = "$env:KOMPANION_BIN"
+
+    $success = Invoke-DlUnzipInstall $path $url $output -Target $target
+
+    if ($success) {
+        Set-KompanionEnvVar -Name "BLENDER_HOME" `
+            -Value "$env:KOMPANION_BIN\$target"
+        # XXX do not add to PATH, use as GUI
+    } else {
+        Write-Warn "Failed to install Blender, skipping configuration..."
+    }
+}
+
+function Invoke-ConfigureCurl {
+    Write-Head "* Configuring Curl..."
+
+    $target = "curl-8.16.0_13-win64-mingw"
+    $url    = $KOMPANION_SETUP.url.curl
+    $output = "$env:KOMPANION_TEMP\curl.zip"
+    $path   = "$env:KOMPANION_BIN"
+
+    $success = Invoke-DlUnzipInstall $path $url $output -Target $target
+
+    if ($success) {
+        Set-KompanionEnvVar -Name "CURL_HOME" `
+            -Value "$env:KOMPANION_BIN\$target"
+
+        Initialize-AddToPath -Directory "$env:CURL_HOME\bin"
+    } else {
+        Write-Warn "Failed to install Curl, skipping configuration..."
+    }
+}
 
 function Invoke-ConfigureDrawio {
     Write-Head "* Configuring Draw.io..."
@@ -220,15 +306,7 @@ function Invoke-ConfigureDrawio {
     $output = "$env:KOMPANION_TEMP\drawio.zip"
     $path   = "$env:KOMPANION_BIN\drawio"
 
-    $success = Invoke-HandledInstall $path $output -InstallScript {
-        if (!(Invoke-DownloadIfNeeded -URL $url -Output $output)) {
-            throw "Failed to download $url as $output"
-        }
-
-        if (!(Invoke-UncompressZipIfNeeded $output $path -Target $target)) {
-            throw "Failed to expand $output into $path with target $target"
-        }
-    } -Target $target
+    $success = Invoke-DlUnzipInstall $path $url $output -Target $target
 
     if ($success) {
         Set-KompanionEnvVar -Name "DRAWIO_HOME" `
@@ -248,15 +326,7 @@ function Invoke-ConfigureElmer {
     $output = "$env:KOMPANION_TEMP\elmer.zip"
     $path   = "$env:KOMPANION_BIN"
 
-    $success = Invoke-HandledInstall $path $output -InstallScript {
-        if (!(Invoke-DownloadIfNeeded -URL $url -Output $output)) {
-            throw "Failed to download $url as $output"
-        }
-
-        if (!(Invoke-UncompressZipIfNeeded $output $path -Target $target)) {
-            throw "Failed to expand $output into $path with target $target"
-        }
-    } -Target $target
+    $success = Invoke-DlUnzipInstall $path $url $output -Target $target
 
     if ($success) {
         Set-KompanionEnvVar -Name "ELMER_HOME" `
@@ -280,15 +350,7 @@ function Invoke-ConfigureFreeCAD {
     $output = "$env:KOMPANION_TEMP\freecad.7z"
     $path   = "$env:KOMPANION_BIN"
 
-    $success = Invoke-HandledInstall $path $output -InstallScript {
-        if (!(Invoke-DownloadIfNeeded -URL $url -Output $output)) {
-            throw "Failed to download $url as $output"
-        }
-
-        if (!(Invoke-Uncompress7zIfNeeded $output $path -Target $target)) {
-            throw "Failed to expand $output into $path with target $target"
-        }
-    } -Target $target
+    $success = Invoke-DlUnzipInstall $path $url $output -Target $target
 
     if ($success) {
         Set-KompanionEnvVar -Name "FREECAD_HOME" `
@@ -308,15 +370,7 @@ function Invoke-ConfigureGmsh {
     $output = "$env:KOMPANION_TEMP\gmsh.zip"
     $path   = "$env:KOMPANION_BIN"
 
-    $success = Invoke-HandledInstall $path $output -InstallScript {
-        if (!(Invoke-DownloadIfNeeded -URL $url -Output $output)) {
-            throw "Failed to download $url as $output"
-        }
-
-        if (!(Invoke-UncompressZipIfNeeded $output $path -Target $target)) {
-            throw "Failed to expand $output into $path with target $target"
-        }
-    } -Target $target
+    $success = Invoke-DlUnzipInstall $path $url $output -Target $target
 
     if ($success) {
         Set-KompanionEnvVar -Name "GMSH_HOME" `
@@ -338,15 +392,7 @@ function Invoke-ConfigureLiteXL {
     $output = "$env:KOMPANION_TEMP\litexl.zip"
     $path   = "$env:KOMPANION_BIN"
 
-    $success = Invoke-HandledInstall $path $output -InstallScript {
-        if (!(Invoke-DownloadIfNeeded -URL $url -Output $output)) {
-            throw "Failed to download $url as $output"
-        }
-
-        if (!(Invoke-UncompressZipIfNeeded $output $path -Target $target)) {
-            throw "Failed to expand $output into $path with target $target"
-        }
-    } -Target $target
+    $success = Invoke-DlUnzipInstall $path $url $output -Target $target
 
     if ($success) {
         Set-KompanionEnvVar -Name "LITEXL_HOME" `
@@ -366,15 +412,7 @@ function Invoke-ConfigurePrePoMax {
     $output = "$env:KOMPANION_TEMP\prepomax.zip"
     $path   = "$env:KOMPANION_BIN"
 
-    $success = Invoke-HandledInstall $path $output -InstallScript {
-        if (!(Invoke-DownloadIfNeeded -URL $url -Output $output)) {
-            throw "Failed to download $url as $output"
-        }
-
-        if (!(Invoke-UncompressZipIfNeeded $output $path -Target $target)) {
-            throw "Failed to expand $output into $path with target $target"
-        }
-    } -Target $target
+    $success = Invoke-DlUnzipInstall $path $url $output -Target $target
 
     if ($success) {
         Set-KompanionEnvVar -Name "PREPOMAX_HOME" `
@@ -394,15 +432,7 @@ function Invoke-ConfigureTabby {
     $output = "$env:KOMPANION_TEMP\tabby.zip"
     $path   = "$env:KOMPANION_BIN\tabby"
 
-    $success = Invoke-HandledInstall $path $output -InstallScript {
-        if (!(Invoke-DownloadIfNeeded -URL $url -Output $output)) {
-            throw "Failed to download $url as $output"
-        }
-
-        if (!(Invoke-UncompressZipIfNeeded $output $path -Target $target)) {
-            throw "Failed to expand $output into $path with target $target"
-        }
-    } -Target $target
+    $success = Invoke-DlUnzipInstall $path $url $output -Target $target
 
     if ($success) {
         Set-KompanionEnvVar -Name "TABBY_HOME" `

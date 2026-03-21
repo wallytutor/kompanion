@@ -17,10 +17,8 @@ jupyterlab_pygments
 jupyterlab_server
 jupytext
 jupyter-cache
-# marimo
 nbconvert
 nbclassic
-# voila
 
 # SciPy stack
 numpy
@@ -38,6 +36,10 @@ sympy
 # PyYAML
 # xlrd
 # xlsxwriter
+
+# Other environments
+# marimo
+# voila
 
 # Scientific
 # cantera

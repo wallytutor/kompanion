@@ -29,7 +29,8 @@
         "rlang":       false,
         "racket":      false,
         "coq":         false,
-        "node":        false
+        "node":        false,
+        "winpython":   false
     },
     "simu": {
         "paraview":    false,

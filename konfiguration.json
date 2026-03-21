@@ -1,21 +1,24 @@
 {
     "version": {
-        "dotnet": "10.0.201"
+        "dotnet": "10.0.201",
+        "python": "3.13.12"
     },
     "url": {
-        "blender":  "https://ftp.halifax.rwth-aachen.de/blender/release/Blender4.5/blender-4.5.4-windows-x64.zip",
-        "curl":     "https://curl.se/windows/dl-8.16.0_13/curl-8.16.0_13-win64-mingw.zip",
-        "dotnet":   "https://builds.dotnet.microsoft.com/dotnet/Sdk/{0}/dotnet-sdk-{0}-win-x64.zip",
-        "drawio":   "https://github.com/jgraph/drawio-desktop/releases/download/v29.0.3/draw.io-29.0.3-windows.zip",
-        "elmer":    "https://www.nic.funet.fi/pub/sci/physics/elmer/bin/windows/ElmerFEM-gui-mpi-Windows-AMD64.zip",
-        "freecad":  "https://github.com/FreeCAD/FreeCAD/releases/download/1.0.2/FreeCAD_1.0.2-conda-Windows-x86_64-py311.7z",
-        "gmsh":     "https://gmsh.info/bin/Windows/gmsh-4.14.1-Windows64-sdk.zip",
-        "jabref":   "https://github.com/JabRef/jabref/releases/download/v5.15/JabRef-5.15-portable_windows.zip",
-        "julia":    "https://julialang-s3.julialang.org/bin/winnt/x64/1.12/julia-1.12.1-win64.zip",
-        "litexl":   "https://github.com/lite-xl/lite-xl/releases/download/v2.1.8/lite-xl-v2.1.8-addons-windows-x86_64.zip",
-        "lpm":      "https://github.com/lite-xl/lite-xl-plugin-manager/releases/download/continuous/lpm.x86_64-windows.exe",
-        "paraview": "https://www.paraview.org/paraview-downloads/download.php?submit=Download&version=v6.0&type=binary&os=Windows&downloadFile=ParaView-6.0.1-Windows-Python3.12-msvc2017-AMD64.zip",
-        "prepomax": "https://prepomax.fs.um.si/Files/Downloads/PrePoMax%20v2.5.0.zip",
-        "tabby":    "https://github.com/Eugeny/tabby/releases/download/v1.0.230/tabby-1.0.230-portable-x64.zip"
+        "blender":   "https://ftp.halifax.rwth-aachen.de/blender/release/Blender4.5/blender-4.5.4-windows-x64.zip",
+        "curl":      "https://curl.se/windows/dl-8.16.0_13/curl-8.16.0_13-win64-mingw.zip",
+        "dotnet":    "https://builds.dotnet.microsoft.com/dotnet/Sdk/{0}/dotnet-sdk-{0}-win-x64.zip",
+        "drawio":    "https://github.com/jgraph/drawio-desktop/releases/download/v29.0.3/draw.io-29.0.3-windows.zip",
+        "elmer":     "https://www.nic.funet.fi/pub/sci/physics/elmer/bin/windows/ElmerFEM-gui-mpi-Windows-AMD64.zip",
+        "freecad":   "https://github.com/FreeCAD/FreeCAD/releases/download/1.0.2/FreeCAD_1.0.2-conda-Windows-x86_64-py311.7z",
+        "gmsh":      "https://gmsh.info/bin/Windows/gmsh-4.14.1-Windows64-sdk.zip",
+        "jabref":    "https://github.com/JabRef/jabref/releases/download/v5.15/JabRef-5.15-portable_windows.zip",
+        "julia":     "https://julialang-s3.julialang.org/bin/winnt/x64/1.12/julia-1.12.1-win64.zip",
+        "litexl":    "https://github.com/lite-xl/lite-xl/releases/download/v2.1.8/lite-xl-v2.1.8-addons-windows-x86_64.zip",
+        "lpm":       "https://github.com/lite-xl/lite-xl-plugin-manager/releases/download/continuous/lpm.x86_64-windows.exe",
+        "paraview":  "https://www.paraview.org/paraview-downloads/download.php?submit=Download&version=v6.0&type=binary&os=Windows&downloadFile=ParaView-6.0.1-Windows-Python3.12-msvc2017-AMD64.zip",
+        "python":    "https://www.python.org/ftp/python/{0}/python-{0}-embed-amd64.zip",
+        "prepomax":  "https://prepomax.fs.um.si/Files/Downloads/PrePoMax%20v2.5.0.zip",
+        "tabby":     "https://github.com/Eugeny/tabby/releases/download/v1.0.230/tabby-1.0.230-portable-x64.zip",
+        "winpython": "https://github.com/winpython/winpython/releases/download/17.2.20251012/WinPython64-3.13.8.0dotb1.zip"
     }
 }

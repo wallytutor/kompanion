@@ -10,6 +10,29 @@ function Read-Json {
     Get-Content -Path $Path -Raw | ConvertFrom-Json
 }
 
+function Get-PackageVersionedUrl {
+    param (
+        [Parameter(Mandatory, Position=0)]
+        [string]$Name
+    )
+    $baseUrl = $KOMPANION_SETUP.url.$Name
+    $version = $KOMPANION_SETUP.version.$Name
+
+    if ([string]::IsNullOrWhiteSpace($baseUrl)) {
+        throw "Base URL for package '$Name' not found in configuration."
+    }
+
+    # TODO handle version = {major, minor} and other formats:
+    $fullUrl = if ([string]::IsNullOrWhiteSpace($version)) {
+        Write-Warn "Version for package '$Name' not found in configuration."
+        $baseUrl
+    } else {
+        $baseUrl -f $version
+    }
+
+    return $fullUrl
+}
+
 function Get-TargetPath {
     param (
         [Parameter(Mandatory, Position=0)]
@@ -303,7 +326,7 @@ function Invoke-ConfigureDotNET {
 
     $target  = $null
     $version = $KOMPANION_SETUP.version.dotnet
-    $url     = $KOMPANION_SETUP.url.dotnet -f $version
+    $url     = Get-PackageVersionedUrl "dotnet"
     $output  = "$env:KOMPANION_TEMP\dotnet.zip"
     $path    = "$env:KOMPANION_BIN\dotnet-sdk-$version-win-x64"
 
@@ -541,6 +564,92 @@ function Invoke-ConfigurePrePoMax {
     }
 }
 
+function Invoke-ConfigurePython {
+    Write-Head "* Configuring Python..."
+
+    $target  = $null
+    $version = $KOMPANION_SETUP.version.python
+    $url     = Get-PackageVersionedUrl "python"
+    $output  = "$env:KOMPANION_TEMP\python.zip"
+    $path    = "$env:KOMPANION_BIN\python-$version-embed-amd64"
+
+    $success = Invoke-DlUnzipInstall $path $url $output -Target $target
+
+    $lockPost = "$env:KOMPANION_DOT\python-post.lock"
+
+    if ($success -and !(Test-Path $lockPost)) {
+        $python    = "$path\python.exe"
+        $getpip    = "https://bootstrap.pypa.io/get-pip.py"
+        $getpipOut = "$env:KOMPANION_TEMP\get-pip.py"
+
+        # Enable user site packages (disabled by default in embedded python):
+        @(
+            "python313.zip"
+            "."
+            ""
+            "import site"
+        ) | Set-Content "$path\python313._pth"
+
+        if (Invoke-DownloadIfNeeded $getpip $getpipOut) {
+            & $python $getpipOut --no-warn-script-location
+            New-Item -ItemType File -Path $lockPost -Force | Out-Null
+        } else {
+            Write-Bad "Failed to download get-pip.py and install pip..."
+            Write-Warn "Package manager will be not available, please retry..."
+        }
+    }
+
+    if ($success) {
+        # Main path to python executable and standard library:
+        Set-KompanionEnvVar -Name "PYTHON_HOME" `
+            -Value "$env:KOMPANION_BIN\python-$version-embed-amd64"
+
+        # Path to IPython profiles, history, etc.:
+        Set-KompanionEnvVar -Name "IPYTHONDIR" `
+            -Value "$env:KOMPANION_DIR\.ipython"
+
+        # Jupyter to be used with IJulia (if any) and data path:
+        Set-KompanionEnvVar -Name "JUPYTER" `
+            -Value "$env:PYTHON_HOME\Scripts\jupyter.exe"
+
+        # Path to Jupyter kernels, etc.:
+        Set-KompanionEnvVar -Name "JUPYTER_DATA_DIR" `
+            -Value "$env:KOMPANION_DIR\.jupyter"
+
+        # This is (was) required for nteract to work:
+        Set-KompanionEnvVar -Name "JUPYTER_PATH" `
+            -Value "$env:JUPYTER_DATA_DIR"
+
+        # Point quarto to the right python:
+        Set-KompanionEnvVar -Name "QUARTO_PYTHON" `
+            -Value "$env:PYTHON_HOME\python.exe"
+
+        Initialize-AddToPath -Directory "$env:PYTHON_HOME\Scripts"
+        Initialize-AddToPath -Directory "$env:PYTHON_HOME"
+
+        # Install minimal requirements:
+        $lockFile = "$env:KOMPANION_DOT\python-pkgs.lock"
+
+        # Ignore deps if requested:
+        if ($NoPythonDeps) {
+            New-Item -ItemType File -Path $lockFile -Force | Out-Null
+        }
+
+        # Note: manually remove lock file if no deps installed at first:
+        if (!(Test-Path $lockFile)) {
+            Piperish install --upgrade pip
+            Piperish install -r "$env:KOMPANION_DOT\requirements.txt"
+
+            # This used to be majordome, do not install by default!
+            # Piperish install -e "$env:KOMPANION_DIR"
+
+            New-Item -ItemType File -Path $lockFile -Force | Out-Null
+        }
+    } else {
+        Write-Warn "Failed to install Python, skipping configuration..."
+    }
+}
+
 function Invoke-ConfigureTabby {
     Write-Head "* Configuring Tabby..."
 
@@ -558,6 +667,25 @@ function Invoke-ConfigureTabby {
         Initialize-AddToPath -Directory "$env:TABBY_HOME"
     } else {
         Write-Warn "Failed to install Tabby, skipping configuration..."
+    }
+}
+
+function Invoke-ConfigureWinPython {
+    Write-Head "* Configuring WinPython..."
+
+    $target  = "WPy64-31380"
+    $url     = Get-PackageVersionedUrl "winpython"
+    $output  = "$env:KOMPANION_TEMP\winpython.zip"
+    $path    = "$env:KOMPANION_BIN"
+
+    $success = Invoke-DlUnzipInstall $path $url $output -Target $target
+
+    if ($success) {
+        Set-KompanionEnvVar -Name "WINPYTHON_HOME" `
+            -Value "$env:KOMPANION_BIN\$target"
+        # XXX do not add to PATH, use as GUI/standarlone terminal
+    } else {
+        Write-Warn "Failed to install WinPython, skipping configuration..."
     }
 }
 #endregion: configuration

@@ -94,7 +94,6 @@ $URL_INKSCAPE    = "https://inkscape.org/gallery/item/53695/inkscape-1.4_2024-10
 $URL_MIKTEX      = "https://miktex.org/download/ctan/systems/win32/miktex/setup/windows-x64/miktexsetup-5.5.0+1763023-x64.zip"
 # $URL_NTERACT     = "https://github.com/nteract/nteract/releases/download/v0.28.0/nteract-0.28.0-win.zip"
 
-$URL_PYTHON      = "https://github.com/winpython/winpython/releases/download/17.2.20251012/WinPython64-3.13.8.0dotb1.zip"
 $URL_RUST_GNU    = "https://static.rust-lang.org/rustup/dist/x86_64-pc-windows-gnu/rustup-init.exe"
 $URL_RUST_MSVC   = "https://static.rust-lang.org/rustup/dist/x86_64-pc-windows-msvc/rustup-init.exe"
 $URL_ERLANG      = "https://github.com/erlang/otp/releases/download/OTP-27.3.4.4/otp_win64_27.3.4.4.zip"
@@ -274,36 +273,35 @@ function Start-KompanionConfigure {
 
     Write-Host "- starting Kompanion languages configuration..."
 
-    Invoke-InstallPython
     Invoke-ConfigurePython
+    if ($Config.lang.winpython) { Invoke-ConfigureWinPython }
 
+    if ($Config.lang.rust)      { Invoke-InstallRust }
+    if ($Config.lang.rust)      { Invoke-ConfigureRust }
 
-    if ($Config.lang.rust)    { Invoke-InstallRust }
-    if ($Config.lang.rust)    { Invoke-ConfigureRust }
+    if ($Config.lang.dotnet)    { Invoke-ConfigureDotNET}
+    if ($Config.lang.julia)     { Invoke-ConfigureJulia }
 
-    if ($Config.lang.dotnet)  { Invoke-ConfigureDotNET}
-    if ($Config.lang.julia)   { Invoke-ConfigureJulia }
+    if ($Config.lang.node)      { Invoke-InstallNode }
+    if ($Config.lang.node)      { Invoke-ConfigureNode }
 
-    if ($Config.lang.node)    { Invoke-InstallNode }
-    if ($Config.lang.node)    { Invoke-ConfigureNode }
+    if ($Config.lang.erlang)    { Invoke-InstallErlang }
+    if ($Config.lang.erlang)    { Invoke-ConfigureErlang }
 
-    if ($Config.lang.erlang)  { Invoke-InstallErlang }
-    if ($Config.lang.erlang)  { Invoke-ConfigureErlang }
+    if ($Config.lang.haskell)   { Invoke-InstallHaskell }
+    if ($Config.lang.haskell)   { Invoke-ConfigureHaskell }
 
-    if ($Config.lang.haskell) { Invoke-InstallHaskell }
-    if ($Config.lang.haskell) { Invoke-ConfigureHaskell }
+    if ($Config.lang.elm)       { Invoke-InstallElm }
+    if ($Config.lang.elm)       { Invoke-ConfigureElm }
 
-    if ($Config.lang.elm)     { Invoke-InstallElm }
-    if ($Config.lang.elm)     { Invoke-ConfigureElm }
+    if ($Config.lang.racket)    { Invoke-InstallRacket }
+    if ($Config.lang.racket)    { Invoke-ConfigureRacket }
 
-    if ($Config.lang.racket)  { Invoke-InstallRacket }
-    if ($Config.lang.racket)  { Invoke-ConfigureRacket }
+    if ($Config.lang.coq)       { Invoke-InstallCoq }
+    if ($Config.lang.coq)       { Invoke-ConfigureCoq }
 
-    if ($Config.lang.coq)     { Invoke-InstallCoq }
-    if ($Config.lang.coq)     { Invoke-ConfigureCoq }
-
-    if ($Config.lang.rlang)   { Invoke-InstallRlang }
-    if ($Config.lang.rlang)   { Invoke-ConfigureRlang }
+    if ($Config.lang.rlang)     { Invoke-InstallRlang }
+    if ($Config.lang.rlang)     { Invoke-ConfigureRlang }
 
     # Create lock file to avoid reinstalling everything on
     # next start (unless -RebuildOnStart is used):
@@ -1203,66 +1201,6 @@ function Invoke-InstallImageMagick {
 #endregion: install_configure_base
 
 #region: install_configure_lang
-function Invoke-ConfigurePython() {
-    Write-Head "* Configuring Python..."
-
-    Set-KompanionEnvVar -Name "PYTHON_HOME" `
-        -Value "$env:KOMPANION_BIN\python\WPy64-31380\python"
-
-    Initialize-AddToPath -Directory "$env:PYTHON_HOME\Scripts"
-    Initialize-AddToPath -Directory "$env:PYTHON_HOME"
-
-    # Path to IPython profiles, history, etc.:
-    Set-KompanionEnvVar -Name "IPYTHONDIR" `
-         -Value "$env:KOMPANION_DIR\.ipython"
-
-    # Jupyter to be used with IJulia (if any) and data path:
-    Set-KompanionEnvVar -Name "JUPYTER" `
-         -Value "$env:PYTHON_HOME\Scripts\jupyter.exe"
-
-    # Path to Jupyter kernels, etc.:
-    Set-KompanionEnvVar -Name "JUPYTER_DATA_DIR" `
-         -Value "$env:KOMPANION_DIR\.jupyter"
-
-    # This is required for nteract to work:
-    Set-KompanionEnvVar -Name "JUPYTER_PATH" `
-         -Value "$env:JUPYTER_DATA_DIR"
-
-    # Point quarto to the right python:
-    Set-KompanionEnvVar -Name "QUARTO_PYTHON" `
-         -Value "$env:PYTHON_HOME\python.exe"
-
-    # Install minimal requirements:
-    $lockFile = "$env:KOMPANION_DOT\python.lock"
-
-    # Ignore deps if requested:
-    if ($NoPythonDeps) {
-        New-Item -ItemType File -Path $lockFile -Force | Out-Null
-    }
-
-    # Note: manually remove lock file if no deps installed at first:
-    if (!(Test-Path $lockFile)) {
-        Piperish install --upgrade pip
-        Piperish install -r "$env:KOMPANION_DOT\requirements.txt"
-
-        # This used to be majordome, do not install by default!
-        # Piperish install -e "$env:KOMPANION_DIR"
-
-        New-Item -ItemType File -Path $lockFile -Force | Out-Null
-    }
-}
-
-function Invoke-InstallPython() {
-    $output = "$env:KOMPANION_TEMP\python.zip"
-    $path   = "$env:KOMPANION_BIN\python"
-    $url    = $URL_PYTHON
-
-    if (Test-Path -Path $path) { return }
-
-    Invoke-DownloadIfNeeded -URL $url -Output $output
-    Invoke-UncompressZipIfNeeded -Source $output -Destination $path
-}
-
 function Invoke-ConfigureRust() {
     Write-Head "* Configuring Rust..."
 

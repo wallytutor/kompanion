@@ -30,7 +30,7 @@
         "racket":      false,
         "coq":         false,
         "node":        false,
-        "winpython":   false
+        "python":     false
     },
     "simu": {
         "paraview":    false,

@@ -19,6 +19,7 @@
         "python":    "https://www.python.org/ftp/python/{0}/python-{0}-embed-amd64.zip",
         "prepomax":  "https://prepomax.fs.um.si/Files/Downloads/PrePoMax%20v2.5.0.zip",
         "tabby":     "https://github.com/Eugeny/tabby/releases/download/v1.0.230/tabby-1.0.230-portable-x64.zip",
-        "winpython": "https://github.com/winpython/winpython/releases/download/17.2.20251012/WinPython64-3.13.8.0dotb1.zip"
+        "winpython": "https://github.com/winpython/winpython/releases/download/17.2.20251012/WinPython64-3.13.8.0dotb1.zip",
+        "_winpython": "https://github.com/winpython/winpython/releases/download/17.2.20260307final/WinPython64-3.13.12.0dot.zip"
     }
 }

@@ -24,7 +24,7 @@ function Get-PackageVersionedUrl {
 
     # TODO handle version = {major, minor} and other formats:
     $fullUrl = if ([string]::IsNullOrWhiteSpace($version)) {
-        Write-Warn "Version for package '$Name' not found in configuration."
+        Write-Warn "* Version for package '$Name' not found in configuration."
         $baseUrl
     } else {
         $baseUrl -f $version
@@ -575,34 +575,72 @@ function Invoke-ConfigurePython {
 
     $success = Invoke-DlUnzipInstall $path $url $output -Target $target
 
-    $lockPost = "$env:KOMPANION_DOT\python-post.lock"
+    if ($success) {
+        $lockPost = "$env:KOMPANION_DOT\python-post.lock"
 
-    if ($success -and !(Test-Path $lockPost)) {
-        $python    = "$path\python.exe"
-        $getpip    = "https://bootstrap.pypa.io/get-pip.py"
-        $getpipOut = "$env:KOMPANION_TEMP\get-pip.py"
+        if (!(Test-Path $lockPost)) {
+            $python    = "$path\python.exe"
+            $getpip    = "https://bootstrap.pypa.io/get-pip.py"
+            $getpipOut = "$env:KOMPANION_TEMP\get-pip.py"
 
-        # Enable user site packages (disabled by default in embedded python):
-        @(
-            "python313.zip"
-            "."
-            ""
-            "import site"
-        ) | Set-Content "$path\python313._pth"
+            # Enable user site packages (disabled by default in embedded python):
+            @(
+                "python313.zip"
+                "."
+                ""
+                "import site"
+            ) | Set-Content "$path\python313._pth"
 
-        if (Invoke-DownloadIfNeeded $getpip $getpipOut) {
-            & $python $getpipOut --no-warn-script-location
-            New-Item -ItemType File -Path $lockPost -Force | Out-Null
-        } else {
-            Write-Bad "Failed to download get-pip.py and install pip..."
-            Write-Warn "Package manager will be not available, please retry..."
+            if (Invoke-DownloadIfNeeded $getpip $getpipOut) {
+                & $python $getpipOut --no-warn-script-location
+                New-Item -ItemType File -Path $lockPost -Force | Out-Null
+            } else {
+                Write-Bad "Failed to download get-pip.py and install pip..."
+                Write-Warn "Pip will be not available, please retry..."
+            }
         }
+    } else {
+        Write-Warn "Failed to install Python, skipping configuration..."
     }
+}
+
+function Invoke-ConfigureTabby {
+    Write-Head "* Configuring Tabby..."
+
+    $target = $null
+    $url    = $KOMPANION_SETUP.url.tabby
+    $output = "$env:KOMPANION_TEMP\tabby.zip"
+    $path   = "$env:KOMPANION_BIN\tabby"
+
+    $success = Invoke-DlUnzipInstall $path $url $output -Target $target
 
     if ($success) {
+        Set-KompanionEnvVar -Name "TABBY_HOME" `
+            -Value "$env:KOMPANION_BIN\tabby"
+
+        Initialize-AddToPath -Directory "$env:TABBY_HOME"
+    } else {
+        Write-Warn "Failed to install Tabby, skipping configuration..."
+    }
+}
+
+function Invoke-ConfigureWinPython {
+    Write-Head "* Configuring WinPython..."
+
+    $target  = "WPy64-31380"
+    $url     = Get-PackageVersionedUrl "winpython"
+    $output  = "$env:KOMPANION_TEMP\winpython.zip"
+    $path    = "$env:KOMPANION_BIN"
+
+    $success = Invoke-DlUnzipInstall $path $url $output -Target $target
+
+    if ($success) {
+        Set-KompanionEnvVar -Name "WINPYTHON_HOME" `
+            -Value "$env:KOMPANION_BIN\$target"
+
         # Main path to python executable and standard library:
         Set-KompanionEnvVar -Name "PYTHON_HOME" `
-            -Value "$env:KOMPANION_BIN\python-$version-embed-amd64"
+            -Value "$env:WINPYTHON_HOME\python"
 
         # Path to IPython profiles, history, etc.:
         Set-KompanionEnvVar -Name "IPYTHONDIR" `
@@ -645,45 +683,6 @@ function Invoke-ConfigurePython {
 
             New-Item -ItemType File -Path $lockFile -Force | Out-Null
         }
-    } else {
-        Write-Warn "Failed to install Python, skipping configuration..."
-    }
-}
-
-function Invoke-ConfigureTabby {
-    Write-Head "* Configuring Tabby..."
-
-    $target = $null
-    $url    = $KOMPANION_SETUP.url.tabby
-    $output = "$env:KOMPANION_TEMP\tabby.zip"
-    $path   = "$env:KOMPANION_BIN\tabby"
-
-    $success = Invoke-DlUnzipInstall $path $url $output -Target $target
-
-    if ($success) {
-        Set-KompanionEnvVar -Name "TABBY_HOME" `
-            -Value "$env:KOMPANION_BIN\tabby"
-
-        Initialize-AddToPath -Directory "$env:TABBY_HOME"
-    } else {
-        Write-Warn "Failed to install Tabby, skipping configuration..."
-    }
-}
-
-function Invoke-ConfigureWinPython {
-    Write-Head "* Configuring WinPython..."
-
-    $target  = "WPy64-31380"
-    $url     = Get-PackageVersionedUrl "winpython"
-    $output  = "$env:KOMPANION_TEMP\winpython.zip"
-    $path    = "$env:KOMPANION_BIN"
-
-    $success = Invoke-DlUnzipInstall $path $url $output -Target $target
-
-    if ($success) {
-        Set-KompanionEnvVar -Name "WINPYTHON_HOME" `
-            -Value "$env:KOMPANION_BIN\$target"
-        # XXX do not add to PATH, use as GUI/standarlone terminal
     } else {
         Write-Warn "Failed to install WinPython, skipping configuration..."
     }

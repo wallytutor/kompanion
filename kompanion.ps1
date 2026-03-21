@@ -273,14 +273,16 @@ function Start-KompanionConfigure {
 
     Write-Host "- starting Kompanion languages configuration..."
 
-    Invoke-ConfigurePython
-    if ($Config.lang.winpython) { Invoke-ConfigureWinPython }
+    # XXX: without winpython we cannot compile Rust code!
+    Invoke-ConfigureWinPython
+
 
     if ($Config.lang.rust)      { Invoke-InstallRust }
     if ($Config.lang.rust)      { Invoke-ConfigureRust }
 
     if ($Config.lang.dotnet)    { Invoke-ConfigureDotNET}
     if ($Config.lang.julia)     { Invoke-ConfigureJulia }
+    if ($Config.lang.python)    { Invoke-ConfigurePython }
 
     if ($Config.lang.node)      { Invoke-InstallNode }
     if ($Config.lang.node)      { Invoke-ConfigureNode }

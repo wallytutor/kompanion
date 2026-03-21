@@ -27,4 +27,7 @@ data = json.loads(conf.read_text())
 
 ## 2026-03-21
 
-After a few years without using it, it seems that now [.NET SDK](https://dotnet.microsoft.com/en-us/download/dotnet/10.0) is also supported in portable format. This is an opportunity to learn [F#](https://fsharp.org/) and maybe introduce the use of [Python.NET](https://github.com/pythonnet/pythonnet) to `Majordome`. 
+After a few years without using it, it seems that now [.NET SDK](https://dotnet.microsoft.com/en-us/download/dotnet/10.0) is also supported in portable format. This is an opportunity to learn [F#](https://fsharp.org/) and maybe introduce the use of [Python.NET](https://github.com/pythonnet/pythonnet) to `Majordome`. Also tried to use embeddable Python in `Kompanion` instead of WinPython with no success; actually it is not shipped with `python*.lib`, so it becomes impossible to link `Majordome`. It remains as a good alternative for redistributing packages (check if possible to use PyInstaller within it).
+
+## 2026-03-22
+

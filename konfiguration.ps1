@@ -298,6 +298,27 @@ function Invoke-ConfigureCurl {
     }
 }
 
+function Invoke-ConfigureDotNET {
+    Write-Head "* Configuring .NET..."
+
+    $target  = $null
+    $version = $KOMPANION_SETUP.version.dotnet
+    $url     = $KOMPANION_SETUP.url.dotnet -f $version
+    $output  = "$env:KOMPANION_TEMP\dotnet.zip"
+    $path    = "$env:KOMPANION_BIN\dotnet-sdk-$version-win-x64"
+
+    $success = Invoke-DlUnzipInstall $path $url $output -Target $target
+
+    if ($success) {
+        Set-KompanionEnvVar -Name "DOTNET_HOME" `
+            -Value "$env:KOMPANION_BIN\dotnet-sdk-$version-win-x64"
+
+        Initialize-AddToPath -Directory "$env:DOTNET_HOME"
+    } else {
+        Write-Warn "Failed to install .NET, skipping configuration..."
+    }
+}
+
 function Invoke-ConfigureDrawio {
     Write-Head "* Configuring Draw.io..."
 

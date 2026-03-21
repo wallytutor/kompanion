@@ -21,6 +21,7 @@
     },
     "lang": {
         "rust":        true,
+        "dotnet":      true,
         "julia":       false,
         "erlang":      false,
         "haskell":     false,

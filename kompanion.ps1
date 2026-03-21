@@ -281,6 +281,7 @@ function Start-KompanionConfigure {
     if ($Config.lang.rust)    { Invoke-InstallRust }
     if ($Config.lang.rust)    { Invoke-ConfigureRust }
 
+    if ($Config.lang.dotnet)  { Invoke-ConfigureDotNET}
     if ($Config.lang.julia)   { Invoke-ConfigureJulia }
 
     if ($Config.lang.node)    { Invoke-InstallNode }

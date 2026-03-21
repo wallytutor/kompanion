@@ -313,6 +313,9 @@ function Invoke-ConfigureDotNET {
         Set-KompanionEnvVar -Name "DOTNET_HOME" `
             -Value "$env:KOMPANION_BIN\dotnet-sdk-$version-win-x64"
 
+        Set-KompanionEnvVar -Name "DOTNET_CLI_TELEMETRY_OPTOUT" `
+            -Value "1"
+
         Initialize-AddToPath -Directory "$env:DOTNET_HOME"
     } else {
         Write-Warn "Failed to install .NET, skipping configuration..."

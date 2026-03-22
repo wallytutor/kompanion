@@ -7,22 +7,18 @@ function Get-EscapedPkg($pkg) {
 }
 
 function Get-PkgHref($pkg) {
-    $target = "^$(Get-EscapedPkg $pkg)-.*\.pkg\.tar\.zst$"
+    $target = "^$(Get-EscapedPkg $pkg).*\.pkg\.tar\.zst$"
     return ($html.Links | Where-Object href -Match $target).href
 }
 
-function Get-Mingw64 {
-    $repo = "https://repo.msys2.org/mingw/ucrt64"
-    $dest = "mingw64"
-
-    $pkgs = @(
-        "re:mingw-w64-ucrt-x86_64-binutils"
-        "re:mingw-w64-ucrt-x86_64-crt-(\d[\w\.]*)"
-        "re:mingw-w64-ucrt-x86_64-gcc-(\d[\d\.]*)"
-        "re:mingw-w64-ucrt-x86_64-headers-(\d[\w\.]*)"
-        "re:mingw-w64-ucrt-x86_64-libwinpthread-git-(\d[\w\.]*)"
+function Get-MingwSystem {
+    param (
+        [string]$repo,
+        [string[]]$pkgs
     )
+    $dest = "mingw"
 
+    # Create destination directory if it doesn't exist:
     New-Item -ItemType Directory -Force -Path $dest | Out-Null
 
     # Get the HTML content of the repository page for scraping:
@@ -35,20 +31,33 @@ function Get-Mingw64 {
         $url = "$repo/$file"
         $tmp = "$env:TEMP\$file"
 
+        if (-not $file) {
+            Write-Host "Looking for $pkg`n`t> not found"
+            continue
+        }
+
         Write-Host "Looking for $pkg`n`t> found $file`n`t> downloading $url"
 
         Invoke-WebRequest $url -OutFile $tmp
         tar -xf $tmp -C $dest
+
+        # tar -I zstd -xf $tmp -C $dest
+        # zstd -d $tmp -o "$tmp.tar"
+        # tar -xf "$tmp.tar" -C $dest
     }
 }
 
-Get-Mingw64
+$rootUrl = "https://repo.msys2.org"
+$repoUrl = "$rootUrl/mingw/ucrt64"
+$pkgs = @(
+    "re:mingw-w64-ucrt-x86_64-binutils"
+    "re:mingw-w64-ucrt-x86_64-crt-(\d[\w\.]*)"
+    "re:mingw-w64-ucrt-x86_64-gcc-(\d[\d\.]*)"
+    "re:mingw-w64-ucrt-x86_64-headers-(\d[\w\.]*)"
+    "re:mingw-w64-ucrt-x86_64-winpthreads-(\d[\w\.]*)"
+    "re:mingw-w64-ucrt-x86_64-winpthreads-git-(\d[\w\.]*)"
+    "re:mingw-w64-ucrt-x86_64-libwinpthread-(\d[\w\.]*)"
+    "re:mingw-w64-ucrt-x86_64-libwinpthread-git-(\d[\w\.]*)"
+)
 
-# $root = Split-Path -Parent $MyInvocation.MyCommand.Path
-# $mingw = Join-Path $root "mingw64\bin"
-
-# $env:PATH = "$mingw;$env:PATH"
-# $env:CC   = "gcc"
-# $env:CXX  = "g++"
-
-# Write-Host "MSYS2 MinGW environment loaded."
+Get-MingwSystem -repo $repoUrl -pkgs $pkgs

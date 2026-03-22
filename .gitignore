@@ -19,8 +19,9 @@ repos/
 .kompanion/envs.ps1
 
 # Editor cache:
-.vscode/*
 .copilot/*
+.logseq/*
+.vscode/*
 .zettlr/*
 
 # Rust directories:

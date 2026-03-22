@@ -1,6 +1,26 @@
-# Using SSH
+# Using SSH {#sec-using-ssh}
 
-There is something almost inevitable in scientific computing: you will need to connect to some remote machine at some point. Most of the time, that is a daily activity, whether you connect to a remote computer or HPC cluster. The most common protocol for such connections is SSH. This section guides you through the generation of a key pair generation and authentication through VS Code.
+There is something almost inevitable in scientific computing: you will need to connect to some remote machine at some point. Most of the time, that is a daily activity, whether you connect to a remote computer or HPC cluster. The most common protocol for such connections is SSH. This note provides some insights in common usage of SSH.
+
+## Port forwarding
+
+When running applications in a remote server where you have no administration rights (often the case in a scientific cluster), you might need to redirect a port through an SSH tunnel so that it is accessible from your local workstation. The following snippet illustrates the command format as pseudo-code:
+
+``` bash
+ssh -L \
+    "<local_port>:localhost:<remote_port>" \
+    "<REMOTE_USER>@<REMOTE_HOST>"
+```
+
+For example:
+
+``` bash
+ssh -L 8080:localhost:8080 walter@192.168.1.10
+```
+
+## Key pair authentication
+
+This section guides you through the generation of a key pair generation and authentication. Additional steps to setup a connection through VS Code are provided.
 
 **Creating the keys:** generate the SSH key pair locally (*i.e.* on your workstation); common options are:
 

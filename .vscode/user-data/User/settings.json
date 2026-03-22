@@ -107,8 +107,9 @@
     "files.trimFinalNewlines": true,
 
     "files.associations": {
-        ".jou": "lisp",
-        ".scm": "lisp",
+        "*.jou": "lisp",
+        "*.scm": "lisp",
+        "*.spec": "python",
         "*.matc": "FortranFreeForm",
         "*Dict": "OpenFOAM",
         "*Properties": "OpenFOAM",
@@ -138,8 +139,8 @@
         "**/target/": true,
 
         // Build and distribution folders:
-        "**/build/": true,
-        "**/dist/": true,
+        // "**/build/": true,
+        // "**/dist/": true,
         "**/*.egg-info/": true,
 
         // Diagram temporary files:

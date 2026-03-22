@@ -525,6 +525,32 @@ function Invoke-ConfigureLiteXL {
     }
 }
 
+function Invoke-ConfigureMingW64 {
+    Write-Head "* Configuring MingW64..."
+
+    $target = "mingw64"
+    $url    = $KOMPANION_SETUP.url.mingw64
+    $output = "$env:KOMPANION_TEMP\mingw64.zip"
+    $path   = "$env:KOMPANION_BIN"
+
+    $success = Invoke-DlUnzipInstall $path $url $output -Target $target
+
+    if ($success) {
+        Set-KompanionEnvVar -Name "MINGW64_HOME" `
+            -Value "$env:KOMPANION_BIN\$target"
+
+        Set-KompanionEnvVar -Name "CC" `
+            -Value "$env:MINGW64_HOME\bin\gcc.exe"
+
+        Set-KompanionEnvVar -Name "CXX" `
+            -Value "$env:MINGW64_HOME\bin\g++.exe"
+
+        Initialize-AddToPath -Directory "$env:MINGW64_HOME\bin"
+    } else {
+        Write-Warn "Failed to install MingW64, skipping configuration..."
+    }
+}
+
 function Invoke-ConfigureParaView {
     Write-Head "* Configuring ParaView..."
 

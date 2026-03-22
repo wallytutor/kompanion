@@ -16,8 +16,7 @@
 
         "drawio":      false,
         "inkscape":    false,
-        "miktex":      false,
-        "msys2":       false
+        "miktex":      false
     },
     "lang": {
         "rust":        true,

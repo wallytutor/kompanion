@@ -33,7 +33,6 @@ $DEFAULT_CONFIG = [PSCustomObject]@{
         drawio      = $false
         nvim        = $false
         lessmsi     = $false
-        msys2       = $false
         pandoc      = $false
         jabref      = $false
         inkscape    = $false
@@ -220,9 +219,6 @@ function Start-KompanionConfigure {
     if ($Config.base.lessmsi)     { Invoke-InstallLessMsi }
     if ($Config.base.lessmsi)     { Invoke-ConfigureLessMsi }
 
-    if ($Config.base.msys2)       { Invoke-InstallMsys2 }
-    if ($Config.base.msys2)       { Invoke-ConfigureMsys2 }
-
     if ($Config.base.pandoc)      { Invoke-InstallPandoc }
     if ($Config.base.pandoc)      { Invoke-ConfigurePandoc }
 
@@ -275,7 +271,7 @@ function Start-KompanionConfigure {
 
     # XXX: without winpython we cannot compile Rust code!
     Invoke-ConfigureWinPython
-
+    Invoke-ConfigureMingW64
 
     if ($Config.lang.rust)      { Invoke-InstallRust }
     if ($Config.lang.rust)      { Invoke-ConfigureRust }
@@ -1019,36 +1015,6 @@ function Invoke-InstallNvim {
     Invoke-DownloadIfNeeded -URL $url -Output $output
     Invoke-UncompressZipIfNeeded -Source $output -Destination $path
     Invoke-ConfigureNvim
-}
-
-function Invoke-ConfigureMsys2 {
-    # TODO once MSYS2 is installed!
-}
-
-function Invoke-InstallMsys2 {
-    Write-Host "- installing MSYS2 (not yet implemented)..."
-    # $output = Get-KompanionPath $$config.install.msys2.saveAs
-    # $path   = Get-KompanionPath $$config.install.msys2.path
-    # Invoke-DownloadIfNeeded -URL $$config.install.msys2.URL -Output $output
-
-    # if (Test-Path -Path $path) {
-    #     Write-Host "Skipping extraction of $output..."
-    # } else {
-    #     Write-Host "Expanding $output into $path"
-    #     $argList = @("in", "--confirm-command", "--accept-messages"
-    #                  "--root", "$path")
-    #     Invoke-CapturedCommand $output $argList
-    # }
-
-    # $bash = Get-KompanionPath "bin\msys2\usr\bin\bash"
-    # $argList = @("-lc", "'pacman -Syu --noconfirm'")
-    # $argList = @("-lc", "'pacman -Su --noconfirm'")
-    # bin\msys2\usr\bin\bash -lc "pacman -Syu --noconfirm"
-    # bin\msys2\usr\bin\bash -lc "pacman -Su --noconfirm"
-    # pacman-key --init && pacman-key --populate msys2
-    # pacman -Syuu && pacman -S bash coreutils make gcc p7zip
-    # pacman -Sy --noconfirm; pacman -S --noconfirm p7zip
-    Invoke-ConfigureMsys2
 }
 
 function Invoke-ConfigureInkscape {

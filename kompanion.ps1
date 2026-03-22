@@ -29,6 +29,7 @@ $DEFAULT_CONFIG = [PSCustomObject]@{
         git         = $true
         curl        = $true
         sevenzip    = $true
+        logseq      = $false
         zettlr      = $false
         drawio      = $false
         nvim        = $false
@@ -44,7 +45,6 @@ $DEFAULT_CONFIG = [PSCustomObject]@{
         quarto      = $false
     }
     lang = [PSCustomObject]@{
-        python      = $true
         rust        = $true
         julia       = $false
         node        = $false
@@ -54,6 +54,7 @@ $DEFAULT_CONFIG = [PSCustomObject]@{
         racket      = $false
         coq         = $false
         rlang       = $false
+        python      = $false
     }
     simu = [PSCustomObject]@{
         paraview    = $false
@@ -207,13 +208,13 @@ function Start-KompanionConfigure {
     Invoke-ConfigureLiteXL
 
     if ($Config.base.tabby)       { Invoke-ConfigureTabby }
+    if ($Config.base.logseq)      { Invoke-ConfigureLogseq }
 
     if ($Config.base.nvim)        { Invoke-InstallNvim }
     if ($Config.base.nvim)        { Invoke-ConfigureNvim }
 
     if ($Config.base.zettlr)      { Invoke-InstallZettlr }
     if ($Config.base.zettlr)      { Invoke-ConfigureZettlr }
-
     if ($Config.base.drawio)      { Invoke-ConfigureDrawio }
 
     if ($Config.base.lessmsi)     { Invoke-InstallLessMsi }

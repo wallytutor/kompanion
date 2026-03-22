@@ -1,5 +1,6 @@
 {
     "base": {
+        "logseq":      false,
         "tabby":       false,
         "zettlr":      false,
         "nvim":        false,
@@ -29,7 +30,7 @@
         "racket":      false,
         "coq":         false,
         "node":        false,
-        "python":     false
+        "python":      false
     },
     "simu": {
         "paraview":    false,

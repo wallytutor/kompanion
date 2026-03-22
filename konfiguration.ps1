@@ -525,6 +525,27 @@ function Invoke-ConfigureLiteXL {
     }
 }
 
+function Invoke-ConfigureLogseq {
+    Write-Head "* Configuring Logseq..."
+
+    $target  = $null
+    $version = $KOMPANION_SETUP.version.logseq
+    $url     = Get-PackageVersionedUrl "logseq"
+    $output  = "$env:KOMPANION_TEMP\logseq.zip"
+    $path    = "$env:KOMPANION_BIN\Logseq-win-x64-$version"
+
+    $success = Invoke-DlUnzipInstall $path $url $output -Target $target
+
+    if ($success) {
+        Set-KompanionEnvVar -Name "LOGSEQ_HOME" `
+            -Value "$env:KOMPANION_BIN\Logseq-win-x64-$version"
+
+        Initialize-AddToPath -Directory "$env:LOGSEQ_HOME"
+    } else {
+        Write-Warn "Failed to install Logseq, skipping configuration..."
+    }
+}
+
 function Invoke-ConfigureMingW64 {
     Write-Head "* Configuring MingW64..."
 

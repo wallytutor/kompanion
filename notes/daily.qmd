@@ -31,3 +31,38 @@ After a few years without using it, it seems that now [.NET SDK](https://dotnet.
 
 ## 2026-03-22
 
+Support (or planned support) of Msys2 has been dropped from `Kompanion` in favor of the *darker* [WinLibs](https://winlibs.com/) project. Currently a compilation toolchain is deployed in the environment without much effort, thus allowing [mlua](https://github.com/mlua-rs/mlua) to be used in `Majordome` for extensions, what has been long expected. I also learned a few elements of PowerShell:
+
+- Today Copilot gave me you idea/idiom for use with PowerShell; you can annotate strings with functional elements, like prepending with `re:` as illustrated below:
+
+```ps1
+function Get-EscapedPkg($pkg) {
+    if ($pkg.StartsWith("re:")) {
+        return $pkg.Substring(3)
+    } else {
+        return [regex]::Escape($pkg)
+    }
+}
+```
+
+- Simple scrapping can be performed with `Invoke-WebRequest`; I was trying to get the latest version of a few packages from [msys2/ucrt64 repo](https://repo.msys2.org/mingw/ucrt64/) and came up with this:
+
+```ps1
+$url = "https://repo.msys2.org/mingw/ucrt64/"
+$pkg = "re:mingw-w64-ucrt-x86_64-gcc-(\d[\d\.]*)"
+
+# Perform request to get page HTML data:
+$html = Invoke-WebRequest $url -UseBasicParsing
+
+# Assembly the expression to find:
+$expr = Get-EscapedPkg($pkg)
+$target = "^$expr.*\.pkg\.tar\.zst$"
+
+# Get a list of links:
+$links = ($html.Links | Where-Object href -Match $target).Href
+
+# Sort and retrieve the latest:
+$links | Sort-Object | Select-Object -Last 1
+```
+
+## 2026-03-23

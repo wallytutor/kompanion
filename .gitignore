@@ -77,3 +77,5 @@ Microsoft/
 !.vscode/user-data/User/
 .vscode/user-data/User/*
 !.vscode/user-data/User/settings.json
+
+/.luarc.json

@@ -58,6 +58,10 @@ Microsoft/
 .config/lpm/*
 !.config/lite-xl/init.lua
 
+# Logseq:
+logseq/logseq/.recycle/
+logseq/logseq/bak/*
+
 #######################################################################
 # User profile: overrides
 #######################################################################

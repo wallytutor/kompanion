@@ -24,8 +24,9 @@ repos/
 .zettlr/*
 
 # Rust directories:
-.cargo/
+.cargo/*
 .rustup/
+!.cargo/config.toml
 
 # Interactive environments:
 .ipython/*

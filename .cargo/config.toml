@@ -1,0 +1,7 @@
+# XXX: just keep here as a reminder that this could become a solution
+# later when compiling for windows with mingw... for now it works as is.
+#
+# [target.x86_64-pc-windows-gnu]
+# rustflags = [
+#     "-C", "link-args=-Wl,--enable-auto-import -lwinpthread"
+# ]

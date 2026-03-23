@@ -104,5 +104,13 @@ vim.keymap.set('n', '<space>rn', vim.lsp.buf.rename)
 vim.keymap.set('n', '<space>ca', vim.lsp.buf.code_action)
 
 -- ---------------------------------------------------------------------
+-- CODE FOLDING
+-- ---------------------------------------------------------------------
+
+-- Set foldmarker, so Vim will know where to fold
+vim.opt.foldmethod = 'marker'
+vim.opt.foldmarker = '#region,#endregion'
+
+-- ---------------------------------------------------------------------
 -- EOF
 -- ---------------------------------------------------------------------

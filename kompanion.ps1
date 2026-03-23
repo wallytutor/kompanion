@@ -391,11 +391,25 @@ function KompanionRebuild {
 }
 
 function Kode {
+    param (
+        [switch]$WithKompanion
+    )
     . "$env:KOMPANION_DIR/kompanion.ps1"
 
-    Code.exe $env:KOMPANION_DIR $PWD.Path `
+    $paths = if ($WithKompanion) {
+        @($env:KOMPANION_DIR, $PWD.Path)
+    } else {
+        @($PWD.Path)
+    }
+
+    Code.exe $paths `
         --extensions-dir $env:VSCODE_EXTENSIONS `
         --user-data-dir  $env:VSCODE_SETTINGS
+}
+
+function Lite {
+    . "$env:KOMPANION_DIR/kompanion.ps1"
+    lite-xl.exe $PWD.Path
 }
 #endregion: kompanion
 

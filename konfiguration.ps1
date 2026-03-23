@@ -10,6 +10,24 @@ function Read-Json {
     Get-Content -Path $Path -Raw | ConvertFrom-Json
 }
 
+function Set-LockedPkg {
+    param (
+        [Parameter(Mandatory, Position=0)]
+        [string]$Pkg
+    )
+    $lockFile = "$env:KOMPANION_DOT\$Pkg.lock"
+    New-Item -ItemType File -Path $lockFile -Force | Out-Null
+}
+
+function Get-IsLockedPkg {
+    param (
+        [Parameter(Mandatory, Position=0)]
+        [string]$Pkg
+    )
+    $lockFile = "$env:KOMPANION_DOT\$Pkg.lock"
+    return (Test-Path -Path $lockFile)
+}
+
 function Get-PackageVersionedUrl {
     param (
         [Parameter(Mandatory, Position=0)]
@@ -479,19 +497,14 @@ function Invoke-ConfigureJulia {
         Set-KompanionEnvVar -Name "AUCHIMISTE_PATH" `
             -Value "$env:KOMPANION_DIR\src\auchimiste"
 
-        # Install minimal requirements:
-        $lockFile = "$env:KOMPANION_DOT\julia.lock"
-
         # Ignore deps if requested:
-        if ($NoJuliaDeps) {
-            New-Item -ItemType File -Path $lockFile -Force | Out-Null
-        }
+        if ($NoJuliaDeps) { Set-LockedPkg "julia" }
 
         # Note: manually remove lock file if no deps installed at first:
-        if (!(Test-Path $lockFile)) {
+        if (-not (Get-IsLockedPkg "julia")) {
             # This will invode setup.jl which may take a long time...
             Invoke-CapturedCommand "$env:JULIA_HOME\bin\julia.exe" @("-e", "exit()")
-            New-Item -ItemType File -Path $lockFile -Force | Out-Null
+            Set-LockedPkg "julia"
         }
     } else {
         Write-Warn "Failed to install Julia, skipping configuration..."
@@ -512,12 +525,15 @@ function Invoke-ConfigureLiteXL {
         Set-KompanionEnvVar -Name "LITEXL_HOME" `
             -Value "$env:KOMPANION_BIN\$target"
 
-        # Invoke-WebRequest -Uri "https://github.com/lite-xl/lite-xl-plugin-manager/releases/download/latest/lpm.x86_64-windows.exe" -OutFile "lpm.exe"
-        # lpm.exe install plugin_manager --assume-yes
-        # Remove-Item lpm.exe
+        if (-not (Get-IsLockedPkg "lpm")) {
+            Invoke-WebRequest -Uri $KOMPANION_SETUP.url.lpm `
+                -OutFile "$env:TEMP\lpm.exe"
 
-        # $_ = Invoke-DownloadIfNeeded $KOMPANION_SETUP.url.lpm "$env:LITEXL_HOME\lpm.exe"
-        # & "$env:LITEXL_HOME\lpm.exe" install plugin_manager --assume-yes
+            & "$env:TEMP\lpm.exe" install plugin_manager --assume-yes
+            Remove-Item "$env:TEMP\lpm.exe"
+
+            Set-LockedPkg "lpm"
+        }
 
         Initialize-AddToPath -Directory "$env:LITEXL_HOME"
     } else {

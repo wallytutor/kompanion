@@ -279,6 +279,21 @@
     "python.languageServer": "Default",
 
     //////////////////////////////////////////////////////////////////////////
+    // F#
+    //////////////////////////////////////////////////////////////////////////
+
+    "FSharp.addFsiWatcher": true,
+    "FSharp.dotnetRoot": "${env:DOTNET_HOME}\\dotnet",
+
+    "[fsharp]": {
+        "editor.tabSize": 4,
+        "editor.foldingStrategy": "auto",
+        "editor.wordWrap": "wordWrapColumn",
+        "editor.wordWrapColumn": 100,
+        "editor.rulers": [79, 100],
+    },
+
+    //////////////////////////////////////////////////////////////////////////
     // JULIA
     //////////////////////////////////////////////////////////////////////////
 
@@ -330,13 +345,12 @@
         "-Wunused-dummy-argument"
     ],
 
-
     //////////////////////////////////////////////////////////////////////////
     // GITHUB COPILOT
     //////////////////////////////////////////////////////////////////////////
 
+    "chat.viewSessions.orientation": "stacked",
     "github.copilot.nextEditSuggestions.enabled": true,
-
     "github.copilot.enable": {
         "*": true,
         "quarto": true,
@@ -486,6 +500,5 @@
     "remote.SSH.remotePlatform": {
         "10.13.52.2": "linux",
         "frontal": "linux"
-    },
-    "chat.viewSessions.orientation": "stacked"
+    }
 }

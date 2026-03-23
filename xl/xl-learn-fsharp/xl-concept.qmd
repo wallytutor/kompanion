@@ -1,6 +1,4 @@
----
-jupyter: python3
----
+# Diffusion in F#
 
 ```{python}
 module Constants =

@@ -4,3 +4,6 @@
 
 # Ionide files
 .fake
+
+# Notebooks
+.ipynb_checkpoints/*

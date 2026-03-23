@@ -42,6 +42,7 @@ pip/
 # .NET:
 .dotnet/*
 .nuget/*
+.templateengine/*
 
 # Other languages:
 .julia/*

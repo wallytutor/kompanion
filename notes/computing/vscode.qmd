@@ -48,6 +48,7 @@ The following extensions are recommended.
 
     -   [C/C++](https://marketplace.visualstudio.com/items?itemName=ms-vscode.cpptools)
     -   [Erlang](https://marketplace.visualstudio.com/items?itemName=pgourlain.erlang)
+    -   [F#](https://marketplace.visualstudio.com/items?itemName=Ionide.Ionide-fsharp)
     -   [Gmsh](https://marketplace.visualstudio.com/items?itemName=Bertrand-Thierry.vscode-gmsh)
     -   [Julia](https://marketplace.visualstudio.com/items?itemName=julialang.language-julia)
     -   [LaTeX Workshop](https://marketplace.visualstudio.com/items?itemName=James-Yu.latex-workshop)

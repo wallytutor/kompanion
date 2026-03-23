@@ -1,17 +1,29 @@
-# ---------------------------------------------------------------------------
-# aliases.ps1
-# ---------------------------------------------------------------------------
-
-# Unix-like commands
+#region: unix-like
 Set-Alias -Name ll     -Value Get-ChildItem
 Set-Alias -Name which  -Value Get-Command
 
-# Programs
-Set-Alias -Name gmsh   -Value gmsh.exe
+function tail {
+    param(
+        [switch]$f
+    )
+    if ($f) {
+        # This is equivalent to Linux `tail -f $Path`:
+        Get-Content -Wait -Path @args
+    } else {
+        # Just read the whole file:
+        Get-Content -Path @args
+    }
+}
+#endregion: unix-like
 
-# Function wrapped
-function Print-Path() { return $env:Path -split ';' }
-function mj { cd $env:KOMPANION_DIR }
+#region: custom functions
+function Print-Path() {
+    return $env:Path -split ';'
+}
+
+function mj {
+    cd $env:KOMPANION_DIR
+}
 
 function vim {
     # For some reason nvim is not taking into account the override of the
@@ -21,19 +33,22 @@ function vim {
 }
 
 function zettlr {
-    & Start-Process Zettlr.exe -ArgumentList "--data-dir=$env:ZETTLR_DATA"
+    & Zettlr.exe --data-dir="$env:ZETTLR_DATA" @args
 }
 
 function jlab {
-    & Start-Process jupyter-lab.exe -ArgumentList "--no-browser" `
-        -NoNewWindow -Wait
+    & jupyter-lab.exe --no-browser @args
 }
 
 function qprev {
-    & Start-Process quarto.exe -ArgumentList "preview", "--no-browser" `
-        -NoNewWindow -Wait
+    & quarto.exe preview --no-browser @args
 }
 
-# ---------------------------------------------------------------------------
-# EOF
-# ---------------------------------------------------------------------------
+function fsi {
+    & dotnet fsi @args
+}
+
+function gmsh {
+    & gmsh.exe @args
+}
+#endregion: custom functions

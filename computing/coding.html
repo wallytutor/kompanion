@@ -347,15 +347,8 @@ ul.task-list li input[type="checkbox"] {
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">Table of contents</h2>
-   
-  <ul>
-  <li><a href="#coding-practices" id="toc-coding-practices" class="nav-link active" data-scroll-target="#coding-practices"><span class="header-section-number">3.1</span> Coding practices</a></li>
-  <li><a href="#scientific-publishing" id="toc-scientific-publishing" class="nav-link" data-scroll-target="#scientific-publishing"><span class="header-section-number">3.2</span> Scientific publishing</a></li>
-  </ul>
-</nav>
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+        
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -380,8 +373,6 @@ ul.task-list li input[type="checkbox"] {
 
 
 <p>At its core, serious <em>scientific computing</em> requires <em>scientific programming</em>. To that end, this page provides access to programming learning materials and related links. If this subject is new to you, to be able to successfully follow the contents you might learn a bit about the environment we will use, <a href="vscode.html" class="quarto-xref">VS Code&nbsp;<span>4</span></a> and the minimum about command prompt on <a href="windows.html" class="quarto-xref">Chapter&nbsp;<span>5</span></a>.</p>
-<section id="coding-practices" class="level2" data-number="3.1">
-<h2 data-number="3.1" class="anchored" data-anchor-id="coding-practices"><span class="header-section-number">3.1</span> Coding practices</h2>
 <p>It is not worth learning any programming before being introduced to the good practices. Many programmers I know write <em>garbage that works for them only</em>. It is impossible to have a healthy collaboration if code is not standardized, reason why I place this highly biased introduction here.</p>
 <p>One of the reasons <a href="https://en.wikipedia.org/wiki/Guido_van_Rossum">Guido van Rossum</a> created Python is because he wanted code to be readable. You should be able to guess what some code is doing even without specific technical knowledge about the language. This is probably the mean feature that made its creation so popular in the scientific world.</p>
 <p>Although they are applicable to Python, the practices recommended in the famous <a href="https://peps.python.org/pep-0008/">PEP8</a> can be extended to other languages, including Julia. You should <strong>read PEP8 religiously</strong>. That document describes how to write clean and maintainable Python code. When transposing that to Julia, the minimum you are expected to do is:</p>
@@ -399,21 +390,8 @@ ul.task-list li input[type="checkbox"] {
 <p>Julia has its own <a href="https://docs.julialang.org/en/v1/manual/variables/#Stylistic-Conventions">stylistic conventions</a> that are simpler than PEP8; the main differences are the way to name functions (it recommends to <em>glue</em> words and use no underscore) and the <em>exclamation mark !</em> indicating a function modifies it(s) argument(s). For function naming you may chose to stick to PEP8 recommendation, what is my personal choice. The detailed document is found <a href="https://docs.julialang.org/en/v1/manual/style-guide/">here</a>.</p>
 <p>Python code documentation is generally done with <a href="https://www.sphinx-doc.org/en/master/">Sphinx</a>. Julia has its own <a href="https://docs.julialang.org/en/v1/manual/documentation/#Syntax-Guide">syntax</a> which can be used to generate package documentation with help of <a href="https://documenter.juliadocs.org/stable/">Documenter.jl</a>.</p>
 <p><strong>Important:</strong> Julia supports <a href="https://docs.julialang.org/en/v1/manual/unicode-input/">Unicode input</a>, but its use is highly discouraged in modules. Unicode characters are better suited to write application scripts such as notebooks (in Pluto or Jupyter).</p>
-</section>
-<section id="scientific-publishing" class="level2" data-number="3.2">
-<h2 data-number="3.2" class="anchored" data-anchor-id="scientific-publishing"><span class="header-section-number">3.2</span> Scientific publishing</h2>
-<p>The following tools might be of interest for creating scientific content with embedded code.</p>
-<ul>
-<li><a href="https://jupytext.readthedocs.io/en/latest/">Jupytext documentation</a></li>
-<li><a href="https://jupyterbook.org/en/stable/intro.html">Jupyter Book</a></li>
-<li><a href="https://weavejl.mpastell.com/stable/">Weave.jl - Scientific Reports Using Julia</a></li>
-<li><a href="https://franklinjl.org/">Franklin - Building static websites in Julia</a></li>
-<li><a href="https://plutojl.org/">Pluto.jl - interactive Julia programming environment</a></li>
-<li><a href="https://quarto.org/">Quarto</a></li>
-</ul>
 
 
-</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

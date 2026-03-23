@@ -402,6 +402,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#programming-languages" id="toc-programming-languages" class="nav-link" data-scroll-target="#programming-languages"><span class="header-section-number">9.4.2</span> Programming languages</a></li>
   <li><a href="#msys2" id="toc-msys2" class="nav-link" data-scroll-target="#msys2"><span class="header-section-number">9.4.3</span> MSYS2</a></li>
   </ul></li>
+  <li><a href="#creating-a-portable-launcher" id="toc-creating-a-portable-launcher" class="nav-link" data-scroll-target="#creating-a-portable-launcher"><span class="header-section-number">9.5</span> Creating a portable launcher</a></li>
   </ul>
 </nav>
     </div>
@@ -600,9 +601,27 @@ mfix</code></pre>
 <ul>
 <li>Full package list is provided <a href="https://packages.msys2.org/queue">here</a>.</li>
 </ul>
-
-
 </section>
+</section>
+<section id="creating-a-portable-launcher" class="level2" data-number="9.5">
+<h2 data-number="9.5" class="anchored" data-anchor-id="creating-a-portable-launcher"><span class="header-section-number">9.5</span> Creating a portable launcher</h2>
+<p>A simple way to create a portable launcher requiring to source extra variables is by writing a simple batch script exporting or calling another script with the definitions:</p>
+<pre class="batch"><code>@echo off
+
+@REM Add variables to be sourced here such as
+@REM set PATH="/path/to/some/dir";%PATH%
+@REM ... or call another shared script doing so.
+@REM call %~dp0\env
+
+MyCode.exe</code></pre>
+<p>Because a batch script will keep a console window open, create a VB file with the following</p>
+<pre class="visual-basic"><code>Set oShell = CreateObject ("Wscript.Shell")
+Dim strArgs
+strArgs = "cmd /c MyCode.bat"
+oShell.Run strArgs, 0, false</code></pre>
+<p>In the example we assume the program is called <code>MyCode.exe</code> and the batch script has been named in an analogous way <code>MyCode.bat</code>.</p>
+
+
 </section>
 
 </main> <!-- /main -->

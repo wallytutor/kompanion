@@ -98,7 +98,29 @@
     "href": "computing/ssh.html",
     "title": "2  Using SSH",
     "section": "",
-    "text": "There is something almost inevitable in scientific computing: you will need to connect to some remote machine at some point. Most of the time, that is a daily activity, whether you connect to a remote computer or HPC cluster. The most common protocol for such connections is SSH. This section guides you through the generation of a key pair generation and authentication through VS Code.\nCreating the keys: generate the SSH key pair locally (i.e. on your workstation); common options are:\n\n-t rsa: key type (RSA is widely supported)\n-b 4096: key length (more bits = stronger, recommended 4096)\n-C : comment (usually your email)\n\nWhen running the command, accept defaults for storage at ~/.ssh/id_rsa[.pub]; optionally add a passphrase for additional security (but then you will need to enter it each time you need to connect, so that’s undesirable if the only reason you are creating the SSH key is to have quick access to the server).\nssh-keygen -t rsa -b 4096 -C \"yourusername@your.server.com\"\nssh-keygen -t ed25519 -b 4096 -C \"yourusername@your.server.com\"\nIf you have password access to the server and ssh-copy-id run the following:\nssh-copy-id -i ~/.ssh/id_rsa.pub user@remote_host\nAlternatively (in Windows PowerShell for instance but reformat it in a single line or replace the pipes by backticks) manually append to the ~/.ssh/authorized_keys:\ncat ~/.ssh/id_rsa.pub | \\\n    ssh yourusername@your.server.com \\\n    \"mkdir -p ~/.ssh && chmod 700 ~/.ssh && cat &gt;&gt; ~/.ssh/authorized_keys\"\nAs a last option do it by hand, but you risk breaking the format of authorized_keys.\nTesting Linux server: before anything, try connecting with you identity:\nssh -i ~/.ssh/id_rsa yourusername@your.server.com\nIf that falls-back to your password connection, connect normally to the server and make sure the rights of both SSH directory and authorized keys file are right before trying again:\nchmod 700 ~/.ssh\nchmod 600 ~/.ssh/authorized_keys\nMaybe the server SSH has not been enabled for key authentication, which can be inspected without opening the actual configuration file through (requires sudo rights):\nsudo sshd -T | grep pubkeyauthentication\nIf it is not enabled, you can edit the file (find and modify PubkeyAuthentication yes) as follows and restart the service:\nsudo vim /etc/ssh/sshd_config\nsudo systemctl restart sshd\n\n# Additional step for SELinux only:\nrestorecon -Rv ~/.ssh\nTest again; upon new failure, try the verbose mode of SSH connection on your workstation:\nssh -v yourusername@your.server.com\nwhile simultaneously connected to the server (sudo) reading the logs:\n# Debian-based:\nsudo tail -f /var/log/auth.log\n\n# Under RHEL/CentOS/Fedora:\nsudo tail -f /var/log/secure\nAdding the key to VS Code by perform the following steps:\n\nInstall Remote-SSH extension\nPress F1 and search for Remote-SSH: Open SSH Configuration File\nAdd an entry like the following (modifying the host name and user):\n\nHost myserver\n    HostName your.server.com\n    User yourusername\n    IdentityFile ~/.ssh/id_rsa\nIf the above fails to fill in your right user name (sometimes Windows username will appear) you can try the following workaround to enforce user:\nHost yourusername@your.server.com\n    HostName your.server.com\n    User yourusername\n    IdentityFile ~/.ssh/id_rsa\nAbout cluster usage: that is the single case you might want to store both public and private keys at the same .ssh; to navigate across nodes (assuming your $HOME directory is the same) you need both keys. Please keep in mind to use a different key pair than the one you use to connect to the cluster for security reasons.",
+    "text": "2.1 Port forwarding\nThere is something almost inevitable in scientific computing: you will need to connect to some remote machine at some point. Most of the time, that is a daily activity, whether you connect to a remote computer or HPC cluster. The most common protocol for such connections is SSH. This note provides some insights in common usage of SSH.\nWhen running applications in a remote server where you have no administration rights (often the case in a scientific cluster), you might need to redirect a port through an SSH tunnel so that it is accessible from your local workstation. The following snippet illustrates the command format as pseudo-code:\nFor example:",
+    "crumbs": [
+      "Computing",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Using SSH</span>"
+    ]
+  },
+  {
+    "objectID": "computing/ssh.html#port-forwarding",
+    "href": "computing/ssh.html#port-forwarding",
+    "title": "2  Using SSH",
+    "section": "",
+    "text": "ssh -L \\\n    \"&lt;local_port&gt;:localhost:&lt;remote_port&gt;\" \\\n    \"&lt;REMOTE_USER&gt;@&lt;REMOTE_HOST&gt;\"\n\nssh -L 8080:localhost:8080 walter@192.168.1.10",
+    "crumbs": [
+      "Computing",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Using SSH</span>"
+    ]
+  },
+  {
+    "objectID": "computing/ssh.html#key-pair-authentication",
+    "href": "computing/ssh.html#key-pair-authentication",
+    "title": "2  Using SSH",
+    "section": "2.2 Key pair authentication",
+    "text": "2.2 Key pair authentication\nThis section guides you through the generation of a key pair generation and authentication. Additional steps to setup a connection through VS Code are provided.\nCreating the keys: generate the SSH key pair locally (i.e. on your workstation); common options are:\n\n-t rsa: key type (RSA is widely supported)\n-b 4096: key length (more bits = stronger, recommended 4096)\n-C : comment (usually your email)\n\nWhen running the command, accept defaults for storage at ~/.ssh/id_rsa[.pub]; optionally add a passphrase for additional security (but then you will need to enter it each time you need to connect, so that’s undesirable if the only reason you are creating the SSH key is to have quick access to the server).\nssh-keygen -t rsa -b 4096 -C \"yourusername@your.server.com\"\nssh-keygen -t ed25519 -b 4096 -C \"yourusername@your.server.com\"\nIf you have password access to the server and ssh-copy-id run the following:\nssh-copy-id -i ~/.ssh/id_rsa.pub user@remote_host\nAlternatively (in Windows PowerShell for instance but reformat it in a single line or replace the pipes by backticks) manually append to the ~/.ssh/authorized_keys:\ncat ~/.ssh/id_rsa.pub | \\\n    ssh yourusername@your.server.com \\\n    \"mkdir -p ~/.ssh && chmod 700 ~/.ssh && cat &gt;&gt; ~/.ssh/authorized_keys\"\nAs a last option do it by hand, but you risk breaking the format of authorized_keys.\nTesting Linux server: before anything, try connecting with you identity:\nssh -i ~/.ssh/id_rsa yourusername@your.server.com\nIf that falls-back to your password connection, connect normally to the server and make sure the rights of both SSH directory and authorized keys file are right before trying again:\nchmod 700 ~/.ssh\nchmod 600 ~/.ssh/authorized_keys\nMaybe the server SSH has not been enabled for key authentication, which can be inspected without opening the actual configuration file through (requires sudo rights):\nsudo sshd -T | grep pubkeyauthentication\nIf it is not enabled, you can edit the file (find and modify PubkeyAuthentication yes) as follows and restart the service:\nsudo vim /etc/ssh/sshd_config\nsudo systemctl restart sshd\n\n# Additional step for SELinux only:\nrestorecon -Rv ~/.ssh\nTest again; upon new failure, try the verbose mode of SSH connection on your workstation:\nssh -v yourusername@your.server.com\nwhile simultaneously connected to the server (sudo) reading the logs:\n# Debian-based:\nsudo tail -f /var/log/auth.log\n\n# Under RHEL/CentOS/Fedora:\nsudo tail -f /var/log/secure\nAdding the key to VS Code by perform the following steps:\n\nInstall Remote-SSH extension\nPress F1 and search for Remote-SSH: Open SSH Configuration File\nAdd an entry like the following (modifying the host name and user):\n\nHost myserver\n    HostName your.server.com\n    User yourusername\n    IdentityFile ~/.ssh/id_rsa\nIf the above fails to fill in your right user name (sometimes Windows username will appear) you can try the following workaround to enforce user:\nHost yourusername@your.server.com\n    HostName your.server.com\n    User yourusername\n    IdentityFile ~/.ssh/id_rsa\nAbout cluster usage: that is the single case you might want to store both public and private keys at the same .ssh; to navigate across nodes (assuming your $HOME directory is the same) you need both keys. Please keep in mind to use a different key pair than the one you use to connect to the cluster for security reasons.",
     "crumbs": [
       "Computing",
       "<span class='chapter-number'>2</span>  <span class='chapter-title'>Using SSH</span>"
@@ -109,29 +131,7 @@
     "href": "computing/coding.html",
     "title": "3  Scientific programming",
     "section": "",
-    "text": "3.1 Coding practices\nAt its core, serious scientific computing requires scientific programming. To that end, this page provides access to programming learning materials and related links. If this subject is new to you, to be able to successfully follow the contents you might learn a bit about the environment we will use, VS Code 4 and the minimum about command prompt on Chapter 5.\nIt is not worth learning any programming before being introduced to the good practices. Many programmers I know write garbage that works for them only. It is impossible to have a healthy collaboration if code is not standardized, reason why I place this highly biased introduction here.\nOne of the reasons Guido van Rossum created Python is because he wanted code to be readable. You should be able to guess what some code is doing even without specific technical knowledge about the language. This is probably the mean feature that made its creation so popular in the scientific world.\nAlthough they are applicable to Python, the practices recommended in the famous PEP8 can be extended to other languages, including Julia. You should read PEP8 religiously. That document describes how to write clean and maintainable Python code. When transposing that to Julia, the minimum you are expected to do is:\nWhen you code, remember that most of the time what you are doing will be reviewed/used by somebody else and that person might not be in the mood to decipher the cryptic code you wrote; it that person is myself, I will promptly refuse to help you with badly written code. For newcomers, it is always better to talk about this before you write your first lines because once you stick to bad practices you will hardly ever leave them. Before you write something new, check if your ideas are also consistent with PEP20.\nJulia has its own stylistic conventions that are simpler than PEP8; the main differences are the way to name functions (it recommends to glue words and use no underscore) and the exclamation mark ! indicating a function modifies it(s) argument(s). For function naming you may chose to stick to PEP8 recommendation, what is my personal choice. The detailed document is found here.\nPython code documentation is generally done with Sphinx. Julia has its own syntax which can be used to generate package documentation with help of Documenter.jl.\nImportant: Julia supports Unicode input, but its use is highly discouraged in modules. Unicode characters are better suited to write application scripts such as notebooks (in Pluto or Jupyter).",
-    "crumbs": [
-      "Computing",
-      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Scientific programming</span>"
-    ]
-  },
-  {
-    "objectID": "computing/coding.html#coding-practices",
-    "href": "computing/coding.html#coding-practices",
-    "title": "3  Scientific programming",
-    "section": "",
-    "text": "lines are limited to 79 characters\nuse spaces around all operators\nconsistent indentation with spaces\nblank lines around structural blocks\nlower case variable names\nPascal-case structure names\nuse underscore to separate words\ndocument functions properly",
-    "crumbs": [
-      "Computing",
-      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Scientific programming</span>"
-    ]
-  },
-  {
-    "objectID": "computing/coding.html#scientific-publishing",
-    "href": "computing/coding.html#scientific-publishing",
-    "title": "3  Scientific programming",
-    "section": "3.2 Scientific publishing",
-    "text": "3.2 Scientific publishing\nThe following tools might be of interest for creating scientific content with embedded code.\n\nJupytext documentation\nJupyter Book\nWeave.jl - Scientific Reports Using Julia\nFranklin - Building static websites in Julia\nPluto.jl - interactive Julia programming environment\nQuarto",
+    "text": "At its core, serious scientific computing requires scientific programming. To that end, this page provides access to programming learning materials and related links. If this subject is new to you, to be able to successfully follow the contents you might learn a bit about the environment we will use, VS Code 4 and the minimum about command prompt on Chapter 5.\nIt is not worth learning any programming before being introduced to the good practices. Many programmers I know write garbage that works for them only. It is impossible to have a healthy collaboration if code is not standardized, reason why I place this highly biased introduction here.\nOne of the reasons Guido van Rossum created Python is because he wanted code to be readable. You should be able to guess what some code is doing even without specific technical knowledge about the language. This is probably the mean feature that made its creation so popular in the scientific world.\nAlthough they are applicable to Python, the practices recommended in the famous PEP8 can be extended to other languages, including Julia. You should read PEP8 religiously. That document describes how to write clean and maintainable Python code. When transposing that to Julia, the minimum you are expected to do is:\n\nlines are limited to 79 characters\nuse spaces around all operators\nconsistent indentation with spaces\nblank lines around structural blocks\nlower case variable names\nPascal-case structure names\nuse underscore to separate words\ndocument functions properly\n\nWhen you code, remember that most of the time what you are doing will be reviewed/used by somebody else and that person might not be in the mood to decipher the cryptic code you wrote; it that person is myself, I will promptly refuse to help you with badly written code. For newcomers, it is always better to talk about this before you write your first lines because once you stick to bad practices you will hardly ever leave them. Before you write something new, check if your ideas are also consistent with PEP20.\nJulia has its own stylistic conventions that are simpler than PEP8; the main differences are the way to name functions (it recommends to glue words and use no underscore) and the exclamation mark ! indicating a function modifies it(s) argument(s). For function naming you may chose to stick to PEP8 recommendation, what is my personal choice. The detailed document is found here.\nPython code documentation is generally done with Sphinx. Julia has its own syntax which can be used to generate package documentation with help of Documenter.jl.\nImportant: Julia supports Unicode input, but its use is highly discouraged in modules. Unicode characters are better suited to write application scripts such as notebooks (in Pluto or Jupyter).",
     "crumbs": [
       "Computing",
       "<span class='chapter-number'>3</span>  <span class='chapter-title'>Scientific programming</span>"
@@ -153,7 +153,7 @@
     "href": "computing/vscode.html#vs-code-extensions",
     "title": "4  Visual Studio Code",
     "section": "",
-    "text": "General purpose:\n\nms-vscode.PowerShell\nms-vscode-remote.remote-ssh\nGitHub.copilot\nukoloff.win-ca\nvscode-icons-team.vscode-icons\nritwickdey.LiveServer\ndnut.rewrap-revived\n\nPython development:\n\nms-python.python\nms-toolsai.jupyter\ntamasfe.even-better-toml\nPyrefly\nRuff\n\nOther languages support\n\nC/C++\nErlang\nGmsh\nJulia\nLaTeX Workshop\nMatlab\nModern Fortran\nQuarto\nRuby\n\nData inspection:\n\nData Wrangler\nExcel Viewer\nRainbow CSV\n\nVS Code themes:\n\nlakshits11.ayu-monokai\ncameronbieganek.julia-color-themes\nGitHub.github-vscode-theme\n\n\n\n\nwallytutor/elmer-sif-vscode: VS Code extension for Elmer Multiphysics SIF\n\n\n\nIf installing local extensions (such as elmer-sif-vscode), consider using Developer: Install Extension from Location instead of placing it under .vscode/extensions manually.\nFor installing extensions from within a VSCode terminal, rather than the main executable one must use %VSCODE_HOME%\\bin\\Code.cmd. Currently, Visual Studio Code’s command-line interface doesn’t directly support installing extensions from a local directory without packaging them into .vsix files. The recommended method is to package your extension into a .vsix file using vsce and then install it.",
+    "text": "General purpose:\n\nms-vscode.PowerShell\nms-vscode-remote.remote-ssh\nGitHub.copilot\nukoloff.win-ca\nvscode-icons-team.vscode-icons\nritwickdey.LiveServer\ndnut.rewrap-revived\n\nPython development:\n\nms-python.python\nms-toolsai.jupyter\ntamasfe.even-better-toml\nPyrefly\nRuff\n\nOther languages support\n\nC/C++\nErlang\nF#\nGmsh\nJulia\nLaTeX Workshop\nMatlab\nModern Fortran\nQuarto\nRuby\n\nData inspection:\n\nData Wrangler\nExcel Viewer\nRainbow CSV\n\nVS Code themes:\n\nlakshits11.ayu-monokai\ncameronbieganek.julia-color-themes\nGitHub.github-vscode-theme\n\n\n\n\nwallytutor/elmer-sif-vscode: VS Code extension for Elmer Multiphysics SIF\n\n\n\nIf installing local extensions (such as elmer-sif-vscode), consider using Developer: Install Extension from Location instead of placing it under .vscode/extensions manually.\nFor installing extensions from within a VSCode terminal, rather than the main executable one must use %VSCODE_HOME%\\bin\\Code.cmd. Currently, Visual Studio Code’s command-line interface doesn’t directly support installing extensions from a local directory without packaging them into .vsix files. The recommended method is to package your extension into a .vsix file using vsce and then install it.",
     "crumbs": [
       "Computing",
       "<span class='chapter-number'>4</span>  <span class='chapter-title'>Visual Studio Code</span>"
@@ -182,33 +182,11 @@
     ]
   },
   {
-    "objectID": "computing/windows.html#creating-a-portable-launcher",
-    "href": "computing/windows.html#creating-a-portable-launcher",
-    "title": "5  Working on Windows",
-    "section": "5.2 Creating a portable launcher",
-    "text": "5.2 Creating a portable launcher\nA simple way to create a portable launcher requiring to source extra variables is by writing a simple batch script exporting or calling another script with the definitions:\n@echo off\n\n@REM Add variables to be sourced here such as\n@REM set PATH=\"/path/to/some/dir\";%PATH%\n@REM ... or call another shared script doing so.\n@REM call %~dp0\\env\n\nMyCode.exe\nBecause a batch script will keep a console window open, create a VB file with the following\nSet oShell = CreateObject (\"Wscript.Shell\")\nDim strArgs\nstrArgs = \"cmd /c MyCode.bat\"\noShell.Run strArgs, 0, false\nIn the example we assume the program is called MyCode.exe and the batch script has been named in an analogous way MyCode.bat.",
-    "crumbs": [
-      "Computing",
-      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Working on Windows</span>"
-    ]
-  },
-  {
     "objectID": "computing/windows.html#mount-a-network-drive-in-wsl",
     "href": "computing/windows.html#mount-a-network-drive-in-wsl",
     "title": "5  Working on Windows",
-    "section": "5.3 Mount a network drive in WSL",
-    "text": "5.3 Mount a network drive in WSL\nHere we assume we will mount drive Z: at /mnt/z:\n# Create the mount point (if required):\nsudo mkdir /mnt/z\n\n# Mount the network drive in WSL:\nsudo mount -t drvfs Z: /mnt/z\nActually the same procedure can be used to access a SMB drive from within WSL temporarily with:\nsudo mount -t drvfs '\\\\path\\to\\smb' /mnt/&lt;mount-point&gt;/\nFor automatic remount, consider adding the following to your /etc/fstab\n//path/to/smb /mnt/&lt;mount-point&gt;/ drvfs auto,rw,nosuid,exec,uid=1000,gid=1000 0 0",
-    "crumbs": [
-      "Computing",
-      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Working on Windows</span>"
-    ]
-  },
-  {
-    "objectID": "computing/windows.html#following-the-writing-to-a-file",
-    "href": "computing/windows.html#following-the-writing-to-a-file",
-    "title": "5  Working on Windows",
-    "section": "5.4 Following the writing to a file",
-    "text": "5.4 Following the writing to a file\nThis is equivalent to Linux tail -f &lt;file-path&gt;:\nGet-Content -Path \"&lt;file-path&gt;\" -Wait\n\n5.4.1 Finding a process handle\nThis is useful when Windows won’t let you move a file or folder because it is already open somewhere. First, download and extract Handle; from PowerShell run the following:\n./handle.exe -u -nobanner \"C:\\Path\\To\\File.txt\"\nNotice that your file might have started another process and some research might be required.",
+    "section": "5.2 Mount a network drive in WSL",
+    "text": "5.2 Mount a network drive in WSL\nHere we assume we will mount drive Z: at /mnt/z:\n# Create the mount point (if required):\nsudo mkdir /mnt/z\n\n# Mount the network drive in WSL:\nsudo mount -t drvfs Z: /mnt/z\nActually the same procedure can be used to access a SMB drive from within WSL temporarily with:\nsudo mount -t drvfs '\\\\path\\to\\smb' /mnt/&lt;mount-point&gt;/\nFor automatic remount, consider adding the following to your /etc/fstab\n//path/to/smb /mnt/&lt;mount-point&gt;/ drvfs auto,rw,nosuid,exec,uid=1000,gid=1000 0 0\n\n5.2.1 Finding a process handle\nThis is useful when Windows won’t let you move a file or folder because it is already open somewhere. First, download and extract Handle; from PowerShell run the following:\n./handle.exe -u -nobanner \"C:\\Path\\To\\File.txt\"\nNotice that your file might have started another process and some research might be required.",
     "crumbs": [
       "Computing",
       "<span class='chapter-number'>5</span>  <span class='chapter-title'>Working on Windows</span>"
@@ -218,8 +196,8 @@
     "objectID": "computing/windows.html#identifying-a-proxy-pem",
     "href": "computing/windows.html#identifying-a-proxy-pem",
     "title": "5  Working on Windows",
-    "section": "5.5 Identifying a proxy PEM",
-    "text": "5.5 Identifying a proxy PEM\n# List all root certs:\nGet-ChildItem -Path Cert:\\LocalMachine\\Root\n\n# Export a specific one:\n$cert = Get-ChildItem -Path Cert:\\LocalMachine\\Root | Where-Object {\n    $_.Subject -like \"*&lt;company-name-generally&gt;*\"\n}\nExport-Certificate -Cert $cert -FilePath \"proxy.pem\"",
+    "section": "5.3 Identifying a proxy PEM",
+    "text": "5.3 Identifying a proxy PEM\n# List all root certs:\nGet-ChildItem -Path Cert:\\LocalMachine\\Root\n\n# Export a specific one:\n$cert = Get-ChildItem -Path Cert:\\LocalMachine\\Root | Where-Object {\n    $_.Subject -like \"*&lt;company-name-generally&gt;*\"\n}\nExport-Certificate -Cert $cert -FilePath \"proxy.pem\"",
     "crumbs": [
       "Computing",
       "<span class='chapter-number'>5</span>  <span class='chapter-title'>Working on Windows</span>"
@@ -296,7 +274,7 @@
     "href": "computing/tips.html",
     "title": "7  General Tips",
     "section": "",
-    "text": "7.1 Running Jupyterlab from a server\n#programming/python/jupyter\nBefore running the server it is a good idea to generate the user configuration file:\nBy default it will be located at ~/.jupyter/jupyter_lab_config.py. Now you can add your own access token that will simplify the following steps (and allow for reproducible connections in the future).\nThe idea is illustrated in this thread; first on the server side you need to start a headless service as provided below. Once Jupyter starts running, copy the token it will generate if you skipped the user configuration step above.\nOn the host side (the computer from where you wish to edit the notebooks) establish a ssh tunel exposing and mapping the port chose to serve Jupyter:\nNow you can browse to http://localhost:8080/ and add the token you copied earlier or your user-token you added to the configuration file. Notice that you need to keep the terminal you used to launch the port forwarding open while you work.",
+    "text": "7.1 Running Jupyterlab from a server\nBefore running the server it is a good idea to generate the user configuration file:\nBy default it will be located at ~/.jupyter/jupyter_lab_config.py. Now you can add your own access token that will simplify the following steps (and allow for reproducible connections in the future).\nThe idea is illustrated in this thread; first on the server side you need to start a headless service as provided below. Once Jupyter starts running, copy the token it will generate if you skipped the user configuration step above.\nOn the host side (the computer from where you wish to edit the notebooks) establish a ssh tunel exposing and mapping the port chose to serve Jupyter. Instructions are provided in Chapter 2. Now you can browse to http://localhost:8080/ and add the token you copied earlier or your user-token you added to the configuration file. Notice that you need to keep the terminal you used to launch the port forwarding open while you work.",
     "crumbs": [
       "Computing",
       "<span class='chapter-number'>7</span>  <span class='chapter-title'>General Tips</span>"
@@ -307,7 +285,7 @@
     "href": "computing/tips.html#running-jupyterlab-from-a-server",
     "title": "7  General Tips",
     "section": "",
-    "text": "jupyter-lab --generate-config\n\nc.IdentityProvider.token = '&lt;YOUR_TOKEN&gt;'\n\njupyter-lab --no-browser --port=8080\n\n# Notice that the ports below must be specified as:\n# ssh -L &lt;local_port&gt;:localhost:&lt;remote_port&gt; &lt;REMOTE_USER&gt;@&lt;REMOTE_HOST&gt;\nssh -L 8080:localhost:8080 &lt;REMOTE_USER&gt;@&lt;REMOTE_HOST&gt;",
+    "text": "jupyter-lab --generate-config\n\nc.IdentityProvider.token = '&lt;YOUR_TOKEN&gt;'\n\njupyter-lab --no-browser --port=8080",
     "crumbs": [
       "Computing",
       "<span class='chapter-number'>7</span>  <span class='chapter-title'>General Tips</span>"
@@ -362,7 +340,40 @@
     "href": "computing/selection.html",
     "title": "8  Selection of tools",
     "section": "",
-    "text": "8.1 Graphics",
+    "text": "8.1 Scientific publishing\nThe following tools might be of interest for creating scientific content with embedded code.",
+    "crumbs": [
+      "Computing",
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Selection of tools</span>"
+    ]
+  },
+  {
+    "objectID": "computing/selection.html#scientific-publishing",
+    "href": "computing/selection.html#scientific-publishing",
+    "title": "8  Selection of tools",
+    "section": "",
+    "text": "Jupytext documentation\nJupyter Book\nWeave.jl - Scientific Reports Using Julia\nFranklin - Building static websites in Julia\nPluto.jl - interactive Julia programming environment\nQuarto",
+    "crumbs": [
+      "Computing",
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Selection of tools</span>"
+    ]
+  },
+  {
+    "objectID": "computing/selection.html#scientific-web-apps",
+    "href": "computing/selection.html#scientific-web-apps",
+    "title": "8  Selection of tools",
+    "section": "8.2 Scientific web apps",
+    "text": "8.2 Scientific web apps\nSome practical tools for creating web applications for scientific applications:\n\nGradio\nPanel\nStreamlit\nTrame\nVoilà",
+    "crumbs": [
+      "Computing",
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Selection of tools</span>"
+    ]
+  },
+  {
+    "objectID": "computing/selection.html#api-and-databases",
+    "href": "computing/selection.html#api-and-databases",
+    "title": "8  Selection of tools",
+    "section": "8.3 API and databases",
+    "text": "8.3 API and databases\nPython:\n\nFastAPI\nPydantic\nTinyDB\n\nRust (frameworks):\n\nActix\nAxum\nRocket\n\nRust databases:\n\nredb\nReefDB\nsled",
     "crumbs": [
       "Computing",
       "<span class='chapter-number'>8</span>  <span class='chapter-title'>Selection of tools</span>"
@@ -372,8 +383,8 @@
     "objectID": "computing/selection.html#graphics",
     "href": "computing/selection.html#graphics",
     "title": "8  Selection of tools",
-    "section": "",
-    "text": "Fiji\ngnuplot\nGraphviz",
+    "section": "8.4 Graphics",
+    "text": "8.4 Graphics\n\nFiji\ngnuplot\nGraphviz",
     "crumbs": [
       "Computing",
       "<span class='chapter-number'>8</span>  <span class='chapter-title'>Selection of tools</span>"
@@ -383,8 +394,8 @@
     "objectID": "computing/selection.html#geometry",
     "href": "computing/selection.html#geometry",
     "title": "8  Selection of tools",
-    "section": "8.2 Geometry",
-    "text": "8.2 Geometry\n\nblender: the most powerful 3D (in the general sense) open source modeling tool; allows geometries to be exported to STL, which is compatible with most meshing software.\nFreeCAD: contrarily to blender, this is the most mature open source modeling tool in the technical sense. It supports both 3D conception and detailed drawing, among other features.\ncadquery: a simple parametric geometry tool.\nSalome: not just grometry, but also a large meshing toolbox provided by EDF.",
+    "section": "8.5 Geometry",
+    "text": "8.5 Geometry\n\nblender: the most powerful 3D (in the general sense) open source modeling tool; allows geometries to be exported to STL, which is compatible with most meshing software.\nFreeCAD: contrarily to blender, this is the most mature open source modeling tool in the technical sense. It supports both 3D conception and detailed drawing, among other features.\ncadquery: a simple parametric geometry tool.\nSalome: not just grometry, but also a large meshing toolbox provided by EDF.",
     "crumbs": [
       "Computing",
       "<span class='chapter-number'>8</span>  <span class='chapter-title'>Selection of tools</span>"
@@ -394,8 +405,8 @@
     "objectID": "computing/selection.html#meshing",
     "href": "computing/selection.html#meshing",
     "title": "8  Selection of tools",
-    "section": "8.3 Meshing",
-    "text": "8.3 Meshing\n\ngmsh: the to-go meshing tool for 2D geometries and visualization of many formats of 3D meshes; before trying to produce reliable structured meshes and geometry in 3D some ninja skills need to be developed. Its own scripting language makes parametric meshing easy.\nMeshLab: allows to manipulate triangulated grids generated in CAD; helpful for preparing patches for use with #OpenFOAM/snappyHexMesh.",
+    "section": "8.6 Meshing",
+    "text": "8.6 Meshing\n\ngmsh: the to-go meshing tool for 2D geometries and visualization of many formats of 3D meshes; before trying to produce reliable structured meshes and geometry in 3D some ninja skills need to be developed. Its own scripting language makes parametric meshing easy.\nMeshLab: allows to manipulate triangulated grids generated in CAD; helpful for preparing patches for use with #OpenFOAM/snappyHexMesh.",
     "crumbs": [
       "Computing",
       "<span class='chapter-number'>8</span>  <span class='chapter-title'>Selection of tools</span>"
@@ -405,8 +416,8 @@
     "objectID": "computing/selection.html#rendering",
     "href": "computing/selection.html#rendering",
     "title": "8  Selection of tools",
-    "section": "8.4 Rendering",
-    "text": "8.4 Rendering\n\nParaView: the de facto post-processing tool for many fields of application.\ntrame: rendering results in web-applications.",
+    "section": "8.7 Rendering",
+    "text": "8.7 Rendering\n\nParaView: the de facto post-processing tool for many fields of application.\ntrame: rendering results in web-applications.",
     "crumbs": [
       "Computing",
       "<span class='chapter-number'>8</span>  <span class='chapter-title'>Selection of tools</span>"
@@ -416,8 +427,8 @@
     "objectID": "computing/selection.html#simulation",
     "href": "computing/selection.html#simulation",
     "title": "8  Selection of tools",
-    "section": "8.5 Simulation",
-    "text": "8.5 Simulation\n\nCantera\nCasADi\nDualSPHysics\nDWSIM\nElmer: multiphysics FEM toolkit (see dedicated topic); download it here\nFreeFem++\nLAMMPS\nMFiX\nOpenFOAM: general purpose FVM CFD toolkit (see dedicated topic).\nOpenModelica\nRadCal\nSU2\nTRUST Platform: the basis for TrioCFD code by CEA.",
+    "section": "8.8 Simulation",
+    "text": "8.8 Simulation\n\nCantera\nCasADi\nDualSPHysics\nDWSIM\nElmer: multiphysics FEM toolkit (see dedicated topic); download it here\nFreeFem++\nLAMMPS\nMFiX\nOpenFOAM: general purpose FVM CFD toolkit (see dedicated topic).\nOpenModelica\nRadCal\nSU2\nTRUST Platform: the basis for TrioCFD code by CEA.",
     "crumbs": [
       "Computing",
       "<span class='chapter-number'>8</span>  <span class='chapter-title'>Selection of tools</span>"
@@ -427,8 +438,8 @@
     "objectID": "computing/selection.html#productivity",
     "href": "computing/selection.html#productivity",
     "title": "8  Selection of tools",
-    "section": "8.6 Productivity",
-    "text": "8.6 Productivity\nObsidian is the de facto solution for note-taking and second brain management, but it is not free for commercial ends and that has become a problem for my intended work use. Looking for alternatives for this tool which is my main productivity setting, I came across the following packages. Testing was done with I want it to be the same mindset and if after a few minutes I was not convinced by the application, it was automatically discarded. In summary, I liked both Joplin and Zettlr but will pursue the use of the latter only as Joplin does not meet by criteria. StandardNotes is a false open-source package and logseq is still too raw for any production setting.\n\n\n\nSoftware\nPros\nCons\n\n\n\n\nlaurent22/joplin\nRich interface with many features; excellent tool if you are not seeking version control as a target. Available as portable executable.\nCounterintuitive interface and files are not directly stored as .md; file system synchronization requires and absolute path. After closing the executable, a process was kept alive.\n\n\nlogseq/logseq\nAvailable as portable executable.\nPoor UI at first sight. Fast but dumb in the sense it will only support one file with a given title, what is incompatible with my way of organizing directories. Pages are not organized as in the folder view.\n\n\nstandardnotes/app\nInterface is cleaner/less cluttered than Joplin. Available as portable executable.\nStopped using it as received the first notification that smart tags require a paid plan. Also only plain text files are supported in free mode.\n\n\nZettlr/Zettlr\nSupport to YAML frontmatter. UI gets better as you open files. Integration to BibTeX.\nPoor UI at first sight. Not available as portable executable; but installation can be done in any user folder, what is also fine. It took a long time to import my existing second brain and sometimes it glitches/has some lags.",
+    "section": "8.9 Productivity",
+    "text": "8.9 Productivity\nObsidian is the de facto solution for note-taking and second brain management, but it is not free for commercial ends and that has become a problem for my intended work use. Looking for alternatives for this tool which is my main productivity setting, I came across the following packages. Testing was done with I want it to be the same mindset and if after a few minutes I was not convinced by the application, it was automatically discarded. In summary, I liked both Joplin and Zettlr but will pursue the use of the latter only as Joplin does not meet by criteria. StandardNotes is a false open-source package and logseq is still too raw for any production setting.\n\n\n\nSoftware\nPros\nCons\n\n\n\n\nlaurent22/joplin\nRich interface with many features; excellent tool if you are not seeking version control as a target. Available as portable executable.\nCounterintuitive interface and files are not directly stored as .md; file system synchronization requires and absolute path. After closing the executable, a process was kept alive.\n\n\nlogseq/logseq\nAvailable as portable executable.\nPoor UI at first sight. Fast but dumb in the sense it will only support one file with a given title, what is incompatible with my way of organizing directories. Pages are not organized as in the folder view.\n\n\nstandardnotes/app\nInterface is cleaner/less cluttered than Joplin. Available as portable executable.\nStopped using it as received the first notification that smart tags require a paid plan. Also only plain text files are supported in free mode.\n\n\nZettlr/Zettlr\nSupport to YAML frontmatter. UI gets better as you open files. Integration to BibTeX.\nPoor UI at first sight. Not available as portable executable; but installation can be done in any user folder, what is also fine. It took a long time to import my existing second brain and sometimes it glitches/has some lags.",
     "crumbs": [
       "Computing",
       "<span class='chapter-number'>8</span>  <span class='chapter-title'>Selection of tools</span>"
@@ -438,8 +449,8 @@
     "objectID": "computing/selection.html#other",
     "href": "computing/selection.html#other",
     "title": "8  Selection of tools",
-    "section": "8.7 Other",
-    "text": "8.7 Other\n\nprotobuf: for parsing #OpenFOAM dictionaries from Python.",
+    "section": "8.10 Other",
+    "text": "8.10 Other\n\nprotobuf: for parsing #OpenFOAM dictionaries from Python.",
     "crumbs": [
       "Computing",
       "<span class='chapter-number'>8</span>  <span class='chapter-title'>Selection of tools</span>"
@@ -484,6 +495,17 @@
     "title": "9  Portable applications",
     "section": "9.4 Creating a portable environment",
     "text": "9.4 Creating a portable environment\nThis section illustrates the generalities of how do create a portable software toolbox. Before proceding with any installation, make sure to read all the elements provided below; simply trying to follow instructions in a step-by-step fashion will certainly lead to failure and frustration.\nFor each of the applications you will install, make sure to perform the following generic steps:\n\nDownload the portable version of the application, generally a .zip compressed file, and save it to some temporary location. Sometimes the normal installer of an application already supports portable mode.\nExtract the compressed file to a dedicated directory. From there, you can move the content to the final location. See the notes below for details about compression practices.\nConfigure the application in a dedicated script or add a routine to the application script that manages all the paths and settings. The latter approach is recommended for putting everything together and is how Kompanion currently works.\n\nImportant: You need to be aware that there are two common practices of compressing (zip) a portable software: (1) some editors place everything in a directory and compress the directory, while others (2) pack everything under the root of the compressed file. Windows built-in system allows your to navigate compressed files as part of the filesystem, so inspect which of the above methods was used. If the later is detected, take care to select the right option to ensure the contents are extracted to a new directory. Several packages are stored directly at zip root and that may be messy to clean if extracted without the above precautions.\nImportant: since setting up the environment may require editing batch scripts, be aware that to open them you cannot click the file, but right-click and edit, as Windows see these as executables. In these files, lines starting by @REM are seem as comments and generally explain something about what follow them. If you are starting from scratch and do not master batch scripting, prefer learning PowerShell instead, as it is more modern and powerful, and you can easily call PowerShell scripts from batch scripts. It is how the current version of Kompanion is implemented and it is the recommended way to go.\n\n9.4.1 Initial setup\nThese are the required steps to get your system working for the first time:\n\nGo to VS Code download page and get the .zip version for x64 system (Arm64 is not supported here). Extract it to the binaries directory and copy the path of VS Code directory the set the variable VSCODE_DIR.\nGo to Git download page and select 64-bit Git for Windows Portable, download it. Notice that this is not a compressed file per se, but it is desguised as an executable. Double-click it and accept the default PortableGit installation directory. After extraction finishes, move it to binaries directory. Add it to the path by setting the variable GIT_DIR to the path of the directory.\n\nImportant: After installing VS Code, do NOT enable its portable mode because the VBS file for launching it will point to a specific user-data folder.\nImportant: these notes are quite general and skip details. Refer to kompanion.ps1 and look for the functions Invoke-Configure* and Invoke-Install* for the exact steps to configure each application.\n\n\n9.4.2 Programming languages\nThe following provides instructions for some languages you might wish to have fully integrated to your environment. For lower level languages, please consider using MSYS2 as described in its dedicated section.\n\n9.4.2.1 Python\nGo to WinPython download page and find the latest version tagged with a Latest green flag (avoid Pre-release versions on top). Expand the Assets and download the .exe version (also a disguised compressed file). Follow steps similar to Git above. See Invoke-ConfigurePython in kompanion.ps1 for the configuration of paths and environment variables.\n\n\n9.4.2.2 Julia\nGo to Julia download page and select the latest stable Windows 64-bit portable version. See Invoke-ConfigureJulia in kompanion.ps1 for the configuration of paths and environment variables.\nDownload rustup-init following the installation. See Invoke-ConfigureRust in kompanion.ps1 for the configuration of paths and environment variables.\n\n\n9.4.2.3 Octave\nGo to Octave download page and identify the .zip package for w64. As the main use of Octave is through its user interface, you can extract the content directly to bin/octave.\n\n\n9.4.2.4 Ruby\nGo to Ruby download page and identify the Devkit package for x64. During installation change the path to point to binaries and unselect the options to associate extensions and adding to the path.\n\n\n9.4.2.5 LISP\nLISP may be installed through Portacle. Instead of right-clicking and installing the executable, Shift-click and select to extract the contents; place the resulting portacle directory. You may choose not to add it to the path if using through its EMACs interface.\n\n\n9.4.2.6 LaTeX and related\nAlthough LaTeX is not mandatory, it is highly encouraged; otherwise, what is the point of doing any scientific computing and not publishing its results?\n\nStart by following the instructions provided here to install MikTeX. Point the installation to a directory miktex-portable under apps and select on-the-fly installation of new packages.\nConsider installing the following additional software:\n\nJabRef\npandoc\ninkscape\n\nGlobally install pip install Pygments for enabling syntax highlight in LaTeX using minted; that is the most flexible highlighting method for adding code snippets to your documents.\nAlso consider installing extension LaTeX Workshop for automatic compilation in editor with built-in PDF visualization.\n\nTo append to TEXMF variable one can use the MiKTeX Console graphical interface and under Settings &gt; Directories navigate and select the local path.\n\nIf you prefer a dedicated LaTeX editor, you may wish to install texstudio; some configuration of paths with the application may be required as it is not directly integrated to this environment.\nWarning: for now having both Rust and Octave fully operational in command-line is not working. This should not be a problem as Octave can be launched with its user-interface and that remain the most popular/recommended way of using it.\nWarning: For a fully operational Jupyter notebook environment, other the LaTeX support discussed in its dedicatet section, you also need both pandoc and inkscape.\nImportant: It is strongly recommended to install Quarto as a supporting tool for publishing reports from Julia and Python.\n\n\n\n9.4.3 MSYS2\nMSYS2 environment is useful for developing native Windows applications and programming in languages as C, C++, Fortran, and Rust. Kompanion VS Code configuration will automatically include this environment to its available terminal lists, what might fail if you do not install it. To get it working do the following:\n\nGo to MSYS2 page and save the installer to downloads.\nRun the installer and change installation path to point to a local msys64 directory instead of the default C:/msys64 (requiring admin rights).\nOnce finished, launch an UCRT64 environment as proposed in the installation guide. Install at least the following:\n\npacman -S \\\n    mingw-w64-ucrt-x86_64-toolchain \\\n    mingw-w64-ucrt-x86_64-binutils \\\n    mingw-w64-ucrt-x86_64-gcc \\\n    mingw-w64-ucrt-x86_64-gcc-fortran\n\nFull package list is provided here.",
+    "crumbs": [
+      "Computing",
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Portable applications</span>"
+    ]
+  },
+  {
+    "objectID": "computing/portable.html#creating-a-portable-launcher",
+    "href": "computing/portable.html#creating-a-portable-launcher",
+    "title": "9  Portable applications",
+    "section": "9.5 Creating a portable launcher",
+    "text": "9.5 Creating a portable launcher\nA simple way to create a portable launcher requiring to source extra variables is by writing a simple batch script exporting or calling another script with the definitions:\n@echo off\n\n@REM Add variables to be sourced here such as\n@REM set PATH=\"/path/to/some/dir\";%PATH%\n@REM ... or call another shared script doing so.\n@REM call %~dp0\\env\n\nMyCode.exe\nBecause a batch script will keep a console window open, create a VB file with the following\nSet oShell = CreateObject (\"Wscript.Shell\")\nDim strArgs\nstrArgs = \"cmd /c MyCode.bat\"\noShell.Run strArgs, 0, false\nIn the example we assume the program is called MyCode.exe and the batch script has been named in an analogous way MyCode.bat.",
     "crumbs": [
       "Computing",
       "<span class='chapter-number'>9</span>  <span class='chapter-title'>Portable applications</span>"

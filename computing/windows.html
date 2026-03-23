@@ -388,13 +388,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    
   <ul>
   <li><a href="#command-line-basics" id="toc-command-line-basics" class="nav-link active" data-scroll-target="#command-line-basics"><span class="header-section-number">5.1</span> Command line basics</a></li>
-  <li><a href="#creating-a-portable-launcher" id="toc-creating-a-portable-launcher" class="nav-link" data-scroll-target="#creating-a-portable-launcher"><span class="header-section-number">5.2</span> Creating a portable launcher</a></li>
-  <li><a href="#mount-a-network-drive-in-wsl" id="toc-mount-a-network-drive-in-wsl" class="nav-link" data-scroll-target="#mount-a-network-drive-in-wsl"><span class="header-section-number">5.3</span> Mount a network drive in WSL</a></li>
-  <li><a href="#following-the-writing-to-a-file" id="toc-following-the-writing-to-a-file" class="nav-link" data-scroll-target="#following-the-writing-to-a-file"><span class="header-section-number">5.4</span> Following the writing to a file</a>
+  <li><a href="#mount-a-network-drive-in-wsl" id="toc-mount-a-network-drive-in-wsl" class="nav-link" data-scroll-target="#mount-a-network-drive-in-wsl"><span class="header-section-number">5.2</span> Mount a network drive in WSL</a>
   <ul class="collapse">
-  <li><a href="#finding-a-process-handle" id="toc-finding-a-process-handle" class="nav-link" data-scroll-target="#finding-a-process-handle"><span class="header-section-number">5.4.1</span> Finding a process handle</a></li>
+  <li><a href="#finding-a-process-handle" id="toc-finding-a-process-handle" class="nav-link" data-scroll-target="#finding-a-process-handle"><span class="header-section-number">5.2.1</span> Finding a process handle</a></li>
   </ul></li>
-  <li><a href="#identifying-a-proxy-pem" id="toc-identifying-a-proxy-pem" class="nav-link" data-scroll-target="#identifying-a-proxy-pem"><span class="header-section-number">5.5</span> Identifying a proxy PEM</a></li>
+  <li><a href="#identifying-a-proxy-pem" id="toc-identifying-a-proxy-pem" class="nav-link" data-scroll-target="#identifying-a-proxy-pem"><span class="header-section-number">5.3</span> Identifying a proxy PEM</a></li>
   </ul>
 </nav>
     </div>
@@ -458,58 +456,35 @@ d-----         1/30/2025   9:58 AM                tests
 PS D:\Kompanion\docs&gt;</code></pre>
 <p>This is the minimum you need to know: navigate, know your address, inspect contents.</p>
 </section>
-<section id="creating-a-portable-launcher" class="level2" data-number="5.2">
-<h2 data-number="5.2" class="anchored" data-anchor-id="creating-a-portable-launcher"><span class="header-section-number">5.2</span> Creating a portable launcher</h2>
-<p>A simple way to create a portable launcher requiring to source extra variables is by writing a simple batch script exporting or calling another script with the definitions:</p>
-<pre class="batch"><code>@echo off
-
-@REM Add variables to be sourced here such as
-@REM set PATH="/path/to/some/dir";%PATH%
-@REM ... or call another shared script doing so.
-@REM call %~dp0\env
-
-MyCode.exe</code></pre>
-<p>Because a batch script will keep a console window open, create a VB file with the following</p>
-<pre class="visual-basic"><code>Set oShell = CreateObject ("Wscript.Shell")
-Dim strArgs
-strArgs = "cmd /c MyCode.bat"
-oShell.Run strArgs, 0, false</code></pre>
-<p>In the example we assume the program is called <code>MyCode.exe</code> and the batch script has been named in an analogous way <code>MyCode.bat</code>.</p>
-</section>
-<section id="mount-a-network-drive-in-wsl" class="level2" data-number="5.3">
-<h2 data-number="5.3" class="anchored" data-anchor-id="mount-a-network-drive-in-wsl"><span class="header-section-number">5.3</span> Mount a network drive in WSL</h2>
+<section id="mount-a-network-drive-in-wsl" class="level2" data-number="5.2">
+<h2 data-number="5.2" class="anchored" data-anchor-id="mount-a-network-drive-in-wsl"><span class="header-section-number">5.2</span> Mount a network drive in WSL</h2>
 <p>Here we assume we will mount drive <code>Z:</code> at <code>/mnt/z</code>:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the mount point (if required):</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> mkdir /mnt/z</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Mount the network drive in WSL:</span></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> mount <span class="at">-t</span> drvfs Z: /mnt/z</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the mount point (if required):</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> mkdir /mnt/z</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Mount the network drive in WSL:</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> mount <span class="at">-t</span> drvfs Z: /mnt/z</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Actually the same procedure can be used to access a SMB drive from within WSL temporarily with:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> mount <span class="at">-t</span> drvfs <span class="st">'\\path\to\smb'</span> /mnt/<span class="op">&lt;</span>mount-point<span class="op">&gt;</span>/</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> mount <span class="at">-t</span> drvfs <span class="st">'\\path\to\smb'</span> /mnt/<span class="op">&lt;</span>mount-point<span class="op">&gt;</span>/</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>For automatic remount, consider adding the following to your <code>/etc/fstab</code></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="ex">//path/to/smb</span> /mnt/<span class="op">&lt;</span>mount-point<span class="op">&gt;</span>/ drvfs auto,rw,nosuid,exec,uid=1000,gid=1000 0 0</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</section>
-<section id="following-the-writing-to-a-file" class="level2" data-number="5.4">
-<h2 data-number="5.4" class="anchored" data-anchor-id="following-the-writing-to-a-file"><span class="header-section-number">5.4</span> Following the writing to a file</h2>
-<p>This is equivalent to Linux <code>tail -f &lt;file-path&gt;</code>:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="ex">Get-Content</span> <span class="at">-Path</span> <span class="st">"&lt;file-path&gt;"</span> <span class="at">-Wait</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<section id="finding-a-process-handle" class="level3" data-number="5.4.1">
-<h3 data-number="5.4.1" class="anchored" data-anchor-id="finding-a-process-handle"><span class="header-section-number">5.4.1</span> Finding a process handle</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="ex">//path/to/smb</span> /mnt/<span class="op">&lt;</span>mount-point<span class="op">&gt;</span>/ drvfs auto,rw,nosuid,exec,uid=1000,gid=1000 0 0</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<section id="finding-a-process-handle" class="level3" data-number="5.2.1">
+<h3 data-number="5.2.1" class="anchored" data-anchor-id="finding-a-process-handle"><span class="header-section-number">5.2.1</span> Finding a process handle</h3>
 <p>This is useful when Windows won’t let you move a file or folder because <em>it is already open somewhere</em>. First, download and extract <a href="https://learn.microsoft.com/en-us/sysinternals/downloads/handle">Handle</a>; from PowerShell run the following:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="ex">./handle.exe</span> <span class="at">-u</span> <span class="at">-nobanner</span> <span class="st">"C:\Path\To\File.txt"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ex">./handle.exe</span> <span class="at">-u</span> <span class="at">-nobanner</span> <span class="st">"C:\Path\To\File.txt"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Notice that your file might have started another process and some research might be required.</p>
 </section>
 </section>
-<section id="identifying-a-proxy-pem" class="level2" data-number="5.5">
-<h2 data-number="5.5" class="anchored" data-anchor-id="identifying-a-proxy-pem"><span class="header-section-number">5.5</span> Identifying a proxy PEM</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># List all root certs:</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="ex">Get-ChildItem</span> <span class="at">-Path</span> Cert:<span class="dt">\L</span>ocalMachine<span class="dt">\R</span>oot</span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Export a specific one:</span></span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="va">$cert</span> = Get-ChildItem <span class="at">-Path</span> Cert:<span class="dt">\L</span>ocalMachine<span class="dt">\R</span>oot <span class="kw">|</span> <span class="ex">Where-Object</span> {</span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="ex">&nbsp;</span> &nbsp; <span class="va">$_</span>.Subject <span class="at">-like</span> <span class="st">"*&lt;company-name-generally&gt;*"</span></span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="er">}</span></span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="ex">Export-Certificate</span> <span class="at">-Cert</span> <span class="va">$cert</span> <span class="at">-FilePath</span> <span class="st">"proxy.pem"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<section id="identifying-a-proxy-pem" class="level2" data-number="5.3">
+<h2 data-number="5.3" class="anchored" data-anchor-id="identifying-a-proxy-pem"><span class="header-section-number">5.3</span> Identifying a proxy PEM</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># List all root certs:</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="ex">Get-ChildItem</span> <span class="at">-Path</span> Cert:<span class="dt">\L</span>ocalMachine<span class="dt">\R</span>oot</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Export a specific one:</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="va">$cert</span> = Get-ChildItem <span class="at">-Path</span> Cert:<span class="dt">\L</span>ocalMachine<span class="dt">\R</span>oot <span class="kw">|</span> <span class="ex">Where-Object</span> {</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="ex">&nbsp;</span> &nbsp; <span class="va">$_</span>.Subject <span class="at">-like</span> <span class="st">"*&lt;company-name-generally&gt;*"</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="er">}</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="ex">Export-Certificate</span> <span class="at">-Cert</span> <span class="va">$cert</span> <span class="at">-FilePath</span> <span class="st">"proxy.pem"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
 
 </section>

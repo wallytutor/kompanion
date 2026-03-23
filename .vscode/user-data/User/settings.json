@@ -239,6 +239,8 @@
 
     "jupyter.askForKernelRestart": false,
     "jupyter.interactiveWindow.creationMode": "perFile",
+
+    // XXX: probably not expanded (most places will not!), as I see no effect.
     "jupyter.kernels.excludePythonEnvironments": [
         "${env:INKSCAPE_HOME}\\bin\\python.exe"
     ],
@@ -273,7 +275,7 @@
     "python.analysis.typeCheckingMode": "standard",
     "python.analysis.updateImportsOnFileMove.enabled": "never",
     "python.createEnvironment.trigger": "off",
-    "python.defaultInterpreterPath": "${env:PYTHON_HOME}\\python.exe",
+    "python.defaultInterpreterPath": "python.exe",
     "python.useEnvironmentsExtension": true,
     "python.terminal.activateEnvInCurrentTerminal": true,
     "python.languageServer": "Default",
@@ -283,7 +285,10 @@
     //////////////////////////////////////////////////////////////////////////
 
     "FSharp.addFsiWatcher": true,
-    "FSharp.dotnetRoot": "${env:DOTNET_HOME}\\dotnet",
+    "FSharp.suggestGitignore": false,
+
+    // Just don't add it, VSCode will not expand variables here:
+    // "FSharp.dotnetRoot": "${env:DOTNET_ROOT}",
 
     "[fsharp]": {
         "editor.tabSize": 4,

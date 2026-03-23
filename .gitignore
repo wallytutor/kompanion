@@ -39,6 +39,10 @@ repos/
 .python_history
 pip/
 
+# .NET:
+.dotnet/*
+.nuget/*
+
 # Other languages:
 .julia/*
 .miktex/*

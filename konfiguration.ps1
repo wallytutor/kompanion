@@ -351,13 +351,34 @@ function Invoke-ConfigureDotNET {
     $success = Invoke-DlUnzipInstall $path $url $output -Target $target
 
     if ($success) {
-        Set-KompanionEnvVar -Name "DOTNET_HOME" `
+        Set-KompanionEnvVar -Name "DOTNET_ROOT" `
             -Value "$env:KOMPANION_BIN\dotnet-sdk-$version-win-x64"
+        # This points to the root of the user profile:
+        Set-KompanionEnvVar -Name "DOTNET_CLI_HOME" `
+            -Value "$env:KOMPANION_DIR"
+        Set-KompanionEnvVar -Name "DOTNET_TOOLS_PATH" `
+            -Value "$env:KOMPANION_DIR\.dotnet\tools"
 
+        Set-KompanionEnvVar -Name "DOTNET_INTERACTIVE_CLI_TELEMETRY_OPTOUT" `
+            -Value "1"
         Set-KompanionEnvVar -Name "DOTNET_CLI_TELEMETRY_OPTOUT" `
             -Value "1"
 
-        Initialize-AddToPath -Directory "$env:DOTNET_HOME"
+        Set-KompanionEnvVar -Name "NUGET_PACKAGES" `
+            -Value "$env:KOMPANION_DIR\.nuget\packages"
+        Set-KompanionEnvVar -Name "NUGET_HTTP_CACHE_PATH" `
+            -Value "$env:KOMPANION_DIR\.nuget\http-cache"
+        Set-KompanionEnvVar -Name "NUGET_SCRATCH" `
+            -Value "$env:KOMPANION_DIR\.nuget\scratch"
+
+        # Copilot says this is required otherwise it falls back to the
+        # user profile, but I am not sure if it is true... yes it
+        # worked now after several failed attempts, so true, I guess.
+        # Nah, it was a coincidence with something else...
+        # Initialize-EnsureDirectory "$env:DOTNET_TOOLS_PATH"
+
+        Initialize-AddToPath -Directory "$env:DOTNET_ROOT"
+        Initialize-AddToPath -Directory "$env:DOTNET_TOOLS_PATH"
     } else {
         Write-Warn "Failed to install .NET, skipping configuration..."
     }

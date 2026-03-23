@@ -124,11 +124,13 @@ $GIT_MAJORDOME = "https://github.com/wallytutor/python-majordome.git"
 $GLOBAL:KOMPANION_CREATED_ENVS = New-Object System.Collections.ArrayList
 
 function Start-KompanionMain {
-    # Fake user profile to avoid applications access:
+    # Fake user profile to avoid applications access; notice that my
+    # latest research said that APPDATA should point to the Roaming
+    # folder, not the actual AppData folder, ... to be verified.
     Set-KompanionEnvVar -Name "USERPROFILE" `
         -Value "$PSScriptRoot"
     Set-KompanionEnvVar -Name "APPDATA" `
-        -Value "$PSScriptRoot\AppData"
+        -Value "$PSScriptRoot\AppData\Roaming"
 
     # Path to the root directory:
     Set-KompanionEnvVar -Name "KOMPANION_DIR" `

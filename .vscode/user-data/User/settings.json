@@ -41,7 +41,7 @@
     // Make tree levels more readable when expanded:
     "workbench.tree.indent": 12,
     "workbench.iconTheme": "bearded-icons",
-    "workbench.colorTheme": "Bearded Theme Altica",
+    "workbench.colorTheme": "Bearded Theme Black & Diamond",
 
     // Add a clearly visible ruler (language dependent position):
     "workbench.colorCustomizations": {
@@ -273,9 +273,8 @@
     "python.analysis.indexing": false,
     "python.analysis.stubPath": "./typings",
     "python.analysis.typeCheckingMode": "standard",
-    "python.analysis.updateImportsOnFileMove.enabled": "never",
     "python.createEnvironment.trigger": "off",
-    "python.defaultInterpreterPath": "python.exe",
+    // "python.defaultInterpreterPath": "python.exe",
     "python.useEnvironmentsExtension": true,
     "python.terminal.activateEnvInCurrentTerminal": true,
     "python.languageServer": "Default",

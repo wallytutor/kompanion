@@ -30,30 +30,69 @@ module Constants =
            W  = "tungsten"; |}
 
 
+module Thermophysics =
+    let arrheniusFactor (a: float) (e: float) (t: float) : float =
+        a * exp(-e / (Constants.gasConstant * t))
+
+
 module SlyckeModels =
+    [<Literal>]
+    let carbonInfDiffusivity: float = 4.85e-05
+
+    [<Literal>]
+    let nitrogenInfDiffusivity: float = 9.10e-05
+
+    [<Literal>]
+    let carbonActivationEnergy: float = 155_000.0
+
+    [<Literal>]
+    let nitrogenActivationEnergy: float = 168_600.0
+
+    [<Literal>]
+    let coefCarbon: float = 1.0
+
+    [<Literal>]
+    let coefNitrogen: float = 0.72
+
+    [<Literal>]
+    let activationEnergyBase: float = 570_000.0
+
+    [<Literal>]
+    let coefPreExtFactor: float = 320.0
+
     let compositionModifier (xc: float) (xn: float) =
-        xc + 0.75 * xn
+        coefCarbon * xc + coefNitrogen * xn
 
     let activationModifier (xc: float) (xn: float) =
-        570_000.0 * (compositionModifier xc xn)
+        activationEnergyBase * (compositionModifier xc xn)
+
+    let siteOccupancy (xc: float) (xn: float) =
+        1.0 - 5.0 * (xc + xn)
 
     let preExponentialFactor (xc: float) (xn: float) =
-        let b = -320.0 / Constants.gasConstant
-        let c = b * (compositionModifier xc xn)
-        (exp c) / (1.0 - 5.0 * (xc + xn))
+        let b = -coefPreExtFactor / Constants.gasConstant
+        (exp (b * (compositionModifier xc xn))) / (siteOccupancy xc xn)
 
-    // let arrheniusFactor (a: float) (e: float) (t: float) : float =
-    //     a * exp(-e / (Constants.gasConstant * t))
+    let carbonDiffusivity (xc: float) (xn: float) (t: float) =
+        let a = (1.0 - xn) * preExponentialFactor xc xn
+        let e = carbonActivationEnergy - activationModifier xc xn
+        carbonInfDiffusivity * Thermophysics.arrheniusFactor a e t
 
-    // type ArrheniusData =
-    //     { A: float; E: float}
+    let nitrogenDiffusivity (xc: float) (xn: float) (t: float) =
+        let a = (1.0 - xc) * preExponentialFactor xc xn
+        let e = nitrogenActivationEnergy - activationModifier xc xn
+        nitrogenInfDiffusivity * Thermophysics.arrheniusFactor a e t
 
-    //     member this.ArrheniusFactor (t: float) : float =
-    //         arrheniusFactor this.A this.E t
 
-// open Models
-// let data = { A = 1.0e-05; E = 50.0e+03 }
 
-// let data: Models.ArrheniusData = { A = 1.0e-05; E = 50.0e+03 }
+
+let xc = 0.02
+let xn = 0.01
+let temperature = 1173.0
+let carbonDiff = SlyckeModels.carbonDiffusivity xc xn temperature
+let nitrogenDiff = SlyckeModels.nitrogenDiffusivity xc xn temperature
+
+printfn $"Carbon diffusivity: {carbonDiff:E}"
+printfn $"Nitrogen diffusivity: {nitrogenDiff:E}"
 // let factor = data.ArrheniusFactor 1173.0
 // printfn $"Arrhenius factor: {factor}"

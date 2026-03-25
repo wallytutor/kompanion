@@ -283,11 +283,17 @@
     // F#
     //////////////////////////////////////////////////////////////////////////
 
-    "FSharp.addFsiWatcher": true,
-    "FSharp.suggestGitignore": false,
-
     // Just don't add it, VSCode will not expand variables here:
     // "FSharp.dotnetRoot": "${env:DOTNET_ROOT}",
+
+    "FSharp.addFsiWatcher": true,
+    "FSharp.suggestGitignore": false,
+    "FSharp.codeLenses.signature.enabled": false,
+    "FSharp.codeLenses.references.enabled": true,
+    "FSharp.inlayHints.typeAnnotations": false,
+    "FSharp.inlayHints.parameterNames": false,
+    "FSharp.inlayHints.disableLongTooltip": true,
+    "FSharp.inlineValues.enabled": false,
 
     "[fsharp]": {
         "editor.tabSize": 4,

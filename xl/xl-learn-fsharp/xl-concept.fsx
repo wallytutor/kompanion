@@ -6,12 +6,12 @@ module Constants =
     let gasConstant: float = 8.314
 
 module Elements =
-    type ElementSymbol = C | N | Si | Ca | V | Cr | Mn | Fe | Mo | W
+    type private ElementSymbol = C | N | Si | Ca | V | Cr | Mn | Fe | Mo | W
 
-    type ElementData =
+    type private ElementData =
         { Symbol: ElementSymbol; Number: int; Name: string; MolarMass: float }
 
-    let tryParse = function
+    let private tryParse = function
         | "C"  -> Some C
         | "N"  -> Some N
         | "Si" -> Some Si
@@ -24,7 +24,7 @@ module Elements =
         | "W"  -> Some W
         | _ -> None
 
-    let elementTable : Map<ElementSymbol, ElementData> =
+    let private elementTable : Map<ElementSymbol, ElementData> =
         [ C,  { Symbol = C;  Number = 6;  Name = "carbon";     MolarMass = 12.011 }
           N,  { Symbol = N;  Number = 7;  Name = "nitrogen";   MolarMass = 14.007 }
           Si, { Symbol = Si; Number = 14; Name = "silicon";    MolarMass = 28.085 }
@@ -37,7 +37,7 @@ module Elements =
           W,  { Symbol = W;  Number = 74; Name = "tungsten";   MolarMass = 183.84 } ]
         |> Map.ofList
 
-    let tryGetByString (sym: string) =
+    let private tryGetByString (sym: string) =
         tryParse sym
         |> Option.bind (fun key -> Map.tryFind key elementTable)
 
@@ -47,25 +47,47 @@ module Elements =
         |> List.map (fun elemData -> elemData.MolarMass)
         |> List.toArray
 
+module Numerical =
+    let tdma (a: float array) (b: float array) (c: float array) (d: float array) : float array =
+        let n = Array.length d
+        let cPrime = Array.zeroCreate n
+        let dPrime = Array.zeroCreate n
+
+        cPrime.[0] <- c.[0] / b.[0]
+        dPrime.[0] <- d.[0] / b.[0]
+
+        for i in 1 .. n - 1 do
+            let m = b.[i] - a.[i] * cPrime.[i - 1]
+            cPrime.[i] <- c.[i] / m
+            dPrime.[i] <- (d.[i] - a.[i] * dPrime.[i - 1]) / m
+
+        let x = Array.zeroCreate n
+        x.[n - 1] <- dPrime.[n - 1]
+
+        for i in n - 2 .. -1 .. 0 do
+            x.[i] <- dPrime.[i] - cPrime.[i] * x.[i + 1]
+
+        x
+
 module Mixtures =
-    let meanMolarMassFromMass (w: array<float>) (y: array<float>) : float =
+    let private validateComposition (name: string) (comp: float array) (mass: float array) =
+        if Array.length comp <> Array.length mass then
+            invalidArg name $"Length of {name} must match number of valid elements."
+
+    let private meanMolarMassFromMass (w: float array) (y: float array) : float =
         1.0 / Array.sum (Array.map2 (fun yk wk -> yk / wk) y w)
 
-    let meanMolarMassFromMole (w: array<float>) (x: array<float>)  : float =
+    let private meanMolarMassFromMole (w: float array) (x: float array)  : float =
         Array.sum (Array.map2 (fun xk wk -> xk * wk) x w)
 
-    let makeMeanMolarMassFromMass (w: array<float>) =
+    let private makeMeanMolarMassFromMass (w: float array) =
         fun (y: float array) ->
-            if Array.length y <> Array.length w then
-                invalidArg "y" "Length of y must match number of valid elements."
-
+            validateComposition "y" y w
             meanMolarMassFromMass w y
 
-    let makeMeanMolarMassFromMole (w: array<float>) =
+    let private makeMeanMolarMassFromMole (w: float array) =
         fun (x: float array) ->
-            if Array.length x <> Array.length w then
-                invalidArg "x" "Length of x must match number of valid elements."
-
+            validateComposition "x" x w
             meanMolarMassFromMole w x
 
     let makeMassFractionToMoleFractionConverter (elements: string list) =
@@ -73,9 +95,7 @@ module Mixtures =
         let meanMolarMass = makeMeanMolarMassFromMass w
 
         fun (y: float array) ->
-            if Array.length y <> Array.length w then
-                invalidArg "y" "Length of y must match number of valid elements."
-
+            validateComposition "y" y w
             let m = meanMolarMass y
             Array.map2 (fun yk wk -> m * (yk / wk)) y w
 
@@ -84,9 +104,7 @@ module Mixtures =
         let meanMolarMass = makeMeanMolarMassFromMole w
 
         fun (x: float array) ->
-            if Array.length x <> Array.length w then
-                invalidArg "x" "Length of x must match number of valid elements."
-
+            validateComposition "x" x w
             let m = meanMolarMass x
             Array.map2 (fun xk wk -> (xk * wk) / m) x w
 
@@ -162,7 +180,7 @@ let nitrogenDiff = SlyckeModels.nitrogenDiffusivity xc xn temperature
 let mass2Mole = SlyckeModels.getMassFractionToMolarFractionConverter ()
 let mole2Mass = SlyckeModels.getMolarFractionToMassFractionConverter ()
 
-printfn $"Carbon diffusivity: {carbonDiff:E}"
-printfn $"Nitrogen diffusivity: {nitrogenDiff:E}"
+printfn $"Carbon diffusivity .... {carbonDiff:E}"
+printfn $"Nitrogen diffusivity .. {nitrogenDiff:E}"
 // let factor = data.ArrheniusFactor 1173.0
 // printfn $"Arrhenius factor: {factor}"

@@ -134,6 +134,15 @@ module Thermophysics =
     let arrheniusFactor (a: float) (e: float) (t: float) : float =
         a * exp(-e / (Constants.gasConstant * t))
 
+    let idealGasDensity (p: float) (t: float) (m: float) : float =
+        p * m / (Constants.gasConstant * t)
+
+    let makeSutherlandMu mu0 Tr S =
+        fun T -> mu0 * (T / Tr)**(3.0/2.0) * (Tr + S) / (T + S)
+
+    let reynoldsNumber (rho: float) (u: float) (d: float) (mu: float) : float =
+        rho * u * d / mu
+
 module CarbonitridingData =
     type Data =
         { CarbonInfDiffusivity: float
@@ -230,23 +239,18 @@ module Main =
     printfn $"TDMA test (quadratic) .. {tdmaStatus}"
 
 
-let P = 101325.0
-let M = 0.02896
-let T = 873.15
-
-let rho = P * M / (Constants.gasConstant * T)
 let U = 10.0
 let d = 0.06
+let P = 101325.0
+let T = 873.15
 
+let M = 0.02896
 let mu0 = 1.716E-5
 let Tr = 273.15
 let S = 110.4
 
-let getSutherlandMu mu0 Tr S =
-    fun T -> mu0 * (T / Tr)**(3.0/2.0) * (Tr + S)/(T + S)
-
-let sutherlandMu = getSutherlandMu mu0 Tr S
+let sutherlandMu = Thermophysics.makeSutherlandMu mu0 Tr S
 
 let mu = sutherlandMu T
-
-let Re = rho * U * d / mu
+let rho = Thermophysics.idealGasDensity P T M
+let Re = Thermophysics.reynoldsNumber rho U d mu

@@ -5,5 +5,6 @@
 .venv
 
 # Generated mesh files:
+*.brep
 *.msh
 *.su2

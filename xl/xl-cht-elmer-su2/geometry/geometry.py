@@ -217,7 +217,17 @@ with GmshOCCModel(name=NAME, render=True, **options) as model:
             "tags": [ext_solid[4][1]],
             "tag_id": 25,
             "name": "solid_sym_slice"
-        }
+        },
+        {
+            "tags": [ext_fluid_outer[3][1]],
+            "tag_id": 50,
+            "name": "cht_fluid_solid"
+        },
+        {
+            "tags": [ext_solid[5][1]],
+            "tag_id": 51,
+            "name": "cht_solid_fluid"
+        },
     ]
 
     all_volumes = [
@@ -230,7 +240,7 @@ with GmshOCCModel(name=NAME, render=True, **options) as model:
             "tags": [ext_solid[1][1]],
             "tag_id": 101,
             "name": "solid"
-        }
+        },
     ]
 
     for surface in all_surfaces:
@@ -243,5 +253,9 @@ with GmshOCCModel(name=NAME, render=True, **options) as model:
     #region: generate
     model.synchronize()
     model.generate_mesh(dim=3)
-    model.dump(f"{NAME}.msh", f"{NAME}.su2")
+    model.dump(
+        f"{NAME}.msh",
+        f"{NAME}.su2",
+        f"{NAME}.brep",
+    )
     #endregion: generate

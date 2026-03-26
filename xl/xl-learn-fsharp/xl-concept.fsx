@@ -97,7 +97,7 @@ module Mixtures =
         fun (y: float array) ->
             validateComposition "y" y w
             let m = meanMolarMass y
-            Array.map2 (fun yk wk -> m * (yk / wk)) y w
+            Array.map2 (fun yk wk -> m * yk / wk) y w
 
     let makeMoleFractionToMassFractionConverter (elements: string list) =
         let w = Elements.getMolarMassArray elements
@@ -106,81 +106,98 @@ module Mixtures =
         fun (x: float array) ->
             validateComposition "x" x w
             let m = meanMolarMass x
-            Array.map2 (fun xk wk -> (xk * wk) / m) x w
+            Array.map2 (fun xk wk -> xk * wk / m) x w
 
 module Thermophysics =
     let arrheniusFactor (a: float) (e: float) (t: float) : float =
         a * exp(-e / (Constants.gasConstant * t))
 
+module CarbonitridingData =
+    type Data =
+        { CarbonInfDiffusivity: float
+          NitrogenInfDiffusivity: float
+          CarbonActivationEnergy: float
+          NitrogenActivationEnergy: float
+          CoefCarbon: float
+          CoefNitrogen: float
+          ActivationEnergyBase: float
+          CoefPreExpFactor: float }
+
+    let getSlyckeData () =
+        { CarbonInfDiffusivity = 4.85e-05
+          NitrogenInfDiffusivity = 9.10e-05
+          CarbonActivationEnergy = 155_000.0
+          NitrogenActivationEnergy = 168_600.0
+          CoefCarbon = 1.0
+          CoefNitrogen = 0.72
+          ActivationEnergyBase = 570_000.0
+          CoefPreExpFactor = 320.0 }
+
 module SlyckeModels =
-    let elements = ["C"; "N"]
-
-    [<Literal>]
-    let carbonInfDiffusivity: float = 4.85e-05
-
-    [<Literal>]
-    let nitrogenInfDiffusivity: float = 9.10e-05
-
-    [<Literal>]
-    let carbonActivationEnergy: float = 155_000.0
-
-    [<Literal>]
-    let nitrogenActivationEnergy: float = 168_600.0
-
-    [<Literal>]
-    let coefCarbon: float = 1.0
-
-    [<Literal>]
-    let coefNitrogen: float = 0.72
-
-    [<Literal>]
-    let activationEnergyBase: float = 570_000.0
-
-    [<Literal>]
-    let coefPreExtFactor: float = 320.0
-
-    let compositionModifier (xc: float) (xn: float) =
-        coefCarbon * xc + coefNitrogen * xn
-
-    let activationModifier (xc: float) (xn: float) =
-        activationEnergyBase * (compositionModifier xc xn)
-
-    let siteOccupancy (xc: float) (xn: float) =
-        1.0 - 5.0 * (xc + xn)
-
-    let preExponentialFactor (xc: float) (xn: float) =
-        let b = -coefPreExtFactor / Constants.gasConstant
-        (exp (b * (compositionModifier xc xn))) / (siteOccupancy xc xn)
-
-    let carbonDiffusivity (xc: float) (xn: float) (t: float) =
-        let a = (1.0 - xn) * preExponentialFactor xc xn
-        let e = carbonActivationEnergy - activationModifier xc xn
-        carbonInfDiffusivity * Thermophysics.arrheniusFactor a e t
-
-    let nitrogenDiffusivity (xc: float) (xn: float) (t: float) =
-        let a = (1.0 - xc) * preExponentialFactor xc xn
-        let e = nitrogenActivationEnergy - activationModifier xc xn
-        nitrogenInfDiffusivity * Thermophysics.arrheniusFactor a e t
+    let private elements = ["C"; "N"; "Fe"]
 
     let getMassFractionToMolarFractionConverter () =
         let massToMole = Mixtures.makeMassFractionToMoleFractionConverter elements
-        fun (y: float array) -> massToMole y
+        fun (y: float array) ->
+            match y with
+            | [| yc; yn |] -> massToMole [| yc; yn; 1.0 - yc - yn |]
+            | _ -> invalidArg "y" "Expected [| yC; yN |] mass fractions."
 
     let getMolarFractionToMassFractionConverter () =
         let moleToMass = Mixtures.makeMoleFractionToMassFractionConverter elements
-        fun (x: float array) -> moleToMass x
+        fun (x: float array) ->
+            match x with
+            | [| xc; xn |] -> moleToMass [| xc; xn; 1.0 - xc - xn |]
+            | _ -> invalidArg "x" "Expected [| xC; xN |] mole fractions."
 
-// module Main =
-let xc = 0.02
-let xn = 0.01
-let temperature = 1173.0
-let carbonDiff = SlyckeModels.carbonDiffusivity xc xn temperature
-let nitrogenDiff = SlyckeModels.nitrogenDiffusivity xc xn temperature
+    type Model =
+        { Data: CarbonitridingData.Data }
 
-let mass2Mole = SlyckeModels.getMassFractionToMolarFractionConverter ()
-let mole2Mass = SlyckeModels.getMolarFractionToMassFractionConverter ()
+        static member private geometricExclusionFactor (xa: float) (xb: float) =
+           (1.0 - xb) / (1.0 - 5.0 * (xa + xb))
 
-printfn $"Carbon diffusivity .... {carbonDiff:E}"
-printfn $"Nitrogen diffusivity .. {nitrogenDiff:E}"
-// let factor = data.ArrheniusFactor 1173.0
-// printfn $"Arrhenius factor: {factor}"
+        member private self.compositionModifier (xc: float) (xn: float) =
+            self.Data.CoefCarbon * xc + self.Data.CoefNitrogen * xn
+
+        member private self.preExponentialFactor (xc: float) (xn: float) =
+            let b = self.Data.CoefPreExpFactor * self.compositionModifier xc xn
+            exp (-b / Constants.gasConstant)
+
+        member private self.activationEnergy (Ea: float) (xc: float) (xn: float) =
+            Ea - self.Data.ActivationEnergyBase * self.compositionModifier xc xn
+
+        member self.carbonDiffusivity (xc: float) (xn: float) (t: float) =
+            let a = Model.geometricExclusionFactor xc xn * self.preExponentialFactor xc xn
+            let e = self.activationEnergy self.Data.CarbonActivationEnergy xc xn
+            self.Data.CarbonInfDiffusivity * Thermophysics.arrheniusFactor a e t
+
+        member self.nitrogenDiffusivity (xc: float) (xn: float) (t: float) =
+            let a = Model.geometricExclusionFactor xn xc * self.preExponentialFactor xc xn
+            let e = self.activationEnergy self.Data.NitrogenActivationEnergy xc xn
+            self.Data.NitrogenInfDiffusivity * Thermophysics.arrheniusFactor a e t
+
+    let getModel () = { Data = CarbonitridingData.getSlyckeData () }
+
+module Main =
+    let yc = 0.0023
+    let yn = 0.0000
+    let temperature = 1173.0
+
+    let model = SlyckeModels.getModel ()
+
+    let mass2Mole = SlyckeModels.getMassFractionToMolarFractionConverter ()
+    let mole2Mass = SlyckeModels.getMolarFractionToMassFractionConverter ()
+
+    let x = mass2Mole [| yc; yn |]
+    let y = mole2Mass [| x.[0]; x.[1] |]
+
+    let xc = x.[0]
+    let xn = x.[1]
+
+    let carbonDiff = model.carbonDiffusivity xc xn temperature
+    let nitrogenDiff = model.nitrogenDiffusivity xc xn temperature
+
+    printfn $"Mass fractions ........ C = {y.[0]:F4}, N = {y.[1]:F4}"
+    printfn $"Mole fractions ........ C = {x.[0]:F4}, N = {x.[1]:F4}"
+    printfn $"Carbon diffusivity .... {carbonDiff:E} m²/s"
+    printfn $"Nitrogen diffusivity .. {nitrogenDiff:E} m²/s"

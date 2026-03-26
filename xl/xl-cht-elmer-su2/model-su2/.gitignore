@@ -1,5 +1,6 @@
 solution_*
 volume_*
 *.csv
-*.log
 *.su2
+log.*
+*.log

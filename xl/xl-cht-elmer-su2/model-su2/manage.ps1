@@ -32,7 +32,9 @@ function Invoke-RunManager {
     Remove-Job -Id $job.Id -Force
 
     if ($null -ne $pidValue -and "$pidValue" -ne "") {
-        "$pidValue" | Out-File -FilePath "log.pid" -Encoding ascii -Force
+        "Stop-Process -Id $pidValue -Force" `
+        | Out-File -FilePath "stop.ps1" -Encoding ascii -Force
+
         Write-Host "Started background process PID: $pidValue"
         Write-Host "Stop simulation with the following command:`n"
         Write-Host "  Stop-Process -Id $pidValue -Force`n"

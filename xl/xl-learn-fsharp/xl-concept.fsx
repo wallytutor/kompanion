@@ -228,3 +228,25 @@ module Main =
     let tdmaPassed = Numerical.testTdmaQuadratic 100 1.0e-12
     let tdmaStatus = if tdmaPassed then "PASSED" else "FAILED"
     printfn $"TDMA test (quadratic) .. {tdmaStatus}"
+
+
+let P = 101325.0
+let M = 0.02896
+let T = 873.15
+
+let rho = P * M / (Constants.gasConstant * T)
+let U = 10.0
+let d = 0.06
+
+let mu0 = 1.716E-5
+let Tr = 273.15
+let S = 110.4
+
+let getSutherlandMu mu0 Tr S =
+    fun T -> mu0 * (T / Tr)**(3.0/2.0) * (Tr + S)/(T + S)
+
+let sutherlandMu = getSutherlandMu mu0 Tr S
+
+let mu = sutherlandMu T
+
+let Re = rho * U * d / mu

@@ -109,6 +109,7 @@
     "files.associations": {
         "*.jou": "lisp",
         "*.scm": "lisp",
+        "*.cfg": "octave",
         "*.spec": "python",
         "*.matc": "FortranFreeForm",
         "*Dict": "OpenFOAM",

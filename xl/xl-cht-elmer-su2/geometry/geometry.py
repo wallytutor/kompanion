@@ -161,58 +161,47 @@ set_recombine(2, solid_surface)
 def share_extrusion(who):
   return extrude(who, 0, 0, H, numElements=[NUM_LAYERS], recombine=True)
 
-fluid_surfaces = [(2, fluid_inner_surface), (2, fluid_outer_surface)]
-solid_surfaces = [(2, solid_surface)]
+fluid_inner_base = [(2, fluid_inner_surface)]
+fluid_outer_base = [(2, fluid_outer_surface)]
+solid_base       = [(2, solid_surface)]
 
-ext_fluid = share_extrusion(fluid_surfaces)
-ext_solid = share_extrusion(solid_surfaces)
+ext_fluid_inner = share_extrusion(fluid_inner_base)
+ext_fluid_outer = share_extrusion(fluid_outer_base)
+ext_solid       = share_extrusion(solid_base)
 #endregion: transform
 
 #region: groups
 occ.synchronize()
 
+# The second entrye of extruded entities are the volumes:
+region_fluid = [ext_fluid_inner[1][1], ext_fluid_outer[1][1]]
+region_solid = [ext_solid[1][1]]
 
-def get_volumes(extrude_result: list[tuple[int, int]]) -> list[int]:
-    tags = [tag for dim, tag in extrude_result if dim == 3]
-    if not tags:
-        raise RuntimeError("No volume returned by extrusion.")
-    return tags
+# Base elements are on inlet side and first elements of the extrusion
+# are on outlet side (mapping of extrusion source faces):
+fluid_inlet  = [fluid_inner_base[0][1], fluid_outer_base[0][1]]
+fluid_outlet = [ext_fluid_inner[0][1], ext_fluid_outer[0][1]]
+solid_inlet  = [solid_base[0][1]]
+solid_outlet = [ext_solid[0][1]]
 
+# The remaining elements are counterclockwise from 0° to 30° planes:
+fluid_sym_main  = [ext_fluid_inner[2][1], ext_fluid_outer[2][1]]
+fluid_sym_slice = [ext_fluid_inner[4][1], ext_fluid_outer[4][1]]
+solid_sym_main  = [ext_solid[2][1]]
+solid_sym_outer = [ext_solid[3][1]]
+solid_sym_slice = [ext_solid[4][1]]
 
-def lateral_surface(curve_tag: int) -> int:
-  up, _ = gmsh.model.getAdjacencies(1, curve_tag)
-  tol = 1.0e-12
-
-  for surf_tag in up:
-    _, _, zmin, _, _, zmax = gmsh.model.getBoundingBox(2, surf_tag)
-    if zmax - zmin > tol:
-      return surf_tag
-
-  raise RuntimeError(f"No lateral surface found for curve {curve_tag}.")
-
-region_fluid = get_volumes(ext_fluid)
-region_solid = get_volumes(ext_solid)
-
-sym_fluid_lower = [
-    lateral_surface(fluid_inner_sym_b),
-    lateral_surface(fluid_outer_sym_b)
-]
-sym_fluid_upper = [
-    lateral_surface(fluid_inner_sym_t),
-    lateral_surface(fluid_outer_sym_t)
-]
-sym_solid_lower = [lateral_surface(solid_sym_b)]
-sym_solid_upper = [lateral_surface(solid_sym_t)]
-sym_solid_outer = [lateral_surface(outer_wall)]
-
-add_physical_group(2, sym_fluid_lower, name="sym_fluid_lower")
-add_physical_group(2, sym_fluid_upper, name="sym_fluid_upper")
-add_physical_group(2, sym_solid_lower, name="sym_solid_lower")
-add_physical_group(2, sym_solid_upper, name="sym_solid_upper")
-add_physical_group(2, sym_solid_outer, name="sym_solid_outer")
-
-add_physical_group(3, region_fluid, name="fluid")
-add_physical_group(3, region_solid, name="solid")
+add_physical_group(2, fluid_inlet,     tag=1,   name="fluid_inlet")
+add_physical_group(2, fluid_outlet,    tag=2,   name="fluid_outlet")
+add_physical_group(2, solid_inlet,     tag=10,  name="solid_inlet")
+add_physical_group(2, solid_outlet,    tag=11,  name="solid_outlet")
+add_physical_group(2, fluid_sym_main,  tag=21,  name="fluid_sym_main")
+add_physical_group(2, fluid_sym_slice, tag=22,  name="fluid_sym_slice")
+add_physical_group(2, solid_sym_main,  tag=23,  name="solid_sym_main")
+add_physical_group(2, solid_sym_outer, tag=24,  name="solid_sym_outer")
+add_physical_group(2, solid_sym_slice, tag=25,  name="solid_sym_slice")
+add_physical_group(3, region_fluid,    tag=100, name="fluid")
+add_physical_group(3, region_solid,    tag=101, name="solid")
 #endregion: groups
 
 #region: generate
@@ -222,7 +211,7 @@ max_len = L / 5
 gmsh.option.setNumber("Mesh.CharacteristicLengthMin", min_len)
 gmsh.option.setNumber("Mesh.CharacteristicLengthMax", max_len)
 gmsh.model.mesh.generate(3)
-# gmsh.write("honeycomb_1_12.msh")
+gmsh.write("honeycomb_1_12.msh")
 #endregion: generate
 
 gmsh.fltk.run()

@@ -2,7 +2,7 @@
 """ Geometry for 1/12 of a honeycomb structure with circular holes. """
 from majordome.simulation import GmshOCCModel
 from majordome.simulation import GeometricProgression
-import math
+from math import cos, sin, tan, pi as PI
 
 #region: parameters
 NAME = "honeycomb_1_12"
@@ -36,63 +36,54 @@ SOLID_DR_OUTER = 0.0030
 NUM_LAYERS = 30
 
 # 1/12 sector: 30-degree wedge (0° to 30°)
-ANGLE = math.pi / 6
-#endregion: parameters
-
-#region: initialization
-# Precompute trigonometric values for angle:
-cos_theta = math.cos(ANGLE)
-sin_theta = math.sin(ANGLE)
-tan_theta = math.tan(ANGLE)
-
-# Thickness of the solid region between hole and hex edge:
-d = (L - 2 * R) / 2
-
-# Distance from hole center to hex edge along symmetry line:
-D = R + d
-
-# Characteristic lengths for meshing:
-min_len = min(HOLE_DR_INTERFACE, HOLE_DR_ORIGIN)
-max_len = L / 10
+ANGLE = PI / 6
 
 # Options for configuring the model:
 options = {
-    "Mesh.CharacteristicLengthMin": min_len,
-    "Mesh.CharacteristicLengthMax": max_len,
-    "Mesh.SaveAll": None,
-    "Mesh.SaveGroupsOfNodes": None,
-    "Mesh.MeshSizeMax": max_len,
+    "Mesh.CharacteristicLengthMin": min(HOLE_DR_INTERFACE, HOLE_DR_ORIGIN),
+    "Mesh.CharacteristicLengthMax": L / 10,
+    "Mesh.SaveAll": False,
+    "Mesh.SaveGroupsOfNodes": True,
+    "Mesh.MeshSizeMax": L / 10,
     "Mesh.Algorithm": 6,
-    "Mesh.ElementOrder": 2,
+    "Mesh.ElementOrder": 1,
     "Geometry.Points": False,
     "Geometry.Lines": True,
     "Geometry.Surfaces": True,
 }
-#endregion: initialization
+#endregion: parameters
 
-with GmshOCCModel(name=NAME, render=True, **options) as model:
-    #region: points
+
+def extrude(model, what, layers=[NUM_LAYERS]):
+    return model.extrude(what, 0, 0, H, numElements=layers, recombine=True)
+
+
+def add_physical_groups(model, all_surfaces, all_volumes):
+    for surface in all_surfaces:
+        model.add_physical_surface(**surface)
+
+    for volume in all_volumes:
+        model.add_physical_volume(**volume)
+
+
+def cht_arc(model):
     # - Origin at hole center:
     p_origin   = model.add_point(0.0, 0.0, 0.0)
 
-    # - Split arc endpoints:
-    p_split_0  = model.add_point(r, 0.0, 0.0)
-    p_split_30 = model.add_point(r * cos_theta, r * sin_theta, 0.0)
-
-    # - Interface arc endpoints:
+    # - Interface arc:
     p_inner_0  = model.add_point(R, 0.0, 0.0)
-    p_inner_30 = model.add_point(R * cos_theta, R * sin_theta, 0.0)
-
-    # - Outer wall endpoints (hex-like boundary in this 1/12 sector):
-    p_outer_0  = model.add_point(D, 0.0, 0.0)
-    p_outer_30 = model.add_point(D, D * tan_theta, 0.0)
-    #endregion: points
-
-    #region: curves
-    # - Shared elements:
-    split_arc     = model.add_circle_arc(p_split_0, p_origin, p_split_30)
+    p_inner_30 = model.add_point(R * cos(ANGLE), R * sin(ANGLE), 0.0)
     interface_arc = model.add_circle_arc(p_inner_0, p_origin, p_inner_30)
-    outer_wall    = model.add_line(p_outer_0, p_outer_30)
+
+    return p_origin, p_inner_0, p_inner_30, interface_arc
+
+
+def fluid_model(model, p_origin, p_inner_0, p_inner_30, interface_arc):
+    #region: base
+    # - Split arc:
+    p_split_0     = model.add_point(r, 0.0, 0.0)
+    p_split_30    = model.add_point(r * cos(ANGLE), r * sin(ANGLE), 0.0)
+    split_arc     = model.add_circle_arc(p_split_0, p_origin, p_split_30)
 
     # - Fluid symmetry segments
     inner_sym_b   = model.add_line(p_origin, p_split_0)
@@ -100,12 +91,6 @@ with GmshOCCModel(name=NAME, render=True, **options) as model:
     outer_sym_b   = model.add_line(p_split_0, p_inner_0)
     outer_sym_t   = model.add_line(p_split_30, p_inner_30)
 
-    # - Solid symmetry segments
-    solid_sym_b   = model.add_line(p_inner_0, p_outer_0)
-    solid_sym_t   = model.add_line(p_inner_30, p_outer_30)
-    #endregion: curves
-
-    #region: surfaces
     # - Fluid inner: unstructured circular sector (0 <= r' <= r)
     items         = [inner_sym_b, split_arc, -inner_sym_t]
     inner_loop    = model.add_curve_loop(items)
@@ -115,16 +100,10 @@ with GmshOCCModel(name=NAME, render=True, **options) as model:
     items         = [outer_sym_b, interface_arc, -outer_sym_t, -split_arc]
     outer_loop    = model.add_curve_loop(items)
     outer_surface = model.add_plane_surface([outer_loop])
-
-    # - Solid: annular wedge (R <= r' <= D)
-    items         = [solid_sym_b, outer_wall, -solid_sym_t, -interface_arc]
-    solid_loop    = model.add_curve_loop(items)
-    solid_surface = model.add_plane_surface([solid_loop])
-    #endregion: surfaces
-
-    #region: meshing
+    #endregion: base
     model.synchronize()
 
+    #region: meshing
     # - Inner fluid region (r' < r): unstructured mesh around 0.002 m
     corners = [(0, p_origin), (0, p_split_0), (0, p_split_30)]
     model.set_size(corners, HOLE_DR_ORIGIN)
@@ -140,39 +119,26 @@ with GmshOCCModel(name=NAME, render=True, **options) as model:
     corners = [p_split_0, p_inner_0, p_inner_30, p_split_30]
     model.set_transfinite_surface(outer_surface, cornerTags=corners)
     model.set_recombine(2, outer_surface)
-
-    # - Structured meshing for solid (fine at interface -> coarse at outer wall)
-    n, q = GeometricProgression.fit(d, HOLE_DR_INTERFACE, SOLID_DR_OUTER)
-    model.set_transfinite_curve(solid_sym_b, n+1, "Progression", q)
-    model.set_transfinite_curve(solid_sym_t, n+1, "Progression", q)
-    model.set_transfinite_curve(outer_wall, HOLE_ARC_ELEMENTS + 1)
-
-    corners = [p_inner_0, p_outer_0, p_outer_30, p_inner_30]
-    model.set_transfinite_surface(solid_surface, cornerTags=corners)
-    model.set_recombine(2, solid_surface)
     #endregion: meshing
-
-    #region: transform
-    def share_extrusion(who, layers=[NUM_LAYERS]):
-        return model.extrude(who, 0, 0, H, numElements=layers, recombine=True)
-
-    fluid_inner_base = [(2, inner_surface)]
-    fluid_outer_base = [(2, outer_surface)]
-    solid_base       = [(2, solid_surface)]
-
-    ext_fluid_inner = share_extrusion(fluid_inner_base)
-    ext_fluid_outer = share_extrusion(fluid_outer_base)
-    ext_solid       = share_extrusion(solid_base)
-    #endregion: transform
-
-    #region: groups
     model.synchronize()
 
-    # - Base elements are on inlet side
-    # - First elements of the extrusion (mapping) are on the outlet side
-    # - The second entry of extruded entities are the volumes:
-    # - The remaining elements are counterclockwise from 0° to 30° planes
-    all_surfaces = [
+    #region: transform
+    fluid_inner_base = [(2, inner_surface)]
+    fluid_outer_base = [(2, outer_surface)]
+    ext_fluid_inner = extrude(model, fluid_inner_base)
+    ext_fluid_outer = extrude(model, fluid_outer_base)
+    #endregion: transform
+    model.synchronize()
+
+    #region: physical_groups
+    tags_fluid_volumes = [
+        {
+            "tags": [ext_fluid_inner[1][1], ext_fluid_outer[1][1]],
+            "tag_id": 100,
+            "name": "fluid"
+        },
+    ]
+    tags_fluid_surfaces = [
         {
             "tags": [fluid_inner_base[0][1], fluid_outer_base[0][1]],
             "tag_id": 1,
@@ -183,16 +149,7 @@ with GmshOCCModel(name=NAME, render=True, **options) as model:
             "tag_id": 2,
             "name": "fluid_outlet"
         },
-        {
-            "tags": [solid_base[0][1]],
-            "tag_id": 10,
-            "name": "solid_inlet"
-        },
-        {
-            "tags": [ext_solid[0][1]],
-            "tag_id": 11,
-            "name": "solid_outlet"
-        },
+
         {
             "tags": [ext_fluid_inner[2][1], ext_fluid_outer[2][1]],
             "tag_id": 21,
@@ -202,6 +159,81 @@ with GmshOCCModel(name=NAME, render=True, **options) as model:
             "tags": [ext_fluid_inner[4][1], ext_fluid_outer[4][1]],
             "tag_id": 22,
             "name": "fluid_sym_slice"
+        },
+
+        {
+            "tags": [ext_fluid_outer[3][1]],
+            "tag_id": 50,
+            "name": "cht_fluid_solid"
+        }
+    ]
+
+    add_physical_groups(model, tags_fluid_surfaces, tags_fluid_volumes)
+    #endregion: physical_groups
+
+
+def solid_model(model, p_origin, p_inner_0, p_inner_30, interface_arc):
+    #region: base
+    # Thickness of the solid region between hole and hex edge:
+    d = (L - 2 * R) / 2
+
+    # Distance from hole center to hex edge along symmetry line:
+    D = L / 2
+
+    # - Outer wall endpoints (hex-like boundary in this 1/12 sector):
+    p_outer_0   = model.add_point(D, 0.0, 0.0)
+    p_outer_30  = model.add_point(D, D * tan(ANGLE), 0.0)
+
+    # - Solid symmetry segments
+    solid_sym_b = model.add_line(p_inner_0, p_outer_0)
+    solid_sym_t = model.add_line(p_inner_30, p_outer_30)
+    outer_wall  = model.add_line(p_outer_0, p_outer_30)
+
+    # - Solid: annular wedge (R <= r' <= D)
+    items         = [solid_sym_b, outer_wall, -solid_sym_t, -interface_arc]
+    solid_loop    = model.add_curve_loop(items)
+    solid_surface = model.add_plane_surface([solid_loop])
+    #endregion: base
+    model.synchronize()
+
+    #region: meshing
+    # - Structured meshing for solid (fine at interface -> coarse at outer wall)
+    n, q = GeometricProgression.fit(d, HOLE_DR_INTERFACE, SOLID_DR_OUTER)
+    model.set_transfinite_curve(solid_sym_b, n+1, "Progression", q)
+    model.set_transfinite_curve(solid_sym_t, n+1, "Progression", q)
+    model.set_transfinite_curve(outer_wall, HOLE_ARC_ELEMENTS + 1)
+    model.set_transfinite_curve(interface_arc, HOLE_ARC_ELEMENTS + 1)
+
+    corners = [p_inner_0, p_outer_0, p_outer_30, p_inner_30]
+    model.set_transfinite_surface(solid_surface, cornerTags=corners)
+    model.set_recombine(2, solid_surface)
+    #endregion: meshing
+    model.synchronize()
+
+    #region: transform
+    solid_base       = [(2, solid_surface)]
+    ext_solid       = extrude(model, solid_base)
+    #endregion: transform
+    model.synchronize()
+
+    #region: physical_groups
+    tags_solid_volumes = [
+        {
+            "tags": [ext_solid[1][1]],
+            "tag_id": 101,
+            "name": "solid"
+        },
+    ]
+    tags_solid_surfaces = [
+        {
+            "tags": [solid_base[0][1]],
+            "tag_id": 10,
+            "name": "solid_inlet"
+        },
+        {
+            "tags": [ext_solid[0][1]],
+            "tag_id": 11,
+            "name": "solid_outlet"
         },
         {
             "tags": [ext_solid[2][1]],
@@ -219,43 +251,39 @@ with GmshOCCModel(name=NAME, render=True, **options) as model:
             "name": "solid_sym_slice"
         },
         {
-            "tags": [ext_fluid_outer[3][1]],
-            "tag_id": 50,
-            "name": "cht_fluid_solid"
-        },
-        {
             "tags": [ext_solid[5][1]],
             "tag_id": 51,
             "name": "cht_solid_fluid"
-        },
+        }
     ]
 
-    all_volumes = [
-        {
-            "tags": [ext_fluid_inner[1][1], ext_fluid_outer[1][1]],
-            "tag_id": 100,
-            "name": "fluid"
-        },
-        {
-            "tags": [ext_solid[1][1]],
-            "tag_id": 101,
-            "name": "solid"
-        },
-    ]
+    add_physical_groups(model, tags_solid_surfaces, tags_solid_volumes)
+    #endregion: physical_groups
 
-    for surface in all_surfaces:
-        model.add_physical_surface(**surface)
 
-    for volume in all_volumes:
-        model.add_physical_volume(**volume)
-    #endregion: groups
+render = False
 
-    #region: generate
+with GmshOCCModel(name=NAME, render=render, **options) as model:
+    p_origin, p_inner_0, p_inner_30, interface_arc = cht_arc(model)
+    fluid_model(model, p_origin, p_inner_0, p_inner_30, interface_arc)
     model.synchronize()
     model.generate_mesh(dim=3)
-    model.dump(
-        f"{NAME}.msh",
-        f"{NAME}.su2",
-        f"{NAME}.brep",
-    )
-    #endregion: generate
+    model.dump(f"../model-su2/{NAME}_fluid.su2")
+
+with GmshOCCModel(name=NAME, render=render, **options) as model:
+    p_origin, p_inner_0, p_inner_30, interface_arc = cht_arc(model)
+    solid_model(model, p_origin, p_inner_0, p_inner_30, interface_arc)
+    model.synchronize()
+    model.generate_mesh(dim=3)
+    model.dump(f"../model-su2/{NAME}_solid.su2")
+
+# XXX: only for Elmer, otherwise NPOIN is wrong in SU2 mesh!
+options["Mesh.ElementOrder"] = 2
+
+with GmshOCCModel(name=NAME, render=render, **options) as model:
+    p_origin, p_inner_0, p_inner_30, interface_arc = cht_arc(model)
+    fluid_model(model, p_origin, p_inner_0, p_inner_30, interface_arc)
+    solid_model(model, p_origin, p_inner_0, p_inner_30, interface_arc)
+    model.synchronize()
+    model.generate_mesh(dim=3)
+    model.dump(f"{NAME}_elmer.msh")

@@ -363,11 +363,11 @@
     "github.copilot.nextEditSuggestions.enabled": true,
     "github.copilot.enable": {
         "*": true,
-        "quarto": true,
-        "python": true,
         "plaintext": false,
-        "markdown": false,
+        "markdown": true,
         "scminput": false,
+        "quarto": true,
+        "python": true
     },
 
     // XXX: use Copilot behing a proxy!

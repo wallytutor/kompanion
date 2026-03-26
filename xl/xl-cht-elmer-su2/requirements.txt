@@ -1,0 +1,1 @@
+majordome[full] @ file:../../repos/majordome

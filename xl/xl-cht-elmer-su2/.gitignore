@@ -1,0 +1,9 @@
+# Ignore Copilot instructions file:
+.github/copilot-instructions.md
+
+# Virtual environment:
+.venv
+
+# Generated mesh files:
+*.msh
+*.su2

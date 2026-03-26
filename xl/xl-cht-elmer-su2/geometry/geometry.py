@@ -11,36 +11,42 @@ NAME = "honeycomb_1_12"
 H = 0.05
 
 # Radius of the hole [m]
-R = 0.03
+R = 0.030
 
 # Distance between holes centers [m]
 L = 0.10
 
+# XXX: experimental, make a hole in the middle!
+HOLED = True
+
 # Radius splitting fluid in 2 parts [m]
-r = R * 3/4
+r = 0.75 * R if not HOLED else 0.05 * R
 
 # Number of elements along the hole arc:
-HOLE_ARC_ELEMENTS = 15
+HOLE_ARC_ELEMENTS = 10
+
+# Mid-fluid characteristic length [m]
+DR_MIDDLE = R / 15
 
 # First radial element inner arc [m]
 # TODO compute based on r and HOLE_ARC_ELEMENTS
-HOLE_DR_ORIGIN = 0.0010
+DR_ORIGIN = 0.001
 
 # Last radial element at interface [m]
-HOLE_DR_INTERFACE = 0.0002
+DR_INTERFACE = 0.0001
 
 # Target element size near outer wall [m]
-SOLID_DR_OUTER = 0.0030
+DR_OUTER = 0.0010
 
 # Number of layers in mesh extrusion:
-NUM_LAYERS = 30
+NUM_LAYERS = 50
 
 # 1/12 sector: 30-degree wedge (0° to 30°)
 ANGLE = PI / 6
 
 # Options for configuring the model:
 options = {
-    "Mesh.CharacteristicLengthMin": min(HOLE_DR_INTERFACE, HOLE_DR_ORIGIN),
+    "Mesh.CharacteristicLengthMin": DR_INTERFACE / 2,
     "Mesh.CharacteristicLengthMax": L / 10,
     "Mesh.SaveAll": False,
     "Mesh.SaveGroupsOfNodes": True,
@@ -91,11 +97,6 @@ def fluid_model(model, p_origin, p_inner_0, p_inner_30, interface_arc):
     outer_sym_b   = model.add_line(p_split_0, p_inner_0)
     outer_sym_t   = model.add_line(p_split_30, p_inner_30)
 
-    # - Fluid inner: unstructured circular sector (0 <= r' <= r)
-    items         = [inner_sym_b, split_arc, -inner_sym_t]
-    inner_loop    = model.add_curve_loop(items)
-    inner_surface = model.add_plane_surface([inner_loop])
-
     # - Fluid outer: transfinite annular sector (r <= r' <= R)
     items         = [outer_sym_b, interface_arc, -outer_sym_t, -split_arc]
     outer_loop    = model.add_curve_loop(items)
@@ -104,15 +105,16 @@ def fluid_model(model, p_origin, p_inner_0, p_inner_30, interface_arc):
     model.synchronize()
 
     #region: meshing
-    # - Inner fluid region (r' < r): unstructured mesh around 0.002 m
-    corners = [(0, p_origin), (0, p_split_0), (0, p_split_30)]
-    model.set_size(corners, HOLE_DR_ORIGIN)
-    model.set_recombine(2, inner_surface)
-
     # - Structured boundary-layer-like meshing on outer fluid ring
-    n, q = GeometricProgression.fit(R-r, HOLE_DR_ORIGIN, HOLE_DR_INTERFACE)
-    model.set_transfinite_curve(outer_sym_b, n+1, "Progression", q)
-    model.set_transfinite_curve(outer_sym_t, n+1, "Progression", q)
+    if HOLED:
+        n, q = GeometricProgression.fit_bump(R-r, DR_INTERFACE, DR_MIDDLE)
+        method = "Bump"
+    else:
+        n, q = GeometricProgression.fit_bump(R-r, DR_INTERFACE, DR_ORIGIN)
+        method = "Progression"
+
+    model.set_transfinite_curve(outer_sym_b, n+1, method, q)
+    model.set_transfinite_curve(outer_sym_t, n+1, method, q)
     model.set_transfinite_curve(split_arc, HOLE_ARC_ELEMENTS + 1)
     model.set_transfinite_curve(interface_arc, HOLE_ARC_ELEMENTS + 1)
 
@@ -123,50 +125,62 @@ def fluid_model(model, p_origin, p_inner_0, p_inner_30, interface_arc):
     model.synchronize()
 
     #region: transform
-    fluid_inner_base = [(2, inner_surface)]
     fluid_outer_base = [(2, outer_surface)]
-    ext_fluid_inner = extrude(model, fluid_inner_base)
     ext_fluid_outer = extrude(model, fluid_outer_base)
     #endregion: transform
     model.synchronize()
 
     #region: physical_groups
-    tags_fluid_volumes = [
-        {
-            "tags": [ext_fluid_inner[1][1], ext_fluid_outer[1][1]],
-            "tag_id": 100,
-            "name": "fluid"
-        },
-    ]
-    tags_fluid_surfaces = [
-        {
-            "tags": [fluid_inner_base[0][1], fluid_outer_base[0][1]],
-            "tag_id": 1,
-            "name": "fluid_inlet"
-        },
-        {
-            "tags": [ext_fluid_inner[0][1], ext_fluid_outer[0][1]],
-            "tag_id": 2,
-            "name": "fluid_outlet"
-        },
+    fluid               = [ext_fluid_outer[1][1]]
+    fluid_inlet         = [fluid_outer_base[0][1]]
+    fluid_outlet        = [ext_fluid_outer[0][1]]
+    ext_fluid_sym_main  = [ext_fluid_outer[2][1]]
+    ext_fluid_sym_slice = [ext_fluid_outer[4][1]]
+    cht_fluid_solid     = [ext_fluid_outer[3][1]]
 
-        {
-            "tags": [ext_fluid_inner[2][1], ext_fluid_outer[2][1]],
-            "tag_id": 21,
-            "name": "fluid_sym_main"
-        },
-        {
-            "tags": [ext_fluid_inner[4][1], ext_fluid_outer[4][1]],
-            "tag_id": 22,
-            "name": "fluid_sym_slice"
-        },
-
-        {
-            "tags": [ext_fluid_outer[3][1]],
-            "tag_id": 50,
-            "name": "cht_fluid_solid"
+    if HOLED:
+        hole_wall = {
+            "tags": [ext_fluid_outer[5][1]],
+            "tag_id": 49,
+            "name": "hole_wall"
         }
+    else:
+        hole_wall = {}
+
+        # - Fluid inner: unstructured circular sector (0 <= r' <= r)
+        items         = [inner_sym_b, split_arc, -inner_sym_t]
+        inner_loop    = model.add_curve_loop(items)
+        inner_surface = model.add_plane_surface([inner_loop])
+        model.synchronize()
+
+        # - Inner fluid region (r' < r): unstructured mesh around 0.002 m
+        corners = [(0, p_origin), (0, p_split_0), (0, p_split_30)]
+        model.set_size(corners, DR_ORIGIN)
+        model.set_recombine(2, inner_surface)
+        model.synchronize()
+
+        # - Extrude inner fluid to create volume
+        fluid_inner_base = [(2, inner_surface)]
+        ext_fluid_inner = extrude(model, fluid_inner_base)
+        model.synchronize()
+
+        fluid               += [ext_fluid_inner[1][1]]
+        fluid_inlet         += [fluid_inner_base[0][1]]
+        fluid_outlet        += [ext_fluid_inner[0][1]]
+        ext_fluid_sym_main  += [ext_fluid_inner[2][1]]
+        ext_fluid_sym_slice += [ext_fluid_inner[4][1]]
+
+    tags_fluid_volumes = [{"tags": fluid, "tag_id": 100, "name": "fluid"}]
+    tags_fluid_surfaces = [
+        {"tags": fluid_inlet,         "tag_id": 1,  "name": "fluid_inlet"},
+        {"tags": fluid_outlet,        "tag_id": 2,  "name": "fluid_outlet"},
+        {"tags": ext_fluid_sym_main,  "tag_id": 21, "name": "fluid_sym_main"},
+        {"tags": ext_fluid_sym_slice, "tag_id": 22, "name": "fluid_sym_slice"},
+        {"tags": cht_fluid_solid,     "tag_id": 50, "name": "cht_fluid_solid"}
     ]
+
+    if hole_wall:
+        tags_fluid_surfaces.append(hole_wall)
 
     add_physical_groups(model, tags_fluid_surfaces, tags_fluid_volumes)
     #endregion: physical_groups
@@ -198,7 +212,7 @@ def solid_model(model, p_origin, p_inner_0, p_inner_30, interface_arc):
 
     #region: meshing
     # - Structured meshing for solid (fine at interface -> coarse at outer wall)
-    n, q = GeometricProgression.fit(d, HOLE_DR_INTERFACE, SOLID_DR_OUTER)
+    n, q = GeometricProgression.fit(d, DR_INTERFACE, DR_OUTER)
     model.set_transfinite_curve(solid_sym_b, n+1, "Progression", q)
     model.set_transfinite_curve(solid_sym_t, n+1, "Progression", q)
     model.set_transfinite_curve(outer_wall, HOLE_ARC_ELEMENTS + 1)
@@ -261,7 +275,7 @@ def solid_model(model, p_origin, p_inner_0, p_inner_30, interface_arc):
     #endregion: physical_groups
 
 
-render = False
+render = not False
 
 with GmshOCCModel(name=NAME, render=render, **options) as model:
     p_origin, p_inner_0, p_inner_30, interface_arc = cht_arc(model)

@@ -83,17 +83,14 @@ $URL_VSCODE      = "https://update.code.visualstudio.com/latest/win32-x64-archiv
 $URL_GIT         = "https://github.com/git-for-windows/git/releases/download/v2.51.0.windows.1/PortableGit-2.51.0-64-bit.7z.exe"
 $URL_SEVENZIP    = "https://github.com/commercialhaskell/stackage-content/releases/download/7z-22.01/"
 $URL_LESSMSI     = "https://github.com/activescott/lessmsi/releases/download/v2.10.3/lessmsi-v2.10.3.zip"
-$URL_PANDOC      = "https://github.com/jgm/pandoc/releases/download/3.8/pandoc-3.8-windows-x86_64.zip"
 $URL_IMAGEMAGICK = "https://github.com/ImageMagick/ImageMagick/releases/download/7.1.2-8/ImageMagick-7.1.2-8-portable-Q16-HDRI-x64.7z"
 $URL_POPPLER     = "https://github.com/oschwartz10612/poppler-windows/releases/download/v25.11.0-0/Release-25.11.0-0.zip"
 $URL_QUARTO      = "https://github.com/quarto-dev/quarto-cli/releases/download/v1.8.26/quarto-1.8.26-win.zip"
-$URL_NVIM        = "https://github.com/neovim/neovim/releases/download/nightly/nvim-win64.zip"
 $URL_ZETTLR      = "https://github.com/Zettlr/Zettlr/releases/download/v4.2.0/Zettlr-4.2.0-x64.exe"
 $URL_FFMPEG      = "https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-full.7z"
 $URL_INKSCAPE    = "https://inkscape.org/gallery/item/53695/inkscape-1.4_2024-10-11_86a8ad7-x64.7z"
 $URL_MIKTEX      = "https://miktex.org/download/ctan/systems/win32/miktex/setup/windows-x64/miktexsetup-5.5.0+1763023-x64.zip"
 # $URL_NTERACT     = "https://github.com/nteract/nteract/releases/download/v0.28.0/nteract-0.28.0-win.zip"
-
 $URL_RUST_GNU    = "https://static.rust-lang.org/rustup/dist/x86_64-pc-windows-gnu/rustup-init.exe"
 $URL_RUST_MSVC   = "https://static.rust-lang.org/rustup/dist/x86_64-pc-windows-msvc/rustup-init.exe"
 $URL_ERLANG      = "https://github.com/erlang/otp/releases/download/OTP-27.3.4.4/otp_win64_27.3.4.4.zip"
@@ -103,11 +100,8 @@ $URL_RLANG       = "https://cran.asnr.fr/bin/windows/base/R-4.5.2-win.exe"
 $URL_RREPOS      = "https://pbil.univ-lyon1.fr/CRAN/"
 $URL_NODE        = "https://nodejs.org/dist/v24.11.0/node-v24.11.0-win-x64.zip"
 $URL_COQ         = "https://github.com/rocq-prover/platform/releases/download/2025.01.0/Coq-Platform-release-2025.01.0-version.8.20.2025.01-Windows-x86_64.exe"
-
-$URL_MESHLAB     = "https://github.com/cnr-isti-vclab/meshlab/releases/download/MeshLab-2025.07/MeshLab2025.07-windows_x86_64.zip"
 $URL_DWSIM       = "https://github.com/DanWBR/dwsim/releases/download/v9.0.4/DWSIM_v904_win64_portable.7z"
 $URL_FREEFEM     = "https://github.com/FreeFem/FreeFem-sources/releases/download/v4.15/FreeFem++-4.15-b-win64.exe"
-
 $URL_OPENCASCADE = "https://github.com/Open-Cascade-SAS/OCCT/releases/download/V7_9_3/opencascade-7.9.3-vc14-64-combined.zip"
 $URL_SU2         = "https://github.com/su2code/SU2/releases/download/v8.4.0/SU2-v8.4.0-win64-mpi.zip"
 $URL_FIREMODELS  = "https://github.com/firemodels/fds/releases/download/FDS-6.10.1/FDS-6.10.1_SMV-6.10.1_win.exe"
@@ -209,23 +203,18 @@ function Start-KompanionConfigure {
     Invoke-ConfigureGit
     Invoke-ConfigureLiteXL
 
-    if ($Config.base.tabby)       { Invoke-ConfigureTabby }
+    if ($Config.base.drawio)      { Invoke-ConfigureDrawio }
+    if ($Config.base.jabref)      { Invoke-ConfigureJabRef }
     if ($Config.base.logseq)      { Invoke-ConfigureLogseq }
-
-    if ($Config.base.nvim)        { Invoke-InstallNvim }
-    if ($Config.base.nvim)        { Invoke-ConfigureNvim }
+    if ($Config.base.nvim)        { Invoke-ConfigureNeovim }
+    if ($Config.base.pandoc)      { Invoke-ConfigurePandoc }
+    if ($Config.base.tabby)       { Invoke-ConfigureTabby }
 
     if ($Config.base.zettlr)      { Invoke-InstallZettlr }
     if ($Config.base.zettlr)      { Invoke-ConfigureZettlr }
-    if ($Config.base.drawio)      { Invoke-ConfigureDrawio }
 
     if ($Config.base.lessmsi)     { Invoke-InstallLessMsi }
     if ($Config.base.lessmsi)     { Invoke-ConfigureLessMsi }
-
-    if ($Config.base.pandoc)      { Invoke-InstallPandoc }
-    if ($Config.base.pandoc)      { Invoke-ConfigurePandoc }
-
-    if ($Config.base.jabref)      { Invoke-ConfigureJabRef }
 
     if ($Config.base.inkscape)    { Invoke-InstallInkscape }
     if ($Config.base.inkscape)    { Invoke-ConfigureInkscape }
@@ -247,7 +236,7 @@ function Start-KompanionConfigure {
 
     Write-Host "- starting Kompanion simulation tools configuration..."
 
-    if ($Config.simu.meshlab)      { Invoke-InstallMeshLab }
+    if ($Config.simu.meshlab)      { Invoke-ConfigureMeshLab }
     if ($Config.simu.dwsim)        { Invoke-InstallDwsim }
     if ($Config.simu.opencascade)  { Invoke-InstallOpenCascade }
 
@@ -917,27 +906,6 @@ function Invoke-InstallLessMsi {
     Invoke-ConfigureLessMsi
 }
 
-function Invoke-ConfigurePandoc {
-    Write-Head "* Configuring Pandoc..."
-
-    Set-KompanionEnvVar -Name "PANDOC_HOME" `
-         -Value "$env:KOMPANION_BIN\pandoc\pandoc-3.8"
-
-    Initialize-AddToPath -Directory "$env:PANDOC_HOME"
-}
-
-function Invoke-InstallPandoc {
-    $output = "$env:KOMPANION_TEMP\pandoc.zip"
-    $path   = "$env:KOMPANION_BIN\pandoc"
-    $url    = $URL_PANDOC
-
-    if (Test-Path -Path $path) { return }
-
-    Invoke-DownloadIfNeeded -URL $url -Output $output
-    Invoke-UncompressZipIfNeeded -Source $output -Destination $path
-    Invoke-ConfigurePandoc
-}
-
 function Invoke-ConfigurePoppler {
     Write-Head "* Configuring Poppler..."
 
@@ -1011,27 +979,6 @@ function Invoke-InstallZettlr {
 
     Remove-Item -Path $temp -Recurse -Force
     Invoke-ConfigureZettlr
-}
-
-function Invoke-ConfigureNvim {
-    Write-Head "* Configuring Neovim..."
-
-    Set-KompanionEnvVar -Name "NVIM_HOME" `
-        -Value "$env:KOMPANION_BIN\nvim\nvim-win64"
-
-    Initialize-AddToPath -Directory "$env:NVIM_HOME\bin"
-}
-
-function Invoke-InstallNvim {
-    $output = "$env:KOMPANION_TEMP\nvim.zip"
-    $path   = "$env:KOMPANION_BIN\nvim"
-    $url    = $URL_NVIM
-
-    if (Test-Path -Path $path) { return }
-
-    Invoke-DownloadIfNeeded -URL $url -Output $output
-    Invoke-UncompressZipIfNeeded -Source $output -Destination $path
-    Invoke-ConfigureNvim
 }
 
 function Invoke-ConfigureInkscape {
@@ -1423,17 +1370,6 @@ function Invoke-InstallCoq() {
 #endregion: install_configure_lang
 
 #region: install_configure_sim_nonconf
-function Invoke-InstallMeshLab {
-    $output = "$env:KOMPANION_TEMP\meshlab.zip"
-    $path   = "$env:KOMPANION_BIN\meshlab"
-    $url    = $URL_MESHLAB
-
-    if (Test-Path -Path $path) { return }
-
-    Invoke-DownloadIfNeeded -URL $url -Output $output
-    Invoke-UncompressZipIfNeeded -Source $output -Destination $path
-}
-
 function Invoke-InstallDwsim {
     $output = "$env:KOMPANION_TEMP\dwsim.zip"
     $path   = "$env:KOMPANION_BIN\dwsim"

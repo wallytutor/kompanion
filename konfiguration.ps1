@@ -574,12 +574,29 @@ function Invoke-ConfigureLogseq {
     $success = Invoke-DlUnzipInstall $path $url $output -Target $target
 
     if ($success) {
-        Set-KompanionEnvVar -Name "LOGSEQ_HOME" `
-            -Value "$env:KOMPANION_BIN\Logseq-win-x64-$version"
-
+        Set-KompanionEnvVar -Name "LOGSEQ_HOME" -Value "$path"
         Initialize-AddToPath -Directory "$env:LOGSEQ_HOME"
     } else {
         Write-Warn "Failed to install Logseq, skipping configuration..."
+    }
+}
+
+function Invoke-ConfigureMeshLab {
+    Write-Head "* Configuring MeshLab..."
+
+    $target  = $null
+    $version = $KOMPANION_SETUP.version.meshlab
+    $url     = Get-PackageVersionedUrl "meshlab"
+    $output  = "$env:KOMPANION_TEMP\meshlab.zip"
+    $path    = "$env:KOMPANION_BIN\MeshLab$version-windows_x86_64"
+
+    $success = Invoke-DlUnzipInstall $path $url $output -Target $target
+
+    if ($success) {
+        Set-KompanionEnvVar -Name "MESHLAB_HOME" -Value "$path"
+        Initialize-AddToPath -Directory "$env:MESHLAB_HOME"
+    } else {
+        Write-Warn "Failed to install MeshLab, skipping configuration..."
     }
 }
 
@@ -606,6 +623,48 @@ function Invoke-ConfigureMingW64 {
         Initialize-AddToPath -Directory "$env:MINGW64_HOME\bin"
     } else {
         Write-Warn "Failed to install MingW64, skipping configuration..."
+    }
+}
+
+function Invoke-ConfigureNeovim {
+    Write-Head "* Configuring Neovim..."
+
+    $target = "nvim-win64"
+    $version = $KOMPANION_SETUP.version.neovim
+    $url     = Get-PackageVersionedUrl "neovim"
+    $output = "$env:KOMPANION_TEMP\neovim.zip"
+    $path   = "$env:KOMPANION_BIN"
+
+    $success = Invoke-DlUnzipInstall $path $url $output -Target $target
+
+    if ($success) {
+        Set-KompanionEnvVar -Name "NEOVIM_HOME" `
+            -Value "$env:KOMPANION_BIN\$target"
+
+        Initialize-AddToPath -Directory "$env:NEOVIM_HOME\bin"
+    } else {
+        Write-Warn "Failed to install Neovim, skipping configuration..."
+    }
+}
+
+function Invoke-ConfigurePandoc {
+    Write-Head "* Configuring Pandoc..."
+
+    $target = "pandoc-3.8"
+    $version = $KOMPANION_SETUP.version.pandoc
+    $url     = Get-PackageVersionedUrl "pandoc"
+    $output = "$env:KOMPANION_TEMP\pandoc.zip"
+    $path   = "$env:KOMPANION_BIN"
+
+    $success = Invoke-DlUnzipInstall $path $url $output -Target $target
+
+    if ($success) {
+        Set-KompanionEnvVar -Name "PANDOC_HOME" `
+            -Value "$env:KOMPANION_BIN\$target"
+
+        Initialize-AddToPath -Directory "$env:PANDOC_HOME"
+    } else {
+        Write-Warn "Failed to install Pandoc, skipping configuration..."
     }
 }
 

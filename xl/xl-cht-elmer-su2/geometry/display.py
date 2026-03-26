@@ -133,6 +133,8 @@ def main() -> None:
 
         current_entity_data = next_entity_data
 
+    gmsh.option.setNumber("Mesh.SaveAll", 1)
+    gmsh.write("display.msh")
     gmsh.fltk.run()
     gmsh.finalize()
 

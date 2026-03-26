@@ -69,6 +69,28 @@ module Numerical =
 
         x
 
+    /// Verify TDMA by solving the 1D discrete Poisson equation
+    /// -u'' = 1, u(0) = u(1) = 0  on n interior nodes.
+    /// Exact solution: u(x) = x(1 - x) / 2  (quadratic).
+    let testTdmaQuadratic (n: int) (tol: float) : bool =
+        let h   = 1.0 / float (n + 1)
+        let nodes = Array.init n (fun i -> float (i + 1) * h)
+
+        // Second-difference stencil: -u[i-1] + 2*u[i] - u[i+1] = h²
+        let a = Array.create n -1.0
+        let b = Array.create n  2.0
+        let c = Array.create n -1.0
+        let d = Array.create n (h * h)   // f * h²  with  f = 1
+
+        let u      = tdma a b c d
+        let uExact = Array.map (fun x -> x * (1.0 - x) / 2.0) nodes
+
+        let maxErr =
+            Array.map2 (fun ui ei -> abs (ui - ei)) u uExact
+            |> Array.max
+
+        maxErr < tol
+
 module Mixtures =
     let private validateComposition (name: string) (comp: float array) (mass: float array) =
         if Array.length comp <> Array.length mass then
@@ -201,3 +223,8 @@ module Main =
     printfn $"Mole fractions ........ C = {x.[0]:F4}, N = {x.[1]:F4}"
     printfn $"Carbon diffusivity .... {carbonDiff:E} m²/s"
     printfn $"Nitrogen diffusivity .. {nitrogenDiff:E} m²/s"
+
+    // --- TDMA test ---
+    let tdmaPassed = Numerical.testTdmaQuadratic 100 1.0e-12
+    let tdmaStatus = if tdmaPassed then "PASSED" else "FAILED"
+    printfn $"TDMA test (quadratic) .. {tdmaStatus}"

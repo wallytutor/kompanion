@@ -1,9 +1,0 @@
-# .NET binaries and objects
-**/bin/*
-**/obj/*
-
-# Ionide files
-.fake
-
-# Notebooks
-.ipynb_checkpoints/*

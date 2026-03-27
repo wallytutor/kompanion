@@ -1,4 +1,0 @@
-<Solution>
-  <Project Path="console-xl/console-xl.fsproj" />
-  <Project Path="library-xl/library-xl.fsproj" />
-</Solution>

@@ -470,6 +470,26 @@ function Invoke-ConfigureGmsh {
     }
 }
 
+function Invoke-ConfigureGnuplot {
+    Write-Head "* Configuring Gnuplot..."
+
+    $target = "gnuplot"
+    $url    = $KOMPANION_SETUP.url.gnuplot
+    $output = "$env:KOMPANION_TEMP\gnuplot.7z"
+    $path   = "$env:KOMPANION_BIN"
+
+    $success = Invoke-DlUnzipInstall $path $url $output -Target $target
+
+    if ($success) {
+        Set-KompanionEnvVar -Name "GNUPLOT_HOME" `
+            -Value "$env:KOMPANION_BIN\$target"
+
+        Initialize-AddToPath -Directory "$env:GNUPLOT_HOME\bin"
+    } else {
+        Write-Warn "Failed to install Gnuplot, skipping configuration..."
+    }
+}
+
 function Invoke-ConfigureJabRef {
     Write-Head "* Configuring JabRef..."
 

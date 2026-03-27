@@ -40,6 +40,7 @@
         "dwsim":       false,
         "opencascade": false,
         "gmsh":        false,
+        "gnuplot":     false,
         "elmer":       false,
         "prepomax":    false,
         "su2":         false,

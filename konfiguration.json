@@ -16,6 +16,7 @@
         "elmer":     "https://www.nic.funet.fi/pub/sci/physics/elmer/bin/windows/ElmerFEM-gui-mpi-Windows-AMD64.zip",
         "freecad":   "https://github.com/FreeCAD/FreeCAD/releases/download/1.0.2/FreeCAD_1.0.2-conda-Windows-x86_64-py311.7z",
         "gmsh":      "https://gmsh.info/bin/Windows/gmsh-4.14.1-Windows64-sdk.zip",
+        "gnuplot":   "https://mirrors.ctan.org/graphics/gnuplot/5.2.6/gp526-win64-mingw.7z",
         "jabref":    "https://github.com/JabRef/jabref/releases/download/v5.15/JabRef-5.15-portable_windows.zip",
         "julia":     "https://julialang-s3.julialang.org/bin/winnt/x64/1.12/julia-1.12.1-win64.zip",
         "litexl":    "https://github.com/lite-xl/lite-xl/releases/download/v2.1.8/lite-xl-v2.1.8-addons-windows-x86_64.zip",

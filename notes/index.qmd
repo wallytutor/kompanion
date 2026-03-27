@@ -133,6 +133,10 @@ if (Test-Path $env:KOMPANION_SOURCE) {
 
 Now all PowerShell sessions will automatically source Kompanion, and you can start using it right away. You can run `Kode` from any directory to open the root of this repository in VSCode.
 
+### User configuration
+
+Other than the `kompanion.json` file, you can also create a `.kompanion/psrc.ps1` file to add your own custom functions and aliases. This file will be automatically sourced after the main `kompanion.ps1` script, so you can use it to customize your environment without modifying the main script. Also notice that upon start, Kompanion will dump all its generated environment variables to `.kompanion/envs.ps1`. You can use that file as a reference to know which variables are available for your own customizations.
+
 ### Known limitations
 
 - Windows MPI support (as required by SU2 in their distributed version) still requires administrator rights, as you need to install the [Microsoft MPI](https://learn.microsoft.com/en-us/message-passing-interface/microsoft-mpi).

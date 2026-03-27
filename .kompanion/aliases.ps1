@@ -21,10 +21,6 @@ function Print-Path() {
     return $env:Path -split ';'
 }
 
-function mj {
-    cd $env:KOMPANION_DIR
-}
-
 function vim {
     # For some reason nvim is not taking into account the override of the
     # user profile (APPDATA) and is looking for the config in the default
@@ -51,4 +47,32 @@ function fsi {
 function gmsh {
     & gmsh.exe @args
 }
+
+function kd {
+    param (
+        [string]$Repo
+    )
+    $Path = Join-Path $env:KOMPANION_REPO $Repo
+
+    if (-Not (Test-Path $Path)) {
+        Write-Error "Repository '$Repo' does not exist at path '$Path'."
+        return
+    }
+
+    Push-Location $Path
+
+    try {
+        git pull
+
+        Code.exe $Path `
+            --extensions-dir $env:VSCODE_EXTENSIONS `
+            --user-data-dir  $env:VSCODE_SETTINGS
+    } finally {
+        Pop-Location
+    }
+}
+
+function mj { kd -Repo "majordome" }
+function xl { kd -Repo "xperimental" }
+
 #endregion: custom functions

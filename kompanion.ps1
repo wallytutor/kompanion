@@ -1518,6 +1518,11 @@ if (Test-Path -Path "$env:KOMPANION_DOT\aliases.ps1") {
     . "$env:KOMPANION_DOT\aliases.ps1"
 }
 
+if (Test-Path -Path "$env:KOMPANION_DOT\psrc.ps1") {
+    Write-Good "`n> Loading user-defined private aliases"
+    . "$env:KOMPANION_DOT\psrc.ps1"
+}
+
 # Get a simpler prompt:
 function prompt {
     $leaf = Split-Path -Leaf (Get-Location)

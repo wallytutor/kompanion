@@ -15,6 +15,7 @@ repos/
 .kompanion/*.lock
 
 # User-specific configuration:
+.kompanion/psrc.ps1
 .kompanion/kompanion.json
 .kompanion/envs.ps1
 

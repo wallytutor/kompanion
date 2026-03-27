@@ -683,7 +683,7 @@ $$
 ## Python prototype
 
 ```{python}
-%load_ext majordome_utilities.skipper
+%load_ext majordome.magic
 %skipper_verbosity 0
 
 import os

@@ -1,7 +1,7 @@
 # Acetylene pyrolysis reactor
 
 ```{python}
-%load_ext majordome_utilities.skipper
+%load_ext majordome.magic
 ```
 
 ```{python}

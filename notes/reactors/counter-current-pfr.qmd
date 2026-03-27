@@ -17,7 +17,7 @@ Because writting long classes is not didatic for the purposes of a tutorial, we 
 Below we start by importing all required tools at once:
 
 ```{python}
-%load_ext majordome_utilities.skipper
+%load_ext majordome.magic
 ```
 
 ```{python}

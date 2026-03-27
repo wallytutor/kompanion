@@ -288,6 +288,7 @@
     // "FSharp.dotnetRoot": "${env:DOTNET_ROOT}",
 
     "FSharp.addFsiWatcher": true,
+    "FSharp.indentationSize": 4,
     "FSharp.suggestGitignore": false,
     "FSharp.codeLenses.signature.enabled": false,
     "FSharp.codeLenses.references.enabled": true,
@@ -295,6 +296,7 @@
     "FSharp.inlayHints.parameterNames": false,
     "FSharp.inlayHints.disableLongTooltip": true,
     "FSharp.inlineValues.enabled": false,
+    "FSharp.inlineValues.prefix": "",
 
     "[fsharp]": {
         "editor.tabSize": 4,

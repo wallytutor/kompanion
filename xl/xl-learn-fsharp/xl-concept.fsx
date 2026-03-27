@@ -91,6 +91,28 @@ module Numerical =
 
         maxErr < tol
 
+    let runTests () =
+        let tdmaPassed = testTdmaQuadratic 100 1.0e-12
+        let tdmaStatus = if tdmaPassed then "PASSED" else "FAILED"
+        printfn $"TDMA test (quadratic) .. {tdmaStatus}"
+
+    let pairwiseHarmonic (x: float) (y: float) : float =
+        2.0 * x * y / (x + y)
+
+    let pairwiseGeometric (x: float) (y: float) : float =
+        sqrt (x * y)
+
+    let linearSpace (start: float) (stop: float) (num: int) : float array =
+        let step = (stop - start) / float (num - 1)
+        Array.init num (fun i -> start + float i * step)
+
+    // TODO: use something more in the sense of what is in majordome.
+    let geometricSpace (start: float) (stop: float) (num: int) : float array =
+        let xs = 1.0 + start
+        let xe = 1.0 + stop
+        let ratio = (xe / xs) ** (1.0 / float (num - 1))
+        Array.init num (fun i -> -1.0 + xs * ratio ** float i)
+
 module Mixtures =
     let private validateComposition (name: string) (comp: float array) (mass: float array) =
         if Array.length comp <> Array.length mass then
@@ -137,8 +159,8 @@ module Thermophysics =
     let idealGasDensity (p: float) (t: float) (m: float) : float =
         p * m / (Constants.gasConstant * t)
 
-    let makeSutherlandMu mu0 Tr S =
-        fun T -> mu0 * (T / Tr)**(3.0/2.0) * (Tr + S) / (T + S)
+    let makeSutherlandMu (mu0: float) (Tr: float) (S: float) =
+        fun (T: float) -> mu0 * (T / Tr)**(3.0/2.0) * (Tr + S) / (T + S)
 
     let reynoldsNumber (rho: float) (u: float) (d: float) (mu: float) : float =
         rho * u * d / mu
@@ -233,24 +255,18 @@ module Main =
     printfn $"Carbon diffusivity .... {carbonDiff:E} m²/s"
     printfn $"Nitrogen diffusivity .. {nitrogenDiff:E} m²/s"
 
-    // --- TDMA test ---
-    let tdmaPassed = Numerical.testTdmaQuadratic 100 1.0e-12
-    let tdmaStatus = if tdmaPassed then "PASSED" else "FAILED"
-    printfn $"TDMA test (quadratic) .. {tdmaStatus}"
+    Numerical.runTests ()
 
+    let num_points = 100
+    let domain_depth = 0.002
 
-let U = 10.0
-let d = 0.06
-let P = 101325.0
-let T = 873.15
+    let z = Numerical.linearSpace 0.0 domain_depth num_points
+    let dz = Array.map2 (fun zi zj -> zj - zi) z[.. num_points - 2] z[1 ..]
 
-let M = 0.02896
-let mu0 = 1.716E-5
-let Tr = 273.15
-let S = 110.4
+    let xcArray = Array.create num_points xc
+    let xnArray = Array.create num_points xn
 
-let sutherlandMu = Thermophysics.makeSutherlandMu mu0 Tr S
-
-let mu = sutherlandMu T
-let rho = Thermophysics.idealGasDensity P T M
-let Re = Thermophysics.reynoldsNumber rho U d mu
+    // let a = Array.create n -1.0
+    // let b = Array.create n  2.0
+    // let c = Array.create n -1.0
+    // let d = Array.create n (h * h)   // f * h²  with  f = 1

@@ -109,8 +109,10 @@ $URL_RADCAL      = "https://github.com/firemodels/radcal/releases/download/v2.0/
 $URL_TESSERACT   = "https://github.com/tesseract-ocr/tesseract/releases/download/5.5.0/tesseract-ocr-w64-setup-5.5.0.20241111.exe"
 $URL_TESSDATA    = "https://github.com/tesseract-ocr/tessdata_best.git"
 
-$GIT_KOMPANION = "https://github.com/wallytutor/kompanion.git"
-$GIT_MAJORDOME = "https://github.com/wallytutor/python-majordome.git"
+$WALLYTUTOR_GITHUB = "https://github.com/wallytutor"
+$GIT_KOMPANION     = "$WALLYTUTOR_GITHUB/kompanion.git"
+$GIT_MAJORDOME     = "$WALLYTUTOR_GITHUB/python-majordome.git"
+$GIT_XPERIMENTAL   = "$WALLYTUTOR_GITHUB/xperimental.git"
 #endregion: default_config
 
 #region: kompanion

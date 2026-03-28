@@ -40,6 +40,8 @@
   
   # (optional) Add a dependency to the project:
   dotnet add package YamlDotNet --project 'library-xl'
+  # Manually add this to the <PropertyGroup> of the project.
+  # <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
   ```
   
   Minimal `.gitgnore` for .NET projects build as above:

@@ -667,6 +667,25 @@ function Invoke-ConfigureNeovim {
     }
 }
 
+function Invoke-ConfigureOllama {
+    Write-Head "* Configuring Ollama..."
+
+    $target  = $null
+    $version = $KOMPANION_SETUP.version.ollama
+    $url     = Get-PackageVersionedUrl "ollama"
+    $output  = "$env:KOMPANION_TEMP\ollama.zip"
+    $path    = "$env:KOMPANION_BIN\ollama-win-x64-$version"
+
+    $success = Invoke-DlUnzipInstall $path $url $output -Target $target
+
+    if ($success) {
+        Set-KompanionEnvVar -Name "OLLAMA_HOME" -Value "$path"
+        Initialize-AddToPath -Directory "$env:OLLAMA_HOME"
+    } else {
+        Write-Warn "Failed to install Ollama, skipping configuration..."
+    }
+}
+
 function Invoke-ConfigurePandoc {
     Write-Head "* Configuring Pandoc..."
 

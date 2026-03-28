@@ -33,19 +33,20 @@
         "python":      false
     },
     "simu": {
-        "paraview":    false,
-        "freecad":     false,
         "blender":     false,
-        "meshlab":     false,
         "dwsim":       false,
-        "opencascade": false,
+        "elmer":       false,
+        "freecad":     false,
+        "freefem":     false,
         "gmsh":        false,
         "gnuplot":     false,
-        "elmer":       false,
+        "meshlab":     false,
+        "ollama":      false,
+        "opencascade": false,
+        "paraview":    false,
         "prepomax":    false,
-        "su2":         false,
-        "tesseract":   false,
         "radcal":      false,
-        "freefem":     false
+        "su2":         false,
+        "tesseract":   false
     }
 }

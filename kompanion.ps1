@@ -247,6 +247,7 @@ function Start-KompanionConfigure {
     if ($Config.simu.freecad)      { Invoke-ConfigureFreeCAD }
     if ($Config.simu.gmsh)         { Invoke-ConfigureGmsh }
     if ($Config.simu.gnuplot)      { Invoke-ConfigureGnuplot }
+    if ($Config.simu.ollama)       { Invoke-ConfigureOllama }
     if ($Config.simu.paraview)     { Invoke-ConfigureParaView }
     if ($Config.simu.prepomax)     { Invoke-ConfigurePrePoMax }
 

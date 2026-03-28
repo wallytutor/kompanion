@@ -870,3 +870,39 @@ function Invoke-ConfigureWinPython {
     }
 }
 #endregion: configuration
+
+#region: ollama
+function Invoke-ServeOllama {
+    Write-Head "* Starting Ollama server..."
+
+    $job = Start-Job -ScriptBlock {
+        $ollamaExe = "$env:OLLAMA_HOME\ollama.exe"
+
+        if (!(Test-Path $ollamaExe)) {
+            Write-Warn "Ollama executable not found at $ollamaExe..."
+            return
+        }
+
+        # TODO check if already running and do not start another instance
+
+        $p = Start-Process -FilePath "$ollamaExe" -ArgumentList "serve" `
+            -RedirectStandardOutput "$env:KOMPANION_LOGS\ollama.log" `
+            -RedirectStandardError  "$env:KOMPANION_LOGS\ollama.err" `
+            -PassThru -NoNewWindow
+
+        $p.Id
+    }
+
+    Wait-Job -Id $job.Id -Timeout 10 | Out-Null
+    $pidValue = Receive-Job -Id $job.Id
+    Remove-Job -Id $job.Id -Force
+
+    if ($null -ne $pidValue -and "$pidValue" -ne "") {
+        Write-Host "Stop ollama service with the following command:`n"
+        Write-Host "  Stop-Process -Id $pidValue -Force`n"
+    } else {
+        Write-Host "Could not retrieve process PID"
+        Write-Host " Check logs under $env:KOMPANION_LOGS\ollama.*"
+    }
+}
+#endregion: ollama

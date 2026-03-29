@@ -25,3 +25,23 @@ Julia has its own [stylistic conventions](https://docs.julialang.org/en/v1/manua
 Python code documentation is generally done with [Sphinx](https://www.sphinx-doc.org/en/master/). Julia has its own [syntax](https://docs.julialang.org/en/v1/manual/documentation/#Syntax-Guide) which can be used to generate package documentation with help of [Documenter.jl](https://documenter.juliadocs.org/stable/).
 
 **Important:** Julia supports [Unicode input](https://docs.julialang.org/en/v1/manual/unicode-input/), but its use is highly discouraged in modules. Unicode characters are better suited to write application scripts such as notebooks (in Pluto or Jupyter).
+
+## Languages
+
+- Python
+- C/C++
+- Fortran
+- Rust
+
+- Julia
+- R
+- Matlab/Octave/Scilab: this is the triad to avoid!
+
+- .NET (C#)
+- .NET (F#)
+- Java
+- JavaScript/TypeScript
+- Go
+- Haskell
+- Lisp/Scheme
+- Lua

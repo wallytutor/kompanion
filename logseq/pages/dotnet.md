@@ -42,6 +42,9 @@
   dotnet add package YamlDotNet --project 'library-xl'
   # Manually add this to the <PropertyGroup> of the project.
   # <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+  
+  # (optional) adding a web API
+  dotnet new webapi -n 'webapi-xl' --no-https
   ```
   
   Minimal `.gitgnore` for .NET projects build as above:

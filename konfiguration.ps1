@@ -667,6 +667,27 @@ function Invoke-ConfigureNeovim {
     }
 }
 
+function Invoke-ConfigureNode {
+    Write-Head "* Configuring Node.js..."
+
+    $version = $KOMPANION_SETUP.version.node
+    $target = "node-v$version-win-x64"
+    $url     = Get-PackageVersionedUrl "node"
+    $output = "$env:KOMPANION_TEMP\node.zip"
+    $path   = "$env:KOMPANION_BIN"
+
+    $success = Invoke-DlUnzipInstall $path $url $output -Target $target
+
+    if ($success) {
+        Set-KompanionEnvVar -Name "NODE_HOME" `
+            -Value "$env:KOMPANION_BIN\$target"
+
+        Initialize-AddToPath -Directory "$env:NODE_HOME"
+    } else {
+        Write-Warn "Failed to install Node.js, skipping configuration..."
+    }
+}
+
 function Invoke-ConfigureOllama {
     Write-Head "* Configuring Ollama..."
 

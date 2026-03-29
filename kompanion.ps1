@@ -98,7 +98,6 @@ $URL_STACK       = "https://github.com/commercialhaskell/stack/releases/download
 $URL_ELM         = "https://github.com/elm/compiler/releases/download/0.19.1/binary-for-windows-64-bit.gz"
 $URL_RLANG       = "https://cran.asnr.fr/bin/windows/base/R-4.5.2-win.exe"
 $URL_RREPOS      = "https://pbil.univ-lyon1.fr/CRAN/"
-$URL_NODE        = "https://nodejs.org/dist/v24.11.0/node-v24.11.0-win-x64.zip"
 $URL_COQ         = "https://github.com/rocq-prover/platform/releases/download/2025.01.0/Coq-Platform-release-2025.01.0-version.8.20.2025.01-Windows-x86_64.exe"
 $URL_DWSIM       = "https://github.com/DanWBR/dwsim/releases/download/v9.0.4/DWSIM_v904_win64_portable.7z"
 $URL_FREEFEM     = "https://github.com/FreeFem/FreeFem-sources/releases/download/v4.15/FreeFem++-4.15-b-win64.exe"
@@ -274,10 +273,8 @@ function Start-KompanionConfigure {
 
     if ($Config.lang.dotnet)    { Invoke-ConfigureDotNET}
     if ($Config.lang.julia)     { Invoke-ConfigureJulia }
-    if ($Config.lang.python)    { Invoke-ConfigurePython }
-
-    if ($Config.lang.node)      { Invoke-InstallNode }
     if ($Config.lang.node)      { Invoke-ConfigureNode }
+    if ($Config.lang.python)    { Invoke-ConfigurePython }
 
     if ($Config.lang.erlang)    { Invoke-InstallErlang }
     if ($Config.lang.erlang)    { Invoke-ConfigureErlang }
@@ -1315,25 +1312,6 @@ function Invoke-InstallRlang() {
 
         Start-Process -FilePath $output -ArgumentList $arglist -Wait
     }
-}
-
-function Invoke-ConfigureNode() {
-    Write-Head "* Configuring Node.js..."
-
-    Set-KompanionEnvVar -Name "NODE_HOME" `
-         -Value "$env:KOMPANION_BIN\node\node-v24.11.0-win-x64"
-
-    Initialize-AddToPath -Directory "$env:NODE_HOME"
-}
-
-function Invoke-InstallNode() {
-    $output = "$env:KOMPANION_TEMP\node.zip"
-    $path   = "$env:KOMPANION_BIN\node"
-
-    if (Test-Path -Path $path) { return }
-
-    Invoke-DownloadIfNeeded -URL $URL_NODE -Output $output
-    Invoke-UncompressZipIfNeeded -Source $output -Destination $path
 }
 
 function Invoke-ConfigureRacket() {

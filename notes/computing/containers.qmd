@@ -243,7 +243,7 @@ FOAM_SOURCE=/opt/openfoam13/OpenFOAM-13/etc/bashrc
 [[ -f ${FOAM_SOURCE} ]] && source ${FOAM_SOURCE}
 ```
 
-Another approach is to execute the SIF image once, source the required variables required in the container, dump `env > draft.env`, [edit the file](https://github.com/wallytutor/learning-by-teaching/blob/main/containers/clean-env.py) as required and then wrap a call with contextualized environment as:
+Another approach is to execute the SIF image once, source the required variables required in the container, dump `env > draft.env`, sanitize the file as needed, and then wrap a call with contextualized environment as:
 
 ``` bash
 function openfoam12() {
@@ -254,7 +254,7 @@ function openfoam12() {
 
 ## Build workflow
 
-Using both tools can be roughly automated by generating a `podman` image, dumping it into a portable format, then converting to Singularity format. Below we illustrate the workflow for an arbitrary container file; this is summarized in a bash script [containerfile.sh](https://github.com/wallytutor/notes-book/blob/main/chap-computing/containerfile.sh) which makes use of [Containerfile](https://github.com/wallytutor/notes-book/blob/main/chap-computing/Containerfile).
+Using both tools can be roughly automated by generating a `podman` image, dumping it into a portable format, then converting to Singularity format. Below we illustrate the workflow for an arbitrary container file; this is summarized in a bash script [containerfile.sh](https://github.com/wallytutor/xperimental/tree/main/xl-containers/scientific-computing).
 
 Now you can move the SIF image to another computer (for instance, you prepared this in a PC with access to the Internet for later using it in an isolated HPC), launch a terminal and run:
 

@@ -45,3 +45,5 @@ Python code documentation is generally done with [Sphinx](https://www.sphinx-doc
 - Haskell
 - Lisp/Scheme
 - Lua
+
+- Gnuplot

@@ -477,7 +477,6 @@ function Invoke-ConfigureErlang {
     $output  = "$env:KOMPANION_TEMP\erlang.zip"
     $path    = "$env:KOMPANION_BIN\erlang-$version"
 
-    Write-Bad "URL = $url"
     $success = Invoke-DlUnzipInstall $path $url $output -Target $target
 
     if ($success) {
@@ -827,7 +826,7 @@ function Invoke-ConfigurePrePoMax {
     }
 }
 
-function Invoke-ConfigureRust() {
+function Invoke-ConfigureRust {
     Write-Head "* Configuring Rust..."
 
     $url    = $KOMPANION_SETUP.url.rust

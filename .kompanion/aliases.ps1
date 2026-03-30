@@ -17,7 +17,7 @@ function tail {
 #endregion: unix-like
 
 #region: custom functions
-function Print-Path() {
+function pp() {
     return $env:Path -split ';'
 }
 

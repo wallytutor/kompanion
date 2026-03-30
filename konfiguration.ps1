@@ -100,30 +100,19 @@ function Invoke-DownloadCurl {
         [string]$URL,
 
         [Parameter(Mandatory, Position=1)]
-        [string]$Output
+        [string]$Output,
+
+        [switch]$Insecure
     )
     $success = $false
+    $opts = @("--ssl-no-revoke", $URL, "--output", $Output)
+    if ($Insecure) { $opts += "--insecure" }
 
     try {
-        $opts = @("--ssl-no-revoke", $URL, "--output", $Output)
-        $code = Invoke-CapturedCommand "curl.exe" $opts
-        $success = ($code -eq 0)
-        if (-not $success) { throw "Curl (1) got exit code $code" }
+        $success = ($(Invoke-CapturedCommand "curl.exe" $opts) -eq 0)
+        if (-not $success) { throw "Curl got exit code $code" }
     } catch {
         Write-Bad "Failed to download $URL as $Output ($_)"
-        # $success = $false
-    }
-
-    if ($success) { return $true }
-
-    try {
-        $opts = @("--insecure", "--ssl-no-revoke", $URL, "--output", $Output)
-        $code = Invoke-CapturedCommand "curl.exe" $opts
-        $success = ($code -eq 0)
-        if (-not $success) { throw "Curl (2) got exit code $code" }
-    } catch {
-        Write-Bad "Failed to download $URL as $Output ($_)"
-        # $success = $false
     }
 
     return $success
@@ -149,6 +138,11 @@ function Invoke-DownloadIfNeeded {
     # curl.exe
     if (-not $success) {
         $success = Invoke-DownloadCurl $URL $Output
+    }
+
+    # curl.exe -insecure
+    if (-not $success) {
+        $success = Invoke-DownloadCurl $URL $Output -Insecure
     }
 
     # Start-BitsTransfer
@@ -926,7 +920,7 @@ function Invoke-ConfigureWinPython {
     Write-Head "* Configuring WinPython..."
 
     $target  = "WPy64-31380"
-    $url     = Get-PackageVersionedUrl "winpython"
+    $url     = $KOMPANION_SETUP.url.winpython
     $output  = "$env:KOMPANION_TEMP\winpython.zip"
     $path    = "$env:KOMPANION_BIN"
 

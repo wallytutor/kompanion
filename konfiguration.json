@@ -1,14 +1,15 @@
 {
     "version": {
         "_dotnet": "10.0.201",
-        "dotnet": "9.0.312",
-        "logseq": "0.10.15",
+        "dotnet":  "9.0.312",
+        "logseq":  "0.10.15",
         "meshlab": "2025.07",
-        "neovim": "stable",
-        "node": "24.11.0",
-        "ollama": "0.18.3",
-        "pandoc": "3.8",
-        "python": "3.13.12"
+        "neovim":  "stable",
+        "node":    "24.11.0",
+        "ollama":  "0.18.3",
+        "pandoc":  "3.8",
+        "python":  "3.13.12",
+        "uv":      "0.11.2"
     },
     "url": {
         "blender":    "https://ftp.halifax.rwth-aachen.de/blender/release/Blender4.5/blender-4.5.4-windows-x64.zip",
@@ -36,6 +37,7 @@
         "rust":       "https://static.rust-lang.org/rustup/dist/x86_64-pc-windows-gnu/rustup-init.exe",
         "_rust":      "https://static.rust-lang.org/rustup/dist/x86_64-pc-windows-msvc/rustup-init.exe",
         "tabby":      "https://github.com/Eugeny/tabby/releases/download/v1.0.230/tabby-1.0.230-portable-x64.zip",
+        "uv":         "https://releases.astral.sh/github/uv/releases/download/{0}/uv-x86_64-pc-windows-msvc.zip",
         "winpython":  "https://github.com/winpython/winpython/releases/download/17.2.20251012/WinPython64-3.13.8.0dotb1.zip",
         "_winpython": "https://github.com/winpython/winpython/releases/download/17.2.20260307final/WinPython64-3.13.12.0dot.zip"
     },

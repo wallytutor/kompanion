@@ -916,6 +916,24 @@ function Invoke-ConfigureTabby {
     }
 }
 
+function Invoke-ConfigureAstralUv {
+    Write-Head "* Configuring Astral UV..."
+
+    $target = $null
+    $url    = Get-PackageVersionedUrl "uv"
+    $output = "$env:KOMPANION_TEMP\uv.zip"
+    $path   = "$env:KOMPANION_BIN\uv"
+
+    $success = Invoke-DlUnzipInstall $path $url $output -Target $target
+
+    if ($success) {
+        Set-KompanionEnvVar -Name "UV_HOME" -Value "$path"
+        Initialize-AddToPath -Directory "$env:UV_HOME"
+    } else {
+        Write-Warn "Failed to install Astral UV, skipping configuration..."
+    }
+}
+
 function Invoke-ConfigureWinPython {
     Write-Head "* Configuring WinPython..."
 

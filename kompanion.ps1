@@ -260,8 +260,9 @@ function Start-KompanionConfigure {
     Write-Host "- starting Kompanion languages configuration..."
 
     # XXX: without winpython we cannot compile Rust code!
-    Invoke-ConfigureWinPython
+    Invoke-ConfigureAstralUv
     Invoke-ConfigureMingW64
+    Invoke-ConfigureWinPython
 
     if ($Config.lang.dotnet)    { Invoke-ConfigureDotNET}
     if ($Config.lang.julia)     { Invoke-ConfigureJulia }

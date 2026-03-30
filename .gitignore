@@ -51,6 +51,7 @@ pip/
 .miktex/*
 .rlang/*
 .stack/*
+.node_repl_history
 
 # User profile directories/files:
 AppData/

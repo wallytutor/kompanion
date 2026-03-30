@@ -1,4 +1,4 @@
-$KOMPANION_DEBUG = $false
+$KOMPANION_DEBUG = $true
 
 #region: utilities
 function Read-Json {
@@ -135,16 +135,6 @@ function Invoke-DownloadIfNeeded {
 
     $success = $false
 
-    # curl.exe
-    if (-not $success) {
-        $success = Invoke-DownloadCurl $URL $Output
-    }
-
-    # curl.exe -insecure
-    if (-not $success) {
-        $success = Invoke-DownloadCurl $URL $Output -Insecure
-    }
-
     # Start-BitsTransfer
     if (-not $success) {
         try {
@@ -155,6 +145,16 @@ function Invoke-DownloadIfNeeded {
             Write-Bad "Failed to download $URL as $Output (Start-BitsTransfer)"
             $success = $false
         }
+    }
+
+    # curl.exe
+    if (-not $success) {
+        $success = Invoke-DownloadCurl $URL $Output
+    }
+
+    # curl.exe -insecure
+    if (-not $success) {
+        $success = Invoke-DownloadCurl $URL $Output -Insecure
     }
 
     # Invoke-WebRequest
@@ -245,14 +245,20 @@ function Invoke-UncompressIfNeeded {
 
     $extension = [System.IO.Path]::GetExtension($Source).ToLower()
 
-    switch ($extension) {
-        ".zip" { Invoke-UncompressZipIfNeeded $Source $Destination -Target $Target }
-        ".7z"  { Invoke-Uncompress7zIfNeeded  $Source $Destination -Target $Target }
-        default {
-            Write-Bad "Unsupported archive format: $extension"
-            return $false
+    try {
+        switch ($extension) {
+            ".zip" { Invoke-UncompressZipIfNeeded $Source $Destination -Target $Target }
+            ".7z"  { Invoke-Uncompress7zIfNeeded  $Source $Destination -Target $Target }
+            default {
+                Write-Bad "Unsupported archive format: $extension"
+                return $false
+            }
         }
+    } catch {
+        Write-Bad "Unable to uncompress $Source into $Destination."
+        return $false
     }
+
 }
 
 function Invoke-HandledInstall {
@@ -459,6 +465,26 @@ function Invoke-ConfigureElmer {
         Initialize-AddToPath -Directory "$env:ELMER_HOME\bin"
     } else {
         Write-Warn "Failed to install Elmer, skipping configuration..."
+    }
+}
+
+function Invoke-ConfigureErlang {
+    Write-Head "* Configuring Erlang..."
+
+    $target  = $null
+    $version = $KOMPANION_SETUP.version.erlang
+    $url     = Get-PackageVersionedUrl "erlang"
+    $output  = "$env:KOMPANION_TEMP\erlang.zip"
+    $path    = "$env:KOMPANION_BIN\erlang-$version"
+
+    Write-Bad "URL = $url"
+    $success = Invoke-DlUnzipInstall $path $url $output -Target $target
+
+    if ($success) {
+        Set-KompanionEnvVar -Name "ERLANG_HOME" -Value "$path"
+        Initialize-AddToPath -Directory "$env:ERLANG_HOME\bin"
+    } else {
+        Write-Warn "Failed to install Erlang, skipping configuration..."
     }
 }
 

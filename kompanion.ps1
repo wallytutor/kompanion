@@ -88,7 +88,6 @@ $URL_INKSCAPE    = "https://inkscape.org/gallery/item/53695/inkscape-1.4_2024-10
 $URL_MIKTEX      = "https://miktex.org/download/ctan/systems/win32/miktex/setup/windows-x64/miktexsetup-5.5.0+1763023-x64.zip"
 # $URL_NTERACT     = "https://github.com/nteract/nteract/releases/download/v0.28.0/nteract-0.28.0-win.zip"
 
-$URL_ERLANG      = "https://github.com/erlang/otp/releases/download/OTP-27.3.4.4/otp_win64_27.3.4.4.zip"
 $URL_STACK       = "https://github.com/commercialhaskell/stack/releases/download/v3.7.1/stack-3.7.1-windows-x86_64.zip"
 $URL_ELM         = "https://github.com/elm/compiler/releases/download/0.19.1/binary-for-windows-64-bit.gz"
 $URL_RLANG       = "https://cran.asnr.fr/bin/windows/base/R-4.5.2-win.exe"
@@ -265,13 +264,11 @@ function Start-KompanionConfigure {
     Invoke-ConfigureWinPython
 
     if ($Config.lang.dotnet)    { Invoke-ConfigureDotNET}
+    if ($Config.lang.erlang)    { Invoke-ConfigureErlang }
     if ($Config.lang.julia)     { Invoke-ConfigureJulia }
     if ($Config.lang.node)      { Invoke-ConfigureNode }
     if ($Config.lang.python)    { Invoke-ConfigurePython }
     if ($Config.lang.rust)      { Invoke-ConfigureRust }
-
-    if ($Config.lang.erlang)    { Invoke-InstallErlang }
-    if ($Config.lang.erlang)    { Invoke-ConfigureErlang }
 
     if ($Config.lang.haskell)   { Invoke-InstallHaskell }
     if ($Config.lang.haskell)   { Invoke-ConfigureHaskell }
@@ -1128,26 +1125,6 @@ function Invoke-InstallImageMagick {
 #endregion: install_configure_base
 
 #region: install_configure_lang
-function Invoke-ConfigureErlang() {
-    Write-Head "* Configuring Erlang..."
-
-    Set-KompanionEnvVar -Name "ERLANG_HOME" `
-         -Value "$env:KOMPANION_BIN\erlang"
-
-    Initialize-AddToPath -Directory "$env:ERLANG_HOME\bin"
-}
-
-function Invoke-InstallErlang() {
-    $output = "$env:KOMPANION_TEMP\erlang.zip"
-    $path   = "$env:KOMPANION_BIN\erlang"
-    $url    = $URL_ERLANG
-
-    if (Test-Path -Path $path) { return }
-
-    Invoke-DownloadIfNeeded -URL $url -Output $output
-    Invoke-UncompressZipIfNeeded -Source $output -Destination $path
-}
-
 function Invoke-ConfigureHaskell() {
     Write-Head "* Configuring Haskell..."
 

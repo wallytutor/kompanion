@@ -46,6 +46,7 @@ pip/
 .templateengine/*
 
 # Other languages:
+.deno/*
 .julia/*
 .miktex/*
 .rlang/*

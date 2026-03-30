@@ -362,6 +362,7 @@
     // GITHUB COPILOT
     //////////////////////////////////////////////////////////////////////////
 
+    "chat.mcp.gallery.enabled": true,
     "chat.viewSessions.orientation": "stacked",
     "github.copilot.nextEditSuggestions.enabled": true,
     "github.copilot.enable": {

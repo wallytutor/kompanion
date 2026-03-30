@@ -1,4 +1,4 @@
-$KOMPANION_DEBUG = $true
+$KOMPANION_DEBUG = $false
 
 #region: utilities
 function Read-Json {
@@ -83,7 +83,7 @@ function Invoke-CapturedCommand {
     $proc = Start-Process -FilePath $FilePath -ArgumentList $ArgumentList `
         -RedirectStandardOutput $logOut `
         -RedirectStandardError  $logErr `
-        -NoNewWindow -Wait
+        -NoNewWindow -Wait -PassThru
 
     Get-Content $logOut | Add-Content "$env:KOMPANION_LOGS\kompanion.log"
     Remove-Item $logOut -ErrorAction SilentlyContinue
@@ -92,6 +92,41 @@ function Invoke-CapturedCommand {
     Remove-Item $logErr -ErrorAction SilentlyContinue
 
     return $proc.ExitCode
+}
+
+function Invoke-DownloadCurl {
+    param (
+        [Parameter(Mandatory, Position=0)]
+        [string]$URL,
+
+        [Parameter(Mandatory, Position=1)]
+        [string]$Output
+    )
+    $success = $false
+
+    try {
+        $opts = @("--ssl-no-revoke", $URL, "--output", $Output)
+        $code = Invoke-CapturedCommand "curl.exe" $opts
+        $success = ($code -eq 0)
+        if (-not $success) { throw "Curl (1) got exit code $code" }
+    } catch {
+        Write-Bad "Failed to download $URL as $Output ($_)"
+        # $success = $false
+    }
+
+    if ($success) { return $true }
+
+    try {
+        $opts = @("--insecure", "--ssl-no-revoke", $URL, "--output", $Output)
+        $code = Invoke-CapturedCommand "curl.exe" $opts
+        $success = ($code -eq 0)
+        if (-not $success) { throw "Curl (2) got exit code $code" }
+    } catch {
+        Write-Bad "Failed to download $URL as $Output ($_)"
+        # $success = $false
+    }
+
+    return $success
 }
 
 function Invoke-DownloadIfNeeded {
@@ -111,27 +146,32 @@ function Invoke-DownloadIfNeeded {
 
     $success = $false
 
+    # curl.exe
+    if (-not $success) {
+        $success = Invoke-DownloadCurl $URL $Output
+    }
+
     # Start-BitsTransfer
-    if (!$success) {
+    if (-not $success) {
         try {
             # XXX: -ErrorAction Stop is required to catch errors
             Start-BitsTransfer -Source $URL -Destination $Output -ErrorAction Stop
             $success = $true
         } catch {
             Write-Bad "Failed to download $URL as $Output (Start-BitsTransfer)"
+            $success = $false
         }
     }
 
-    # curl.exe
-    if (!$success) {
+    # Invoke-WebRequest
+    if (-not $success) {
         try {
-            # Invoke-WebRequest -Uri $URL -OutFile $Output --> TOO SLOW
-            # TODO implement the captured output for curl as well, to log the process:
-            # Invoke-CapturedCommand "curl.exe" @("--ssl-no-revoke", $URL, "--output", $Output)
-            curl.exe --ssl-no-revoke $URL --output $Output
-            $success = ($LASTEXITCODE -eq 0)
+            # XXX: -ErrorAction Stop is required to catch errors
+            Invoke-WebRequest -Uri $URL -OutFile $Output -ErrorAction Stop
+            $success = $true
         } catch {
-            Write-Bad "Failed to download $URL as $Output (curl)"
+            Write-Bad "Failed to download $URL as $Output (Invoke-WebRequest)"
+            $success = $false
         }
     }
 

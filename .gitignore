@@ -95,6 +95,7 @@ logseq/logseq/bak/*
 .vscode/user-data/*
 !.vscode/user-data/User/
 .vscode/user-data/User/*
+!.vscode/user-data/User/keybindings.json
 !.vscode/user-data/User/settings.json
 
 /.luarc.json

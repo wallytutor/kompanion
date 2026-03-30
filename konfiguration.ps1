@@ -767,6 +767,61 @@ function Invoke-ConfigurePrePoMax {
     }
 }
 
+function Invoke-ConfigureRust() {
+    Write-Head "* Configuring Rust..."
+
+    $url    = $KOMPANION_SETUP.url.rust
+    $conf   = $KOMPANION_SETUP.config.rust
+    $output = "$env:KOMPANION_TEMP\rustup-init.exe"
+    $path   = "$env:KOMPANION_DIR\.cargo\bin"
+
+    # XXX rust needs environment variables BEFORE installations!
+    Set-KompanionEnvVar -Name "CARGO_HOME" `
+        -Value "$env:KOMPANION_DIR\.cargo"
+
+    Set-KompanionEnvVar -Name "RUSTUP_HOME" `
+        -Value "$env:KOMPANION_DIR\.cargo"
+
+    # XXX: disable certificate revocation check due to possible issues
+    # with certain Windows configurations (corporate networks, proxies,
+    # etc.). Avoid using this in general, as it lowers security!
+    Set-KompanionEnvVar -Name "CARGO_HTTP_CHECK_REVOKE" -Value "false"
+
+    $success = $false
+
+    if (-not (Test-Path $path)) {
+        try {
+            Invoke-DownloadIfNeeded -URL $url -Output $output
+
+            $arglist = @(
+                "--verbose",
+                "-y",
+                "--default-host",      $conf.triple,
+                "--default-toolchain", $conf.toolchain,
+                "--profile",           $conf.profile,
+                "--no-modify-path"
+            )
+
+            Invoke-CapturedCommand $output $arglist
+            $success = $true
+        } catch {
+            Write-Bad "Failed to install Rust : $_"
+            $success = $false
+        }
+    } else {
+        if ($KOMPANION_DEBUG) {
+            Write-Warn "* Installation target $path already exists..."
+        }
+        $success = $true
+    }
+
+    if ($success) {
+        Initialize-AddToPath -Directory "$env:CARGO_HOME\bin"
+    } else {
+        Write-Warn "Failed to install Rust, skipping configuration..."
+    }
+}
+
 function Invoke-ConfigurePython {
     Write-Head "* Configuring Python..."
 

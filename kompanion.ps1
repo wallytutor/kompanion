@@ -73,11 +73,7 @@ $DEFAULT_CONFIG = [PSCustomObject]@{
     }
 }
 
-$DEFAULT_RUST_INSTALL = [PSCustomObject]@{
-    toolchain = "stable"
-    triple    = "x86_64-pc-windows-gnu"
-    profile   = "default"
-}
+
 
 $URL_VSCODE      = "https://update.code.visualstudio.com/latest/win32-x64-archive/stable"
 $URL_GIT         = "https://github.com/git-for-windows/git/releases/download/v2.51.0.windows.1/PortableGit-2.51.0-64-bit.7z.exe"
@@ -91,8 +87,7 @@ $URL_FFMPEG      = "https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-full.7z"
 $URL_INKSCAPE    = "https://inkscape.org/gallery/item/53695/inkscape-1.4_2024-10-11_86a8ad7-x64.7z"
 $URL_MIKTEX      = "https://miktex.org/download/ctan/systems/win32/miktex/setup/windows-x64/miktexsetup-5.5.0+1763023-x64.zip"
 # $URL_NTERACT     = "https://github.com/nteract/nteract/releases/download/v0.28.0/nteract-0.28.0-win.zip"
-$URL_RUST_GNU    = "https://static.rust-lang.org/rustup/dist/x86_64-pc-windows-gnu/rustup-init.exe"
-$URL_RUST_MSVC   = "https://static.rust-lang.org/rustup/dist/x86_64-pc-windows-msvc/rustup-init.exe"
+
 $URL_ERLANG      = "https://github.com/erlang/otp/releases/download/OTP-27.3.4.4/otp_win64_27.3.4.4.zip"
 $URL_STACK       = "https://github.com/commercialhaskell/stack/releases/download/v3.7.1/stack-3.7.1-windows-x86_64.zip"
 $URL_ELM         = "https://github.com/elm/compiler/releases/download/0.19.1/binary-for-windows-64-bit.gz"
@@ -268,13 +263,11 @@ function Start-KompanionConfigure {
     Invoke-ConfigureWinPython
     Invoke-ConfigureMingW64
 
-    if ($Config.lang.rust)      { Invoke-InstallRust }
-    if ($Config.lang.rust)      { Invoke-ConfigureRust }
-
     if ($Config.lang.dotnet)    { Invoke-ConfigureDotNET}
     if ($Config.lang.julia)     { Invoke-ConfigureJulia }
     if ($Config.lang.node)      { Invoke-ConfigureNode }
     if ($Config.lang.python)    { Invoke-ConfigurePython }
+    if ($Config.lang.rust)      { Invoke-ConfigureRust }
 
     if ($Config.lang.erlang)    { Invoke-InstallErlang }
     if ($Config.lang.erlang)    { Invoke-ConfigureErlang }
@@ -1134,58 +1127,6 @@ function Invoke-InstallImageMagick {
 #endregion: install_configure_base
 
 #region: install_configure_lang
-function Invoke-ConfigureRust() {
-    Write-Head "* Configuring Rust..."
-
-    Set-KompanionEnvVar -Name "CARGO_HOME" `
-        -Value "$env:KOMPANION_DIR\.cargo"
-
-    Set-KompanionEnvVar -Name "RUSTUP_HOME" `
-        -Value "$env:KOMPANION_DIR\.cargo"
-
-    Initialize-AddToPath -Directory "$env:CARGO_HOME\bin"
-
-    # XXX: disable certificate revocation check due to possible issues
-    # with certain Windows configurations (corporate networks, proxies, etc.)
-    # Avoid using this in general, as it lowers security!
-    Set-KompanionEnvVar -Name "CARGO_HTTP_CHECK_REVOKE" -Value "false"
-}
-
-function Invoke-InstallRust() {
-    $output = "$env:KOMPANION_TEMP\rustup-init.exe"
-    $path   = "$env:KOMPANION_DIR\.cargo\bin"
-
-    # Choose one of the following URLs depending on the desired toolchain
-    # notice that MSVC requires Visual Studio Build Tools to be installed
-    # $url    = $URL_RUST_MSVC
-    $url    = $URL_RUST_GNU
-
-    if (Test-Path -Path $path) { return }
-
-    Invoke-DownloadIfNeeded -URL $url -Output $output
-
-    if (-not (Test-Path $path)) {
-
-
-        $arglist = @(
-            "--verbose",
-            "-y",
-            "--default-host",      $DEFAULT_RUST_INSTALL.triple,
-            "--default-toolchain", $DEFAULT_RUST_INSTALL.toolchain,
-            "--profile",           $DEFAULT_RUST_INSTALL.profile,
-            "--no-modify-path"
-        )
-
-        Set-KompanionEnvVar -Name "CARGO_HOME" `
-            -Value "$env:KOMPANION_DIR\.cargo"
-
-        Set-KompanionEnvVar -Name "RUSTUP_HOME" `
-            -Value "$env:KOMPANION_DIR\.cargo"
-
-        Invoke-CapturedCommand -FilePath $output -ArgumentList $arglist -Wait
-    }
-}
-
 function Invoke-ConfigureErlang() {
     Write-Head "* Configuring Erlang..."
 

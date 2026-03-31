@@ -7,6 +7,7 @@ namespace KompanionUI;
 public partial class MainWindow : Window
 {
     private readonly Logger         _logger;
+    private readonly ScriptRunner   _runner;
     private readonly RepoScanner    _scanner;
     private readonly VsCodeLauncher _vscode;
     private readonly GitService     _git;
@@ -16,12 +17,29 @@ public partial class MainWindow : Window
         InitializeComponent();
 
         _logger  = new Logger();
+        _runner  = new ScriptRunner(_logger);
         _scanner = new RepoScanner(_logger);
         _vscode  = new VsCodeLauncher(_logger);
         _git     = new GitService(_logger);
 
-        // Populate the list on first load.
-        Loaded += (_, _) => Refresh();
+        // Run the startup script on a background thread so the window is
+        // visible immediately; populate the repo list once the script finishes.
+        Loaded += OnLoadedAsync;
+    }
+
+    private async void OnLoadedAsync(object sender, RoutedEventArgs e)
+    {
+        SetStatus("Running startup script…");
+        RefreshButton.IsEnabled = false;
+
+        string? scriptError = await Task.Run(() => _runner.RunKompanionScript());
+
+        RefreshButton.IsEnabled = true;
+
+        if (scriptError != null)
+            SetStatus(scriptError, isError: true);
+
+        Refresh();
     }
 
     // ------------------------------------------------------------------ //

@@ -29,3 +29,7 @@ Code.exe $path `
 - When pushing/pulling, the application will capture outputs to the log, so if anything goes wrong, there is direct access to the information.
 
 - Coding practices will include line lenghts limited to 100 characters, proper error handling, and comments explaining the code logic.
+
+- The package is to be built as a standalone application, so that it does not depend on .NET being installed. Use the single-file approach.
+
+- Add a README.md file explaining how you conceived the application (all commands to create a similar app, as a tutorial), how to build it, and how to use it.

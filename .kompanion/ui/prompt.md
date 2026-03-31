@@ -46,4 +46,4 @@ Code.exe $path `
 
 - Some repositories are used more often than others. Keep a file in `$env:KOMPANION_LOGS` that tracks the usage frequency of each repository. Sort the repositories in the UI based on their usage frequency, with the most frequently used repositories appearing at the top of the list. Update this file every time a repository is launched, pulled, or pushed. This way, users can quickly access their most commonly used repositories without having to scroll through the entire list. Keep Kompanion itself at the top of the list, regardless of its usage frequency, for easy access. Also make sure that VSCode is being launched in maximized mode for better user experience.
 
-- Move the logging to another tabs separate from settings, called "Logs". In this tab, display the logs in a user-friendly way, with timestamps and clear formatting.
+- Move the logging to another tabs separate from settings, called "Logs". In this tab, display the logs in a user-friendly way, with timestamps and clear formatting. Also a button to quit the application (as having to exit from the system tray can be a bit unintuitive for some users).

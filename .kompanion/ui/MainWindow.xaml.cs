@@ -1,6 +1,7 @@
 using System.ComponentModel;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Text.RegularExpressions;
 using DrawingIcon = System.Drawing.Icon;
 using FormsContextMenuStrip = System.Windows.Forms.ContextMenuStrip;
 using FormsNotifyIcon = System.Windows.Forms.NotifyIcon;
@@ -15,7 +16,9 @@ namespace KompanionUI;
 public partial class MainWindow : Window
 {
     private const string TrayTipText = "Kompanion is still running in the system tray.";
-    private const int MaxHistoryEntries = 150;
+    private const int MaxLogEntries = 300;
+    private static readonly Regex LogLinePattern =
+        new(@"^\[(?<ts>[^\]]+)\]\s*(?<msg>.*)$", RegexOptions.Compiled);
 
     private readonly Logger         _logger;
     private readonly ScriptRunner   _runner;
@@ -24,7 +27,7 @@ public partial class MainWindow : Window
     private readonly GitService     _git;
     private readonly UsageTracker   _usage;
     private readonly FormsNotifyIcon _trayIcon;
-    private readonly ObservableCollection<string> _statusHistory;
+    private readonly ObservableCollection<LogListItem> _logEntries;
 
     private bool _allowClose;
     private bool _trayTipShown;
@@ -41,10 +44,10 @@ public partial class MainWindow : Window
         _git     = new GitService(_logger);
         _usage   = new UsageTracker(_logger);
         _trayIcon = CreateTrayIcon();
-        _statusHistory = new ObservableCollection<string>();
+        _logEntries = new ObservableCollection<LogListItem>();
 
-        HistoryList.ItemsSource = _statusHistory;
-        LoadLogTailIntoHistory();
+        LogsList.ItemsSource = _logEntries;
+        ReloadLogs();
 
         // Run the startup script on a background thread so the window is
         // visible immediately; populate the repo list once the script finishes.
@@ -254,7 +257,7 @@ public partial class MainWindow : Window
             ? System.Windows.Media.Brushes.Firebrick
             : System.Windows.Media.Brushes.DarkSlateGray;
 
-        AddHistoryEntry(message);
+        ReloadLogs();
     }
 
     /// <summary>Shows a modal error dialog.</summary>
@@ -271,16 +274,75 @@ public partial class MainWindow : Window
         RepoList.IsEnabled = enabled;
     }
 
-    private void AddHistoryEntry(string message)
+    private void RefreshLogsButton_Click(object sender, RoutedEventArgs e)
     {
-        string stamped = $"[{DateTime.Now:HH:mm:ss}] {message}";
-        _statusHistory.Insert(0, stamped);
+        ReloadLogs();
+    }
 
-        if (_statusHistory.Count <= MaxHistoryEntries)
+    private void ExitMenuItem_Click(object sender, RoutedEventArgs e)
+    {
+        _allowClose = true;
+        _logger.Log("Kompanion exit requested from File > Exit menu.");
+        Close();
+    }
+
+    private void ReloadLogs()
+    {
+        _logEntries.Clear();
+
+        if (string.IsNullOrWhiteSpace(_logger.LogPath))
+        {
+            LogsHintText.Text = "Logging is disabled. Set KOMPANION_LOGS to enable log files.";
             return;
+        }
 
-        while (_statusHistory.Count > MaxHistoryEntries)
-            _statusHistory.RemoveAt(_statusHistory.Count - 1);
+        if (!File.Exists(_logger.LogPath))
+        {
+            LogsHintText.Text = "No log file found yet. Perform an action to create it.";
+            return;
+        }
+
+        try
+        {
+            string[] lines = File.ReadAllLines(_logger.LogPath);
+            IEnumerable<string> tail = lines
+                .Where(line => !string.IsNullOrWhiteSpace(line))
+                .TakeLast(MaxLogEntries)
+                .Reverse();
+
+            foreach (string line in tail)
+                _logEntries.Add(ParseLogLine(line));
+
+            string fileName = Path.GetFileName(_logger.LogPath);
+            LogsHintText.Text = $"Showing {_logEntries.Count} recent entries from {fileName}.";
+        }
+        catch (Exception ex)
+        {
+            _logger.Log($"Failed to load logs tab content: {ex.Message}");
+            LogsHintText.Text = "Could not load log file. Check file permissions and try again.";
+        }
+    }
+
+    private static LogListItem ParseLogLine(string line)
+    {
+        Match match = LogLinePattern.Match(line);
+        if (!match.Success)
+        {
+            return new LogListItem
+            {
+                Timestamp = "-",
+                Message = line.Trim()
+            };
+        }
+
+        string timestamp = match.Groups["ts"].Value.Trim();
+        string message = match.Groups["msg"].Value.Trim();
+
+        return new LogListItem
+        {
+            Timestamp = timestamp,
+            Message = string.IsNullOrWhiteSpace(message) ? "(empty)" : message
+        };
     }
 
     private void ResortCurrentRepos()
@@ -297,27 +359,8 @@ public partial class MainWindow : Window
 
     private void LoadLogTailIntoHistory()
     {
-        if (string.IsNullOrWhiteSpace(_logger.LogPath))
-            return;
-
-        try
-        {
-            if (!File.Exists(_logger.LogPath))
-                return;
-
-            string[] allLines = File.ReadAllLines(_logger.LogPath);
-            IEnumerable<string> tail = allLines
-                .Where(line => !string.IsNullOrWhiteSpace(line))
-                .TakeLast(20)
-                .Reverse();
-
-            foreach (string line in tail)
-                _statusHistory.Add(line);
-        }
-        catch (Exception ex)
-        {
-            _logger.Log($"Failed to load log tail for settings history: {ex.Message}");
-        }
+        // Kept for backwards compatibility with older call sites. Prefer ReloadLogs.
+        ReloadLogs();
     }
 
     private FormsNotifyIcon CreateTrayIcon()
@@ -388,5 +431,11 @@ public partial class MainWindow : Window
         }
 
         return System.Drawing.SystemIcons.Application;
+    }
+
+    private sealed class LogListItem
+    {
+        public string Timestamp { get; init; } = string.Empty;
+        public string Message { get; init; } = string.Empty;
     }
 }

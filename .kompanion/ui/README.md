@@ -24,7 +24,7 @@ A self-contained WPF application for Windows that bootstraps your development en
 | Question | Decision | Rationale |
 |---|---|---|
 | UI framework | WPF (.NET 9) | Richer styling and data-binding than WinForms; native Windows look |
-| Main layout | Two tabs: Repositories + Settings | Keeps repository actions focused; leaves a clean place for future settings |
+| Main layout | Three tabs: Repositories + Settings + Logs | Separates operational actions, future configuration, and observability |
 | Visual design | Teal brand theme (`#009688`) | Matches the app icon for a cohesive, recognizable look |
 | Architecture | Thin code-behind + service classes | Keeps UI logic separate; easy to test services in isolation |
 | Process execution | Shared `IProcessExecutor` abstraction | Enables deterministic unit tests and consistent timeout/cancel behavior |
@@ -32,7 +32,7 @@ A self-contained WPF application for Windows that bootstraps your development en
 | Git operations | Async UI handlers + background execution | Keeps the UI responsive and guarantees controls are re-enabled via `try/finally` |
 | Git cancellation | UI cancel button + cancellation token | Long pull/push operations can be stopped cleanly by the user |
 | Repository ordering | Usage-frequency file + pinned main repo | Most-used repositories stay near the top while Kompanion remains first |
-| Status history | Recent status + log tail in Settings | Users can inspect recent actions without opening the log file manually |
+| Log visibility | Dedicated Logs tab with timestamp + message columns | Provides readable, structured log output directly in the app |
 | VS Code launch | Detached shell launch + `--maximized` | VS Code opens in full view and outlives the launcher process |
 | Error handling | Validate input paths and exit codes | User gets immediate actionable feedback and logs include root-cause details |
 | Distribution | Single-file self-contained (`win-x64`) | No .NET runtime installation required on the target machine |
@@ -46,7 +46,7 @@ A self-contained WPF application for Windows that bootstraps your development en
 ui/
 ├── KompanionUI.csproj          # Project file (WPF, net9.0-windows, single-file)
 ├── App.xaml / App.xaml.cs      # Application entry point; runs KOMPANION_SOURCE
-├── MainWindow.xaml             # Two-tab UI: Repositories and placeholder Settings
+├── MainWindow.xaml             # Three-tab UI: Repositories, Settings, and Logs
 ├── MainWindow.xaml.cs          # UI handlers; tray behavior; async/cancellable git actions
 ├── KompanionUI.Tests/          # Unit tests for ScriptRunner and GitService
 │   ├── ScriptRunnerTests.cs
@@ -286,9 +286,10 @@ The output is a single `publish\KompanionUI.exe` (~128 MB, all dependencies bund
 3. The startup script is executed and its environment is imported. The repository list
     is populated automatically. If `KOMPANION_DIR` is set to a Git repository, it is shown
     first even when it is outside `KOMPANION_REPO`.
-4. The UI has two tabs:
+4. The UI has three tabs:
     - **Repositories**: list of detected repositories and action buttons.
-    - **Settings**: placeholder panel plus a **Recent Activity** history pane.
+    - **Settings**: placeholder panel for upcoming configuration.
+    - **Logs**: readable log viewer with separate timestamp and message columns.
 5. Use the buttons in each repository row:
     - **Launch** — opens VS Code at the repository root (detached, maximized, stays open if you close
      the app).
@@ -300,7 +301,8 @@ The output is a single `publish\KompanionUI.exe` (~128 MB, all dependencies bund
     `%KOMPANION_LOGS%\repo-usage.json`, repositories are sorted by descending usage,
     and `KOMPANION_DIR` stays pinned at the top.
 9. Clicking the window close button sends Kompanion to the system tray instead of
-    exiting. Use the tray icon to restore the window or choose **Exit** to stop the app.
+    exiting. Use the tray icon to restore the window, choose **Exit** from the tray menu,
+    or use **File > Exit** in the app window to stop the app.
 
 ---
 

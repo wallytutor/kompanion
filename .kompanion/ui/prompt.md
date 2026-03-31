@@ -37,3 +37,5 @@ Code.exe $path `
 - An edge case: add the repository located at `$env:KOMPANION_DIR` to the top of the list. This is the main project repository and it is not found in the aforementioned path, but it should be easily accessible.
 
 - Instead of exiting when the user clicks the close button, the application will minimize to the system tray. The tray icon will have a context menu with options to restore the window or exit the application.
+
+- Split the UI into two tabs: "Repositories" and "Settings". The "Repositories" tab will contain the list of repositories and their corresponding buttons (exactly the same existing UI), while the "Settings" is for now just a placeholder for future settings, but it will have a label that says "Settings coming soon!" to indicate that it's not yet implemented.

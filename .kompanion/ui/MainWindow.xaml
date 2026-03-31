@@ -26,98 +26,113 @@
         </Style>
     </Window.Resources>
 
-    <DockPanel>
+    <TabControl>
+        <TabItem Header="Repositories">
+            <DockPanel>
 
-        <!-- Toolbar: Refresh + status label -->
-        <ToolBar DockPanel.Dock="Top" Padding="4">
-            <Button x:Name="RefreshButton"
-                    Click="RefreshButton_Click"
-                    Width="80"
-                    Padding="6 3"
-                    ToolTip="Re-scan $env:KOMPANION_REPO">
-                Refresh
-            </Button>
-            <Separator/>
-            <TextBlock x:Name="StatusText"
-                       VerticalAlignment="Center"
-                       Margin="6 0"
-                       Foreground="DarkSlateGray"
-                       TextWrapping="NoWrap"/>
-        </ToolBar>
+                <!-- Toolbar: Refresh + status label -->
+                <ToolBar DockPanel.Dock="Top" Padding="4">
+                    <Button x:Name="RefreshButton"
+                            Click="RefreshButton_Click"
+                            Width="80"
+                            Padding="6 3"
+                            ToolTip="Re-scan $env:KOMPANION_REPO">
+                        Refresh
+                    </Button>
+                    <Separator/>
+                    <TextBlock x:Name="StatusText"
+                               VerticalAlignment="Center"
+                               Margin="6 0"
+                               Foreground="DarkSlateGray"
+                               TextWrapping="NoWrap"/>
+                </ToolBar>
 
-        <!-- Column headers -->
-        <Grid DockPanel.Dock="Top">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="80"/>
-                <ColumnDefinition Width="80"/>
-                <ColumnDefinition Width="80"/>
-            </Grid.ColumnDefinitions>
-            <Border Background="#EBEBEB" Grid.ColumnSpan="4" BorderBrush="#CCCCCC"
-                    BorderThickness="0 0 0 1"/>
-            <TextBlock Grid.Column="0" Text="Repository"  Style="{StaticResource HeaderStyle}"/>
-            <TextBlock Grid.Column="1" Text="Launch"      Style="{StaticResource HeaderStyle}"
-                       HorizontalAlignment="Center"/>
-            <TextBlock Grid.Column="2" Text="Pull"        Style="{StaticResource HeaderStyle}"
-                       HorizontalAlignment="Center"/>
-            <TextBlock Grid.Column="3" Text="Push"        Style="{StaticResource HeaderStyle}"
-                       HorizontalAlignment="Center"/>
-        </Grid>
+                <!-- Column headers -->
+                <Grid DockPanel.Dock="Top">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="80"/>
+                        <ColumnDefinition Width="80"/>
+                        <ColumnDefinition Width="80"/>
+                    </Grid.ColumnDefinitions>
+                    <Border Background="#EBEBEB" Grid.ColumnSpan="4" BorderBrush="#CCCCCC"
+                            BorderThickness="0 0 0 1"/>
+                    <TextBlock Grid.Column="0" Text="Repository" Style="{StaticResource HeaderStyle}"/>
+                    <TextBlock Grid.Column="1" Text="Launch" Style="{StaticResource HeaderStyle}"
+                               HorizontalAlignment="Center"/>
+                    <TextBlock Grid.Column="2" Text="Pull" Style="{StaticResource HeaderStyle}"
+                               HorizontalAlignment="Center"/>
+                    <TextBlock Grid.Column="3" Text="Push" Style="{StaticResource HeaderStyle}"
+                               HorizontalAlignment="Center"/>
+                </Grid>
 
-        <!-- Repository list -->
-        <ScrollViewer VerticalScrollBarVisibility="Auto">
-            <ItemsControl x:Name="RepoList">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="80"/>
-                                <ColumnDefinition Width="80"/>
-                                <ColumnDefinition Width="80"/>
-                            </Grid.ColumnDefinitions>
+                <!-- Repository list -->
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <ItemsControl x:Name="RepoList">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="80"/>
+                                        <ColumnDefinition Width="80"/>
+                                        <ColumnDefinition Width="80"/>
+                                    </Grid.ColumnDefinitions>
 
-                            <!-- Alternating row background via trigger on index is complex in WPF;
-                                 we use a simple subtle border instead. -->
-                            <Border Grid.ColumnSpan="4"
-                                    BorderBrush="#E0E0E0"
-                                    BorderThickness="0 0 0 1"/>
+                                    <!-- Alternating row background via trigger on index is complex in WPF;
+                                         we use a simple subtle border instead. -->
+                                    <Border Grid.ColumnSpan="4"
+                                            BorderBrush="#E0E0E0"
+                                            BorderThickness="0 0 0 1"/>
 
-                            <TextBlock Grid.Column="0"
-                                       Text="{Binding Name}"
-                                       VerticalAlignment="Center"
-                                       Margin="8 4"
-                                       ToolTip="{Binding FullPath}"
-                                       TextTrimming="CharacterEllipsis"/>
+                                    <TextBlock Grid.Column="0"
+                                               Text="{Binding Name}"
+                                               VerticalAlignment="Center"
+                                               Margin="8 4"
+                                               ToolTip="{Binding FullPath}"
+                                               TextTrimming="CharacterEllipsis"/>
 
-                            <Button Grid.Column="1"
-                                    Style="{StaticResource ActionButton}"
-                                    Tag="{Binding FullPath}"
-                                    Click="LaunchButton_Click"
-                                    ToolTip="{Binding FullPath}">
-                                Launch
-                            </Button>
+                                    <Button Grid.Column="1"
+                                            Style="{StaticResource ActionButton}"
+                                            Tag="{Binding FullPath}"
+                                            Click="LaunchButton_Click"
+                                            ToolTip="{Binding FullPath}">
+                                        Launch
+                                    </Button>
 
-                            <Button Grid.Column="2"
-                                    Style="{StaticResource ActionButton}"
-                                    Tag="{Binding FullPath}"
-                                    Click="PullButton_Click"
-                                    ToolTip="git pull">
-                                Pull
-                            </Button>
+                                    <Button Grid.Column="2"
+                                            Style="{StaticResource ActionButton}"
+                                            Tag="{Binding FullPath}"
+                                            Click="PullButton_Click"
+                                            ToolTip="git pull">
+                                        Pull
+                                    </Button>
 
-                            <Button Grid.Column="3"
-                                    Style="{StaticResource ActionButton}"
-                                    Tag="{Binding FullPath}"
-                                    Click="PushButton_Click"
-                                    ToolTip="git push">
-                                Push
-                            </Button>
-                        </Grid>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
-        </ScrollViewer>
+                                    <Button Grid.Column="3"
+                                            Style="{StaticResource ActionButton}"
+                                            Tag="{Binding FullPath}"
+                                            Click="PushButton_Click"
+                                            ToolTip="git push">
+                                        Push
+                                    </Button>
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
 
-    </DockPanel>
+            </DockPanel>
+        </TabItem>
+
+        <TabItem Header="Settings">
+            <Grid>
+                <TextBlock Text="Settings coming soon!"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           FontSize="18"
+                           FontWeight="SemiBold"
+                           Foreground="DarkSlateGray"/>
+            </Grid>
+        </TabItem>
+    </TabControl>
 </Window>

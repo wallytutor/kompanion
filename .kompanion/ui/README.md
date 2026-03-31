@@ -227,10 +227,10 @@ Task.Run(() => _git.Run(GitOperation.Pull, path))
 
 ```powershell
 # Debug build (requires .NET 9 runtime on the machine)
-dotnet build ui\KompanionUI.csproj
+dotnet build KompanionUI.csproj
 ```
 
-The output goes to `ui\bin\Debug\net9.0-windows\KompanionUI.exe`.
+The output goes to `bin\Debug\net9.0-windows\KompanionUI.exe`.
 
 ---
 
@@ -238,11 +238,10 @@ The output goes to `ui\bin\Debug\net9.0-windows\KompanionUI.exe`.
 
 ```powershell
 # Self-contained single .exe – no .NET runtime needed on the target machine
-dotnet publish ui\KompanionUI.csproj -c Release -o ui\publish
+dotnet publish KompanionUI.csproj -c Release -o publish
 ```
 
-The output is a single `ui\publish\KompanionUI.exe` (~128 MB, all dependencies bundled).
-Copy just that file to pin it to the taskbar or add it to `PATH`.
+The output is a single `publish\KompanionUI.exe` (~128 MB, all dependencies bundled). Copy just that file to pin it to the taskbar or add it to `PATH`.
 
 ---
 

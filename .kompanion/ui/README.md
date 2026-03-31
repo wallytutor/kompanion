@@ -217,6 +217,7 @@ Task.Run(() => _git.Run(GitOperation.Pull, path))
 |---|---|---|
 | `KOMPANION_SOURCE` | Yes | Path to a PowerShell `.ps1` script run at startup |
 | `KOMPANION_REPO` | Yes | Directory scanned for Git repositories |
+| `KOMPANION_DIR` | No | Main repository pinned to the top of the list when it is a Git repository |
 | `KOMPANION_LOGS` | No | Directory where `kompanion-ui.log` is written |
 | `VSCODE_EXTENSIONS` | No | Passed to `code.exe --extensions-dir` |
 | `VSCODE_SETTINGS` | No | Passed to `code.exe --user-data-dir` |
@@ -251,13 +252,16 @@ The output is a single `publish\KompanionUI.exe` (~128 MB, all dependencies bund
    your shell profile).
 2. Run `KompanionUI.exe`.
 3. The startup script is executed and its environment is imported. The repository list
-   is populated automatically.
+    is populated automatically. If `KOMPANION_DIR` is set to a Git repository, it is shown
+    first even when it is outside `KOMPANION_REPO`.
 4. Use the buttons in each row:
    - **Launch** — opens VS Code at the repository root (detached, stays open if you close
      the app).
    - **Pull** — runs `git pull`; result is shown in the status bar and logged.
    - **Push** — runs `git push`; result is shown in the status bar and logged.
 5. Click **Refresh** at any time to re-scan `KOMPANION_REPO`.
+6. Clicking the window close button sends Kompanion to the system tray instead of
+    exiting. Use the tray icon to restore the window or choose **Exit** to stop the app.
 
 ---
 

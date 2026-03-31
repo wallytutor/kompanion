@@ -33,3 +33,7 @@ Code.exe $path `
 - The package is to be built as a standalone application, so that it does not depend on .NET being installed. Use the single-file approach.
 
 - Add a README.md file explaining how you conceived the application (all commands to create a similar app, as a tutorial), how to build it, and how to use it.
+
+- An edge case: add the repository located at `$env:KOMPANION_DIR` to the top of the list. This is the main project repository and it is not found in the aforementioned path, but it should be easily accessible.
+
+- Instead of exiting when the user clicks the close button, the application will minimize to the system tray. The tray icon will have a context menu with options to restore the window or exit the application.

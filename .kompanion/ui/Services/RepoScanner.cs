@@ -13,28 +13,49 @@ public class RepoScanner
 
     public RepoScanner(Logger logger) => _logger = logger;
 
+    private const string MainRepoEnvVar = "KOMPANION_DIR";
+    private const string RepoRootEnvVar = "KOMPANION_REPO";
+
     /// <summary>
     /// Returns a (possibly empty) list of repositories, and an optional
     /// error string when $env:KOMPANION_REPO is missing or invalid.
     /// </summary>
     public (List<RepoEntry> Repos, string? Error) Scan()
     {
-        string? repoRoot = Environment.GetEnvironmentVariable("KOMPANION_REPO");
+        var repos = new List<RepoEntry>();
+        string? repoRoot = Environment.GetEnvironmentVariable(RepoRootEnvVar);
+        RepoEntry? mainRepo = GetMainRepoEntry();
+
+        if (mainRepo != null)
+            repos.Add(mainRepo);
 
         if (string.IsNullOrWhiteSpace(repoRoot))
-            return ([], "$env:KOMPANION_REPO is not set. No repositories to display.");
+        {
+            string error = "$env:KOMPANION_REPO is not set. No repositories to display.";
+            _logger.Log(error);
+            return (repos, error);
+        }
 
         if (!Directory.Exists(repoRoot))
-            return ([], $"$env:KOMPANION_REPO points to a path that does not exist:\n{repoRoot}");
+        {
+            string error =
+                $"$env:{RepoRootEnvVar} points to a path that does not exist:\n{repoRoot}";
+            _logger.Log(error);
+            return (repos, error);
+        }
 
         try
         {
-            var repos = Directory
+            var discoveredRepos = Directory
                 .EnumerateDirectories(repoRoot)
                 .Where(d => Directory.Exists(Path.Combine(d, ".git")))
+                .Where(d => mainRepo == null ||
+                    !string.Equals(d, mainRepo.FullPath, StringComparison.OrdinalIgnoreCase))
                 .OrderBy(d => d, StringComparer.OrdinalIgnoreCase)
                 .Select(d => new RepoEntry(Path.GetFileName(d), d))
                 .ToList();
+
+            repos.AddRange(discoveredRepos);
 
             _logger.Log($"Scanned '{repoRoot}': found {repos.Count} Git repositories.");
             return (repos, null);
@@ -43,7 +64,31 @@ public class RepoScanner
         {
             string msg = $"Error scanning '{repoRoot}': {ex.Message}";
             _logger.Log(msg);
-            return ([], msg);
+            return (repos, msg);
         }
+    }
+
+    private RepoEntry? GetMainRepoEntry()
+    {
+        string? mainRepoPath = Environment.GetEnvironmentVariable(MainRepoEnvVar);
+
+        if (string.IsNullOrWhiteSpace(mainRepoPath))
+            return null;
+
+        if (!Directory.Exists(mainRepoPath))
+        {
+            _logger.Log(
+                $"$env:{MainRepoEnvVar} points to a path that does not exist: {mainRepoPath}");
+            return null;
+        }
+
+        if (!Directory.Exists(Path.Combine(mainRepoPath, ".git")))
+        {
+            _logger.Log(
+                $"$env:{MainRepoEnvVar} was ignored because '.git' was not found: {mainRepoPath}");
+            return null;
+        }
+
+        return new RepoEntry(Path.GetFileName(mainRepoPath), mainRepoPath);
     }
 }

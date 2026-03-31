@@ -11,43 +11,103 @@
     WindowStartupLocation="CenterScreen">
 
     <Window.Resources>
-        <!-- Re-usable column-header style -->
-        <Style x:Key="HeaderStyle" TargetType="TextBlock">
-            <Setter Property="FontWeight" Value="SemiBold"/>
-            <Setter Property="Margin"     Value="6 4"/>
+        <SolidColorBrush x:Key="BrandBrush" Color="#FF009688"/>
+        <SolidColorBrush x:Key="BrandDarkBrush" Color="#FF00695C"/>
+        <SolidColorBrush x:Key="SurfaceBrush" Color="#FFF2FAF8"/>
+        <SolidColorBrush x:Key="CardBrush" Color="#FFFFFFFF"/>
+        <SolidColorBrush x:Key="HeaderBgBrush" Color="#FFDDF3EE"/>
+        <SolidColorBrush x:Key="BodyTextBrush" Color="#FF153532"/>
+
+        <LinearGradientBrush x:Key="WindowBackground" StartPoint="0,0" EndPoint="1,1">
+            <GradientStop Color="#FFF6FFFD" Offset="0"/>
+            <GradientStop Color="#FFEAF7F3" Offset="0.58"/>
+            <GradientStop Color="#FFDDF3EE" Offset="1"/>
+        </LinearGradientBrush>
+
+        <Style TargetType="TabControl">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Padding" Value="10"/>
         </Style>
 
-        <!-- Action button style -->
+        <Style TargetType="TabItem">
+            <Setter Property="Padding" Value="14 6"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Foreground" Value="{StaticResource BodyTextBrush}"/>
+        </Style>
+
+        <Style x:Key="HeaderStyle" TargetType="TextBlock">
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Margin" Value="6 5"/>
+            <Setter Property="Foreground" Value="{StaticResource BodyTextBrush}"/>
+        </Style>
+
         <Style x:Key="ActionButton" TargetType="Button">
-            <Setter Property="Width"   Value="70"/>
-            <Setter Property="Height"  Value="26"/>
-            <Setter Property="Margin"  Value="3 2"/>
+            <Setter Property="Width" Value="70"/>
+            <Setter Property="Height" Value="26"/>
+            <Setter Property="Margin" Value="3 2"/>
             <Setter Property="Padding" Value="4 2"/>
+            <Setter Property="Background" Value="{StaticResource BrandBrush}"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderBrush" Value="{StaticResource BrandDarkBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="{StaticResource BrandDarkBrush}"/>
+                </Trigger>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Opacity" Value="0.55"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="PanelCard" TargetType="Border">
+            <Setter Property="Background" Value="{StaticResource CardBrush}"/>
+            <Setter Property="BorderBrush" Value="#FFC4E3DC"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="10"/>
+            <Setter Property="Padding" Value="8"/>
         </Style>
     </Window.Resources>
 
-    <TabControl>
+    <Grid Background="{StaticResource WindowBackground}">
+        <TabControl>
         <TabItem Header="Repositories">
-            <DockPanel>
+            <Border Style="{StaticResource PanelCard}" Margin="2 0 2 2">
+                <DockPanel>
 
-                <!-- Toolbar: Refresh + status label -->
                 <ToolBar DockPanel.Dock="Top" Padding="4">
                     <Button x:Name="RefreshButton"
                             Click="RefreshButton_Click"
                             Width="80"
                             Padding="6 3"
+                            Margin="0 0 6 0"
+                            Background="{StaticResource BrandBrush}"
+                            Foreground="White"
+                            BorderBrush="{StaticResource BrandDarkBrush}"
                             ToolTip="Re-scan $env:KOMPANION_REPO">
                         Refresh
+                    </Button>
+                    <Button x:Name="CancelGitButton"
+                            Click="CancelGitButton_Click"
+                            Width="90"
+                            Padding="6 3"
+                            Margin="0 0 6 0"
+                            Background="#FFB7472A"
+                            Foreground="White"
+                            BorderBrush="#FF8D3821"
+                            ToolTip="Cancel current Git operation"
+                            IsEnabled="False">
+                        Cancel Git
                     </Button>
                     <Separator/>
                     <TextBlock x:Name="StatusText"
                                VerticalAlignment="Center"
                                Margin="6 0"
-                               Foreground="DarkSlateGray"
+                               Foreground="{StaticResource BodyTextBrush}"
                                TextWrapping="NoWrap"/>
                 </ToolBar>
 
-                <!-- Column headers -->
                 <Grid DockPanel.Dock="Top">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
@@ -55,7 +115,9 @@
                         <ColumnDefinition Width="80"/>
                         <ColumnDefinition Width="80"/>
                     </Grid.ColumnDefinitions>
-                    <Border Background="#EBEBEB" Grid.ColumnSpan="4" BorderBrush="#CCCCCC"
+                        <Border Background="{StaticResource HeaderBgBrush}"
+                            Grid.ColumnSpan="4"
+                            BorderBrush="#FFC4E3DC"
                             BorderThickness="0 0 0 1"/>
                     <TextBlock Grid.Column="0" Text="Repository" Style="{StaticResource HeaderStyle}"/>
                     <TextBlock Grid.Column="1" Text="Launch" Style="{StaticResource HeaderStyle}"
@@ -66,7 +128,6 @@
                                HorizontalAlignment="Center"/>
                 </Grid>
 
-                <!-- Repository list -->
                 <ScrollViewer VerticalScrollBarVisibility="Auto">
                     <ItemsControl x:Name="RepoList">
                         <ItemsControl.ItemTemplate>
@@ -79,16 +140,15 @@
                                         <ColumnDefinition Width="80"/>
                                     </Grid.ColumnDefinitions>
 
-                                    <!-- Alternating row background via trigger on index is complex in WPF;
-                                         we use a simple subtle border instead. -->
                                     <Border Grid.ColumnSpan="4"
-                                            BorderBrush="#E0E0E0"
+                                            BorderBrush="#FFE3F1ED"
                                             BorderThickness="0 0 0 1"/>
 
                                     <TextBlock Grid.Column="0"
                                                Text="{Binding Name}"
                                                VerticalAlignment="Center"
                                                Margin="8 4"
+                                               Foreground="{StaticResource BodyTextBrush}"
                                                ToolTip="{Binding FullPath}"
                                                TextTrimming="CharacterEllipsis"/>
 
@@ -121,18 +181,49 @@
                     </ItemsControl>
                 </ScrollViewer>
 
-            </DockPanel>
+                </DockPanel>
+            </Border>
         </TabItem>
 
         <TabItem Header="Settings">
-            <Grid>
-                <TextBlock Text="Settings coming soon!"
-                           HorizontalAlignment="Center"
-                           VerticalAlignment="Center"
-                           FontSize="18"
-                           FontWeight="SemiBold"
-                           Foreground="DarkSlateGray"/>
-            </Grid>
+            <Border Style="{StaticResource PanelCard}" Margin="2 0 2 2">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Grid.Row="0"
+                               Margin="6"
+                               FontSize="20"
+                               FontWeight="Bold"
+                               Foreground="{StaticResource BrandDarkBrush}"
+                               Text="Settings coming soon!"/>
+
+                    <TextBlock Grid.Row="1"
+                               Margin="6 0 6 10"
+                               Foreground="{StaticResource BodyTextBrush}"
+                               Text="Recent status and log-tail entries are shown below."/>
+
+                    <TextBlock Grid.Row="2"
+                               Margin="6 0 6 4"
+                               FontWeight="SemiBold"
+                               Foreground="{StaticResource BodyTextBrush}"
+                               Text="Recent Activity"/>
+
+                    <ListBox Grid.Row="3"
+                             x:Name="HistoryList"
+                             Margin="6"
+                             BorderBrush="#FFC4E3DC"
+                             Background="{StaticResource SurfaceBrush}"
+                             Foreground="{StaticResource BodyTextBrush}"
+                             FontFamily="Consolas"
+                             FontSize="12"/>
+                </Grid>
+            </Border>
         </TabItem>
-    </TabControl>
+        </TabControl>
+    </Grid>
 </Window>

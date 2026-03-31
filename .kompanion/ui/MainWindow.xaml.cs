@@ -1,4 +1,6 @@
 using System.ComponentModel;
+using System.Collections.ObjectModel;
+using System.IO;
 using DrawingIcon = System.Drawing.Icon;
 using FormsContextMenuStrip = System.Windows.Forms.ContextMenuStrip;
 using FormsNotifyIcon = System.Windows.Forms.NotifyIcon;
@@ -13,6 +15,7 @@ namespace KompanionUI;
 public partial class MainWindow : Window
 {
     private const string TrayTipText = "Kompanion is still running in the system tray.";
+    private const int MaxHistoryEntries = 150;
 
     private readonly Logger         _logger;
     private readonly ScriptRunner   _runner;
@@ -20,9 +23,11 @@ public partial class MainWindow : Window
     private readonly VsCodeLauncher _vscode;
     private readonly GitService     _git;
     private readonly FormsNotifyIcon _trayIcon;
+    private readonly ObservableCollection<string> _statusHistory;
 
     private bool _allowClose;
     private bool _trayTipShown;
+    private CancellationTokenSource? _gitOperationCts;
 
     public MainWindow()
     {
@@ -34,6 +39,10 @@ public partial class MainWindow : Window
         _vscode  = new VsCodeLauncher(_logger);
         _git     = new GitService(_logger);
         _trayIcon = CreateTrayIcon();
+        _statusHistory = new ObservableCollection<string>();
+
+        HistoryList.ItemsSource = _statusHistory;
+        LoadLogTailIntoHistory();
 
         // Run the startup script on a background thread so the window is
         // visible immediately; populate the repo list once the script finishes.
@@ -140,18 +149,36 @@ public partial class MainWindow : Window
     }
     private async Task ExecuteGitOperationAsync(GitOperation operation, string path)
     {
+        if (_gitOperationCts != null)
+        {
+            SetStatus("Another Git operation is already running.", isError: true);
+            return;
+        }
+
         string verb = operation == GitOperation.Pull ? "pull" : "push";
 
         SetStatus($"Running git {verb} in: {path}");
         SetAllEnabled(false);
+        CancelGitButton.IsEnabled = true;
+        _gitOperationCts = new CancellationTokenSource();
 
         try
         {
             // Keep git execution off the UI thread, then marshal results back via await.
-            var (success, output) = await Task.Run(() => _git.Run(operation, path));
+            var (success, output) = await Task.Run(
+                () => _git.Run(operation, path, _gitOperationCts.Token));
 
             if (!success)
             {
+                bool cancelled = output.Contains(
+                    "cancelled by user", StringComparison.OrdinalIgnoreCase);
+
+                if (cancelled)
+                {
+                    SetStatus($"git {verb} cancelled in: {path}");
+                    return;
+                }
+
                 SetStatus($"git {verb} failed in: {path}", isError: true);
 
                 string details = string.IsNullOrWhiteSpace(output)
@@ -172,8 +199,20 @@ public partial class MainWindow : Window
         }
         finally
         {
+            _gitOperationCts.Dispose();
+            _gitOperationCts = null;
+            CancelGitButton.IsEnabled = false;
             SetAllEnabled(true);
         }
+    }
+
+    private void CancelGitButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (_gitOperationCts == null)
+            return;
+
+        _gitOperationCts.Cancel();
+        SetStatus("Cancellation requested. Waiting for Git to stop...");
     }
 
 
@@ -203,6 +242,8 @@ public partial class MainWindow : Window
         StatusText.Foreground = isError
             ? System.Windows.Media.Brushes.Firebrick
             : System.Windows.Media.Brushes.DarkSlateGray;
+
+        AddHistoryEntry(message);
     }
 
     /// <summary>Shows a modal error dialog.</summary>
@@ -217,6 +258,43 @@ public partial class MainWindow : Window
         // ItemsControl items are UIElements; walk the visual tree is not trivial,
         // so we disable the overlay instead by setting opacity and hit-test visibility.
         RepoList.IsEnabled = enabled;
+    }
+
+    private void AddHistoryEntry(string message)
+    {
+        string stamped = $"[{DateTime.Now:HH:mm:ss}] {message}";
+        _statusHistory.Insert(0, stamped);
+
+        if (_statusHistory.Count <= MaxHistoryEntries)
+            return;
+
+        while (_statusHistory.Count > MaxHistoryEntries)
+            _statusHistory.RemoveAt(_statusHistory.Count - 1);
+    }
+
+    private void LoadLogTailIntoHistory()
+    {
+        if (string.IsNullOrWhiteSpace(_logger.LogPath))
+            return;
+
+        try
+        {
+            if (!File.Exists(_logger.LogPath))
+                return;
+
+            string[] allLines = File.ReadAllLines(_logger.LogPath);
+            IEnumerable<string> tail = allLines
+                .Where(line => !string.IsNullOrWhiteSpace(line))
+                .TakeLast(20)
+                .Reverse();
+
+            foreach (string line in tail)
+                _statusHistory.Add(line);
+        }
+        catch (Exception ex)
+        {
+            _logger.Log($"Failed to load log tail for settings history: {ex.Message}");
+        }
     }
 
     private FormsNotifyIcon CreateTrayIcon()

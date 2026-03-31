@@ -22,6 +22,8 @@
   <ItemGroup>
     <!-- Embed the icon so WPF can reference it as a pack URI at runtime -->
     <Resource Include="Assets\icon.ico" />
+    <!-- Keep nested test project sources out of the app assembly -->
+    <Compile Remove="KompanionUI.Tests\**\*.cs" />
   </ItemGroup>
 
 </Project>

@@ -11,10 +11,11 @@ A self-contained WPF application for Windows that bootstraps your development en
 3. [Tutorial – creating a similar app from scratch](#tutorial--creating-a-similar-app-from-scratch)
 4. [Environment variables](#environment-variables)
 5. [Building](#building)
-6. [Publishing a standalone executable](#publishing-a-standalone-executable)
-7. [Generating the icon](#generating-the-icon)
-8. [Using the application](#using-the-application)
-9. [Log file](#log-file)
+6. [Testing](#testing)
+7. [Publishing a standalone executable](#publishing-a-standalone-executable)
+8. [Generating the icon](#generating-the-icon)
+9. [Using the application](#using-the-application)
+10. [Log file](#log-file)
 
 ---
 
@@ -24,9 +25,13 @@ A self-contained WPF application for Windows that bootstraps your development en
 |---|---|---|
 | UI framework | WPF (.NET 9) | Richer styling and data-binding than WinForms; native Windows look |
 | Main layout | Two tabs: Repositories + Settings | Keeps repository actions focused; leaves a clean place for future settings |
+| Visual design | Teal brand theme (`#009688`) | Matches the app icon for a cohesive, recognizable look |
 | Architecture | Thin code-behind + service classes | Keeps UI logic separate; easy to test services in isolation |
+| Process execution | Shared `IProcessExecutor` abstraction | Enables deterministic unit tests and consistent timeout/cancel behavior |
 | Startup script | Run synchronously, then import env vars | A child process cannot push env vars back to the parent; we dump `Get-ChildItem Env:` after the script and call `Environment.SetEnvironmentVariable` for each entry |
 | Git operations | Async UI handlers + background execution | Keeps the UI responsive and guarantees controls are re-enabled via `try/finally` |
+| Git cancellation | UI cancel button + cancellation token | Long pull/push operations can be stopped cleanly by the user |
+| Status history | Recent status + log tail in Settings | Users can inspect recent actions without opening the log file manually |
 | VS Code launch | `UseShellExecute = true` | The child process is fully detached and outlives the launcher |
 | Error handling | Validate input paths and exit codes | User gets immediate actionable feedback and logs include root-cause details |
 | Distribution | Single-file self-contained (`win-x64`) | No .NET runtime installation required on the target machine |
@@ -41,7 +46,11 @@ ui/
 ├── KompanionUI.csproj          # Project file (WPF, net9.0-windows, single-file)
 ├── App.xaml / App.xaml.cs      # Application entry point; runs KOMPANION_SOURCE
 ├── MainWindow.xaml             # Two-tab UI: Repositories and placeholder Settings
-├── MainWindow.xaml.cs          # UI handlers; tray behavior; async git actions
+├── MainWindow.xaml.cs          # UI handlers; tray behavior; async/cancellable git actions
+├── KompanionUI.Tests/          # Unit tests for ScriptRunner and GitService
+│   ├── ScriptRunnerTests.cs
+│   ├── GitServiceTests.cs
+│   └── FakeProcessExecutor.cs
 ├── Assets/
 │   └── icon.ico                # App icon (teal circle + white "K", 48/32/16 px)
 ├── Models/
@@ -51,7 +60,8 @@ ui/
     ├── ScriptRunner.cs         # Runs KOMPANION_SOURCE, enforces timeout, imports env vars
     ├── RepoScanner.cs          # Scans KOMPANION_REPO for .git directories
     ├── VsCodeLauncher.cs       # Launches code.exe with --extensions-dir / --user-data-dir
-    └── GitService.cs           # Executes git pull / git push; validates repo; captures output
+    ├── GitService.cs           # Executes git pull / git push; validates repo; captures output
+    └── ProcessExecution.cs     # IProcessExecutor + default system implementation
 ```
 
 ---
@@ -202,7 +212,8 @@ background thread and always restore UI state in `finally`:
 SetAllEnabled(false);
 try
 {
-    var (success, output) = await Task.Run(() => _git.Run(GitOperation.Pull, path));
+    using var cts = new CancellationTokenSource();
+    var (success, output) = await Task.Run(() => _git.Run(GitOperation.Pull, path, cts.Token));
     if (!success) ShowError($"git pull failed:\n\n{output}");
 }
 finally
@@ -210,6 +221,9 @@ finally
     SetAllEnabled(true);
 }
 ```
+
+When a Git action is running, the UI exposes a **Cancel Git** button that calls
+`CancellationTokenSource.Cancel()` and updates the status/history panel.
 
 ---
 
@@ -237,6 +251,20 @@ The output goes to `bin\Debug\net9.0-windows\KompanionUI.exe`.
 
 ---
 
+## Testing
+
+```powershell
+# Run service unit tests
+dotnet test KompanionUI.Tests\KompanionUI.Tests.csproj
+```
+
+The current test coverage verifies:
+
+- `ScriptRunner` startup success env import and non-zero exit-code handling.
+- `GitService` repository validation, successful execution, and cancellation behavior.
+
+---
+
 ## Publishing a standalone executable
 
 ```powershell
@@ -258,14 +286,15 @@ The output is a single `publish\KompanionUI.exe` (~128 MB, all dependencies bund
     first even when it is outside `KOMPANION_REPO`.
 4. The UI has two tabs:
     - **Repositories**: list of detected repositories and action buttons.
-    - **Settings**: placeholder panel with "Settings coming soon!".
+    - **Settings**: placeholder panel plus a **Recent Activity** history pane.
 5. Use the buttons in each repository row:
    - **Launch** — opens VS Code at the repository root (detached, stays open if you close
      the app).
    - **Pull** — runs `git pull`; result is shown in the status bar and logged.
    - **Push** — runs `git push`; result is shown in the status bar and logged.
-6. Click **Refresh** at any time to re-scan `KOMPANION_REPO`.
-7. Clicking the window close button sends Kompanion to the system tray instead of
+6. While pull/push is running, use **Cancel Git** to request cancellation.
+7. Click **Refresh** at any time to re-scan `KOMPANION_REPO`.
+8. Clicking the window close button sends Kompanion to the system tray instead of
     exiting. Use the tray icon to restore the window or choose **Exit** to stop the app.
 
 ---

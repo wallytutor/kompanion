@@ -1,6 +1,4 @@
-using System.Diagnostics;
 using System.IO;
-using System.Text;
 
 namespace KompanionUI.Services;
 
@@ -14,19 +12,25 @@ public class GitService
     private const int GitTimeoutMs = 60_000;
 
     private readonly Logger _logger;
+    private readonly IProcessExecutor _processExecutor;
 
-    public GitService(Logger logger) => _logger = logger;
+    public GitService(Logger logger, IProcessExecutor? processExecutor = null)
+    {
+        _logger = logger;
+        _processExecutor = processExecutor ?? new SystemProcessExecutor();
+    }
 
     /// <summary>
     /// Executes the specified Git operation synchronously.
     /// Returns (success, output) where output contains stdout + stderr.
     /// </summary>
-    public (bool Success, string Output) Run(GitOperation op, string repoPath)
+    public (bool Success, string Output) Run(
+        GitOperation op,
+        string repoPath,
+        CancellationToken cancellationToken = default)
     {
         string verb = op == GitOperation.Pull ? "pull" : "push";
         _logger.Log($"git {verb}: {repoPath}");
-
-        var sb = new StringBuilder();
 
         if (!Directory.Exists(repoPath))
         {
@@ -47,51 +51,50 @@ public class GitService
 
         try
         {
-            var psi = new ProcessStartInfo
+            ProcessExecutionResult result = _processExecutor.Execute(
+                new ProcessExecutionRequest
+                {
+                    FileName = "git",
+                    Arguments = verb,
+                    WorkingDirectory = repoPath,
+                    TimeoutMs = GitTimeoutMs,
+                    CreateNoWindow = true,
+                    UseShellExecute = false,
+                    RedirectOutput = true,
+                },
+                cancellationToken);
+
+            if (!result.Started)
             {
-                FileName               = "git",
-                Arguments              = verb,
-                WorkingDirectory       = repoPath,
-                UseShellExecute        = false,
-                CreateNoWindow         = true,
-                RedirectStandardOutput = true,
-                RedirectStandardError  = true,
-            };
+                string startFailed = $"git {verb} failed to start.";
+                _logger.Log(startFailed);
+                return (false, startFailed);
+            }
 
-            using var process = new Process { StartInfo = psi };
+            string output = CombineOutput(result.StdOut, result.StdErr);
 
-            // Collect both stdout and stderr into the same buffer.
-            process.OutputDataReceived += (_, e) =>
+            if (result.Cancelled)
             {
-                if (e.Data != null) sb.AppendLine(e.Data);
-            };
-            process.ErrorDataReceived += (_, e) =>
+                string cancelled = $"git {verb} cancelled by user.";
+                _logger.Log(cancelled);
+                if (!string.IsNullOrWhiteSpace(output))
+                    _logger.Log($"git {verb} output before cancellation:\n{output}");
+                return (false, cancelled);
+            }
+
+            if (result.TimedOut)
             {
-                if (e.Data != null) sb.AppendLine(e.Data);
-            };
-
-            process.Start();
-            process.BeginOutputReadLine();
-            process.BeginErrorReadLine();
-
-            // Wait up to 60 seconds for the operation to complete.
-            bool finished = process.WaitForExit(GitTimeoutMs);
-
-            if (!finished)
-            {
-                process.Kill(entireProcessTree: true);
                 string timeout = $"git {verb} timed out after {GitTimeoutMs / 1000} seconds.";
                 _logger.Log(timeout);
+                if (!string.IsNullOrWhiteSpace(output))
+                    _logger.Log($"git {verb} output before timeout:\n{output}");
                 return (false, timeout);
             }
 
-            // Ensure async output events flush into the buffer before reading result.
-            process.WaitForExit();
+            int exitCode = result.ExitCode ?? -1;
+            bool success = exitCode == 0;
 
-            string output  = sb.ToString().TrimEnd();
-            bool   success = process.ExitCode == 0;
-
-            _logger.Log($"git {verb} exit {process.ExitCode}: {repoPath}");
+            _logger.Log($"git {verb} exit {exitCode}: {repoPath}");
 
             // Always log the captured output so failures are traceable without
             // needing to re-run the command manually.
@@ -106,5 +109,16 @@ public class GitService
             _logger.Log(msg);
             return (false, msg);
         }
+    }
+
+    private static string CombineOutput(string stdout, string stderr)
+    {
+        if (string.IsNullOrWhiteSpace(stdout))
+            return stderr.TrimEnd();
+
+        if (string.IsNullOrWhiteSpace(stderr))
+            return stdout.TrimEnd();
+
+        return $"{stdout.TrimEnd()}\n{stderr.TrimEnd()}";
     }
 }

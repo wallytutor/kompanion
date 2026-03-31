@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using System.IO;
 
 namespace KompanionUI.Services;
@@ -13,8 +12,13 @@ public class ScriptRunner
     private const int StartupScriptTimeoutMs = 120_000;
 
     private readonly Logger _logger;
+    private readonly IProcessExecutor _processExecutor;
 
-    public ScriptRunner(Logger logger) => _logger = logger;
+    public ScriptRunner(Logger logger, IProcessExecutor? processExecutor = null)
+    {
+        _logger = logger;
+        _processExecutor = processExecutor ?? new SystemProcessExecutor();
+    }
 
     /// <summary>
     /// Validates and runs the setup script synchronously.
@@ -55,39 +59,36 @@ public class ScriptRunner
             string encodedCommand = Convert.ToBase64String(
                 System.Text.Encoding.Unicode.GetBytes(psScript));
 
-            var psi = new ProcessStartInfo
+            ProcessExecutionResult result = _processExecutor.Execute(
+                new ProcessExecutionRequest
+                {
+                    FileName = "powershell.exe",
+                    Arguments = "-NonInteractive -ExecutionPolicy Bypass " +
+                                $"-EncodedCommand {encodedCommand}",
+                    TimeoutMs = StartupScriptTimeoutMs,
+                    CreateNoWindow = true,
+                    UseShellExecute = false,
+                    RedirectOutput = true,
+                });
+
+            if (!result.Started)
+                throw new InvalidOperationException("Failed to start powershell.exe");
+
+            if (result.TimedOut)
             {
-                FileName               = "powershell.exe",
-                Arguments              = $"-NonInteractive -ExecutionPolicy Bypass" +
-                                         $" -EncodedCommand {encodedCommand}",
-                UseShellExecute        = false,
-                CreateNoWindow         = true,
-                RedirectStandardOutput = true,
-                RedirectStandardError  = true,
-            };
-
-            using var process = Process.Start(psi)
-                ?? throw new InvalidOperationException("Failed to start powershell.exe");
-
-            // Read stdout and stderr concurrently to prevent a deadlock that
-            // occurs when both pipe buffers fill before either is drained.
-            var stderrTask = Task.Run(() => process.StandardError.ReadToEnd());
-            string stdout  = process.StandardOutput.ReadToEnd();
-            string stderr  = stderrTask.Result;
-
-            bool finished = process.WaitForExit(StartupScriptTimeoutMs);
-            if (!finished)
-            {
-                process.Kill(entireProcessTree: true);
                 string timeout = $"Startup script timed out after " +
                                  $"{StartupScriptTimeoutMs / 1000} seconds.";
                 _logger.Log(timeout);
                 return timeout;
             }
 
-            if (process.ExitCode != 0)
+            string stdout = result.StdOut;
+            string stderr = result.StdErr;
+            int exitCode = result.ExitCode ?? -1;
+
+            if (exitCode != 0)
             {
-                string fail = $"Startup script failed with exit code {process.ExitCode}.";
+                string fail = $"Startup script failed with exit code {exitCode}.";
 
                 if (!string.IsNullOrWhiteSpace(stderr))
                     fail += $"\n\n{stderr.TrimEnd()}";

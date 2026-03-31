@@ -10,6 +10,8 @@ public class Logger
 {
     private readonly string? _logPath;
 
+    public string? LogPath => _logPath;
+
     public Logger()
     {
         string? dir = Environment.GetEnvironmentVariable("KOMPANION_LOGS");

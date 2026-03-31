@@ -23,10 +23,12 @@ A self-contained WPF application for Windows that bootstraps your development en
 | Question | Decision | Rationale |
 |---|---|---|
 | UI framework | WPF (.NET 9) | Richer styling and data-binding than WinForms; native Windows look |
+| Main layout | Two tabs: Repositories + Settings | Keeps repository actions focused; leaves a clean place for future settings |
 | Architecture | Thin code-behind + service classes | Keeps UI logic separate; easy to test services in isolation |
 | Startup script | Run synchronously, then import env vars | A child process cannot push env vars back to the parent; we dump `Get-ChildItem Env:` after the script and call `Environment.SetEnvironmentVariable` for each entry |
-| Git operations | Background `Task.Run` with output capture | Keeps the UI responsive; full stdout+stderr is written to the log |
+| Git operations | Async UI handlers + background execution | Keeps the UI responsive and guarantees controls are re-enabled via `try/finally` |
 | VS Code launch | `UseShellExecute = true` | The child process is fully detached and outlives the launcher |
+| Error handling | Validate input paths and exit codes | User gets immediate actionable feedback and logs include root-cause details |
 | Distribution | Single-file self-contained (`win-x64`) | No .NET runtime installation required on the target machine |
 | Icon | Generated programmatically with `System.Drawing` | No external dependency; reproducible by running the included PowerShell snippet |
 
@@ -38,18 +40,18 @@ A self-contained WPF application for Windows that bootstraps your development en
 ui/
 ├── KompanionUI.csproj          # Project file (WPF, net9.0-windows, single-file)
 ├── App.xaml / App.xaml.cs      # Application entry point; runs KOMPANION_SOURCE
-├── MainWindow.xaml             # Repository table with Refresh toolbar
-├── MainWindow.xaml.cs          # Button event handlers; async git operations
+├── MainWindow.xaml             # Two-tab UI: Repositories and placeholder Settings
+├── MainWindow.xaml.cs          # UI handlers; tray behavior; async git actions
 ├── Assets/
 │   └── icon.ico                # App icon (teal circle + white "K", 48/32/16 px)
 ├── Models/
 │   └── RepoEntry.cs            # Data model: Name + FullPath for one repository
 └── Services/
     ├── Logger.cs               # Timestamped log → $env:KOMPANION_LOGS
-    ├── ScriptRunner.cs         # Runs KOMPANION_SOURCE and imports env vars
+    ├── ScriptRunner.cs         # Runs KOMPANION_SOURCE, enforces timeout, imports env vars
     ├── RepoScanner.cs          # Scans KOMPANION_REPO for .git directories
     ├── VsCodeLauncher.cs       # Launches code.exe with --extensions-dir / --user-data-dir
-    └── GitService.cs           # Executes git pull / git push; captures output
+    └── GitService.cs           # Executes git pull / git push; validates repo; captures output
 ```
 
 ---
@@ -193,20 +195,20 @@ foreach (string line in stdout.Split('\n'))
 
 ### 6. Run git operations asynchronously
 
-To keep the UI responsive while `git pull` / `git push` runs:
+To keep the UI responsive while `git pull` / `git push` runs, execute Git on a
+background thread and always restore UI state in `finally`:
 
 ```csharp
 SetAllEnabled(false);
-Task.Run(() => _git.Run(GitOperation.Pull, path))
-    .ContinueWith(t =>
-    {
-        var (success, output) = t.Result;
-        Dispatcher.Invoke(() =>
-        {
-            SetAllEnabled(true);
-            if (!success) ShowError($"git pull failed:\n\n{output}");
-        });
-    });
+try
+{
+    var (success, output) = await Task.Run(() => _git.Run(GitOperation.Pull, path));
+    if (!success) ShowError($"git pull failed:\n\n{output}");
+}
+finally
+{
+    SetAllEnabled(true);
+}
 ```
 
 ---
@@ -254,13 +256,16 @@ The output is a single `publish\KompanionUI.exe` (~128 MB, all dependencies bund
 3. The startup script is executed and its environment is imported. The repository list
     is populated automatically. If `KOMPANION_DIR` is set to a Git repository, it is shown
     first even when it is outside `KOMPANION_REPO`.
-4. Use the buttons in each row:
+4. The UI has two tabs:
+    - **Repositories**: list of detected repositories and action buttons.
+    - **Settings**: placeholder panel with "Settings coming soon!".
+5. Use the buttons in each repository row:
    - **Launch** — opens VS Code at the repository root (detached, stays open if you close
      the app).
    - **Pull** — runs `git pull`; result is shown in the status bar and logged.
    - **Push** — runs `git push`; result is shown in the status bar and logged.
-5. Click **Refresh** at any time to re-scan `KOMPANION_REPO`.
-6. Clicking the window close button sends Kompanion to the system tray instead of
+6. Click **Refresh** at any time to re-scan `KOMPANION_REPO`.
+7. Clicking the window close button sends Kompanion to the system tray instead of
     exiting. Use the tray icon to restore the window or choose **Exit** to stop the app.
 
 ---
@@ -279,3 +284,6 @@ When `KOMPANION_LOGS` is set, every action is appended to
 [2026-03-31 14:07:13] git pull output:
 Already up to date.
 ```
+
+Additional log entries are emitted for startup script timeout or non-zero exit
+codes, invalid repository paths, and ignored non-Git main-repo paths.

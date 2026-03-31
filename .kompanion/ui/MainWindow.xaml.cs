@@ -104,7 +104,7 @@ public partial class MainWindow : Window
 
     private void LaunchButton_Click(object sender, RoutedEventArgs e)
     {
-        string? path = GetTagPath(sender);
+        string? path = GetTagPath(sender, "Launch");
         if (path == null) return;
 
         string? error = _vscode.Launch(path);
@@ -119,66 +119,82 @@ public partial class MainWindow : Window
     //  Pull
     // ------------------------------------------------------------------ //
 
-    private void PullButton_Click(object sender, RoutedEventArgs e)
+    private async void PullButton_Click(object sender, RoutedEventArgs e)
     {
-        string? path = GetTagPath(sender);
+        string? path = GetTagPath(sender, "Pull");
         if (path == null) return;
 
-        SetStatus($"Running git pull in: {path}");
-        SetAllEnabled(false);
-
-        // Run on a background thread so the UI stays responsive.
-        Task.Run(() => _git.Run(GitOperation.Pull, path))
-            .ContinueWith(t =>
-            {
-                var (success, output) = t.Result;
-                Dispatcher.Invoke(() =>
-                {
-                    SetAllEnabled(true);
-
-                    if (!success)
-                        ShowError($"git pull failed:\n\n{output}");
-                    else
-                        SetStatus($"git pull succeeded in: {path}");
-                });
-            });
+        await ExecuteGitOperationAsync(GitOperation.Pull, path);
     }
 
     // ------------------------------------------------------------------ //
     //  Push
     // ------------------------------------------------------------------ //
 
-    private void PushButton_Click(object sender, RoutedEventArgs e)
+    private async void PushButton_Click(object sender, RoutedEventArgs e)
     {
-        string? path = GetTagPath(sender);
+        string? path = GetTagPath(sender, "Push");
         if (path == null) return;
 
-        SetStatus($"Running git push in: {path}");
+        await ExecuteGitOperationAsync(GitOperation.Push, path);
+    }
+    private async Task ExecuteGitOperationAsync(GitOperation operation, string path)
+    {
+        string verb = operation == GitOperation.Pull ? "pull" : "push";
+
+        SetStatus($"Running git {verb} in: {path}");
         SetAllEnabled(false);
 
-        Task.Run(() => _git.Run(GitOperation.Push, path))
-            .ContinueWith(t =>
-            {
-                var (success, output) = t.Result;
-                Dispatcher.Invoke(() =>
-                {
-                    SetAllEnabled(true);
+        try
+        {
+            // Keep git execution off the UI thread, then marshal results back via await.
+            var (success, output) = await Task.Run(() => _git.Run(operation, path));
 
-                    if (!success)
-                        ShowError($"git push failed:\n\n{output}");
-                    else
-                        SetStatus($"git push succeeded in: {path}");
-                });
-            });
+            if (!success)
+            {
+                SetStatus($"git {verb} failed in: {path}", isError: true);
+
+                string details = string.IsNullOrWhiteSpace(output)
+                    ? "No output was captured. Check the log file for details."
+                    : output;
+                ShowError($"git {verb} failed:\n\n{details}");
+                return;
+            }
+
+            SetStatus($"git {verb} succeeded in: {path}");
+        }
+        catch (Exception ex)
+        {
+            string error = $"Unexpected git {verb} error in '{path}': {ex.Message}";
+            _logger.Log(error);
+            SetStatus(error, isError: true);
+            ShowError(error);
+        }
+        finally
+        {
+            SetAllEnabled(true);
+        }
     }
+
 
     // ------------------------------------------------------------------ //
     //  Helpers
     // ------------------------------------------------------------------ //
 
     /// <summary>Extracts the repository path stored in a button's Tag.</summary>
-    private static string? GetTagPath(object sender)
-        => (sender as System.Windows.Controls.Button)?.Tag as string;
+    private string? GetTagPath(object sender, string actionName)
+    {
+        string? path = (sender as System.Windows.Controls.Button)?.Tag as string;
+
+        if (!string.IsNullOrWhiteSpace(path))
+            return path;
+
+        string message = $"{actionName} failed because the repository path is missing.";
+        _logger.Log(message);
+        SetStatus(message, isError: true);
+        ShowError(message);
+        return null;
+    }
 
     /// <summary>Displays a message in the status bar.</summary>
     private void SetStatus(string message, bool isError = false)

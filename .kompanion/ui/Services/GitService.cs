@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.IO;
 using System.Text;
 
 namespace KompanionUI.Services;
@@ -10,6 +11,8 @@ public enum GitOperation { Pull, Push }
 /// </summary>
 public class GitService
 {
+    private const int GitTimeoutMs = 60_000;
+
     private readonly Logger _logger;
 
     public GitService(Logger logger) => _logger = logger;
@@ -24,6 +27,23 @@ public class GitService
         _logger.Log($"git {verb}: {repoPath}");
 
         var sb = new StringBuilder();
+
+        if (!Directory.Exists(repoPath))
+        {
+            string missing = $"git {verb} failed: repository path does not exist: {repoPath}";
+            _logger.Log(missing);
+            return (false, missing);
+        }
+
+        bool hasGitMarker = Directory.Exists(Path.Combine(repoPath, ".git")) ||
+                            File.Exists(Path.Combine(repoPath, ".git"));
+
+        if (!hasGitMarker)
+        {
+            string notRepo = $"git {verb} failed: '{repoPath}' is not a Git repository.";
+            _logger.Log(notRepo);
+            return (false, notRepo);
+        }
 
         try
         {
@@ -55,15 +75,18 @@ public class GitService
             process.BeginErrorReadLine();
 
             // Wait up to 60 seconds for the operation to complete.
-            bool finished = process.WaitForExit(60_000);
+            bool finished = process.WaitForExit(GitTimeoutMs);
 
             if (!finished)
             {
                 process.Kill(entireProcessTree: true);
-                string timeout = $"git {verb} timed out after 60 seconds.";
+                string timeout = $"git {verb} timed out after {GitTimeoutMs / 1000} seconds.";
                 _logger.Log(timeout);
                 return (false, timeout);
             }
+
+            // Ensure async output events flush into the buffer before reading result.
+            process.WaitForExit();
 
             string output  = sb.ToString().TrimEnd();
             bool   success = process.ExitCode == 0;

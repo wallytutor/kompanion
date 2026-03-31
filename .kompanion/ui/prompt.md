@@ -39,3 +39,7 @@ Code.exe $path `
 - Instead of exiting when the user clicks the close button, the application will minimize to the system tray. The tray icon will have a context menu with options to restore the window or exit the application.
 
 - Split the UI into two tabs: "Repositories" and "Settings". The "Repositories" tab will contain the list of repositories and their corresponding buttons (exactly the same existing UI), while the "Settings" is for now just a placeholder for future settings, but it will have a label that says "Settings coming soon!" to indicate that it's not yet implemented.
+
+- The application underwent several iterations of design and development. Please review the code and ensure that it follows best practices for UI design, error handling, and logging. Make sure that the application is user-friendly and provides clear feedback for all actions performed. Additionally, ensure that the application is robust and can handle edge cases gracefully. If required, refactor the code to improve readability and maintainability, while keeping the functionality intact. Update the README.md file to reflect any changes made during the review process, and ensure that it provides clear instructions for building and using the application.
+
+- Add unit tests for ScriptRunner and GitService with mocked process execution wrappers. Add cancellation support for long git operations from the UI. Add a small status history pane in the Settings tab for recent actions/log tail.

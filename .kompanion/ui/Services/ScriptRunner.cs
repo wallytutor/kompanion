@@ -10,6 +10,8 @@ namespace KompanionUI.Services;
 /// </summary>
 public class ScriptRunner
 {
+    private const int StartupScriptTimeoutMs = 120_000;
+
     private readonly Logger _logger;
 
     public ScriptRunner(Logger logger) => _logger = logger;
@@ -35,6 +37,8 @@ public class ScriptRunner
         {
             _logger.Log($"Running startup script: {scriptPath}");
 
+            string escapedScriptPath = scriptPath.Replace("'", "''");
+
             // Build the PowerShell script as plain text, then Base64-encode it
             // for -EncodedCommand. This avoids all quoting/escaping issues that
             // arise when embedding paths and operators inside -Command "...".
@@ -42,7 +46,7 @@ public class ScriptRunner
             // The script runs KOMPANION_SOURCE, prints a sentinel, then dumps
             // every env var in NAME=VALUE form so we can import them back.
             string psScript = string.Join("\n",
-                $"& '{scriptPath}'",
+                $"& '{escapedScriptPath}'",
                 "Write-Output '---ENV---'",
                 "Get-ChildItem Env: | ForEach-Object {",
                 "    Write-Output ('ENV:' + $_.Name + '=' + $_.Value)",
@@ -70,7 +74,27 @@ public class ScriptRunner
             var stderrTask = Task.Run(() => process.StandardError.ReadToEnd());
             string stdout  = process.StandardOutput.ReadToEnd();
             string stderr  = stderrTask.Result;
-            process.WaitForExit();
+
+            bool finished = process.WaitForExit(StartupScriptTimeoutMs);
+            if (!finished)
+            {
+                process.Kill(entireProcessTree: true);
+                string timeout = $"Startup script timed out after " +
+                                 $"{StartupScriptTimeoutMs / 1000} seconds.";
+                _logger.Log(timeout);
+                return timeout;
+            }
+
+            if (process.ExitCode != 0)
+            {
+                string fail = $"Startup script failed with exit code {process.ExitCode}.";
+
+                if (!string.IsNullOrWhiteSpace(stderr))
+                    fail += $"\n\n{stderr.TrimEnd()}";
+
+                _logger.Log(fail);
+                return fail;
+            }
 
             if (!string.IsNullOrWhiteSpace(stderr))
                 _logger.Log($"Startup script stderr:\n{stderr.TrimEnd()}");
@@ -98,6 +122,9 @@ public class ScriptRunner
                     EnvironmentVariableTarget.Process);
                 imported++;
             }
+
+            if (!inEnvSection)
+                _logger.Log("Startup script completed, but no environment section was found.");
 
             _logger.Log($"Startup script completed. {imported} environment variable(s) imported.");
             return null;

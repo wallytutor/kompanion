@@ -6,6 +6,35 @@ namespace KompanionUI.Tests;
 public class UsageTrackerTests
 {
     [Fact]
+    public void RecordUsage_WorksWhenLogDirIsSetAfterConstruction()
+    {
+        string logsDir = Path.Combine(Path.GetTempPath(), $"kompanion-logs-{Guid.NewGuid():N}");
+        string? oldLogs = Environment.GetEnvironmentVariable("KOMPANION_LOGS");
+
+        try
+        {
+            Environment.SetEnvironmentVariable("KOMPANION_LOGS", null);
+
+            var logger = new Logger();
+            var tracker = new UsageTracker(logger);
+
+            Environment.SetEnvironmentVariable("KOMPANION_LOGS", logsDir);
+
+            string repo = Path.Combine(logsDir, "repo-late");
+            tracker.RecordUsage(repo);
+
+            string usagePath = Path.Combine(logsDir, "repo-usage.json");
+            Assert.True(File.Exists(usagePath));
+        }
+        finally
+        {
+            Environment.SetEnvironmentVariable("KOMPANION_LOGS", oldLogs);
+            if (Directory.Exists(logsDir))
+                Directory.Delete(logsDir, recursive: true);
+        }
+    }
+
+    [Fact]
     public void RecordUsage_WritesAndIncrementsUsageFile()
     {
         string logsDir = Path.Combine(Path.GetTempPath(), $"kompanion-logs-{Guid.NewGuid():N}");

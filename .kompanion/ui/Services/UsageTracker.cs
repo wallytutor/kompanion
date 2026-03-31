@@ -14,26 +14,14 @@ public class UsageTracker
 
     private readonly Logger _logger;
     private readonly object _sync = new();
-    private readonly string? _usageFilePath;
+    private string? _usageFilePath;
 
     public UsageTracker(Logger logger)
     {
         _logger = logger;
 
-        string? logDir = Environment.GetEnvironmentVariable("KOMPANION_LOGS");
-
-        if (string.IsNullOrWhiteSpace(logDir))
-            return;
-
-        try
-        {
-            Directory.CreateDirectory(logDir);
-            _usageFilePath = Path.Combine(logDir, UsageFileName);
-        }
-        catch (Exception ex)
-        {
-            _logger.Log($"Usage tracking disabled because log directory is invalid: {ex.Message}");
-        }
+        // KOMPANION_LOGS can be defined by the startup script after this class is
+        // constructed. The usage file path is therefore resolved lazily.
     }
 
     /// <summary>
@@ -42,11 +30,14 @@ public class UsageTracker
     public void RecordUsage(string repoPath)
     {
         string normalized = NormalizePath(repoPath);
-        if (string.IsNullOrWhiteSpace(normalized) || _usageFilePath == null)
+        if (string.IsNullOrWhiteSpace(normalized))
             return;
 
         lock (_sync)
         {
+            if (!EnsureUsageFilePathUnsafe())
+                return;
+
             Dictionary<string, int> usage = LoadUnsafe();
 
             usage.TryGetValue(normalized, out int count);
@@ -103,6 +94,9 @@ public class UsageTracker
 
     private Dictionary<string, int> LoadUnsafe()
     {
+        if (!EnsureUsageFilePathUnsafe())
+            return new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+
         if (_usageFilePath == null || !File.Exists(_usageFilePath))
             return new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
 
@@ -125,6 +119,9 @@ public class UsageTracker
 
     private void SaveUnsafe(Dictionary<string, int> usage)
     {
+        if (!EnsureUsageFilePathUnsafe())
+            return;
+
         if (_usageFilePath == null)
             return;
 
@@ -152,6 +149,29 @@ public class UsageTracker
         catch
         {
             return path.Trim();
+        }
+    }
+
+    private bool EnsureUsageFilePathUnsafe()
+    {
+        if (!string.IsNullOrWhiteSpace(_usageFilePath))
+            return true;
+
+        string? logDir = Environment.GetEnvironmentVariable("KOMPANION_LOGS");
+        if (string.IsNullOrWhiteSpace(logDir))
+            return false;
+
+        try
+        {
+            Directory.CreateDirectory(logDir);
+            _usageFilePath = Path.Combine(logDir, UsageFileName);
+            return true;
+        }
+        catch (Exception ex)
+        {
+            _logger.Log($"Usage tracking disabled because log directory is invalid: {ex.Message}");
+            _usageFilePath = null;
+            return false;
         }
     }
 }

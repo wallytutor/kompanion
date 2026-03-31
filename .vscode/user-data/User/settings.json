@@ -9,6 +9,9 @@
     // Remove breadcrumbs for vertical space:
     "breadcrumbs.enabled": false,
 
+    // Do not ask about saving untitled workspace on exit:
+    "window.confirmSaveUntitledWorkspace": false,
+
     //////////////////////////////////////////////////////////////////////////
     // EXPLORER
     //////////////////////////////////////////////////////////////////////////

@@ -73,9 +73,6 @@ $DEFAULT_CONFIG = [PSCustomObject]@{
     }
 }
 
-
-
-$URL_VSCODE      = "https://update.code.visualstudio.com/latest/win32-x64-archive/stable"
 $URL_GIT         = "https://github.com/git-for-windows/git/releases/download/v2.51.0.windows.1/PortableGit-2.51.0-64-bit.7z.exe"
 $URL_SEVENZIP    = "https://github.com/commercialhaskell/stackage-content/releases/download/7z-22.01/"
 $URL_LESSMSI     = "https://github.com/activescott/lessmsi/releases/download/v2.10.3/lessmsi-v2.10.3.zip"
@@ -192,7 +189,6 @@ function Start-KompanionConfigure {
     Invoke-InstallSevenZip
     Invoke-ConfigureSevenZip
     Invoke-ConfigureCurl
-    Invoke-InstallVsCode
     Invoke-ConfigureVsCode
     Invoke-InstallGit
     Invoke-ConfigureGit
@@ -259,7 +255,7 @@ function Start-KompanionConfigure {
     Write-Host "- starting Kompanion languages configuration..."
 
     # XXX: without winpython we cannot compile Rust code!
-    Invoke-ConfigureAstralUv
+    Invoke-ConfigureUv
     Invoke-ConfigureMingW64
     Invoke-ConfigureWinPython
 
@@ -783,31 +779,6 @@ function Rename-FilesToStandard {
 #endregion: utils_other
 
 #region: install_configure_base
-function Invoke-ConfigureVsCode {
-    Write-Head "* Configuring Visual Studio Code..."
-
-    Set-KompanionEnvVar -Name "VSCODE_HOME" `
-        -Value "$env:KOMPANION_BIN\vscode"
-    Set-KompanionEnvVar -Name "VSCODE_EXTENSIONS" `
-        -Value "$env:KOMPANION_DIR\.vscode\extensions"
-    Set-KompanionEnvVar -Name "VSCODE_SETTINGS" `
-        -Value "$env:KOMPANION_DIR\.vscode\user-data"
-
-    Initialize-AddToPath -Directory "$env:VSCODE_HOME"
-}
-
-function Invoke-InstallVsCode {
-    $output = "$env:KOMPANION_TEMP\vscode.zip"
-    $path   = "$env:KOMPANION_BIN\vscode"
-    $url    = $URL_VSCODE
-
-    if (Test-Path -Path $path) { return }
-
-    Invoke-DownloadIfNeeded -URL $url -Output $output
-    Invoke-UncompressZipIfNeeded -Source $output -Destination $path
-    Invoke-ConfigureVsCode
-}
-
 function Invoke-ConfigureGit {
     Write-Head "* Configuring Git..."
 

@@ -941,7 +941,7 @@ function Invoke-ConfigureTabby {
     }
 }
 
-function Invoke-ConfigureAstralUv {
+function Invoke-ConfigureUv {
     Write-Head "* Configuring Astral UV..."
 
     $target = $null
@@ -956,6 +956,27 @@ function Invoke-ConfigureAstralUv {
         Initialize-AddToPath -Directory "$env:UV_HOME"
     } else {
         Write-Warn "Failed to install Astral UV, skipping configuration..."
+    }
+}
+
+function Invoke-ConfigureVsCode{
+    Write-Head "* Configuring Visual Studio Code..."
+
+    $target = $null
+    $url    = $KOMPANION_SETUP.url.vscode
+    $output = "$env:KOMPANION_TEMP\vscode.zip"
+    $path   = "$env:KOMPANION_BIN\vscode"
+    $dotdir = "$env:KOMPANION_DIR\.vscode"
+
+    $success = Invoke-DlUnzipInstall $path $url $output -Target $target
+
+    if ($success) {
+        Set-KompanionEnvVar -Name "VSCODE_HOME" -Value "$path"
+        Set-KompanionEnvVar -Name "VSCODE_EXTENSIONS" -Value "$dotdir\extensions"
+        Set-KompanionEnvVar -Name "VSCODE_SETTINGS" -Value "$dotdir\user-data"
+        Initialize-AddToPath -Directory "$env:VSCODE_HOME"
+    } else {
+        Write-Warn "Failed to install Visual Studio Code, skipping configuration..."
     }
 }
 

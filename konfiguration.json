@@ -40,6 +40,7 @@
         "_rust":      "https://static.rust-lang.org/rustup/dist/x86_64-pc-windows-msvc/rustup-init.exe",
         "tabby":      "https://github.com/Eugeny/tabby/releases/download/v1.0.230/tabby-1.0.230-portable-x64.zip",
         "uv":         "https://releases.astral.sh/github/uv/releases/download/{0}/uv-x86_64-pc-windows-msvc.zip",
+        "vscode":     "https://update.code.visualstudio.com/latest/win32-x64-archive/stable",
         "winpython":  "https://github.com/winpython/winpython/releases/download/17.2.20251012/WinPython64-3.13.8.0dotb1.zip",
         "_winpython": "https://github.com/winpython/winpython/releases/download/17.2.20260307final/WinPython64-3.13.12.0dot.zip"
     },

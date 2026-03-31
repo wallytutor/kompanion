@@ -412,6 +412,19 @@ public partial class MainWindow : Window
         _logger.Log("Main window restored from system tray.");
     }
 
+    public void RestoreFromExternalActivation()
+    {
+        Show();
+        ShowInTaskbar = true;
+
+        if (WindowState == WindowState.Minimized)
+            WindowState = WindowState.Normal;
+
+        Activate();
+        SetStatus("Kompanion brought to foreground.");
+        _logger.Log("Main window activated from a secondary launch request.");
+    }
+
     private void ExitApplication()
     {
         _allowClose = true;

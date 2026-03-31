@@ -9,6 +9,12 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <ApplicationIcon>Assets\icon.ico</ApplicationIcon>
   </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Embed the icon so WPF can reference it as a pack URI at runtime -->
+    <Resource Include="Assets\icon.ico" />
+  </ItemGroup>
 
 </Project>

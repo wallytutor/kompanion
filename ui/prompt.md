@@ -22,8 +22,10 @@ Code.exe $path `
 
 - The application will be built using Windows Forms or WPF in .NET, and it will handle all necessary error checking and user feedback for actions performed.
 
-- The application will have a simple icon so that it can be pinned to the taskbar for easy access.
+- The application will have a nice open source icon so that it looks nice in the taskbar and can be pinned to the taskbar for easy access.
 
 - The application will log actions to a file under `$env:KOMPANION_LOGS` with timestamps for each action performed (e.g., launching VSCode, pulling, pushing).
+
+- When pushing/pulling, the application will capture outputs to the log, so if anything goes wrong, there is direct access to the information.
 
 - Coding practices will include line lenghts limited to 100 characters, proper error handling, and comments explaining the code logic.

@@ -69,6 +69,12 @@ public class GitService
             bool   success = process.ExitCode == 0;
 
             _logger.Log($"git {verb} exit {process.ExitCode}: {repoPath}");
+
+            // Always log the captured output so failures are traceable without
+            // needing to re-run the command manually.
+            if (!string.IsNullOrWhiteSpace(output))
+                _logger.Log($"git {verb} output:\n{output}");
+
             return (success, output);
         }
         catch (Exception ex)

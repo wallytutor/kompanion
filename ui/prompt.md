@@ -1,0 +1,29 @@
+- Create a graphical application in .NET that will run script pointed to by the environment variable `$env:KOMPANION_SOURCE`. The application will then read environment variable `$env:KOMPANION_REPO` and display the list of directories in that path. It will filter only directories that contain a .git folder, indicating they are Git repositories. For each repository, the UI will provide three buttons: "Launch", "Pull", and "Push". The UI will look like this:
+
+```
+| Repo | Launch | Pull | Push |
+|------|--------|------|------|
+| Dir1 | [Launch] | [Pull] | [Push] |
+| Dir2 | [Launch] | [Pull] | [Push] |
+| ...  | ...    | ...  | ...  |
+```
+
+- If $env:KOMPANION_SOURCE is not set or the path does not exist, the application will display an appropriate error message and do nothing.
+
+- The "Launch" will launch VSCode at the repository path with the specified extensions and user settings as provided below. It will run in the background, so that if one closes the app, VSCode will continue running. The "Pull" and "Push" buttons will execute the corresponding Git commands in the repository path.
+
+```ps1
+Code.exe $path `
+    --extensions-dir $env:VSCODE_EXTENSIONS `
+    --user-data-dir  $env:VSCODE_SETTINGS
+```
+
+- The application will also have a "Refresh" button that will re-read the repositories from the specified path and update the UI accordingly.
+
+- The application will be built using Windows Forms or WPF in .NET, and it will handle all necessary error checking and user feedback for actions performed.
+
+- The application will have a simple icon so that it can be pinned to the taskbar for easy access.
+
+- The application will log actions to a file under `$env:KOMPANION_LOGS` with timestamps for each action performed (e.g., launching VSCode, pulling, pushing).
+
+- Coding practices will include line lenghts limited to 100 characters, proper error handling, and comments explaining the code logic.

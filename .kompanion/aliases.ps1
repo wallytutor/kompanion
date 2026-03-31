@@ -52,7 +52,12 @@ function kd {
     param (
         [string]$Repo
     )
-    $Path = Join-Path $env:KOMPANION_REPO $Repo
+
+    $Path = if ($Repo -eq "kompanion") {
+        $env:KOMPANION_DIR
+    } else {
+        Join-Path $env:KOMPANION_REPO $Repo
+    }
 
     if (-Not (Test-Path $Path)) {
         Write-Error "Repository '$Repo' does not exist at path '$Path'."
@@ -72,7 +77,7 @@ function kd {
     }
 }
 
+function kp { kd -Repo "kompanion" }
 function mj { kd -Repo "majordome" }
 function xl { kd -Repo "xperimental" }
-
 #endregion: custom functions

@@ -22,6 +22,7 @@ public partial class MainWindow : Window
     private readonly RepoScanner    _scanner;
     private readonly VsCodeLauncher _vscode;
     private readonly GitService     _git;
+    private readonly UsageTracker   _usage;
     private readonly FormsNotifyIcon _trayIcon;
     private readonly ObservableCollection<string> _statusHistory;
 
@@ -38,6 +39,7 @@ public partial class MainWindow : Window
         _scanner = new RepoScanner(_logger);
         _vscode  = new VsCodeLauncher(_logger);
         _git     = new GitService(_logger);
+        _usage   = new UsageTracker(_logger);
         _trayIcon = CreateTrayIcon();
         _statusHistory = new ObservableCollection<string>();
 
@@ -73,6 +75,9 @@ public partial class MainWindow : Window
     private void Refresh()
     {
         var (repos, error) = _scanner.Scan();
+        List<Models.RepoEntry> sorted = _usage.SortRepos(
+            repos,
+            Environment.GetEnvironmentVariable("KOMPANION_DIR"));
 
         if (error != null)
         {
@@ -83,7 +88,7 @@ public partial class MainWindow : Window
             SetStatus($"{repos.Count} repositor{(repos.Count == 1 ? "y" : "ies")} found.");
         }
 
-        RepoList.ItemsSource = repos;
+        RepoList.ItemsSource = sorted;
     }
 
     private void RefreshButton_Click(object sender, RoutedEventArgs e) => Refresh();
@@ -115,6 +120,9 @@ public partial class MainWindow : Window
     {
         string? path = GetTagPath(sender, "Launch");
         if (path == null) return;
+
+        _usage.RecordUsage(path);
+        ResortCurrentRepos();
 
         string? error = _vscode.Launch(path);
 
@@ -156,6 +164,9 @@ public partial class MainWindow : Window
         }
 
         string verb = operation == GitOperation.Pull ? "pull" : "push";
+
+        _usage.RecordUsage(path);
+        ResortCurrentRepos();
 
         SetStatus($"Running git {verb} in: {path}");
         SetAllEnabled(false);
@@ -270,6 +281,18 @@ public partial class MainWindow : Window
 
         while (_statusHistory.Count > MaxHistoryEntries)
             _statusHistory.RemoveAt(_statusHistory.Count - 1);
+    }
+
+    private void ResortCurrentRepos()
+    {
+        if (RepoList.ItemsSource is not IEnumerable<Models.RepoEntry> existing)
+            return;
+
+        List<Models.RepoEntry> sorted = _usage.SortRepos(
+            existing.ToList(),
+            Environment.GetEnvironmentVariable("KOMPANION_DIR"));
+
+        RepoList.ItemsSource = sorted;
     }
 
     private void LoadLogTailIntoHistory()

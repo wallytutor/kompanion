@@ -31,6 +31,8 @@ public class VsCodeLauncher
         if (!string.IsNullOrWhiteSpace(settingsDir))
             args.Add($"--user-data-dir \"{settingsDir}\"");
 
+        args.Add("--maximized");
+
         string arguments = string.Join(" ", args);
 
         try

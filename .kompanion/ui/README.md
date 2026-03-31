@@ -31,8 +31,9 @@ A self-contained WPF application for Windows that bootstraps your development en
 | Startup script | Run synchronously, then import env vars | A child process cannot push env vars back to the parent; we dump `Get-ChildItem Env:` after the script and call `Environment.SetEnvironmentVariable` for each entry |
 | Git operations | Async UI handlers + background execution | Keeps the UI responsive and guarantees controls are re-enabled via `try/finally` |
 | Git cancellation | UI cancel button + cancellation token | Long pull/push operations can be stopped cleanly by the user |
+| Repository ordering | Usage-frequency file + pinned main repo | Most-used repositories stay near the top while Kompanion remains first |
 | Status history | Recent status + log tail in Settings | Users can inspect recent actions without opening the log file manually |
-| VS Code launch | `UseShellExecute = true` | The child process is fully detached and outlives the launcher |
+| VS Code launch | Detached shell launch + `--maximized` | VS Code opens in full view and outlives the launcher process |
 | Error handling | Validate input paths and exit codes | User gets immediate actionable feedback and logs include root-cause details |
 | Distribution | Single-file self-contained (`win-x64`) | No .NET runtime installation required on the target machine |
 | Icon | Generated programmatically with `System.Drawing` | No external dependency; reproducible by running the included PowerShell snippet |
@@ -59,6 +60,7 @@ ui/
     ├── Logger.cs               # Timestamped log → $env:KOMPANION_LOGS
     ├── ScriptRunner.cs         # Runs KOMPANION_SOURCE, enforces timeout, imports env vars
     ├── RepoScanner.cs          # Scans KOMPANION_REPO for .git directories
+    ├── UsageTracker.cs         # Persists repo usage counts and sorts by frequency
     ├── VsCodeLauncher.cs       # Launches code.exe with --extensions-dir / --user-data-dir
     ├── GitService.cs           # Executes git pull / git push; validates repo; captures output
     └── ProcessExecution.cs     # IProcessExecutor + default system implementation
@@ -288,13 +290,16 @@ The output is a single `publish\KompanionUI.exe` (~128 MB, all dependencies bund
     - **Repositories**: list of detected repositories and action buttons.
     - **Settings**: placeholder panel plus a **Recent Activity** history pane.
 5. Use the buttons in each repository row:
-   - **Launch** — opens VS Code at the repository root (detached, stays open if you close
+    - **Launch** — opens VS Code at the repository root (detached, maximized, stays open if you close
      the app).
    - **Pull** — runs `git pull`; result is shown in the status bar and logged.
    - **Push** — runs `git push`; result is shown in the status bar and logged.
 6. While pull/push is running, use **Cancel Git** to request cancellation.
 7. Click **Refresh** at any time to re-scan `KOMPANION_REPO`.
-8. Clicking the window close button sends Kompanion to the system tray instead of
+8. Repository order is usage-aware: every Launch/Pull/Push increments a counter in
+    `%KOMPANION_LOGS%\repo-usage.json`, repositories are sorted by descending usage,
+    and `KOMPANION_DIR` stays pinned at the top.
+9. Clicking the window close button sends Kompanion to the system tray instead of
     exiting. Use the tray icon to restore the window or choose **Exit** to stop the app.
 
 ---
@@ -316,3 +321,5 @@ Already up to date.
 
 Additional log entries are emitted for startup script timeout or non-zero exit
 codes, invalid repository paths, and ignored non-Git main-repo paths.
+
+Repository usage counters are stored separately in `%KOMPANION_LOGS%\repo-usage.json`.

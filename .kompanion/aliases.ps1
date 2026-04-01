@@ -80,4 +80,6 @@ function kd {
 function kp { kd -Repo "kompanion" }
 function mj { kd -Repo "majordome" }
 function xl { kd -Repo "xperimental" }
+
+function kb { cd "$env:KOMPANION_DOT\bin" }
 #endregion: custom functions

@@ -380,6 +380,16 @@
     // XXX: use Copilot behing a proxy!
     "win-ca.inject": "append",
 
+    "copilot.experimental.llmProviders": {
+        "ollama-qwen": {
+            "model": "qwen3-coder:30b",
+            "apiBase": "http://localhost:11434/v1",
+            "apiKey": "ollama"
+        }
+    },
+    "copilot.experimental.defaultModel": "ollama-qwen",
+    "copilot.experimental.showAllModels": true,
+
     //////////////////////////////////////////////////////////////////////////
     // TERMINAL
     //////////////////////////////////////////////////////////////////////////

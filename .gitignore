@@ -20,6 +20,7 @@ repos/
 .kompanion/envs.ps1
 
 # Editor cache:
+.continue/*
 .copilot/*
 .logseq/*
 .vscode/*

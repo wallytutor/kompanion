@@ -362,11 +362,17 @@
     ],
 
     //////////////////////////////////////////////////////////////////////////
-    // GITHUB COPILOT
+    // GITHUB COPILOT AND AI TOOLS
     //////////////////////////////////////////////////////////////////////////
+
+    // XXX: use Copilot behing a proxy!
+    "win-ca.inject": "append",
 
     "chat.mcp.gallery.enabled": true,
     "chat.viewSessions.orientation": "stacked",
+
+    "continue.enableConsole": true,
+
     "github.copilot.nextEditSuggestions.enabled": true,
     "github.copilot.enable": {
         "*": true,
@@ -376,9 +382,6 @@
         "quarto": true,
         "python": true
     },
-
-    // XXX: use Copilot behing a proxy!
-    "win-ca.inject": "append",
 
     "copilot.experimental.llmProviders": {
         "ollama-qwen": {

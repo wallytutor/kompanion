@@ -25,10 +25,20 @@ The other part of the nightmare concerns *PortableApps*: you can't simply trust 
 The minimal Kompanion setup includes:
 
 - Visual Studio Code
-- Python
+- LiteXL
 - Git
 - 7-Zip
 - Curl
+- Quarto
+- uv
+
+Some programming languages are also included by default and always:
+
+- .NET (C#, F#, VB.NET)
+- MingW64 (C/C++, Fortran)
+- NodeJS
+- Rust
+- Python (WinPython)
 
 If that's all you need, simply open a PowerShell terminal (preferred over the legacy *Windows PowerShell*) at this directory and run `.\kompanion.ps1` (or `.\kompanion.ps1 -RebuildOnStart` if the first run fails) to install the defaults. In most cases this will work out of the box, as the links for these tools are from well known sources and are generally not filtered by corporate firewalls. If that fails, you might need to build Kompanion elsewhere and drop it in a USB drive to transfer to your workstation.
 

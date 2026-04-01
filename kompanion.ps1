@@ -24,37 +24,32 @@ param (
 #region: default_config
 $DEFAULT_CONFIG = [PSCustomObject]@{
     base = [PSCustomObject]@{
-        vscode      = $true
-        tabby       = $true
-        git         = $true
-        curl        = $true
-        sevenzip    = $true
-        logseq      = $false
-        zettlr      = $false
-        drawio      = $false
-        nvim        = $false
         lessmsi     = $false
-        pandoc      = $false
-        jabref      = $false
-        inkscape    = $false
-        miktex      = $false
-        nteract     = $false
+        tabby       = $false
+        nvim        = $false
+
+        drawio      = $false
         ffmpeg      = $false
         imagemagick = $false
+        inkscape    = $false
+
+        jabref      = $false
+        miktex      = $false
+        pandoc      = $false
         poppler     = $false
-        quarto      = $false
+
+        logseq      = $false
+        zettlr      = $false
+
     }
     lang = [PSCustomObject]@{
-        rust        = $true
-        julia       = $false
-        node        = $false
+        coq         = $false
+        elm         = $false
         erlang      = $false
         haskell     = $false
-        elm         = $false
-        racket      = $false
-        coq         = $false
+        julia       = $false
         rlang       = $false
-        python      = $false
+        racket      = $false
     }
     simu = [PSCustomObject]@{
         paraview    = $false
@@ -174,25 +169,31 @@ function Start-KompanionConfigure {
         [pscustomobject]$Config
     )
 
-    # Install components if needed
-    $lockFile = "$env:KOMPANION_DOT\kompanion.lock"
-
-    Write-Host "`nStarting Kompanion configuration..."
-
-    # XXX: languages come first because some packages might override
+    # ---
+    # XXX: languages come last because some packages might override
     # them (especially Python that is used everywhere).
-
-    Write-Host "- starting Kompanion base configuration..."
-
+    # ---
     # XXX: this order is important: sometimes SSL blocks downloads that
     # could succeed if done with curl, thus it comes before other tools!
+    # ---
+    # XXX: the hardcoded active languages are required by Majordome and/or
+    # just generally useful to have around; they will be installed and
+    # configured regardless of the configuration file,
+    # ---
+
+    Write-Good "`n> Starting Kompanion base configuration..."
+
     Invoke-InstallSevenZip
     Invoke-ConfigureSevenZip
     Invoke-ConfigureCurl
+
     Invoke-ConfigureVsCode
+    Invoke-ConfigureLiteXL
     Invoke-InstallGit
     Invoke-ConfigureGit
-    Invoke-ConfigureLiteXL
+
+    Invoke-InstallQuarto
+    Invoke-ConfigureQuarto
 
     if ($Config.base.drawio)      { Invoke-ConfigureDrawio }
     if ($Config.base.jabref)      { Invoke-ConfigureJabRef }
@@ -222,10 +223,7 @@ function Start-KompanionConfigure {
     if ($Config.base.poppler)     { Invoke-InstallPoppler }
     if ($Config.base.poppler)     { Invoke-ConfigurePoppler }
 
-    if ($Config.base.quarto)      { Invoke-InstallQuarto }
-    if ($Config.base.quarto)      { Invoke-ConfigureQuarto }
-
-    Write-Host "- starting Kompanion simulation tools configuration..."
+    Write-Good "`n> Starting Kompanion simulation tools configuration..."
 
     if ($Config.simu.meshlab)      { Invoke-ConfigureMeshLab }
     if ($Config.simu.dwsim)        { Invoke-InstallDwsim }
@@ -252,38 +250,27 @@ function Start-KompanionConfigure {
     if ($Config.simu.freefem)      { Invoke-InstallFreeFem }
     if ($Config.simu.freefem)      { Invoke-ConfigureFreeFem }
 
-    Write-Host "- starting Kompanion languages configuration..."
+    Write-Good "`n> Starting Kompanion languages configuration..."
 
-    # XXX: without winpython we cannot compile Rust code!
-    Invoke-ConfigureUv
+    Invoke-ConfigureDotNET
     Invoke-ConfigureMingW64
+    Invoke-ConfigureNode
+    Invoke-ConfigureRust
+    Invoke-ConfigureUv
     Invoke-ConfigureWinPython
-
-    if ($Config.lang.dotnet)    { Invoke-ConfigureDotNET}
-    if ($Config.lang.erlang)    { Invoke-ConfigureErlang }
-    if ($Config.lang.julia)     { Invoke-ConfigureJulia }
-    if ($Config.lang.node)      { Invoke-ConfigureNode }
-    if ($Config.lang.python)    { Invoke-ConfigurePython }
-    if ($Config.lang.rust)      { Invoke-ConfigureRust }
-
-    if ($Config.lang.haskell)   { Invoke-InstallHaskell }
-    if ($Config.lang.haskell)   { Invoke-ConfigureHaskell }
-
-    if ($Config.lang.elm)       { Invoke-InstallElm }
-    if ($Config.lang.elm)       { Invoke-ConfigureElm }
-
-    if ($Config.lang.racket)    { Invoke-InstallRacket }
-    if ($Config.lang.racket)    { Invoke-ConfigureRacket }
 
     if ($Config.lang.coq)       { Invoke-InstallCoq }
     if ($Config.lang.coq)       { Invoke-ConfigureCoq }
-
+    if ($Config.lang.elm)       { Invoke-InstallElm }
+    if ($Config.lang.elm)       { Invoke-ConfigureElm }
+    if ($Config.lang.erlang)    { Invoke-ConfigureErlang }
+    if ($Config.lang.haskell)   { Invoke-InstallHaskell }
+    if ($Config.lang.haskell)   { Invoke-ConfigureHaskell }
+    if ($Config.lang.julia)     { Invoke-ConfigureJulia }
+    if ($Config.lang.racket)    { Invoke-InstallRacket }
+    if ($Config.lang.racket)    { Invoke-ConfigureRacket }
     if ($Config.lang.rlang)     { Invoke-InstallRlang }
     if ($Config.lang.rlang)     { Invoke-ConfigureRlang }
-
-    # Create lock file to avoid reinstalling everything on
-    # next start (unless -RebuildOnStart is used):
-    New-Item -ItemType File -Path $lockFile -Force | Out-Null
 
     # Make sure this is a git repository to allow updates:
     if (-not (Test-Path -Path "$env:KOMPANION_DIR\.git")) {
@@ -446,7 +433,7 @@ function Initialize-AddToPath() {
             $env:Path = "$Directory;" + $env:Path
         }
     } else {
-        Write-Host "Not prepeding missing path to environment: $Directory"
+        Write-Bad "* Not prepeding missing path to environment: $Directory"
     }
 }
 
@@ -462,7 +449,7 @@ function Initialize-AddToManPath() {
             $env:MANPATH = "$Directory;" + $env:MANPATH
         }
     } else {
-        Write-Host "Not prepeding missing path to environment: $Directory"
+        Write-Bad "* Not prepeding missing path to environment: $Directory"
     }
 }
 #endregion: path
@@ -649,7 +636,7 @@ function Get-ModulesConfig() {
     $path = "$env:KOMPANION_DOT\kompanion.json"
 
     if (Test-Path -Path $path) {
-        Write-Host "Using user-defined configuration..."
+        Write-Head "* Using user-defined configuration..."
         return Get-Content -Path $path -Raw | ConvertFrom-Json
     }
 

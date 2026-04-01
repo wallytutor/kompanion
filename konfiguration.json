@@ -9,7 +9,6 @@
         "node":    "24.11.0",
         "ollama":  "0.18.3",
         "pandoc":  "3.8",
-        "python":  "3.13.12",
         "uv":      "0.11.2"
     },
     "url": {
@@ -34,7 +33,6 @@
         "ollama":     "https://github.com/ollama/ollama/releases/download/v{0}/ollama-windows-amd64.zip",
         "pandoc":     "https://github.com/jgm/pandoc/releases/download/{0}/pandoc-{0}-windows-x86_64.zip",
         "paraview":   "https://www.paraview.org/paraview-downloads/download.php?submit=Download&version=v6.0&type=binary&os=Windows&downloadFile=ParaView-6.0.1-Windows-Python3.12-msvc2017-AMD64.zip",
-        "python":     "https://www.python.org/ftp/python/{0}/python-{0}-embed-amd64.zip",
         "prepomax":   "https://prepomax.fs.um.si/Files/Downloads/PrePoMax%20v2.5.0.zip",
         "rust":       "https://static.rust-lang.org/rustup/dist/x86_64-pc-windows-gnu/rustup-init.exe",
         "_rust":      "https://static.rust-lang.org/rustup/dist/x86_64-pc-windows-msvc/rustup-init.exe",

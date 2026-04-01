@@ -1,36 +1,27 @@
 {
     "base": {
-        "logseq":      false,
-        "tabby":       false,
-        "zettlr":      false,
-        "nvim":        false,
-        "quarto":      false,
-        "nteract":     false,
-
-        "pandoc":      false,
-        "jabref":      false,
-
-        "imagemagick": false,
-        "poppler":     false,
-        "ffmpeg":      false,
         "lessmsi":     false,
-
+        "tabby":       false,
+        "nvim":        false,
         "drawio":      false,
+        "ffmpeg":      false,
+        "imagemagick": false,
         "inkscape":    false,
-        "miktex":      false
+        "jabref":      false,
+        "miktex":      false,
+        "pandoc":      false,
+        "poppler":     false,
+        "logseq":      false,
+        "zettlr":      false
     },
     "lang": {
-        "rust":        true,
-        "dotnet":      true,
-        "julia":       false,
+        "coq":         false,
+        "elm":         false,
         "erlang":      false,
         "haskell":     false,
-        "elm":         false,
+        "julia":       false,
         "rlang":       false,
-        "racket":      false,
-        "coq":         false,
-        "node":        false,
-        "python":      false
+        "racket":      false
     },
     "simu": {
         "blender":     false,

@@ -59,3 +59,5 @@ Code.exe $path `
 - The `KompanionUI` project will then reference the `Kompanion` project to use the `OllamaService` functionalities. Add a "Ollama" tab to the UI, where users can start and stop Ollama server processes using the `Kompanion` library functionalities. It also displays the status of the running processes. Update the README.md to include instructions on how to use the new Ollama functionalities in the UI, and ensure that all necessary dependencies are included in the solution file.
 
 - The solution will have a single tests project, so move `KompanionUI.Tests` to `Kompanion.Tests`. Add unit tests for the `OllamaService` class in the `Kompanion.Tests` project, using mocked process execution wrappers to simulate the behavior of the Ollama commands.
+
+- Add mouse giggling every 10 s when KompanionUI is running to avoid screen lock. Add a tab for "Applications" and move "Logs" to be the last on the right. Under "Applications", add a button to launch Logseq. If variable `$env:LOGSEQ_HOME` is not set, just display an error message saying that the applications cannot be launched.

@@ -1,6 +1,8 @@
 using System.ComponentModel;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
+using System.Media;
 using System.Text.RegularExpressions;
 using DrawingIcon = System.Drawing.Icon;
 using FormsContextMenuStrip = System.Windows.Forms.ContextMenuStrip;
@@ -35,6 +37,7 @@ public partial class MainWindow : Window
     private bool _allowClose;
     private bool _trayTipShown;
     private CancellationTokenSource? _gitOperationCts;
+    private bool _gigglingEnabled = false;
 
     public MainWindow()
     {
@@ -48,6 +51,10 @@ public partial class MainWindow : Window
         _usage   = new UsageTracker(_logger);
         _ollama  = new OllamaService();
         _trayIcon = CreateTrayIcon();
+
+        // Add mouse event handlers for giggling functionality
+        MouseMove += MainWindow_MouseMove;
+        MouseLeftButtonUp += MainWindow_MouseLeftButtonUp;
         _logEntries = new ObservableCollection<LogListItem>();
         _ollamaEntries = new ObservableCollection<OllamaProcessInfo>();
 
@@ -313,6 +320,83 @@ public partial class MainWindow : Window
         _allowClose = true;
         _logger.Log("Kompanion exit requested from File > Exit menu.");
         Close();
+    }
+
+    private void LaunchLogseqButton_Click(object sender, RoutedEventArgs e)
+    {
+        string? logseqHome = Environment.GetEnvironmentVariable("LOGSEQ_HOME");
+        if (string.IsNullOrWhiteSpace(logseqHome))
+        {
+            SetStatus("Applications cannot be launched: $env:LOGSEQ_HOME is not set.", isError: true);
+            return;
+        }
+
+        string logseqExe = Path.Combine(logseqHome, "Logseq.exe");
+        if (!File.Exists(logseqExe))
+        {
+            string error = $"Logseq executable not found at: {logseqExe}";
+            _logger.Log(error);
+            SetStatus(error, isError: true);
+            return;
+        }
+
+        try
+        {
+            Process.Start(new ProcessStartInfo(logseqExe) { UseShellExecute = true });
+            _logger.Log($"Launched Logseq from: {logseqExe}");
+            SetStatus($"Launched Logseq.");
+        }
+        catch (Exception ex)
+        {
+            string error = $"Failed to launch Logseq: {ex.Message}";
+            _logger.Log(error);
+            SetStatus(error, isError: true);
+        }
+    }
+
+    private void GigglingMenuItem_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is not MenuItem menuItem)
+            return;
+        _gigglingEnabled = menuItem.IsChecked;
+
+        if (_gigglingEnabled)
+        {
+            SetStatus("Giggling enabled", false);
+        }
+        else
+        {
+            SetStatus("Giggling disabled", false);
+        }
+    }
+
+    private void MainWindow_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)
+    {
+        if (_gigglingEnabled)
+        {
+            PlayGiggleSound();
+        }
+    }
+
+    private void MainWindow_MouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+    {
+        if (_gigglingEnabled)
+        {
+            PlayGiggleSound();
+        }
+    }
+
+    private void PlayGiggleSound()
+    {
+        try
+        {
+            // Play a system sound for giggling effect
+            SystemSounds.Beep.Play();
+        }
+        catch (Exception ex)
+        {
+            _logger.Log($"Failed to play giggling sound: {ex.Message}");
+        }
     }
 
     private void ReloadLogs()

@@ -1,6 +1,6 @@
 using KompanionUI.Services;
 
-namespace KompanionUI.Tests;
+namespace Kompanion.Tests;
 
 internal sealed class FakeProcessExecutor : IProcessExecutor
 {

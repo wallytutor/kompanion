@@ -1,6 +1,6 @@
 using KompanionUI.Services;
 
-namespace KompanionUI.Tests;
+namespace Kompanion.Tests;
 
 public class GitServiceTests
 {

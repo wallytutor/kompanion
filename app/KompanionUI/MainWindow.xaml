@@ -264,6 +264,79 @@
                 </Grid>
             </Border>
         </TabItem>
+
+        <TabItem Header="Ollama">
+            <Border Style="{StaticResource PanelCard}" Margin="2 0 2 2">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <ToolBar Grid.Row="0" Padding="4">
+                        <Button x:Name="StartOllamaButton"
+                                Width="100"
+                                Height="26"
+                                Margin="0 0 6 0"
+                                Background="{StaticResource BrandBrush}"
+                                Foreground="White"
+                                BorderBrush="{StaticResource BrandDarkBrush}"
+                                Click="StartOllamaButton_Click">
+                            Start Server
+                        </Button>
+                        <Button x:Name="StopOllamaButton"
+                                Width="100"
+                                Height="26"
+                                Margin="0 0 6 0"
+                                Background="#FFB7472A"
+                                Foreground="White"
+                                BorderBrush="#FF8D3821"
+                                Click="StopOllamaButton_Click">
+                            Stop Server
+                        </Button>
+                        <Button x:Name="RefreshOllamaButton"
+                                Width="80"
+                                Height="26"
+                                Margin="0 0 6 0"
+                                Background="{StaticResource BrandBrush}"
+                                Foreground="White"
+                                BorderBrush="{StaticResource BrandDarkBrush}"
+                                Click="RefreshOllamaButton_Click">
+                            Refresh
+                        </Button>
+                        <Separator/>
+                        <TextBlock x:Name="OllamaStatusText"
+                                   VerticalAlignment="Center"
+                                   Margin="6 0"
+                                   Foreground="{StaticResource BodyTextBrush}"
+                                   TextWrapping="Wrap"
+                                   Text="Ollama status will appear here."/>
+                    </ToolBar>
+
+                    <TextBlock Grid.Row="1"
+                               Margin="6 0 6 6"
+                               Style="{StaticResource MutedLabel}"
+                               Text="Running Ollama processes for OLLAMA_HOME executable."/>
+
+                    <ListView Grid.Row="2"
+                              x:Name="OllamaProcessesList"
+                              Margin="6"
+                              BorderBrush="#FFC4E3DC"
+                              Background="{StaticResource SurfaceBrush}"
+                              Foreground="{StaticResource BodyTextBrush}">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Header="PID" Width="90"
+                                                DisplayMemberBinding="{Binding Id}"/>
+                                <GridViewColumn Header="Executable Path" Width="500"
+                                                DisplayMemberBinding="{Binding Path}"/>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </Grid>
+            </Border>
+        </TabItem>
         </TabControl>
     </Grid>
 </Window>

@@ -1,7 +1,7 @@
 using KompanionUI.Models;
 using KompanionUI.Services;
 
-namespace KompanionUI.Tests;
+namespace Kompanion.Tests;
 
 public class UsageTrackerTests
 {

@@ -23,11 +23,11 @@ A self-contained WPF application for Windows that bootstraps your development en
 
 | Question | Decision | Rationale |
 |---|---|---|
-| UI framework | WPF (.NET 9) | Richer styling and data-binding than WinForms; native Windows look |
-| Main layout | Three tabs: Repositories + Settings + Logs | Separates operational actions, future configuration, and observability |
+| UI framework | WPF (.NET 10) | Richer styling and data-binding than WinForms; native Windows look |
+| Main layout | Four tabs: Repositories + Settings + Logs + Ollama | Separates operational actions, observability, and Ollama lifecycle controls |
 | Visual design | Teal brand theme (`#009688`) | Matches the app icon for a cohesive, recognizable look |
 | Architecture | Thin code-behind + service classes | Keeps UI logic separate; easy to test services in isolation |
-| Process execution | Shared `IProcessExecutor` abstraction | Enables deterministic unit tests and consistent timeout/cancel behavior |
+| Process execution | Shared `IProcessExecutor` abstraction plus `Kompanion` core services | Enables deterministic unit tests and reuse of process control logic across apps |
 | Startup script | Run synchronously, then import env vars | A child process cannot push env vars back to the parent; we dump `Get-ChildItem Env:` after the script and call `Environment.SetEnvironmentVariable` for each entry |
 | Git operations | Async UI handlers + background execution | Keeps the UI responsive and guarantees controls are re-enabled via `try/finally` |
 | Git cancellation | UI cancel button + cancellation token | Long pull/push operations can be stopped cleanly by the user |
@@ -44,19 +44,24 @@ A self-contained WPF application for Windows that bootstraps your development en
 
 ```
 app/
-├── Kompanion.sln               # Solution containing the app and test projects
+├── Kompanion.slnx              # Solution containing core, UI, and test projects
 ├── README.md                   # Build, test, publish, and usage guide
-├── KompanionUI.Tests/          # Root-level test project
-│   ├── KompanionUI.Tests.csproj
+├── Kompanion/                  # Core library (net10.0)
+│   ├── Kompanion.csproj
+│   └── Services/
+│       └── OllamaService.cs
+├── Kompanion.Tests/            # Root-level test project
+│   ├── Kompanion.Tests.csproj
 │   ├── ScriptRunnerTests.cs
 │   ├── GitServiceTests.cs
+│   ├── OllamaServiceTests.cs
 │   ├── UsageTrackerTests.cs
 │   └── FakeProcessExecutor.cs
 ├── prompt.md                   # Original feature brief / design prompt
 └── KompanionUI/
-    ├── KompanionUI.csproj      # Project file (WPF, net9.0-windows, single-file)
+    ├── KompanionUI.csproj      # Project file (WPF, net10.0-windows, single-file)
     ├── App.xaml / App.xaml.cs  # Application entry point; runs KOMPANION_SOURCE
-    ├── MainWindow.xaml         # Three-tab UI: Repositories, Settings, and Logs
+    ├── MainWindow.xaml         # Four-tab UI: Repositories, Settings, Logs, Ollama
     ├── MainWindow.xaml.cs      # UI handlers; tray behavior; async/cancellable git actions
     ├── Assets/
     │   └── icon.ico            # App icon (teal circle + white "K", 48/32/16 px)
@@ -82,6 +87,7 @@ app/
 | `KOMPANION_REPO` | Yes | Directory scanned for Git repositories |
 | `KOMPANION_DIR` | No | Main repository pinned to the top of the list when it is a Git repository |
 | `KOMPANION_LOGS` | No | Directory where `kompanion-ui.log` is written |
+| `OLLAMA_HOME` | Required for Ollama tab | Directory containing `ollama.exe` |
 | `VSCODE_EXTENSIONS` | No | Passed to `code.exe --extensions-dir` |
 | `VSCODE_SETTINGS` | No | Passed to `code.exe --user-data-dir` |
 
@@ -91,10 +97,10 @@ app/
 
 ```powershell
 # From the app/ directory
-dotnet build .\Kompanion.sln
+dotnet build .\Kompanion.slnx
 ```
 
-The application output goes to `KompanionUI\bin\Debug\net9.0-windows\win-x64\KompanionUI.exe`.
+The application output goes to `KompanionUI\bin\Debug\net10.0-windows\win-x64\KompanionUI.exe`.
 
 ---
 
@@ -102,13 +108,14 @@ The application output goes to `KompanionUI\bin\Debug\net9.0-windows\win-x64\Kom
 
 ```powershell
 # From the app/ directory
-dotnet test .\Kompanion.sln
+dotnet test .\Kompanion.slnx
 ```
 
 The current test coverage verifies:
 
 - `ScriptRunner` startup success env import and non-zero exit-code handling.
 - `GitService` repository validation, successful execution, and cancellation behavior.
+- `OllamaService` start/stop lifecycle outcomes with mocked runtime abstractions.
 
 ---
 
@@ -120,7 +127,7 @@ dotnet publish .\KompanionUI\KompanionUI.csproj -c Release -o publish
 ```
 
 The single-file executable is written under
-`KompanionUI\bin\Release\net9.0-windows\win-x64\publish\KompanionUI.exe`
+`KompanionUI\bin\Release\net10.0-windows\win-x64\publish\KompanionUI.exe`
 (~128 MB, all dependencies bundled).
 
 ---
@@ -134,10 +141,11 @@ The single-file executable is written under
 4. The startup script is executed and its environment is imported. The repository list
     is populated automatically. If `KOMPANION_DIR` is set to a Git repository, it is shown
     first even when it is outside `KOMPANION_REPO`.
-5. The UI has three tabs:
+5. The UI has four tabs:
     - **Repositories**: list of detected repositories and action buttons.
     - **Settings**: placeholder panel for upcoming configuration.
     - **Logs**: readable log viewer with separate timestamp and message columns.
+    - **Ollama**: start/stop/refresh Ollama server status using the shared core `OllamaService`.
 6. Use the buttons in each repository row:
     - **Launch** — opens VS Code at the repository root (detached, maximized, stays open if you close
      the app).
@@ -148,7 +156,11 @@ The single-file executable is written under
 9. Repository order is usage-aware: every Launch/Pull/Push increments a counter in
     `%KOMPANION_LOGS%\repo-usage.json`, repositories are sorted by descending usage,
     and `KOMPANION_DIR` stays pinned at the top.
-10. Clicking the window close button sends Kompanion to the system tray instead of
+10. In the **Ollama** tab:
+    - Use **Start Server** to launch `ollama.exe serve` from `OLLAMA_HOME`.
+    - Use **Stop Server** to stop Ollama processes matching that executable path.
+    - Use **Refresh** to reload running process status (PID and executable path).
+11. Clicking the window close button sends Kompanion to the system tray instead of
     exiting. Use the tray icon to restore the window, choose **Exit** from the tray menu,
     or use **File > Exit** in the app window to stop the app.
 

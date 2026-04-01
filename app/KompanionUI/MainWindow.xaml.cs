@@ -9,6 +9,7 @@ using FormsToolStripMenuItem = System.Windows.Forms.ToolStripMenuItem;
 using FormsToolStripSeparator = System.Windows.Forms.ToolStripSeparator;
 using System.Windows;
 using System.Windows.Controls;
+using Kompanion.Services;
 using KompanionUI.Services;
 
 namespace KompanionUI;
@@ -26,8 +27,10 @@ public partial class MainWindow : Window
     private readonly VsCodeLauncher _vscode;
     private readonly GitService     _git;
     private readonly UsageTracker   _usage;
+    private readonly OllamaService  _ollama;
     private readonly FormsNotifyIcon _trayIcon;
     private readonly ObservableCollection<LogListItem> _logEntries;
+    private readonly ObservableCollection<OllamaProcessInfo> _ollamaEntries;
 
     private bool _allowClose;
     private bool _trayTipShown;
@@ -43,11 +46,15 @@ public partial class MainWindow : Window
         _vscode  = new VsCodeLauncher(_logger);
         _git     = new GitService(_logger);
         _usage   = new UsageTracker(_logger);
+        _ollama  = new OllamaService();
         _trayIcon = CreateTrayIcon();
         _logEntries = new ObservableCollection<LogListItem>();
+        _ollamaEntries = new ObservableCollection<OllamaProcessInfo>();
 
         LogsList.ItemsSource = _logEntries;
+        OllamaProcessesList.ItemsSource = _ollamaEntries;
         ReloadLogs();
+        RefreshOllamaStatus();
 
         // Run the startup script on a background thread so the window is
         // visible immediately; populate the repo list once the script finishes.
@@ -279,6 +286,28 @@ public partial class MainWindow : Window
         ReloadLogs();
     }
 
+    private void RefreshOllamaButton_Click(object sender, RoutedEventArgs e)
+    {
+        RefreshOllamaStatus("Ollama status refreshed.");
+    }
+
+    private void StartOllamaButton_Click(object sender, RoutedEventArgs e)
+    {
+        var result = _ollama.Serve();
+        _logger.Log($"Ollama serve result: {result.Status} - {result.Message}");
+        RefreshOllamaStatus(result.Message, isError: result.Status == OllamaServeStatus.FailedToStart ||
+            result.Status == OllamaServeStatus.NotConfigured ||
+            result.Status == OllamaServeStatus.ExecutableNotFound);
+    }
+
+    private void StopOllamaButton_Click(object sender, RoutedEventArgs e)
+    {
+        var result = _ollama.Stop();
+        _logger.Log($"Ollama stop result: {result.Status} - {result.Message}");
+        RefreshOllamaStatus(result.Message, isError: result.Status == OllamaStopStatus.FailedToStop ||
+            result.Status == OllamaStopStatus.StillRunning);
+    }
+
     private void ExitMenuItem_Click(object sender, RoutedEventArgs e)
     {
         _allowClose = true;
@@ -321,6 +350,23 @@ public partial class MainWindow : Window
             _logger.Log($"Failed to load logs tab content: {ex.Message}");
             LogsHintText.Text = "Could not load log file. Check file permissions and try again.";
         }
+    }
+
+    private void RefreshOllamaStatus(string? message = null, bool isError = false)
+    {
+        _ollamaEntries.Clear();
+
+        foreach (OllamaProcessInfo process in _ollama.GetRunningProcesses())
+            _ollamaEntries.Add(process);
+
+        string status = message ?? (_ollamaEntries.Count == 0
+            ? "Ollama server is not running."
+            : $"Ollama server running with {_ollamaEntries.Count} process(es).");
+
+        OllamaStatusText.Text = status;
+        OllamaStatusText.Foreground = isError
+            ? System.Windows.Media.Brushes.Firebrick
+            : System.Windows.Media.Brushes.DarkSlateGray;
     }
 
     private static LogListItem ParseLogLine(string line)

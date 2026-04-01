@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="KompanionUI.Tests/KompanionUI.Tests.csproj" />
+  <Project Path="KompanionUI/KompanionUI.csproj" />
+</Solution>

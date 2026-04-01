@@ -135,7 +135,7 @@ Now all PowerShell sessions will automatically source Kompanion, and you can sta
 
 ### Graphical user interface
 
-Kompanion includes a self-contained WPF application for Windows that scans `$env:KOMPANION_REPO` directory for Git repositories, and lets you launch VS Code, pull, or push each one with a single click. You can find the source code in the `.kompanion/ui` directory of this repository. To build the application you need to enable .NET support in Kompanion (see `kompanion-sample.json`) and have added `$env:KOMPANION_SOURCE` to your user environment variables as described in the previous section. Then you can follow instructions in the `README.md` file of that directory to build and run the application. You can pin the resulting `KompanionUI.exe` to your taskbar for easy access.
+Kompanion includes a self-contained WPF application for Windows that scans `$env:KOMPANION_REPO` directory for Git repositories, and lets you launch VS Code, pull, or push each one with a single click. You can find the source code in the `app` directory of this repository. To build the application you need to enable .NET support in Kompanion (see `kompanion-sample.json`) and have added `$env:KOMPANION_SOURCE` to your user environment variables as described in the previous section. Then you can follow instructions in the `README.md` file of that directory to build and run the application. You can pin the resulting `KompanionUI.exe` to your taskbar for easy access.
 
 ### User configuration
 

@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\KompanionUI.csproj" />
+    <ProjectReference Include="..\KompanionUI\KompanionUI.csproj" />
   </ItemGroup>
 
 </Project>

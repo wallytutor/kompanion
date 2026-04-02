@@ -40,13 +40,14 @@ public partial class MainWindow : Window
     private CancellationTokenSource? _gitOperationCts;
     private readonly DispatcherTimer _mouseJiggleTimer;
     private bool _mouseJigglingEnabled = true;
-    private int _jiggleOffset = 1;
+    private int _jiggleOffset = 4;
+    private long _jiggleInterval = 3;
 
     public MainWindow()
     {
         _mouseJiggleTimer = new DispatcherTimer
         {
-            Interval = TimeSpan.FromSeconds(10)
+            Interval = TimeSpan.FromSeconds(_jiggleInterval)
         };
         _mouseJiggleTimer.Tick += MouseJiggleTimer_Tick;
 
@@ -252,7 +253,6 @@ public partial class MainWindow : Window
         SetStatus("Cancellation requested. Waiting for Git to stop...");
     }
 
-
     // ------------------------------------------------------------------ //
     //  Helpers
     // ------------------------------------------------------------------ //
@@ -406,12 +406,11 @@ public partial class MainWindow : Window
             return;
 
         int targetX = currentPosition.X + _jiggleOffset;
-        int targetY = currentPosition.Y;
+        int targetY = currentPosition.Y + _jiggleOffset;
 
         _jiggleOffset = -_jiggleOffset;
 
         SetCursorPos(targetX, targetY);
-        SetCursorPos(currentPosition.X, currentPosition.Y);
     }
 
     [DllImport("user32.dll")]

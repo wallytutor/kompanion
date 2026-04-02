@@ -24,7 +24,8 @@ A self-contained WPF application for Windows that bootstraps your development en
 | Question | Decision | Rationale |
 |---|---|---|
 | UI framework | WPF (.NET 10) | Richer styling and data-binding than WinForms; native Windows look |
-| Main layout | Four tabs: Repositories + Settings + Logs + Ollama | Separates operational actions, observability, and Ollama lifecycle controls |
+| Main layout | Five tabs: Repositories + Settings + Ollama + Applications + Logs | Separates operational actions, app behavior settings, observability, and external service controls |
+| Screen-lock prevention | Mouse jiggling every 10 seconds (enabled by default) | Light cursor movement can keep systems from auto-locking during active sessions |
 | Visual design | Teal brand theme (`#009688`) | Matches the app icon for a cohesive, recognizable look |
 | Architecture | Thin code-behind + service classes | Keeps UI logic separate; easy to test services in isolation |
 | Process execution | Shared `IProcessExecutor` abstraction plus `Kompanion` core services | Enables deterministic unit tests and reuse of process control logic across apps |
@@ -61,8 +62,8 @@ app/
 └── KompanionUI/
     ├── KompanionUI.csproj      # Project file (WPF, net10.0-windows, single-file)
     ├── App.xaml / App.xaml.cs  # Application entry point; runs KOMPANION_SOURCE
-    ├── MainWindow.xaml         # Four-tab UI: Repositories, Settings, Logs, Ollama
-    ├── MainWindow.xaml.cs      # UI handlers; tray behavior; async/cancellable git actions
+    ├── MainWindow.xaml         # Five-tab UI: Repositories, Settings, Ollama, Applications, Logs
+    ├── MainWindow.xaml.cs      # UI handlers; tray behavior; async/cancellable git actions; mouse jiggling
     ├── Assets/
     │   └── icon.ico            # App icon (teal circle + white "K", 48/32/16 px)
     ├── Models/
@@ -141,26 +142,42 @@ The single-file executable is written under
 4. The startup script is executed and its environment is imported. The repository list
     is populated automatically. If `KOMPANION_DIR` is set to a Git repository, it is shown
     first even when it is outside `KOMPANION_REPO`.
-5. The UI has four tabs:
+5. The UI has five tabs:
     - **Repositories**: list of detected repositories and action buttons.
-    - **Settings**: placeholder panel for upcoming configuration.
-    - **Logs**: readable log viewer with separate timestamp and message columns.
+    - **Settings**: behavior controls, including the mouse jiggling toggle.
     - **Ollama**: start/stop/refresh Ollama server status using the shared core `OllamaService`.
-6. Use the buttons in each repository row:
+    - **Applications**: launch external applications such as Logseq.
+    - **Logs**: readable log viewer with separate timestamp and message columns.
+
+6. Mouse jiggling (screen-lock prevention):
+
+Mouse jiggling is enabled by default while KompanionUI is running. Every 10 seconds, the app slightly moves the cursor and returns it to the original position.
+
+If you are not familiar with mouse jiggling: it is a small automatic cursor movement used to keep some systems from treating the session as idle. It does not click, type, or interact with applications.
+
+To enable or disable it:
+
+1. Open KompanionUI.
+2. Select the **Settings** tab.
+3. Toggle **Enable mouse jiggling every 10 seconds** on or off.
+
+When this option is turned off, KompanionUI stops simulating cursor movement immediately.
+
+7. Use the buttons in each repository row:
     - **Launch** — opens VS Code at the repository root (detached, maximized, stays open if you close
-     the app).
-   - **Pull** — runs `git pull`; result is shown in the status bar and logged.
-   - **Push** — runs `git push`; result is shown in the status bar and logged.
-7. While pull/push is running, use **Cancel Git** to request cancellation.
-8. Click **Refresh** at any time to re-scan `KOMPANION_REPO`.
-9. Repository order is usage-aware: every Launch/Pull/Push increments a counter in
+      the app).
+    - **Pull** — runs `git pull`; result is shown in the status bar and logged.
+    - **Push** — runs `git push`; result is shown in the status bar and logged.
+8. While pull/push is running, use **Cancel Git** to request cancellation.
+9. Click **Refresh** at any time to re-scan `KOMPANION_REPO`.
+10. Repository order is usage-aware: every Launch/Pull/Push increments a counter in
     `%KOMPANION_LOGS%\repo-usage.json`, repositories are sorted by descending usage,
     and `KOMPANION_DIR` stays pinned at the top.
-10. In the **Ollama** tab:
+11. In the **Ollama** tab:
     - Use **Start Server** to launch `ollama.exe serve` from `OLLAMA_HOME`.
     - Use **Stop Server** to stop Ollama processes matching that executable path.
     - Use **Refresh** to reload running process status (PID and executable path).
-11. Clicking the window close button sends Kompanion to the system tray instead of
+12. Clicking the window close button sends Kompanion to the system tray instead of
     exiting. Use the tray icon to restore the window, choose **Exit** from the tray menu,
     or use **File > Exit** in the app window to stop the app.
 

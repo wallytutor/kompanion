@@ -83,7 +83,6 @@
 
         <Menu Grid.Row="0" Background="{StaticResource CardBrush}">
             <MenuItem Header="_File">
-                <MenuItem Header="Giggling" Click="GigglingMenuItem_Click" IsCheckable="True" IsChecked="False"/>
                 <MenuItem Header="E_xit" Click="ExitMenuItem_Click"/>
             </MenuItem>
         </Menu>
@@ -204,14 +203,25 @@
 
         <TabItem Header="Settings">
             <Border Style="{StaticResource PanelCard}" Margin="2 0 2 2">
-                <Grid>
-                    <TextBlock
-                               Margin="6"
-                               FontSize="20"
-                               FontWeight="Bold"
+                <StackPanel Margin="8">
+                    <TextBlock Margin="0 0 0 10"
+                               FontSize="18"
+                               FontWeight="SemiBold"
                                Foreground="{StaticResource BrandDarkBrush}"
-                               Text="Settings coming soon!"/>
-                </Grid>
+                               Text="Behavior"/>
+
+                    <CheckBox x:Name="MouseJigglingCheckBox"
+                              Content="Enable mouse jiggling every 10 seconds"
+                              IsChecked="True"
+                              Margin="0 0 0 8"
+                              Checked="MouseJigglingCheckBox_Changed"
+                              Unchecked="MouseJigglingCheckBox_Changed"/>
+
+                    <TextBlock Style="{StaticResource MutedLabel}"
+                               Margin="0"
+                               TextWrapping="Wrap"
+                               Text="When enabled, Kompanion briefly moves the cursor and returns it to its original position to help prevent automatic screen lock while the app is running."/>
+                </StackPanel>
             </Border>
         </TabItem>
 

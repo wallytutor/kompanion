@@ -2,7 +2,7 @@ using System.ComponentModel;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
-using System.Media;
+using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using DrawingIcon = System.Drawing.Icon;
 using FormsContextMenuStrip = System.Windows.Forms.ContextMenuStrip;
@@ -11,6 +11,7 @@ using FormsToolStripMenuItem = System.Windows.Forms.ToolStripMenuItem;
 using FormsToolStripSeparator = System.Windows.Forms.ToolStripSeparator;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Threading;
 using Kompanion.Services;
 using KompanionUI.Services;
 
@@ -37,10 +38,18 @@ public partial class MainWindow : Window
     private bool _allowClose;
     private bool _trayTipShown;
     private CancellationTokenSource? _gitOperationCts;
-    private bool _gigglingEnabled = false;
+    private readonly DispatcherTimer _mouseJiggleTimer;
+    private bool _mouseJigglingEnabled = true;
+    private int _jiggleOffset = 1;
 
     public MainWindow()
     {
+        _mouseJiggleTimer = new DispatcherTimer
+        {
+            Interval = TimeSpan.FromSeconds(10)
+        };
+        _mouseJiggleTimer.Tick += MouseJiggleTimer_Tick;
+
         InitializeComponent();
 
         _logger  = new Logger();
@@ -52,9 +61,6 @@ public partial class MainWindow : Window
         _ollama  = new OllamaService();
         _trayIcon = CreateTrayIcon();
 
-        // Add mouse event handlers for giggling functionality
-        MouseMove += MainWindow_MouseMove;
-        MouseLeftButtonUp += MainWindow_MouseLeftButtonUp;
         _logEntries = new ObservableCollection<LogListItem>();
         _ollamaEntries = new ObservableCollection<OllamaProcessInfo>();
 
@@ -68,6 +74,8 @@ public partial class MainWindow : Window
         Loaded += OnLoadedAsync;
         Closing += OnWindowClosing;
         Closed += OnWindowClosed;
+
+        ApplyMouseJigglingSetting();
     }
 
     private async void OnLoadedAsync(object sender, RoutedEventArgs e)
@@ -125,6 +133,7 @@ public partial class MainWindow : Window
 
     private void OnWindowClosed(object? sender, EventArgs e)
     {
+        _mouseJiggleTimer.Stop();
         _trayIcon.Visible = false;
         _trayIcon.Dispose();
     }
@@ -354,49 +363,71 @@ public partial class MainWindow : Window
         }
     }
 
-    private void GigglingMenuItem_Click(object sender, RoutedEventArgs e)
+    private void MouseJigglingCheckBox_Changed(object sender, RoutedEventArgs e)
     {
-        if (sender is not MenuItem menuItem)
+        ApplyMouseJigglingSetting();
+
+        if (!IsLoaded || StatusText is null)
             return;
-        _gigglingEnabled = menuItem.IsChecked;
 
-        if (_gigglingEnabled)
-        {
-            SetStatus("Giggling enabled", false);
-        }
-        else
-        {
-            SetStatus("Giggling disabled", false);
-        }
+        SetStatus(
+            _mouseJigglingEnabled
+                ? "Mouse jiggling enabled."
+                : "Mouse jiggling disabled.",
+            false);
     }
 
-    private void MainWindow_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)
+    private void ApplyMouseJigglingSetting()
     {
-        if (_gigglingEnabled)
+        _mouseJigglingEnabled = MouseJigglingCheckBox?.IsChecked ?? true;
+
+        if (_mouseJigglingEnabled)
         {
-            PlayGiggleSound();
+            if (!_mouseJiggleTimer.IsEnabled)
+                _mouseJiggleTimer.Start();
+
+            return;
         }
+
+        _mouseJiggleTimer.Stop();
     }
 
-    private void MainWindow_MouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+    private void MouseJiggleTimer_Tick(object? sender, EventArgs e)
     {
-        if (_gigglingEnabled)
-        {
-            PlayGiggleSound();
-        }
+        if (!_mouseJigglingEnabled)
+            return;
+
+        JiggleMouseCursor();
     }
 
-    private void PlayGiggleSound()
+    private void JiggleMouseCursor()
     {
-        try
-        {
-            // Play a system sound for giggling effect
-            SystemSounds.Beep.Play();
-        }
-        catch (Exception ex)
-        {
-            _logger.Log($"Failed to play giggling sound: {ex.Message}");
-        }
+        if (!TryGetCursorPos(out NativePoint currentPosition))
+            return;
+
+        int targetX = currentPosition.X + _jiggleOffset;
+        int targetY = currentPosition.Y;
+
+        _jiggleOffset = -_jiggleOffset;
+
+        SetCursorPos(targetX, targetY);
+        SetCursorPos(currentPosition.X, currentPosition.Y);
+    }
+
+    [DllImport("user32.dll")]
+    private static extern bool SetCursorPos(int x, int y);
+
+    [DllImport("user32.dll")]
+    private static extern bool GetCursorPos(out NativePoint point);
+
+    private static bool TryGetCursorPos(out NativePoint point)
+        => GetCursorPos(out point);
+
+    [StructLayout(LayoutKind.Sequential)]
+    private struct NativePoint
+    {
+        public int X;
+        public int Y;
     }
 
     private void ReloadLogs()

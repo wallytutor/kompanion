@@ -2,6 +2,7 @@
     x:Class="KompanionUI.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:KompanionUI.Converters"
     Title="Kompanion"
     Icon="Assets/icon.ico"
     Width="700"
@@ -11,6 +12,7 @@
     WindowStartupLocation="CenterScreen">
 
     <Window.Resources>
+        <local:HexColorToBrushConverter x:Key="HexColorToBrushConverter"/>
         <SolidColorBrush x:Key="BrandBrush" Color="#FF009688"/>
         <SolidColorBrush x:Key="BrandDarkBrush" Color="#FF00695C"/>
         <SolidColorBrush x:Key="SurfaceBrush" Color="#FFF2FAF8"/>
@@ -104,6 +106,17 @@
                             ToolTip="Re-scan $env:KOMPANION_REPO">
                         Refresh
                     </Button>
+                    <Button x:Name="CheckAllButton"
+                            Click="CheckAllButton_Click"
+                            Width="90"
+                            Padding="6 3"
+                            Margin="0 0 6 0"
+                            Background="{StaticResource BrandBrush}"
+                            Foreground="White"
+                            BorderBrush="{StaticResource BrandDarkBrush}"
+                            ToolTip="Check status of all repositories">
+                        Check All
+                    </Button>
                     <Button x:Name="CancelGitButton"
                             Click="CancelGitButton_Click"
                             Width="90"
@@ -130,9 +143,10 @@
                         <ColumnDefinition Width="80"/>
                         <ColumnDefinition Width="80"/>
                         <ColumnDefinition Width="80"/>
+                        <ColumnDefinition Width="80"/>
                     </Grid.ColumnDefinitions>
                         <Border Background="{StaticResource HeaderBgBrush}"
-                            Grid.ColumnSpan="4"
+                            Grid.ColumnSpan="5"
                             BorderBrush="#FFC4E3DC"
                             BorderThickness="0 0 0 1"/>
                     <TextBlock Grid.Column="0" Text="Repository" Style="{StaticResource HeaderStyle}"/>
@@ -141,6 +155,8 @@
                     <TextBlock Grid.Column="2" Text="Pull" Style="{StaticResource HeaderStyle}"
                                HorizontalAlignment="Center"/>
                     <TextBlock Grid.Column="3" Text="Push" Style="{StaticResource HeaderStyle}"
+                               HorizontalAlignment="Center"/>
+                    <TextBlock Grid.Column="4" Text="Status" Style="{StaticResource HeaderStyle}"
                                HorizontalAlignment="Center"/>
                 </Grid>
 
@@ -154,19 +170,29 @@
                                         <ColumnDefinition Width="80"/>
                                         <ColumnDefinition Width="80"/>
                                         <ColumnDefinition Width="80"/>
+                                        <ColumnDefinition Width="80"/>
                                     </Grid.ColumnDefinitions>
 
-                                    <Border Grid.ColumnSpan="4"
+                                    <Border Grid.ColumnSpan="5"
                                             BorderBrush="#FFE3F1ED"
                                             BorderThickness="0 0 0 1"/>
 
                                     <TextBlock Grid.Column="0"
-                                               Text="{Binding Name}"
                                                VerticalAlignment="Center"
                                                Margin="8 4"
                                                Foreground="{StaticResource BodyTextBrush}"
-                                               ToolTip="{Binding FullPath}"
-                                               TextTrimming="CharacterEllipsis"/>
+                                               ToolTip="{Binding FullPath}">
+                                        <StackPanel Orientation="Horizontal">
+                                            <Ellipse Width="12"
+                                                     Height="12"
+                                                     Fill="{Binding StatusColor, Converter={StaticResource HexColorToBrushConverter}}"
+                                                     VerticalAlignment="Center"
+                                                     Margin="0 0 6 0"
+                                                     ToolTip="Repository status"/>
+                                            <TextBlock Text="{Binding Name}"
+                                                       TextTrimming="CharacterEllipsis"/>
+                                        </StackPanel>
+                                    </TextBlock>
 
                                     <Button Grid.Column="1"
                                             Style="{StaticResource ActionButton}"
@@ -190,6 +216,14 @@
                                             Click="PushButton_Click"
                                             ToolTip="git push">
                                         Push
+                                    </Button>
+
+                                    <Button Grid.Column="4"
+                                            Style="{StaticResource ActionButton}"
+                                            Tag="{Binding FullPath}"
+                                            Click="StatusButton_Click"
+                                            ToolTip="git status">
+                                        Status
                                     </Button>
                                 </Grid>
                             </DataTemplate>

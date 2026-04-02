@@ -119,6 +119,47 @@ public partial class MainWindow : Window
 
     private void RefreshButton_Click(object sender, RoutedEventArgs e) => Refresh();
 
+    private async void CheckAllButton_Click(object sender, RoutedEventArgs e)
+    {
+        var button = (System.Windows.Controls.Button)sender;
+        button.IsEnabled = false;
+        SetStatus("Checking status of all repositories...");
+
+        try
+        {
+            if (RepoList.ItemsSource is not
+                IEnumerable<Models.RepoEntry> repos)
+                return;
+
+            // Check all repositories in parallel.
+            var tasks = repos
+                .Select(async repo =>
+                {
+                    bool isClean = await Task.Run(
+                        () => _git.IsRepositoryClean(repo.FullPath));
+
+                    // Update the UI on the dispatcher thread.
+                    Dispatcher.Invoke(() =>
+                    {
+                        repo.StatusColor = isClean
+                            ? "#FF00B050" // Green: clean
+                            : "#FFFF0000"; // Red: has changes
+                    });
+                })
+                .ToList();
+
+            await Task.WhenAll(tasks);
+
+            SetStatus(
+                $"Status check complete for {repos.Count()} " +
+                $"repositor{(repos.Count() == 1 ? "y" : "ies")}.");
+        }
+        finally
+        {
+            button.IsEnabled = true;
+        }
+    }
+
     // ------------------------------------------------------------------ //
     //  Window lifecycle
     // ------------------------------------------------------------------ //
@@ -157,6 +198,94 @@ public partial class MainWindow : Window
             ShowError(error);
         else
             SetStatus($"Launched VSCode at: {path}");
+    }
+
+    // ------------------------------------------------------------------ //
+    //  Status
+    // ------------------------------------------------------------------ //
+
+    private async void StatusButton_Click(object sender, RoutedEventArgs e)
+    {
+        string? path = GetTagPath(sender, "Status");
+        if (path == null) return;
+
+        SetStatus($"Running git status in: {path}");
+        SetAllEnabled(false);
+
+        try
+        {
+            var (success, output) = await Task.Run(() => _git.GetStatus(path));
+
+            string repoName = System.IO.Path.GetFileName(path);
+            string title = $"git status — {repoName}";
+
+            // Show result in a scrollable popup window.
+            ShowOutputPopup(title, output, success);
+
+            SetStatus(success
+                ? $"git status completed for: {repoName}"
+                : $"git status failed for: {repoName}", isError: !success);
+        }
+        finally
+        {
+            SetAllEnabled(true);
+        }
+    }
+
+    /// <summary>
+    /// Opens a small popup window that displays pre-formatted text output (e.g. git status).
+    /// </summary>
+    private void ShowOutputPopup(string title, string content, bool success)
+    {
+        var popup = new Window
+        {
+            Title = title,
+            Width = 600,
+            Height = 420,
+            MinWidth = 300,
+            MinHeight = 200,
+            WindowStartupLocation = WindowStartupLocation.CenterOwner,
+            Owner = this,
+            Background = System.Windows.Media.Brushes.White,
+        };
+
+        var textBox = new System.Windows.Controls.TextBox
+        {
+            Text = content,
+            IsReadOnly = true,
+            FontFamily = new System.Windows.Media.FontFamily("Consolas, Courier New, monospace"),
+            FontSize = 12,
+            Margin = new Thickness(8),
+            BorderThickness = new Thickness(0),
+            Background = System.Windows.Media.Brushes.White,
+            Foreground = success
+                ? System.Windows.Media.Brushes.Black
+                : System.Windows.Media.Brushes.DarkRed,
+            TextWrapping = System.Windows.TextWrapping.Wrap,
+            VerticalScrollBarVisibility = System.Windows.Controls.ScrollBarVisibility.Auto,
+            HorizontalScrollBarVisibility = System.Windows.Controls.ScrollBarVisibility.Auto,
+            AcceptsReturn = true,
+            VerticalAlignment = System.Windows.VerticalAlignment.Stretch,
+            HorizontalAlignment = System.Windows.HorizontalAlignment.Stretch,
+        };
+
+        var closeButton = new System.Windows.Controls.Button
+        {
+            Content = "Close",
+            Width = 80,
+            Height = 26,
+            Margin = new Thickness(0, 4, 8, 8),
+            HorizontalAlignment = System.Windows.HorizontalAlignment.Right,
+        };
+        closeButton.Click += (_, _) => popup.Close();
+
+        var root = new DockPanel();
+        DockPanel.SetDock(closeButton, Dock.Bottom);
+        root.Children.Add(closeButton);
+        root.Children.Add(textBox);
+
+        popup.Content = root;
+        popup.ShowDialog();
     }
 
     // ------------------------------------------------------------------ //

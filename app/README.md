@@ -168,8 +168,21 @@ When this option is turned off, KompanionUI stops simulating cursor movement imm
       the app).
     - **Pull** — runs `git pull`; result is shown in the status bar and logged.
     - **Push** — runs `git push`; result is shown in the status bar and logged.
+    - **Status** — runs `git status` and shows the full output in a popup window. This lets you
+      quickly inspect uncommitted changes, the current branch, and whether the branch is ahead or
+      behind the remote, without opening VS Code. If you are not familiar with `git status`: it
+      reports the state of the working tree — modified files, staged changes, untracked files, and
+      the relationship with the remote branch. The Status button does not modify the repository in
+      any way.
 8. While pull/push is running, use **Cancel Git** to request cancellation.
 9. Click **Refresh** at any time to re-scan `KOMPANION_REPO`.
+9.1. Repository status indicators:
+    - A small colored circle appears to the left of each repository name:
+      - **Gray** — status has not been checked yet.
+      - **Green** — repository is clean (no uncommitted changes, in sync with remote).
+      - **Red** — repository has changes (uncommitted modifications, untracked files, or divergence from remote).
+    Click **Check All** (next to **Refresh**) to scan all repositories at once and update the indicators.
+    This is useful for quickly identifying which repositories need attention without running Git commands.
 10. Repository order is usage-aware: every Launch/Pull/Push increments a counter in
     `%KOMPANION_LOGS%\repo-usage.json`, repositories are sorted by descending usage,
     and `KOMPANION_DIR` stays pinned at the top.

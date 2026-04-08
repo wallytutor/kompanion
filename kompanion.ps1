@@ -111,13 +111,13 @@ function Start-KompanionMain {
     Set-KompanionEnvVar -Name "USERPROFILE"     -Value "$PSScriptRoot"
     Set-KompanionEnvVar -Name "APPDATA"         -Value "$PSScriptRoot\AppData\Roaming"
     Set-KompanionEnvVar -Name "LOCALAPPDATA"    -Value "$PSScriptRoot\AppData\Local"
+    Set-KompanionEnvVar -Name "XDG_CONFIG_HOME" -Value "$PSScriptRoot\.config"
     Set-KompanionEnvVar -Name "KOMPANION_DIR"   -Value "$PSScriptRoot"
     Set-KompanionEnvVar -Name "KOMPANION_DOT"   -Value "$env:KOMPANION_DIR\.kompanion"
     Set-KompanionEnvVar -Name "KOMPANION_REPO"  -Value "$env:KOMPANION_DIR\repos"
     Set-KompanionEnvVar -Name "KOMPANION_BIN"   -Value "$env:KOMPANION_DOT\bin"
     Set-KompanionEnvVar -Name "KOMPANION_LOGS"  -Value "$env:KOMPANION_DOT\logs"
     Set-KompanionEnvVar -Name "KOMPANION_TEMP"  -Value "$env:KOMPANION_DOT\temp"
-    Set-KompanionEnvVar -Name "XDG_CONFIG_HOME" -Value "$env:KOMPANION_DIR\.config"
 
     Write-Good "> Starting Kompanion from $env:KOMPANION_DIR"
 

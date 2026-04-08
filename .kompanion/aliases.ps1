@@ -25,7 +25,8 @@ function vim {
     # For some reason nvim is not taking into account the override of the
     # user profile (APPDATA) and is looking for the config in the default
     # location. This is a workaround to force it to use the provided config.
-    & nvim.exe -u "$env:KOMPANION_DIR\config\nvim\init.lua" @args
+    # Update: adding XDG_CONFIG_HOME solves the problem, but keep as is here.
+    & nvim.exe -u "$env:KOMPANION_DIR\.config\nvim\init.lua" @args
 }
 
 function zettlr {

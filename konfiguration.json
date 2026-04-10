@@ -9,6 +9,7 @@
         "node":    "24.11.0",
         "ollama":  "0.18.3",
         "pandoc":  "3.8",
+        "ripgrep": "15.1.0",
         "uv":      "0.11.2"
     },
     "url": {
@@ -33,7 +34,9 @@
         "ollama":     "https://github.com/ollama/ollama/releases/download/v{0}/ollama-windows-amd64.zip",
         "pandoc":     "https://github.com/jgm/pandoc/releases/download/{0}/pandoc-{0}-windows-x86_64.zip",
         "paraview":   "https://www.paraview.org/paraview-downloads/download.php?submit=Download&version=v6.0&type=binary&os=Windows&downloadFile=ParaView-6.0.1-Windows-Python3.12-msvc2017-AMD64.zip",
+        "perl":       "https://github.com/StrawberryPerl/Perl-Dist-Strawberry/releases/download/SP_54221_64bit/strawberry-perl-5.42.2.1-64bit-portable.zip",
         "prepomax":   "https://prepomax.fs.um.si/Files/Downloads/PrePoMax%20v2.5.0.zip",
+        "ripgrep":    "https://github.com/BurntSushi/ripgrep/releases/download/{0}/ripgrep-{0}-x86_64-pc-windows-gnu.zip",
         "rust":       "https://static.rust-lang.org/rustup/dist/x86_64-pc-windows-gnu/rustup-init.exe",
         "_rust":      "https://static.rust-lang.org/rustup/dist/x86_64-pc-windows-msvc/rustup-init.exe",
         "tabby":      "https://github.com/Eugeny/tabby/releases/download/v1.0.230/tabby-1.0.230-portable-x64.zip",

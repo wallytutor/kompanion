@@ -20,6 +20,7 @@
         "erlang":      false,
         "haskell":     false,
         "julia":       false,
+        "perl":        false,
         "rlang":       false,
         "racket":      false
     },

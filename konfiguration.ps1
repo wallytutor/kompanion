@@ -806,6 +806,28 @@ function Invoke-ConfigureParaView {
     }
 }
 
+function Invoke-ConfigurePerl {
+    Write-Head "* Configuring Perl..."
+
+    $target = $null
+    $url     = Get-PackageVersionedUrl "perl"
+    $output = "$env:KOMPANION_TEMP\perl.zip"
+    $path   = "$env:KOMPANION_BIN\strawberry-perl-5.42.2.1-64bit"
+
+    $success = Invoke-DlUnzipInstall $path $url $output -Target $target
+
+    if ($success) {
+        Set-KompanionEnvVar -Name "PERL_HOME" -Value "$path"
+        # They finally documented this in the README!
+        # c:\myperl\perl\site\bin, c:\myperl\perl\bin, and c:\myperl\c\bin
+        Initialize-AddToPath -Directory "$env:PERL_HOME\perl\site\bin"
+        Initialize-AddToPath -Directory "$env:PERL_HOME\perl\bin"
+        Initialize-AddToPath -Directory "$env:PERL_HOME\c\bin"
+    } else {
+        Write-Warn "Failed to install Perl, skipping configuration..."
+    }
+}
+
 function Invoke-ConfigurePrePoMax {
     Write-Head "* Configuring PrePoMax..."
 
@@ -823,6 +845,27 @@ function Invoke-ConfigurePrePoMax {
         Initialize-AddToPath -Directory "$env:PREPOMAX_HOME"
     } else {
         Write-Warn "Failed to install PrePoMax, skipping configuration..."
+    }
+}
+
+function Invoke-ConfigureRipgrep {
+    Write-Head "* Configuring Ripgrep..."
+
+    $version = $KOMPANION_SETUP.version.ripgrep
+    $target = "ripgrep-$version-x86_64-pc-windows-gnu"
+    $url     = Get-PackageVersionedUrl "ripgrep"
+    $output = "$env:KOMPANION_TEMP\ripgrep.zip"
+    $path   = "$env:KOMPANION_BIN"
+
+    $success = Invoke-DlUnzipInstall $path $url $output -Target $target
+
+    if ($success) {
+        Set-KompanionEnvVar -Name "RIPGREP_HOME" `
+            -Value "$env:KOMPANION_BIN\$target"
+
+        Initialize-AddToPath -Directory "$env:RIPGREP_HOME"
+    } else {
+        Write-Warn "Failed to install Ripgrep, skipping configuration..."
     }
 }
 

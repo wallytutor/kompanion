@@ -507,6 +507,26 @@ function Invoke-ConfigureFreeCAD {
     }
 }
 
+function Invoke-ConfigureGithubCLI {
+    Write-Head "* Configuring GitHub CLI..."
+
+    $target  = $null
+    $version = $KOMPANION_SETUP.version.gh
+    $url     = Get-PackageVersionedUrl "gh"
+    $output  = "$env:KOMPANION_TEMP\gh.zip"
+    $path    = "$env:KOMPANION_BIN\gh_${version}_windows_amd64"
+
+    $success = Invoke-DlUnzipInstall $path $url $output -Target $target
+
+    if ($success) {
+        Set-KompanionEnvVar -Name "GH_HOME" -Value "$path"
+        Initialize-AddToPath -Directory "$env:GH_HOME\bin"
+    } else {
+        Write-Warn "Failed to install GitHub CLI, skipping configuration..."
+    }
+}
+
+
 function Invoke-ConfigureGmsh {
     Write-Head "* Configuring Gmsh..."
 

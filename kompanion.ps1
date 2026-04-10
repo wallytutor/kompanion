@@ -181,6 +181,7 @@ function Start-KompanionConfigure {
     Invoke-ConfigureLiteXL
     Invoke-InstallGit
     Invoke-ConfigureGit
+    Invoke-ConfigureGithubCLI
 
     Invoke-InstallQuarto
     Invoke-ConfigureQuarto

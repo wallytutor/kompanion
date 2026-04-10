@@ -70,6 +70,11 @@ vim.opt.clipboard = 'unnamedplus'
 vim.opt.foldmethod = 'marker'
 vim.opt.foldmarker = '#region,#endregion'
 
+-- Start PowerShell as the default shell on Windows
+if vim.fn.has("win32") == 1 then
+    vim.opt.shell = "pwsh -NoLogo -NoExit -Command . $env:KOMPANION_DIR/kompanion.ps1"
+end
+
 -- ---------------------------------------------------------------------
 -- EOF
 -- ---------------------------------------------------------------------

@@ -20,6 +20,7 @@ repos/
 .kompanion/envs.ps1
 
 # Editor cache:
+.config/github-copilot/
 .continue/*
 .copilot/*
 .logseq/*

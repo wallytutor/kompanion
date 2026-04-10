@@ -63,7 +63,7 @@ vim.opt.mouse = 'a'
 vim.opt.clipboard = 'unnamedplus'
 
 -- ---------------------------------------------------------------------
--- CODE FOLDING
+-- CODE FOLDING (zo/zc, zO/zC, za, zA, zM, zR)
 -- ---------------------------------------------------------------------
 
 -- Set foldmarker, so Vim will know where to fold

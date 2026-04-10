@@ -6,14 +6,14 @@
 vim.keymap.set('n', '<leader>cd', vim.cmd.Ex)
 
 -- Show diagnostic popup
-vim.keymap.set('n', '<space>e', vim.diagnostic.open_float)
+vim.keymap.set('n', '<leader>x', vim.diagnostic.open_float)
 
 -- Navigate diagnostics
 vim.keymap.set('n', '[d', vim.diagnostic.goto_prev)
 vim.keymap.set('n', ']d', vim.diagnostic.goto_next)
 
 -- Show all diagnostics
-vim.keymap.set('n', '<space>q', vim.diagnostic.setloclist)
+vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist)
 
 -- ---------------------------------------------------------------------
 -- NORMAL MODE KEYMAPS FOR LSP
@@ -21,9 +21,10 @@ vim.keymap.set('n', '<space>q', vim.diagnostic.setloclist)
 
 -- LSP actions (when LSP is attached)
 vim.keymap.set('n', 'gd', vim.lsp.buf.definition)
+vim.keymap.set('n', 'gr', vim.lsp.buf.references)
 vim.keymap.set('n', 'K', vim.lsp.buf.hover)
-vim.keymap.set('n', '<space>rn', vim.lsp.buf.rename)
-vim.keymap.set('n', '<space>ca', vim.lsp.buf.code_action)
+vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename)
+vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action)
 
 -- ---------------------------------------------------------------------
 -- EOF

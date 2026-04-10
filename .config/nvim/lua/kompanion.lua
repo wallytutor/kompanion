@@ -80,6 +80,9 @@ require('config.lsp')
 require('config.opt')
 require('config.keymap')
 
+-- This comes last as it overrides some of the above settings
+require('config.lazy')
+
 -- ---------------------------------------------------------------------
 -- EOF
 -- ---------------------------------------------------------------------

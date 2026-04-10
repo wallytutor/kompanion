@@ -21,6 +21,7 @@ repos/
 
 # Editor cache:
 .config/github-copilot/
+.config/gh/
 .continue/*
 .copilot/*
 .logseq/*

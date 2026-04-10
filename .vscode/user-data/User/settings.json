@@ -289,14 +289,14 @@
     // Just don't add it, VSCode will not expand variables here:
     // "FSharp.dotnetRoot": "${env:DOTNET_ROOT}",
 
-    "FSharp.addFsiWatcher": true,
+    "FSharp.addFsiWatcher": false,
     "FSharp.indentationSize": 4,
     "FSharp.suggestGitignore": false,
     "FSharp.codeLenses.signature.enabled": false,
     "FSharp.codeLenses.references.enabled": true,
     "FSharp.inlayHints.typeAnnotations": false,
     "FSharp.inlayHints.parameterNames": false,
-    "FSharp.inlayHints.disableLongTooltip": true,
+    "FSharp.inlayHints.disableLongTooltip": false,
     "FSharp.inlineValues.enabled": false,
     "FSharp.inlineValues.prefix": "",
 
@@ -533,6 +533,7 @@
         "10.13.52.2": "linux",
         "frontal": "linux"
     },
-    "workbench.colorTheme": "Bearded Theme Altica",
-    "explorer.confirmPasteNative": false
+    "workbench.colorTheme": "Bearded Theme Anthracite",
+    "explorer.confirmPasteNative": false,
+    "github.copilot.nextEditSuggestions.eagerness": "medium"
 }

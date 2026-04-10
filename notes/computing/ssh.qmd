@@ -22,7 +22,9 @@ ssh -L 8080:localhost:8080 walter@192.168.1.10
 
 This section guides you through the generation of a key pair generation and authentication. Additional steps to setup a connection through VS Code are provided.
 
-**Creating the keys:** generate the SSH key pair locally (*i.e.* on your workstation); common options are:
+### Creating the keys
+
+Generate the SSH key pair locally (*i.e.* on your workstation); common options are:
 
 -   `-t rsa`: key type (RSA is widely supported)
 -   `-b 4096`: key length (more bits = stronger, recommended 4096)
@@ -51,7 +53,11 @@ cat ~/.ssh/id_rsa.pub | \
 
 As a last option do it by hand, but you risk breaking the format of `authorized_keys`.
 
-**Testing Linux server:** before anything, try connecting with you identity:
+### Testing the server
+
+If you are trying to reach a Windows machine, follow [this](@sec-enabling-openssh-server) instructions from the server to enable the OpenSSH server before testing.
+
+Before going further, try connecting with your identity:
 
 ``` bash
 ssh -i ~/.ssh/id_rsa yourusername@your.server.com
@@ -96,7 +102,9 @@ sudo tail -f /var/log/auth.log
 sudo tail -f /var/log/secure
 ```
 
-**Adding the key to VS Code** by perform the following steps:
+### Adding the key to VS Code
+
+Perform the following steps:
 
 -   Install `Remote-SSH` extension
 -   Press `F1` and search for `Remote-SSH: Open SSH Configuration File`
@@ -118,4 +126,6 @@ Host yourusername@your.server.com
     IdentityFile ~/.ssh/id_rsa
 ```
 
-**About cluster usage:** that is the single case you might want to store both public and private keys at the same `.ssh`; to navigate across nodes (assuming your `$HOME` directory is the same) you need both keys. Please keep in mind to use a different key pair than the one you use to connect to the cluster for security reasons.
+### About cluster usage
+
+That is the single case you might want to store both public and private keys at the same `.ssh`; to navigate across nodes (assuming your `$HOME` directory is the same) you need both keys. Please keep in mind to use a different key pair than the one you use to connect to the cluster for security reasons.

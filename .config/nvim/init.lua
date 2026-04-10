@@ -2,30 +2,7 @@
 -- init.lua - Neovim configuration
 -- ---------------------------------------------------------------------
 
--- About Neovim defaults:
--- Note: 'nocompatible' is not needed (always set by default)
--- Note: 'syntax on' and 'filetype plugin indent on' are enabled
-
--- ---------------------------------------------------------------------
--- GENERAL
--- ---------------------------------------------------------------------
-
--- Set space as the leader key
-vim.g.mapleader = ' '
-
--- Enable syntax highlighting (redundant in Neovim but harmless)
-vim.cmd('syntax on')
-
--- Enable filetype detection, plugins, and indentation rules
-vim.cmd('filetype plugin indent on')
-
--- ---------------------------------------------------------------------
--- CONFIG
--- ---------------------------------------------------------------------
-
-require('config.lsp')
-require('config.opt')
-require('config.keymap')
+require('kompanion')
 
 -- ---------------------------------------------------------------------
 -- EOF

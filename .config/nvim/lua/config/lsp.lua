@@ -1,0 +1,2 @@
+-- vim.lsp.enable('pyrefly')
+-- vim.lsp.enable('rust_analyzer')

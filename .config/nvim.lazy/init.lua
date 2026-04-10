@@ -1,3 +1,6 @@
+-- bootstrap lazy.nvim, LazyVim and your plugins
+require("config.lazy")
+
 -- ---------------------------------------------------------------------
 -- init.lua - Neovim configuration
 -- ---------------------------------------------------------------------
@@ -10,22 +13,20 @@
 -- GENERAL
 -- ---------------------------------------------------------------------
 
--- Set space as the leader key
-vim.g.mapleader = ' '
-
 -- Enable syntax highlighting (redundant in Neovim but harmless)
-vim.cmd('syntax on')
+-- vim.cmd('syntax on')
 
 -- Enable filetype detection, plugins, and indentation rules
-vim.cmd('filetype plugin indent on')
+-- vim.cmd('filetype plugin indent on')
 
--- ---------------------------------------------------------------------
--- CONFIG
--- ---------------------------------------------------------------------
+-- vim.lsp.enable('pyrefly')
+-- vim.lsp.enable('rust_analyzer')
 
-require('config.lsp')
-require('config.opt')
-require('config.keymap')
+-- Load options configuration
+-- require('config.options')
+
+-- Load keybindings configuration
+-- require('config.keymap')
 
 -- ---------------------------------------------------------------------
 -- EOF

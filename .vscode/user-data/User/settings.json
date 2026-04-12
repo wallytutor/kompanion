@@ -22,6 +22,9 @@
     // Do not ask about reordering projects:
     "explorer.confirmDragAndDrop": false,
 
+    // Do not ask about pasting files in explorer:
+    "explorer.confirmPasteNative": false,
+
     //////////////////////////////////////////////////////////////////////////
     // EXTENSIONS
     //////////////////////////////////////////////////////////////////////////
@@ -43,7 +46,10 @@
 
     // Make tree levels more readable when expanded:
     "workbench.tree.indent": 12,
+
+    // Use a custom icon and color theme:
     "workbench.iconTheme": "bearded-icons",
+    "workbench.colorTheme": "Bearded Theme Anthracite",
 
     // Add a clearly visible ruler (language dependent position):
     "workbench.colorCustomizations": {
@@ -244,9 +250,9 @@
     "jupyter.interactiveWindow.creationMode": "perFile",
 
     // XXX: probably not expanded (most places will not!), as I see no effect.
-    "jupyter.kernels.excludePythonEnvironments": [
-        "${env:INKSCAPE_HOME}\\bin\\python.exe"
-    ],
+    // "jupyter.kernels.excludePythonEnvironments": [
+    //     "${env:INKSCAPE_HOME}\\bin\\python.exe"
+    // ],
 
     //////////////////////////////////////////////////////////////////////////
     // PYTHON
@@ -368,10 +374,8 @@
     "win-ca.inject": "append",
 
     "chat.mcp.gallery.enabled": true,
-    "chat.viewSessions.orientation": "stacked",
 
-    "continue.enableConsole": true,
-
+    "github.copilot.nextEditSuggestions.eagerness": "medium",
     "github.copilot.nextEditSuggestions.enabled": true,
     "github.copilot.enable": {
         "*": true,
@@ -532,8 +536,5 @@
     "remote.SSH.remotePlatform": {
         "10.13.52.2": "linux",
         "frontal": "linux"
-    },
-    "workbench.colorTheme": "Bearded Theme Anthracite",
-    "explorer.confirmPasteNative": false,
-    "github.copilot.nextEditSuggestions.eagerness": "medium"
+    }
 }

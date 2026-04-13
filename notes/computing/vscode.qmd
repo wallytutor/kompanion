@@ -46,6 +46,7 @@ The following extensions are recommended.
 
 -   Other languages support
 
+    -   [.NET Notebooks](https://marketplace.visualstudio.com/items?itemName=Datafication.verso-notebook)
     -   [C/C++](https://marketplace.visualstudio.com/items?itemName=ms-vscode.cpptools)
     -   [Erlang](https://marketplace.visualstudio.com/items?itemName=pgourlain.erlang)
     -   [F#](https://marketplace.visualstudio.com/items?itemName=Ionide.Ionide-fsharp)

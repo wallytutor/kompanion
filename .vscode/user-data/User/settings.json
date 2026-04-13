@@ -63,6 +63,12 @@
     // Place elements on top of side bar:
     "workbench.activityBar.location": "top",
 
+    // Prefer verso over built-in:
+    "workbench.editorAssociations": {
+        "*.copilotmd": "vscode.markdown.preview.editor",
+        "*.ipynb": "verso.blazorNotebook"
+    },
+
     //////////////////////////////////////////////////////////////////////////
     // EDITOR / DIFFEDITOR
     //////////////////////////////////////////////////////////////////////////

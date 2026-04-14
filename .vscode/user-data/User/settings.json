@@ -533,6 +533,7 @@
 
     "redhat.telemetry.enabled": false,
     "vsicons.dontShowNewVersionMessage": true,
+    "liveServer.settings.donotShowInfoMsg": true,
 
     "security.workspace.trust.untrustedFiles": "open",
     "security.allowedUNCHosts": [

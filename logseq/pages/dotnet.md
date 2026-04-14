@@ -56,3 +56,4 @@
   # Ionide files
   .fake
   ```
+- For generating the documentation install `dotnet tool install -g fsdocs-tool` and make sure to enable `GenerateDocumentationFile` in `<PropertyGroup>`; then run `fsdocs build`.

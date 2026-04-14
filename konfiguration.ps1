@@ -526,7 +526,6 @@ function Invoke-ConfigureGithubCLI {
     }
 }
 
-
 function Invoke-ConfigureGmsh {
     Write-Head "* Configuring Gmsh..."
 

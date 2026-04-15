@@ -7,7 +7,7 @@
     "update.mode": "none",
 
     // Remove breadcrumbs for vertical space:
-    "breadcrumbs.enabled": false,
+    "breadcrumbs.enabled": true,
 
     // Do not ask about saving untitled workspace on exit:
     "window.confirmSaveUntitledWorkspace": false,

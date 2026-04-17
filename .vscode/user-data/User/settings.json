@@ -49,7 +49,7 @@
 
     // Use a custom icon and color theme:
     "workbench.iconTheme": "bearded-icons",
-    "workbench.colorTheme": "Bearded Theme Anthracite",
+    "workbench.colorTheme": "Bearded Theme Altica",
 
     // Add a clearly visible ruler (language dependent position):
     "workbench.colorCustomizations": {
@@ -276,6 +276,9 @@
         ".venv/**",
         "venv**",
     ],
+
+    "python.venvFolders": [".venv", "venv"],
+    "python.venvPath": "${workspaceFolder}",
 
     "[python]": {
         "editor.tabSize": 4,

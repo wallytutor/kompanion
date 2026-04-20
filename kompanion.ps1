@@ -929,7 +929,7 @@ function Invoke-ConfigureInkscape {
     Set-KompanionEnvVar -Name "INKSCAPE_HOME" `
         -Value "$env:KOMPANION_BIN\inkscape\inkscape"
 
-    Initialize-AddToPath -Directory "$env:INKSCAPE_HOME\bin"
+    # Initialize-AddToPath -Directory "$env:INKSCAPE_HOME\bin"
 }
 
 function Invoke-InstallInkscape {

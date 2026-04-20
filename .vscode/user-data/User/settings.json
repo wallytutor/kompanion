@@ -66,7 +66,7 @@
     // Prefer verso over built-in:
     "workbench.editorAssociations": {
         "*.copilotmd": "vscode.markdown.preview.editor",
-        "*.ipynb": "verso.blazorNotebook"
+        // "*.ipynb": "verso.blazorNotebook"
     },
 
     //////////////////////////////////////////////////////////////////////////
@@ -126,12 +126,12 @@
         "*.cfg": "octave",
         "*.spec": "python",
         "*.matc": "FortranFreeForm",
-        "*Dict": "OpenFOAM",
-        "*Properties": "OpenFOAM",
-        "fvSchemes": "OpenFOAM",
-        "fvSolution": "OpenFOAM",
-        "**/constant/g": "OpenFOAM",
-        "**/0/*": "OpenFOAM",
+        // "*Dict": "OpenFOAM",
+        // "*Properties": "OpenFOAM",
+        // "fvSchemes": "OpenFOAM",
+        // "fvSolution": "OpenFOAM",
+        // "**/constant/g": "OpenFOAM",
+        // "**/0/*": "OpenFOAM",
     },
 
     "files.exclude": {

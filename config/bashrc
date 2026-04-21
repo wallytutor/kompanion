@@ -29,8 +29,14 @@ if command -v nvim >/dev/null 2>&1; then
     alias vim="nvim"
 fi
 
+# Source Rust
 if [ -f "${HOME}/.cargo/env" ]; then
     source "${HOME}/.cargo/env"
+fi
+
+# Source OpenFOAM
+if [ -f "/opt/openfoam13/etc/bashrc" ]; then
+    source "/opt/openfoam13/etc/bashrc"
 fi
 
 ##############################################################################

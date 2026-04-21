@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
 
 #@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-# Manually add the following line to your ~/.bashrc to enable these aliases:
+# Manually add the following line to your ~/.bashrc to enable these aliases
+# (assuming kompanion was installed in $HOME/kompanion):
 #
-# if [ -d "${HOME}/GitHub/python-majordome" ]; then
+# if [ -d "${HOME}/kompanion/config/bashrc" ]; then
 #     source "${HOME}/kompanion/config/bashrc"
 # fi
 #
@@ -26,8 +27,6 @@ alias du="du -h --max-depth=1"
 
 alias ll='ls -Alh --group-directories-first | sort -k9 -V -r'
 alias ls="ls -lh --group-directories-first"
-
-
 
 ##############################################################################
 # Container aliases

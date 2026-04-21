@@ -27,6 +27,9 @@ git commit -m "some message"
 git checkout '<branch-name>'
 
 git branch -d '<branch-name>'
+
+git tag -a '<tag-name>' -m "some message"
+git push origin --tags
 ```
 
 -   Line ending normalization: instructions provided in [this thread](https://stackoverflow.com/questions/2517190); do not forget to add a `.gitattributes` file to the project with `* text=auto` for checking-in files as normalized. Then run the following:

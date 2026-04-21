@@ -1,12 +1,15 @@
-# bashrc
+#!/usr/bin/env bash
 
 #@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 # Manually add the following line to your ~/.bashrc to enable these aliases:
 #
 # if [ -d "${HOME}/GitHub/python-majordome" ]; then
-#     source "${HOME}/GitHub/python-majordome/src/configuration/bashrc"
+#     source "${HOME}/kompanion/config/bashrc"
 # fi
+#
 #@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd)"
 
 MAJORDOME_GIT="https://github.com/wallytutor/python-majordome.git"
 
@@ -24,20 +27,7 @@ alias du="du -h --max-depth=1"
 alias ll='ls -Alh --group-directories-first | sort -k9 -V -r'
 alias ls="ls -lh --group-directories-first"
 
-if command -v nvim >/dev/null 2>&1; then
-    alias vi="nvim"
-    alias vim="nvim"
-fi
 
-# Source Rust
-if [ -f "${HOME}/.cargo/env" ]; then
-    source "${HOME}/.cargo/env"
-fi
-
-# Source OpenFOAM
-if [ -f "/opt/openfoam13/etc/bashrc" ]; then
-    source "/opt/openfoam13/etc/bashrc"
-fi
 
 ##############################################################################
 # Container aliases
@@ -83,6 +73,22 @@ pexec() {
 }
 
 ##############################################################################
+# Neovim configuration
+##############################################################################
+
+NVIM_VER=$(nvim --version | head -n1 | sed 's/^NVIM v//')
+
+# check if >= 0.10
+if printf '%s\n' "$NVIM_VER" "0.10" | sort -V | head -n1 | grep -q "0.10"; then
+    export XDG_CONFIG_HOME="${SCRIPT_DIR}/../.config"
+fi
+
+if command -v nvim >/dev/null 2>&1; then
+    alias vi="nvim"
+    alias vim="nvim"
+fi
+
+##############################################################################
 # Screen aliases
 ##############################################################################
 
@@ -90,6 +96,20 @@ alias scl="screen -ls"
 alias scx="screen -x"
 alias scs="screen -S"
 alias scr="screen -r"
+
+##############################################################################
+# Sourcing of other configuration files
+##############################################################################
+
+# Source Rust
+if [ -f "${HOME}/.cargo/env" ]; then
+    source "${HOME}/.cargo/env"
+fi
+
+# Source OpenFOAM
+if [ -f "/opt/openfoam13/etc/bashrc" ]; then
+    source "/opt/openfoam13/etc/bashrc"
+fi
 
 ##############################################################################
 # EOF

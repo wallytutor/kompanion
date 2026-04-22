@@ -290,7 +290,11 @@
     // "python.defaultInterpreterPath": "python.exe",
     "python.useEnvironmentsExtension": true,
     "python.terminal.activateEnvInCurrentTerminal": true,
+    "python.terminal.activateEnvironment": true,
+    "python.terminal.executeInFileDir": true,
+    "python.terminal.launchArgs": [],
     "python.languageServer": "Default",
+    "python.REPL.enableREPLSmartSend": true,
 
     //////////////////////////////////////////////////////////////////////////
     // F#

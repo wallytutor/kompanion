@@ -126,12 +126,7 @@
         "*.cfg": "octave",
         "*.spec": "python",
         "*.matc": "FortranFreeForm",
-        // "*Dict": "OpenFOAM",
-        // "*Properties": "OpenFOAM",
-        // "fvSchemes": "OpenFOAM",
-        // "fvSolution": "OpenFOAM",
-        // "**/constant/g": "OpenFOAM",
-        // "**/0/*": "OpenFOAM",
+        // "pRef": "openfoam-dict",
     },
 
     "files.exclude": {

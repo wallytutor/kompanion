@@ -63,6 +63,7 @@ Microsoft/
 *.lock
 .cache/
 .ssh/
+vscode-remote-wsl/
 
 # Lite-XL editor:
 .config/lite-xl/*

@@ -101,8 +101,8 @@ alias scr="screen -r"
 ##############################################################################
 
 export IPYTHONDIR="${SCRIPT_DIR}/../.ipython"
-export JUPYTER_DATA_DIR="${SCRIPT_DIR}/../.jupyter"
-export JUPYTER_PATH="${SCRIPT_DIR}/../.jupyter"
+# export JUPYTER_DATA_DIR="${SCRIPT_DIR}/../.jupyter"
+# export JUPYTER_PATH="${SCRIPT_DIR}/../.jupyter"
 # export VSCODE_EXTENSIONS="${SCRIPT_DIR}/../.vscode/extensions"
 # export VSCODE_SETTINGS="${SCRIPT_DIR}/../.vscode/user-data"
 

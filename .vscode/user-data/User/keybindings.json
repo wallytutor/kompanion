@@ -4,5 +4,15 @@
         "key": "ctrl+tab ctrl+m",
         "command": "workbench.action.toggleMaximizedPanel",
         "when": "panelAlignment == 'center' || panelPosition != 'bottom' && panelPosition != 'top'"
+    },
+    {
+        "key": "ctrl+`",
+        "command": "workbench.action.terminal.focus",
+        "when": "!terminalFocus"
+    },
+    {
+        "key": "ctrl+`",
+        "command": "workbench.action.focusActiveEditorGroup",
+        "when": "terminalFocus"
     }
 ]

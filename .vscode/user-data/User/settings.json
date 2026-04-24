@@ -443,6 +443,25 @@
     "terminal.integrated.shellIntegration.enabled": true,
 
     //////////////////////////////////////////////////////////////////////////
+    // REMOTE
+    //////////////////////////////////////////////////////////////////////////
+
+    "remote.autoForwardPortsSource": "hybrid",
+    "remote.SSH.remotePlatform": {
+        "10.13.52.2": "linux",
+        "frontal": "linux"
+    },
+
+    //////////////////////////////////////////////////////////////////////////
+    // SECURITY
+    //////////////////////////////////////////////////////////////////////////
+
+    "security.workspace.trust.untrustedFiles": "open",
+    "security.allowedUNCHosts": [
+        "10.13.52.2"
+    ],
+
+    //////////////////////////////////////////////////////////////////////////
     // LATEX
     //////////////////////////////////////////////////////////////////////////
 
@@ -535,15 +554,5 @@
 
     "redhat.telemetry.enabled": false,
     "vsicons.dontShowNewVersionMessage": true,
-    "liveServer.settings.donotShowInfoMsg": true,
-
-    "security.workspace.trust.untrustedFiles": "open",
-    "security.allowedUNCHosts": [
-        "10.13.52.2"
-    ],
-
-    "remote.SSH.remotePlatform": {
-        "10.13.52.2": "linux",
-        "frontal": "linux"
-    }
+    "liveServer.settings.donotShowInfoMsg": true
 }

@@ -1,0 +1,10 @@
+{
+    "bootstrap": {
+        "urls": {
+            "sevenzip": "https://github.com/commercialhaskell/stackage-content/releases/download/7z-22.01",
+            "curl": "https://curl.se/windows/dl-8.19.0_8/curl-8.19.0_8-win64-mingw.zip",
+            "git": "https://github.com/git-for-windows/git/releases/download/v2.54.0.windows.1/MinGit-2.54.0-64-bit.zip",
+            "dotnet": "https://builds.dotnet.microsoft.com/dotnet/Sdk/9.0.312/dotnet-sdk-9.0.312-win-x64.zip"
+        }
+    }
+}

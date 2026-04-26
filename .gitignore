@@ -6,101 +6,131 @@
 *sandbox*
 
 # User repositories:
-repos/
+work/
 
-# Created by Kompanion:
-.kompanion/bin/
-.kompanion/logs/
-.kompanion/temp/
-.kompanion/*.lock
-
-# User-specific configuration:
-.kompanion/psrc.ps1
-.kompanion/kompanion.json
-.kompanion/envs.ps1
-
-# Editor cache:
-.config/github-copilot/
-.config/gh/
-.continue/*
-.copilot/*
-.logseq/*
-.vscode/*
-.zettlr/*
+#######################################################################
+# Home
+#######################################################################
 
 # Rust directories:
-.cargo/*
-.rustup/
-!.cargo/config.toml
+/home/.cargo/*
+!/home/.cargo/config.toml
 
-# Interactive environments:
-.ipython/*
-.jupyter/*
+# General configuration:
+/home/.config/
 
-# Python:
-.hyperspy/
-.matplotlib/
-.python_history
-pip/
+# .NET SDK
+/home/.dotnet/
 
-# .NET:
-.dotnet/*
-.nuget/*
-.templateengine/*
+# Kompanion:
+/home/.kompanion/*
+!/home/.kompanion/config.json
 
-# Other languages:
-.deno/*
-.julia/*
-.miktex/*
-.rlang/*
-.stack/*
-.node_repl_history
+# NuGet packages:
+/home/.nuget/
 
-# User profile directories/files:
-AppData/
-Desktop/
-Microsoft/
-*.lock
-.cache/
-.ssh/
-vscode-remote-wsl/
-
-# Lite-XL editor:
-.config/lite-xl/*
-.config/lpm/*
-!.config/lite-xl/init.lua
-
-# Logseq:
-logseq/logseq/.recycle/
-logseq/logseq/bak/*
-
-# Ollama:
-.ollama/*
-
-# Rest Client:
-.rest-client/*
+# Default Microsoft directories:
+/home/AppData/
+/home/Desktop/
+/home/Microsoft/
 
 #######################################################################
-# User profile: overrides
+# Home
 #######################################################################
 
-# Ipython startup configuration:
-!.ipython/profile_default/
-!.ipython/profile_default/startup/*
-.ipython/profile_default/startup/README
-.ipython/profile_default/*.sqlite
 
-# Julia startup configuration:
-!.julia/config/
-!.julia/config/startup.jl
 
-# VSCode user settings (XXX: using a wildcard so any future files or
-# folders keep ignored except for the explicitly unignored):
-!.vscode/user-data/
-.vscode/user-data/*
-!.vscode/user-data/User/
-.vscode/user-data/User/*
-!.vscode/user-data/User/keybindings.json
-!.vscode/user-data/User/settings.json
+# # Created by Kompanion:
+# .kompanion/bin/
+# .kompanion/logs/
+# .kompanion/temp/
+# .kompanion/*.lock
 
-/.luarc.json
+# # User-specific configuration:
+# .kompanion/psrc.ps1
+# .kompanion/kompanion.json
+# .kompanion/envs.ps1
+
+# # Editor cache:
+# .config/github-copilot/
+# .config/gh/
+# .continue/*
+# .copilot/*
+# .logseq/*
+# .vscode/*
+# .zettlr/*
+
+# # Rust directories:
+# .cargo/*
+# .rustup/
+# !.cargo/config.toml
+
+# # Interactive environments:
+# .ipython/*
+# .jupyter/*
+
+# # Python:
+# .hyperspy/
+# .matplotlib/
+# .python_history
+# pip/
+
+# # .NET:
+# .dotnet/*
+# .nuget/*
+# .templateengine/*
+
+# # Other languages:
+# .deno/*
+# .julia/*
+# .miktex/*
+# .rlang/*
+# .stack/*
+# .node_repl_history
+
+# # User profile directories/files:
+
+# *.lock
+# .cache/
+# .ssh/
+# vscode-remote-wsl/
+
+# # Lite-XL editor:
+# .config/lite-xl/*
+# .config/lpm/*
+# !.config/lite-xl/init.lua
+
+# # Logseq:
+# logseq/logseq/.recycle/
+# logseq/logseq/bak/*
+
+# # Ollama:
+# .ollama/*
+
+# # Rest Client:
+# .rest-client/*
+
+# #######################################################################
+# # User profile: overrides
+# #######################################################################
+
+# # Ipython startup configuration:
+# !.ipython/profile_default/
+# !.ipython/profile_default/startup/*
+# .ipython/profile_default/startup/README
+# .ipython/profile_default/*.sqlite
+
+# # Julia startup configuration:
+# !.julia/config/
+# !.julia/config/startup.jl
+
+# # VSCode user settings (XXX: using a wildcard so any future files or
+# # folders keep ignored except for the explicitly unignored):
+# !.vscode/user-data/
+# .vscode/user-data/*
+# !.vscode/user-data/User/
+# .vscode/user-data/User/*
+# !.vscode/user-data/User/keybindings.json
+# !.vscode/user-data/User/settings.json
+
+# /.luarc.json

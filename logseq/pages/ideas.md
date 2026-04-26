@@ -1,2 +1,0 @@
-- Add a data generation and model training as previous `RadcalNet` to personal XL portfolio. This could be a program in F# with a PyTorch wrapper for further learning the language.
-- Implement third-generation Calphad formalist; a good starting point seems to be the paper by [[@Deffrennes2020]] as a discussion of different forms of representation is provided.

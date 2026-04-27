@@ -131,7 +131,8 @@
 
     "files.exclude": {
         // Python virtual environments:
-        "**/.venv/": true,
+        "**/venv*/": true,
+        "**/.venv*/": true,
 
         // Common cache/build folders:
         "**/__pycache__/": true,
@@ -149,9 +150,13 @@
         "**/target/": true,
 
         // Build and distribution folders:
-        // "**/build/": true,
-        // "**/dist/": true,
+        "**/build/": true,
+        "**/dist/": true,
         "**/*.egg-info/": true,
+
+        // Python extension build artifacts:
+        "**/*.so/": true,
+        "**/*.pyd/": true,
 
         // Diagram temporary files:
         "**/*.drawio.bkp": true,
@@ -554,5 +559,6 @@
 
     "redhat.telemetry.enabled": false,
     "vsicons.dontShowNewVersionMessage": true,
-    "liveServer.settings.donotShowInfoMsg": true
+    "liveServer.settings.donotShowInfoMsg": true,
+    "chat.viewSessions.orientation": "stacked"
 }

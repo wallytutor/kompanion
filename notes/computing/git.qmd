@@ -24,9 +24,13 @@ git add *
 
 git commit -m "some message"
 
+# Old way to branch:
 git checkout '<branch-name>'
-
 git branch -d '<branch-name>'
+
+# Modern way to branch:
+git switch -c '<branch-name>' main
+git push -u origin '<branch-name>'
 
 git tag -a '<tag-name>' -m "some message"
 git push origin --tags

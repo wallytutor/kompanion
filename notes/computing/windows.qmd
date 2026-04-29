@@ -59,6 +59,16 @@ PS D:\Kompanion\docs>
 
 This is the minimum you need to know: navigate, know your address, inspect contents.
 
+## Accessing WSL from Windows
+
+```powershell
+# List WSL distributions:
+wsl --list
+
+# Access WSL file system from Windows:
+cd \\wsl.localhost\Ubuntu\
+```
+
 ## Exporting WSL to another drive
 
 If the `C:` drive of your Windows is running out of space, you can export your WSL distribution to another drive and import it back. First, list your WSL distributions and follow the steps below:

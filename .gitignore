@@ -24,6 +24,8 @@ repos/
 .config/gh/
 .continue/*
 .copilot/*
+.gemini/*
+.haystack/*
 .logseq/*
 .vscode/*
 .zettlr/*

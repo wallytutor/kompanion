@@ -202,8 +202,9 @@ function Start-KompanionConfigure {
     if ($Config.base.inkscape)    { Invoke-InstallInkscape }
     if ($Config.base.inkscape)    { Invoke-ConfigureInkscape }
 
-    if ($Config.base.miktex)      { Invoke-InstallMikTex }
-    if ($Config.base.miktex)      { Invoke-ConfigureMikTex }
+    # I am mostly using TinyTex now, keep this off for now...
+    # if ($Config.base.miktex)      { Invoke-InstallMikTex }
+    # if ($Config.base.miktex)      { Invoke-ConfigureMikTex }
 
     if ($Config.base.ffmpeg)      { Invoke-InstallFfmpeg }
     if ($Config.base.ffmpeg)      { Invoke-ConfigureFfmpeg }

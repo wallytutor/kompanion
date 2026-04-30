@@ -560,5 +560,6 @@
     "redhat.telemetry.enabled": false,
     "vsicons.dontShowNewVersionMessage": true,
     "liveServer.settings.donotShowInfoMsg": true,
-    "chat.viewSessions.orientation": "stacked"
+    "chat.viewSessions.orientation": "stacked",
+    "powershell.promptToUpdatePowerShell": false
 }

@@ -387,6 +387,19 @@
     "win-ca.inject": "append",
 
     "chat.mcp.gallery.enabled": true,
+    "chat.viewSessions.orientation": "stacked",
+    "chat.tools.urls.autoApprove": {
+        "https://code.visualstudio.com": true,
+        "https://github.com/microsoft/vscode/wiki/*": true,
+        "https://*.msty.studio": {
+            "approveRequest": false,
+            "approveResponse": true
+        },
+        "https://docs.msty.studio": {
+            "approveRequest": true,
+            "approveResponse": false
+        }
+    },
 
     "github.copilot.nextEditSuggestions.eagerness": "medium",
     "github.copilot.nextEditSuggestions.enabled": true,
@@ -560,6 +573,5 @@
     "redhat.telemetry.enabled": false,
     "vsicons.dontShowNewVersionMessage": true,
     "liveServer.settings.donotShowInfoMsg": true,
-    "chat.viewSessions.orientation": "stacked",
-    "powershell.promptToUpdatePowerShell": false
+    "powershell.promptToUpdatePowerShell": false,
 }

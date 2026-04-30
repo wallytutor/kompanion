@@ -92,3 +92,11 @@ python -m ipykernel install --user `
 # Run nteract:
 nteract.exe
 ```
+
+## Problem with Python version in Quarto
+
+If you encounter problems with which Python version is being used, you can set the `QUARTO_PYTHON` environment variable to the path of the Python executable in your virtual environment. For example (PowerShell):
+
+```bash
+$env:QUARTO_PYTHON='.venv/Scripts/python.exe'
+```

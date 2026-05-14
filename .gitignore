@@ -20,6 +20,7 @@ repos/
 .kompanion/envs.ps1
 
 # Editor cache:
+.antigravity/*
 .config/github-copilot/
 .config/gh/
 .continue/*

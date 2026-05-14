@@ -35,6 +35,7 @@ A self-contained WPF application for Windows that bootstraps your development en
 | Repository ordering | Usage-frequency file + pinned main repo | Most-used repositories stay near the top while Kompanion remains first |
 | Log visibility | Dedicated Logs tab with timestamp + message columns | Provides readable, structured log output directly in the app |
 | VS Code launch | Detached shell launch + `--maximized` | VS Code opens in full view and outlives the launcher process |
+| Optional Antigravity launch | Settings toggle + runtime command probe | Uses `antigravity.cmd` when available and runnable, otherwise falls back to VS Code |
 | Error handling | Validate input paths and exit codes | User gets immediate actionable feedback and logs include root-cause details |
 | Distribution | Single-file self-contained (`win-x64`) | No .NET runtime installation required on the target machine |
 | Icon | Generated programmatically with `System.Drawing` | No external dependency; reproducible by running the included PowerShell snippet |
@@ -73,7 +74,7 @@ app/
         ├── ScriptRunner.cs     # Runs KOMPANION_SOURCE, enforces timeout, imports env vars
         ├── RepoScanner.cs      # Scans KOMPANION_REPO for .git directories
         ├── UsageTracker.cs     # Persists repo usage counts and sorts by frequency
-        ├── VsCodeLauncher.cs   # Launches code.exe with --extensions-dir / --user-data-dir
+        ├── VsCodeLauncher.cs   # Launches antigravity.cmd (optional) or code.exe with fallback
         ├── GitService.cs       # Executes git pull / git push; validates repo; captures output
         └── ProcessExecution.cs # IProcessExecutor + default system implementation
 ```
@@ -164,8 +165,9 @@ To enable or disable it:
 When this option is turned off, KompanionUI stops simulating cursor movement immediately.
 
 7. Use the buttons in each repository row:
-    - **Launch** — opens VS Code at the repository root (detached, maximized, stays open if you close
-      the app).
+        - **Launch** — opens the repository with Antigravity when enabled in Settings and
+            `antigravity.cmd` is available/runnable; otherwise opens VS Code (detached, maximized,
+            stays open if you close the app).
     - **Pull** — runs `git pull`; result is shown in the status bar and logged.
     - **Push** — runs `git push`; result is shown in the status bar and logged.
     - **Status** — runs `git status` and shows the full output in a popup window. This lets you
@@ -174,23 +176,30 @@ When this option is turned off, KompanionUI stops simulating cursor movement imm
       reports the state of the working tree — modified files, staged changes, untracked files, and
       the relationship with the remote branch. The Status button does not modify the repository in
       any way.
-8. While pull/push is running, use **Cancel Git** to request cancellation.
-9. Click **Refresh** at any time to re-scan `KOMPANION_REPO`.
-9.1. Repository status indicators:
+8. Antigravity launch preference:
+        - Open the **Settings** tab.
+        - Toggle **Use Antigravity if available**.
+        - When enabled, Kompanion probes `antigravity.cmd` at launch time and uses it if it can be
+            found and started.
+        - If the command is missing or cannot be started, Kompanion automatically falls back to
+            VS Code and continues normally.
+9. While pull/push is running, use **Cancel Git** to request cancellation.
+10. Click **Refresh** at any time to re-scan `KOMPANION_REPO`.
+10.1. Repository status indicators:
     - A small colored circle appears to the left of each repository name:
       - **Gray** — status has not been checked yet.
       - **Green** — repository is clean (no uncommitted changes, in sync with remote).
       - **Red** — repository has changes (uncommitted modifications, untracked files, or divergence from remote).
     Click **Check All** (next to **Refresh**) to scan all repositories at once and update the indicators.
     This is useful for quickly identifying which repositories need attention without running Git commands.
-10. Repository order is usage-aware: every Launch/Pull/Push increments a counter in
+11. Repository order is usage-aware: every Launch/Pull/Push increments a counter in
     `%KOMPANION_LOGS%\repo-usage.json`, repositories are sorted by descending usage,
     and `KOMPANION_DIR` stays pinned at the top.
-11. In the **Ollama** tab:
+12. In the **Ollama** tab:
     - Use **Start Server** to launch `ollama.exe serve` from `OLLAMA_HOME`.
     - Use **Stop Server** to stop Ollama processes matching that executable path.
     - Use **Refresh** to reload running process status (PID and executable path).
-12. Clicking the window close button sends Kompanion to the system tray instead of
+13. Clicking the window close button sends Kompanion to the system tray instead of
     exiting. Use the tray icon to restore the window, choose **Exit** from the tray menu,
     or use **File > Exit** in the app window to stop the app.
 

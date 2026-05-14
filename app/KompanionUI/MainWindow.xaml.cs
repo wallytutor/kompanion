@@ -40,6 +40,7 @@ public partial class MainWindow : Window
     private CancellationTokenSource? _gitOperationCts;
     private readonly DispatcherTimer _mouseJiggleTimer;
     private bool _mouseJigglingEnabled = true;
+    private bool _useAntigravityIfAvailable;
     private int _jiggleOffset = 4;
     private long _jiggleInterval = 3;
 
@@ -77,6 +78,7 @@ public partial class MainWindow : Window
         Closed += OnWindowClosed;
 
         ApplyMouseJigglingSetting();
+        ApplyAntigravitySetting();
     }
 
     private async void OnLoadedAsync(object sender, RoutedEventArgs e)
@@ -192,12 +194,12 @@ public partial class MainWindow : Window
         _usage.RecordUsage(path);
         ResortCurrentRepos();
 
-        string? error = _vscode.Launch(path);
+        LaunchResult result = _vscode.Launch(path, _useAntigravityIfAvailable);
 
-        if (error != null)
-            ShowError(error);
+        if (result.Error != null)
+            ShowError(result.Error);
         else
-            SetStatus($"Launched VSCode at: {path}");
+            SetStatus($"Launched {result.LauncherDisplayName} at: {path}");
     }
 
     // ------------------------------------------------------------------ //
@@ -506,6 +508,19 @@ public partial class MainWindow : Window
             false);
     }
 
+    private void UseAntigravityCheckBox_Changed(object sender, RoutedEventArgs e)
+    {
+        ApplyAntigravitySetting();
+
+        if (!IsLoaded || StatusText is null)
+            return;
+
+        SetStatus(
+            _useAntigravityIfAvailable
+                ? "Antigravity preference enabled. Launch will use it when available."
+                : "Antigravity preference disabled. Launch will use VS Code.");
+    }
+
     private void ApplyMouseJigglingSetting()
     {
         _mouseJigglingEnabled = MouseJigglingCheckBox?.IsChecked ?? true;
@@ -519,6 +534,11 @@ public partial class MainWindow : Window
         }
 
         _mouseJiggleTimer.Stop();
+    }
+
+    private void ApplyAntigravitySetting()
+    {
+        _useAntigravityIfAvailable = UseAntigravityCheckBox?.IsChecked ?? false;
     }
 
     private void MouseJiggleTimer_Tick(object? sender, EventArgs e)

@@ -255,6 +255,19 @@
                                Margin="0"
                                TextWrapping="Wrap"
                                Text="When enabled, Kompanion briefly moves the cursor and returns it to its original position to help prevent automatic screen lock while the app is running."/>
+
+                    <CheckBox x:Name="UseAntigravityCheckBox"
+                              Content="Use Antigravity if available"
+                              IsChecked="True"
+                              Margin="0 0 0 8"
+                              Checked="UseAntigravityCheckBox_Changed"
+                              Unchecked="UseAntigravityCheckBox_Changed"/>
+
+                    <TextBlock Style="{StaticResource MutedLabel}"
+                               Margin="0 0 0 8"
+                               TextWrapping="Wrap"
+                               Text="When enabled, repository Launch prefers antigravity.cmd when it is available and can be started. If not, Kompanion automatically falls back to VS Code."/>
+
                 </StackPanel>
             </Border>
         </TabItem>

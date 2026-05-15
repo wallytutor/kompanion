@@ -141,6 +141,12 @@ if (Test-Path $env:KOMPANION_SOURCE) {
 }
 ```
 
+::: {.callout-note title="About Antigravity"}
+
+For some reason, when running Google Antigravity from within a shell with Kompanion sourced, it *believes* the override of home directory performed by Kompanion and variable `$PROFILE` points to Kompanion's root directory. You can create a directory `Documents\PowerShell` located at Kompanion root and place the configuration file there. For getting the right path/file name, run `echo $PROFILE` from a terminal running from Antigravity.
+
+:::
+
 Now all PowerShell sessions will automatically source Kompanion, and you can start using it right away. You can run `Kode` from any directory to open the root of this repository in VSCode.
 
 ### Graphical user interface

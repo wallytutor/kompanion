@@ -62,6 +62,7 @@ pip/
 # User profile directories/files:
 AppData/
 Desktop/
+Documents/
 Microsoft/
 *.lock
 .cache/

@@ -422,6 +422,8 @@
     "copilot.experimental.defaultModel": "ollama-qwen",
     "copilot.experimental.showAllModels": true,
 
+    "geminicodeassist.project": "pure-keep-dxvsd",
+
     //////////////////////////////////////////////////////////////////////////
     // TERMINAL
     //////////////////////////////////////////////////////////////////////////
@@ -573,5 +575,5 @@
     "redhat.telemetry.enabled": false,
     "vsicons.dontShowNewVersionMessage": true,
     "liveServer.settings.donotShowInfoMsg": true,
-    "powershell.promptToUpdatePowerShell": false,
+    "powershell.promptToUpdatePowerShell": false
 }

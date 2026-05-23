@@ -20,7 +20,7 @@ repos/
 .kompanion/envs.ps1
 
 # Editor cache:
-.antigravity/*
+.antigravity*/*
 .config/github-copilot/
 .config/gh/
 .continue/*
@@ -28,6 +28,7 @@ repos/
 .gemini/*
 .haystack/*
 .logseq/*
+.securecoder/*
 .vscode/*
 .zettlr/*
 

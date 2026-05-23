@@ -30,7 +30,7 @@ public class VsCodeLauncher
 
     /// <summary>
     /// Starts Code.exe detached so it outlives this application.
-    /// Optionally prefers antigravity.cmd when it exists and can be started.
+    /// Optionally prefers antigravity-ide.cmd when it exists and can be started.
     /// </summary>
     public LaunchResult Launch(string repoPath, bool preferAntigravityIfAvailable)
     {
@@ -140,7 +140,7 @@ public class VsCodeLauncher
 
         _antigravityAvailable = true;
         _antigravityCommandPath = commandPath;
-        _lastProbeReason = "antigravity.cmd is available.";
+        _lastProbeReason = "antigravity-ide.cmd is available.";
         reason = _lastProbeReason;
         return true;
     }
@@ -164,7 +164,7 @@ public class VsCodeLauncher
             var whereInfo = new ProcessStartInfo
             {
                 FileName = "where.exe",
-                Arguments = "antigravity.cmd",
+                Arguments = "antigravity-ide.cmd",
                 UseShellExecute = false,
                 CreateNoWindow = true,
                 RedirectStandardOutput = true,
@@ -174,21 +174,21 @@ public class VsCodeLauncher
             using var process = Process.Start(whereInfo);
             if (process == null)
             {
-                reason = "Failed to start where.exe while probing antigravity.cmd.";
+                reason = "Failed to start where.exe while probing antigravity-ide.cmd.";
                 return false;
             }
 
             if (!process.WaitForExit(2_000))
             {
                 TryKill(process);
-                reason = "Timed out while probing antigravity.cmd location.";
+                reason = "Timed out while probing antigravity-ide.cmd location.";
                 return false;
             }
 
             string output = process.StandardOutput.ReadToEnd();
             if (process.ExitCode != 0 || string.IsNullOrWhiteSpace(output))
             {
-                reason = "antigravity.cmd was not found on PATH.";
+                reason = "antigravity-ide.cmd was not found on PATH.";
                 return false;
             }
 
@@ -198,17 +198,17 @@ public class VsCodeLauncher
 
             if (string.IsNullOrWhiteSpace(firstPath) || !File.Exists(firstPath))
             {
-                reason = "Resolved antigravity.cmd path does not exist.";
+                reason = "Resolved antigravity-ide.cmd path does not exist.";
                 return false;
             }
 
             resolvedPath = firstPath;
-            reason = "antigravity.cmd found.";
+            reason = "antigravity-ide.cmd found.";
             return true;
         }
         catch (Exception ex)
         {
-            reason = $"Failed to resolve antigravity.cmd: {ex.Message}";
+            reason = $"Failed to resolve antigravity-ide.cmd: {ex.Message}";
             return false;
         }
     }
@@ -230,23 +230,23 @@ public class VsCodeLauncher
             using var process = Process.Start(probeInfo);
             if (process == null)
             {
-                reason = "Failed to start antigravity.cmd probe process.";
+                reason = "Failed to start antigravity-ide.cmd probe process.";
                 return false;
             }
 
             if (!process.WaitForExit(3_000))
             {
                 TryKill(process);
-                reason = "antigravity.cmd starts successfully (probe timed out).";
+                reason = "antigravity-ide.cmd starts successfully (probe timed out).";
                 return true;
             }
 
-            reason = $"antigravity.cmd probe exited with code {process.ExitCode}.";
+            reason = $"antigravity-ide.cmd probe exited with code {process.ExitCode}.";
             return process.ExitCode != 9009;
         }
         catch (Exception ex)
         {
-            reason = $"Failed to run antigravity.cmd probe: {ex.Message}";
+            reason = $"Failed to run antigravity-ide.cmd probe: {ex.Message}";
             return false;
         }
     }

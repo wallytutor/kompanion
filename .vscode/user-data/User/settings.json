@@ -2,96 +2,77 @@
     //////////////////////////////////////////////////////////////////////////
     // GENERAL
     //////////////////////////////////////////////////////////////////////////
-
     // No update: we wish to keep Kompanion portable and self-contained.
     "update.mode": "none",
-
     // Remove breadcrumbs for vertical space:
     "breadcrumbs.enabled": true,
-
     // Do not ask about saving untitled workspace on exit:
     "window.confirmSaveUntitledWorkspace": false,
-
     //////////////////////////////////////////////////////////////////////////
     // EXPLORER
     //////////////////////////////////////////////////////////////////////////
-
     // Do not expand file tree for the current file path
     "explorer.autoReveal": false,
-
     // Do not ask about reordering projects:
     "explorer.confirmDragAndDrop": false,
-
     // Do not ask about pasting files in explorer:
     "explorer.confirmPasteNative": false,
-
+    // Do not ask about deleting files in explorer:
+    "explorer.confirmDelete": false,
     //////////////////////////////////////////////////////////////////////////
     // EXTENSIONS
     //////////////////////////////////////////////////////////////////////////
-
     // Ignore all extension proposals; also block auto-update so that
     // personal/local extensions are not deleted on start-up.
     "extensions.ignoreRecommendations": true,
     "extensions.autoUpdate": false,
-
     //////////////////////////////////////////////////////////////////////////
     // WORKBENCH
     //////////////////////////////////////////////////////////////////////////
-
     // On startup do not show anything:
     "workbench.startupEditor": "none",
-
     // Do hide label, show icons:
     "workbench.panel.showLabels": false,
-
     // Make tree levels more readable when expanded:
     "workbench.tree.indent": 12,
-
     // Use a custom icon and color theme:
     "workbench.iconTheme": "bearded-icons",
     "workbench.colorTheme": "Bearded Theme Altica",
-
     // Add a clearly visible ruler (language dependent position):
     "workbench.colorCustomizations": {
         "editorRuler.foreground": "#3d17e4",
         // "editor.background": "#f2f2f2"
     },
-
     // Just the icon for pinned tabs:
     "workbench.editor.pinnedTabSizing": "compact",
-
     // Place elements on top of side bar:
     "workbench.activityBar.location": "top",
-
     // Prefer verso over built-in:
     "workbench.editorAssociations": {
         "*.copilotmd": "vscode.markdown.preview.editor",
         // "*.ipynb": "verso.blazorNotebook"
     },
-
     //////////////////////////////////////////////////////////////////////////
     // EDITOR / DIFFEDITOR
     //////////////////////////////////////////////////////////////////////////
-
     // Do not ignore white space:
     "diffEditor.ignoreTrimWhitespace": false,
-
     // Do not display minimap on side of document:
     "editor.minimap.enabled": false,
-
     // Do not show pop-ups all the time:
     "editor.parameterHints.enabled": false,
-
     // Use Ctrl to multi-selection:
     "editor.multiCursorModifier": "ctrlCmd",
-
     // Folding parameters:
     "editor.foldingStrategy": "auto",
     "editor.showFoldingControls": "always",
-
     // Rulers at specific character counts:
-    "editor.rulers": [72, 79, 90, 100],
-
+    "editor.rulers": [
+        72,
+        79,
+        90,
+        100
+    ],
     // Indentation and font size settings:
     "editor.fontFamily": "Cascadia Mono",
     "editor.detectIndentation": false,
@@ -100,26 +81,21 @@
     "editor.fontSize": 14,
     "editor.lineHeight": 16,
     "editor.fontWeight": "normal",
-
     // Enable semantic highlighting (for Rust mainly):
     "editor.semanticTokenColorCustomizations": {
         "enabled": true
     },
-
     // Specific settings for JSONC files (mainly this file):
     "[jsonc]": {
         "editor.tabSize": 4,
         "editor.defaultFormatter": "vscode.json-language-features"
     },
-
     //////////////////////////////////////////////////////////////////////////
     // FILES
     //////////////////////////////////////////////////////////////////////////
-
     "files.eol": "\n",
     "files.trimTrailingWhitespace": true,
     "files.trimFinalNewlines": true,
-
     "files.associations": {
         "*.jou": "lisp",
         "*.scm": "lisp",
@@ -128,59 +104,49 @@
         "*.matc": "FortranFreeForm",
         // "pRef": "openfoam-dict",
     },
-
     "files.exclude": {
         // Python virtual environments:
         "**/venv*/": true,
         "**/.venv*/": true,
-
         // Common cache/build folders:
         "**/__pycache__/": true,
         "**/.ipynb_checkpoints/": true,
         "**/.jupyter_cache/": true,
-
         // Fortran module files:
         "**/*.mod": true,
-
         // Quarto cache files:
         "**/.quarto/": true,
         "**/.vdoc.*": true,
-
         // Rust targets:
         "**/target/": true,
-
         // Build and distribution folders:
         "**/build/": true,
         "**/dist/": true,
         "**/*.egg-info/": true,
-
         // Python extension build artifacts:
         "**/*.so/": true,
         "**/*.pyd/": true,
-
         // Diagram temporary files:
         "**/*.drawio.bkp": true,
     },
-
     "files.watcherExclude": {
         // Majordome specifics:
-        ".cargo/":true,
-        ".copilot/":true,
-        ".hyperspy/":true,
-        ".ipython/":true,
-        ".julia/":true,
-        ".jupyter/":true,
-        ".kompanion/":true,
-        ".matplotlib/":true,
-        ".miktex/":true,
-        ".stack/":true,
-        ".vscode/":true,
-        ".zettlr/":true,
-        "AppData/":true,
-        "Desktop/":true,
-        "pip/":true,
-        "repos/":true,
-
+        ".cargo/": true,
+        ".copilot/": true,
+        ".hyperspy/": true,
+        ".ipython/": true,
+        ".julia/": true,
+        ".jupyter/": true,
+        ".kompanion/": true,
+        ".matplotlib/": true,
+        ".miktex/": true,
+        ".stack/": true,
+        ".vscode/": true,
+        ".zettlr/": true,
+        "AppData/": true,
+        "Desktop/": true,
+        "pip/": true,
+        "repos/": true,
         // Common programming:
         "**/node_modules": true,
         "**/.git": true,
@@ -189,50 +155,43 @@
         "**/target": true,
         "**/.venv": true
     },
-
     //////////////////////////////////////////////////////////////////////////
     // GIT
     //////////////////////////////////////////////////////////////////////////
-
     "git.enabled": true,
     "git.autofetch": true,
     "git.confirmSync": false,
     "git.openRepositoryInParentFolders": "never",
     "git.ignoreMissingGitWarning": true,
-
     //////////////////////////////////////////////////////////////////////////
     // MARKDOWN
     //////////////////////////////////////////////////////////////////////////
-
     "[markdown]": {
         "editor.foldingStrategy": "auto",
         "editor.wordWrap": "wordWrapColumn",
         "editor.wordWrapColumn": 80,
         "rewrap.autoWrap.enabled": false,
     },
-
     //////////////////////////////////////////////////////////////////////////
     // RUST
     //////////////////////////////////////////////////////////////////////////
-
     "[rust]": {
         "editor.tabSize": 4,
-
         // XXX: keep this as auto to allow region-based folding in Rust files.
         // This is contrary to what a research suggests...
         "editor.foldingStrategy": "auto",
         "editor.semanticHighlighting.enabled": true,
         "editor.wordWrap": "wordWrapColumn",
         "editor.wordWrapColumn": 100,
-        "editor.rulers": [79, 100],
+        "editor.rulers": [
+            79,
+            100
+        ],
     },
-
     "rust-analyzer.cargo.targetDir": true,
-
     //////////////////////////////////////////////////////////////////////////
     // QUARTO
     //////////////////////////////////////////////////////////////////////////
-
     "[quarto]": {
         "editor.wordWrap": "wordWrapColumn",
         "editor.wordWrapColumn": 80,
@@ -247,25 +206,19 @@
         "editor.unicodeHighlight.ambiguousCharacters": false,
         "editor.unicodeHighlight.invisibleCharacters": false
     },
-
     //////////////////////////////////////////////////////////////////////////
     // JUPYTER
     //////////////////////////////////////////////////////////////////////////
-
     "notebook.lineNumbers": "on",
-
     "jupyter.askForKernelRestart": false,
     "jupyter.interactiveWindow.creationMode": "perFile",
-
     // XXX: probably not expanded (most places will not!), as I see no effect.
     // "jupyter.kernels.excludePythonEnvironments": [
     //     "${env:INKSCAPE_HOME}\\bin\\python.exe"
     // ],
-
     //////////////////////////////////////////////////////////////////////////
     // PYTHON
     //////////////////////////////////////////////////////////////////////////
-
     "python-envs.pythonProjects": [
         {
             "path": "",
@@ -273,22 +226,21 @@
             "packageManager": "ms-python.python:pip"
         }
     ],
-
     "python-envs.globalSearchPaths": [
         ".venv/**",
         "venv**",
     ],
-
-    "python.venvFolders": [".venv", "venv"],
+    "python.venvFolders": [
+        ".venv",
+        "venv"
+    ],
     "python.venvPath": "${workspaceFolder}",
-
     "[python]": {
         "editor.tabSize": 4,
         "editor.foldingStrategy": "indentation",
         "editor.wordWrap": "wordWrapColumn",
         "editor.wordWrapColumn": 80,
     },
-
     "python.analysis.autoSearchPaths": true,
     "python.analysis.indexing": false,
     "python.analysis.stubPath": "./typings",
@@ -302,14 +254,11 @@
     "python.terminal.launchArgs": [],
     "python.languageServer": "Default",
     "python.REPL.enableREPLSmartSend": true,
-
     //////////////////////////////////////////////////////////////////////////
     // F#
     //////////////////////////////////////////////////////////////////////////
-
     // Just don't add it, VSCode will not expand variables here:
     // "FSharp.dotnetRoot": "${env:DOTNET_ROOT}",
-
     "FSharp.addFsiWatcher": false,
     "FSharp.indentationSize": 4,
     "FSharp.suggestGitignore": false,
@@ -320,50 +269,44 @@
     "FSharp.inlayHints.disableLongTooltip": false,
     "FSharp.inlineValues.enabled": false,
     "FSharp.inlineValues.prefix": "",
-
     "[fsharp]": {
         "editor.tabSize": 4,
         "editor.foldingStrategy": "auto",
         "editor.wordWrap": "wordWrapColumn",
         "editor.wordWrapColumn": 100,
-        "editor.rulers": [79, 100],
+        "editor.rulers": [
+            79,
+            100
+        ],
     },
-
     //////////////////////////////////////////////////////////////////////////
     // JULIA
     //////////////////////////////////////////////////////////////////////////
-
     "[julia]": {
         "editor.tabSize": 4
     },
-
     "julia.symbolCacheDownload": true,
     "julia.enableCrashReporter": false,
     "julia.enableTelemetry": false,
     "julia.useProgressFrontend": true,
     "julia.workspace.showModules": true,
-
     "julia.lint.disabledDirs": [
         "**/julia-depot/**",
         "docs",
         "test"
     ],
-
     //////////////////////////////////////////////////////////////////////////
     // HASKELL
     //////////////////////////////////////////////////////////////////////////
-
     //////////////////////////////////////////////////////////////////////////
     // RACKET
     //////////////////////////////////////////////////////////////////////////
-
     //////////////////////////////////////////////////////////////////////////
     // FORTRAN
     //////////////////////////////////////////////////////////////////////////
-
     "fortran.notifications.releaseNotes": false,
     "fortran.preferredCase": "lowercase",
-    "fortran.fortls.directories":[
+    "fortran.fortls.directories": [
         "**/build/*",
         "**/src/**/*"
     ],
@@ -380,14 +323,11 @@
         "-Wunused-variable",
         "-Wunused-dummy-argument"
     ],
-
     //////////////////////////////////////////////////////////////////////////
     // GITHUB COPILOT AND AI TOOLS
     //////////////////////////////////////////////////////////////////////////
-
     // XXX: use Copilot behing a proxy!
     "win-ca.inject": "append",
-
     "chat.mcp.gallery.enabled": true,
     "chat.viewSessions.orientation": "stacked",
     "chat.tools.urls.autoApprove": {
@@ -402,7 +342,6 @@
             "approveResponse": false
         }
     },
-
     "github.copilot.nextEditSuggestions.eagerness": "medium",
     "github.copilot.nextEditSuggestions.enabled": true,
     "github.copilot.enable": {
@@ -413,7 +352,6 @@
         "quarto": true,
         "python": true
     },
-
     "copilot.experimental.llmProviders": {
         "ollama-qwen": {
             "model": "qwen3-coder:30b",
@@ -423,27 +361,21 @@
     },
     "copilot.experimental.defaultModel": "ollama-qwen",
     "copilot.experimental.showAllModels": true,
-
     "geminicodeassist.project": "pure-keep-dxvsd",
-
     //////////////////////////////////////////////////////////////////////////
     // TERMINAL
     //////////////////////////////////////////////////////////////////////////
-
+    "powershell.promptToUpdatePowerShell": false,
     // Do not ask for confirmation when pasting multiple lines:
     "terminal.integrated.enableMultiLinePasteWarning": "never",
-
     // Do not show sticky scroll:
     "terminal.integrated.stickyScroll.enabled": false,
-
     // Use a bit smaller font in terminal:
     "terminal.integrated.fontSize": 12,
-
     "terminal.integrated.profiles.windows": {
         "Git Bash": null,
         "JavaScript Debug Terminal": null,
         "MATLAB": null,
-
         "Kompanion PowerShell": {
             "path": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
             "args": [
@@ -454,46 +386,36 @@
             ]
         },
     },
-
     "terminal.integrated.defaultProfile.windows": "Kompanion PowerShell",
-
     "terminal.integrated.commandsToSkipShell": [
         "language-julia.interrupt"
     ],
-
     // Allow shell integration for better Copilot interaction:
     "terminal.integrated.shellIntegration.enabled": true,
-
     //////////////////////////////////////////////////////////////////////////
     // REMOTE
     //////////////////////////////////////////////////////////////////////////
-
     "remote.autoForwardPortsSource": "hybrid",
     "remote.SSH.remotePlatform": {
         "10.13.52.2": "linux",
         "frontal": "linux"
     },
-
     //////////////////////////////////////////////////////////////////////////
     // SECURITY
     //////////////////////////////////////////////////////////////////////////
-
     "security.workspace.trust.untrustedFiles": "open",
     "security.allowedUNCHosts": [
         "10.13.52.2"
     ],
-
     //////////////////////////////////////////////////////////////////////////
     // LATEX
     //////////////////////////////////////////////////////////////////////////
-
     "[latex]": {
         "editor.tabSize": 2,
         "editor.wordWrap": "wordWrapColumn",
         "editor.wordWrapColumn": 80,
         "rewrap.autoWrap.enabled": false
     },
-
     "latex-workshop.latex.recipes": [
         {
             "name": "kompanion-bare-pdflatex",
@@ -534,7 +456,6 @@
             ]
         }
     ],
-
     "latex-workshop.latex.tools": [
         {
             "name": "pdflatex",
@@ -561,21 +482,22 @@
         {
             "name": "bibtex",
             "command": "bibtex",
-            "args": ["%DOC%"]
+            "args": [
+                "%DOC%"
+            ]
         },
         {
             "name": "biber",
             "command": "biber",
-            "args": ["%DOC%"]
+            "args": [
+                "%DOC%"
+            ]
         }
     ],
-
     //////////////////////////////////////////////////////////////////////////
     // OTHER
     //////////////////////////////////////////////////////////////////////////
-
     "redhat.telemetry.enabled": false,
     "vsicons.dontShowNewVersionMessage": true,
     "liveServer.settings.donotShowInfoMsg": true,
-    "powershell.promptToUpdatePowerShell": false
 }

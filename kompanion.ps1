@@ -259,7 +259,8 @@ function Start-KompanionConfigure {
     if ($Config.lang.haskell)   { Invoke-InstallHaskell }
     if ($Config.lang.haskell)   { Invoke-ConfigureHaskell }
     if ($Config.lang.julia)     { Invoke-ConfigureJulia }
-    if ($Config.lang.perl)        { Invoke-ConfigurePerl }
+    if ($Config.lang.octave)    { Invoke-ConfigureOctave }
+    if ($Config.lang.perl)      { Invoke-ConfigurePerl }
     if ($Config.lang.racket)    { Invoke-InstallRacket }
     if ($Config.lang.racket)    { Invoke-ConfigureRacket }
     if ($Config.lang.rlang)     { Invoke-InstallRlang }

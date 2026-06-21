@@ -772,14 +772,15 @@ function Invoke-ConfigureOctave {
     $version = $KOMPANION_SETUP.version.octave
     $url     = Get-PackageVersionedUrl "octave"
     $output  = "$env:KOMPANION_TEMP\octave.zip"
-    $path    = "$env:KOMPANION_BIN\octave-$version-w64"
+    $path    = "$env:KOMPANION_BIN"
     $target  = "octave-$version-w64"
 
     $success = Invoke-DlUnzipInstall $path $url $output -Target $target
 
     if ($success) {
-        Set-KompanionEnvVar -Name "OCTAVE_HOME" -Value "$path"
+        Set-KompanionEnvVar -Name "OCTAVE_HOME" -Value "$path\$target"
         Initialize-AddToPath -Directory "$env:OCTAVE_HOME"
+        Initialize-AddToPath -Directory "$env:OCTAVE_HOME\mingw64\bin"
     } else {
         Write-Warn "Failed to install Octave, skipping configuration..."
     }

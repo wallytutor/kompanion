@@ -780,7 +780,9 @@ function Invoke-ConfigureOctave {
     if ($success) {
         Set-KompanionEnvVar -Name "OCTAVE_HOME" -Value "$path\$target"
         Initialize-AddToPath -Directory "$env:OCTAVE_HOME"
-        Initialize-AddToPath -Directory "$env:OCTAVE_HOME\mingw64\bin"
+        # This is practical when using, but keep disabled as it will
+        # override the compiler suit of Rust, what is more troublesome...
+        # Initialize-AddToPath -Directory "$env:OCTAVE_HOME\mingw64\bin"
     } else {
         Write-Warn "Failed to install Octave, skipping configuration..."
     }

@@ -985,6 +985,27 @@ function Invoke-ConfigureTabby {
     }
 }
 
+function Invoke-ConfigureTypst {
+    Write-Head "* Configuring Typst..."
+
+    $version = $KOMPANION_SETUP.version.typst
+    $target = "typst-x86_64-pc-windows-msvc"
+    $url     = Get-PackageVersionedUrl "typst"
+    $output = "$env:KOMPANION_TEMP\typst.zip"
+    $path   = "$env:KOMPANION_BIN"
+
+    $success = Invoke-DlUnzipInstall $path $url $output -Target $target
+
+    if ($success) {
+        Set-KompanionEnvVar -Name "TYPST_HOME" `
+            -Value "$env:KOMPANION_BIN\$target"
+
+        Initialize-AddToPath -Directory "$env:TYPST_HOME"
+    } else {
+        Write-Warn "Failed to install Typst, skipping configuration..."
+    }
+}
+
 function Invoke-ConfigureUv {
     Write-Head "* Configuring Astral UV..."
 

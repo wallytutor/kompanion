@@ -185,6 +185,7 @@ function Start-KompanionConfigure {
 
     Invoke-InstallQuarto
     Invoke-ConfigureQuarto
+    Invoke-ConfigureTypst
 
     if ($Config.base.drawio)      { Invoke-ConfigureDrawio }
     if ($Config.base.jabref)      { Invoke-ConfigureJabRef }

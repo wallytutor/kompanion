@@ -74,7 +74,6 @@ $URL_SEVENZIP    = "https://github.com/commercialhaskell/stackage-content/releas
 $URL_LESSMSI     = "https://github.com/activescott/lessmsi/releases/download/v2.10.3/lessmsi-v2.10.3.zip"
 $URL_IMAGEMAGICK = "https://github.com/ImageMagick/ImageMagick/releases/download/7.1.2-8/ImageMagick-7.1.2-8-portable-Q16-HDRI-x64.7z"
 $URL_POPPLER     = "https://github.com/oschwartz10612/poppler-windows/releases/download/v25.11.0-0/Release-25.11.0-0.zip"
-$URL_QUARTO      = "https://github.com/quarto-dev/quarto-cli/releases/download/v1.8.26/quarto-1.8.26-win.zip"
 $URL_ZETTLR      = "https://github.com/Zettlr/Zettlr/releases/download/v4.2.0/Zettlr-4.2.0-x64.exe"
 $URL_FFMPEG      = "https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-full.7z"
 $URL_INKSCAPE    = "https://inkscape.org/gallery/item/53695/inkscape-1.4_2024-10-11_86a8ad7-x64.7z"
@@ -183,7 +182,6 @@ function Start-KompanionConfigure {
     Invoke-ConfigureGit
     Invoke-ConfigureGithubCLI
 
-    Invoke-InstallQuarto
     Invoke-ConfigureQuarto
     Invoke-ConfigureTypst
 
@@ -871,29 +869,6 @@ function Invoke-InstallPoppler {
     Invoke-DownloadIfNeeded -URL $url -Output $output
     Invoke-UncompressZipIfNeeded -Source $output -Destination $path
     Invoke-ConfigurePoppler
-}
-
-function Invoke-ConfigureQuarto {
-    Write-Head "* Configuring Quarto..."
-
-    Set-KompanionEnvVar -Name "QUARTO_HOME" `
-        -Value "$env:KOMPANION_BIN\quarto"
-
-    Initialize-AddToPath -Directory "$env:QUARTO_HOME\bin"
-}
-
-function Invoke-InstallQuarto {
-    $output = "$env:KOMPANION_TEMP\quarto.zip"
-    $path   = "$env:KOMPANION_BIN\quarto"
-    $url    = $URL_QUARTO
-
-    if (Test-Path -Path $path) { return }
-
-    Invoke-DownloadIfNeeded -URL $url -Output $output
-    Invoke-UncompressZipIfNeeded -Source $output -Destination $path
-    Invoke-ConfigureQuarto
-
-    & quarto install tinytex
 }
 
 function Invoke-ConfigureZettlr {

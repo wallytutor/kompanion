@@ -851,7 +851,7 @@ function Invoke-ConfigurePerl {
     Write-Head "* Configuring Perl..."
 
     $target = $null
-    $url     = Get-PackageVersionedUrl "perl"
+    $url    = Get-PackageVersionedUrl "perl"
     $output = "$env:KOMPANION_TEMP\perl.zip"
     $path   = "$env:KOMPANION_BIN\strawberry-perl-5.42.2.1-64bit"
 
@@ -886,6 +886,28 @@ function Invoke-ConfigurePrePoMax {
         Initialize-AddToPath -Directory "$env:PREPOMAX_HOME"
     } else {
         Write-Warn "Failed to install PrePoMax, skipping configuration..."
+    }
+}
+
+function Invoke-ConfigureQuarto {
+    Write-Head "* Configuring Quarto..."
+
+    $target  = $null
+    $version = $KOMPANION_SETUP.version.quarto
+    $url     = Get-PackageVersionedUrl "quarto"
+    $output  = "$env:KOMPANION_TEMP\quarto.zip"
+    $path    = "$env:KOMPANION_BIN\quarto-$version-win"
+
+    $success = Invoke-DlUnzipInstall $path $url $output -Target $target
+
+    if ($success) {
+        Set-KompanionEnvVar -Name "QUARTO_HOME" -Value "$path\$target"
+        Initialize-AddToPath -Directory "$env:QUARTO_HOME\bin"
+
+        # TODO automate this for the first time only
+        # & quarto install tinytex
+    } else {
+        Write-Warn "Failed to install Quarto, skipping configuration..."
     }
 }
 

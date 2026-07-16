@@ -28,7 +28,41 @@ function Get-IsLockedPkg {
     return (Test-Path -Path $lockFile)
 }
 
+function Get-PackageVersion {
+    <#
+    .SYNOPSIS
+        Returns the package version from the JSON configuration.
+    .PARAMETER Name
+        Name of the package to be retrieved (same case as in JSON).
+    .PARAMETER Full
+        Set to true to return `X.Y.Z`, otherwise `X.Y`.
+    #>
+    param (
+        [Parameter(Mandatory, Position=0)]
+        [string]$Name,
+        [bool]$Full = $true
+    )
+
+    $versionEntry = $KOMPANION_SETUP.version.$Name
+
+    if ($versionEntry -is [string]) {
+        return $versionEntry
+    }
+
+    if ($Full) {
+        "{0}.{1}.{2}" -f $versionEntry
+    } else {
+        "{0}.{1}" -f $versionEntry
+    }
+}
+
 function Get-PackageVersionedUrl {
+    <#
+    .SYNOPSIS
+        Returns the package URL from the JSON configuration.
+    .PARAMETER Name
+        Name of the package to be retrieved (same case as in JSON).
+    #>
     param (
         [Parameter(Mandatory, Position=0)]
         [string]$Name
@@ -40,15 +74,12 @@ function Get-PackageVersionedUrl {
         throw "Base URL for package '$Name' not found in configuration."
     }
 
-    # TODO handle version = {major, minor} and other formats:
-    $fullUrl = if ([string]::IsNullOrWhiteSpace($version)) {
+    if ([string]::IsNullOrWhiteSpace($version)) {
         Write-Warn "* Version for package '$Name' not found in configuration."
         $baseUrl
     } else {
         $baseUrl -f $version
     }
-
-    return $fullUrl
 }
 
 function Get-TargetPath {
@@ -591,8 +622,10 @@ function Invoke-ConfigureJabRef {
 function Invoke-ConfigureJulia {
     Write-Head "* Configuring Julia..."
 
-    $target = "julia-1.12.1"
-    $url    = $KOMPANION_SETUP.url.julia
+    $version  = Get-PackageVersion "julia"
+    $target = "julia-$version"
+
+    $url    = Get-PackageVersionedUrl "julia"
     $output = "$env:KOMPANION_TEMP\julia.zip"
     $path   = "$env:KOMPANION_BIN"
 

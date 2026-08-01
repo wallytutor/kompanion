@@ -305,6 +305,7 @@
         "docs",
         "test"
     ],
+    "julia.juliaup.install.hint": false,
     //////////////////////////////////////////////////////////////////////////
     // HASKELL
     //////////////////////////////////////////////////////////////////////////
@@ -510,4 +511,5 @@
     "redhat.telemetry.enabled": false,
     "vsicons.dontShowNewVersionMessage": true,
     "liveServer.settings.donotShowInfoMsg": true,
+
 }

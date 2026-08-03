@@ -19,7 +19,7 @@ repos/
 .kompanion/kompanion.json
 .kompanion/envs.ps1
 
-# Editor cache:
+# Dot-directories:
 .antigravity*/*
 .config/github-copilot/
 .config/gh/
@@ -27,6 +27,7 @@ repos/
 .copilot/*
 .gemini/*
 .haystack/*
+.local/*
 .logseq/*
 .securecoder/*
 .vscode/*

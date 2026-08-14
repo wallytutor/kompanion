@@ -43,7 +43,6 @@ book:
     - part: "Montagne"
       chapters:
         - tracks/carto.qmd
-        - tracks/liens.qmd
 
     - references.qmd
 

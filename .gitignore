@@ -76,10 +76,6 @@ vscode-remote-wsl/
 .config/lpm/*
 !.config/lite-xl/init.lua
 
-# Logseq:
-logseq/logseq/.recycle/
-logseq/logseq/bak/*
-
 # Ollama:
 .ollama/*
 

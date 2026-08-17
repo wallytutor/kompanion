@@ -1,3 +1,0 @@
-# Convection in 1-D  {#sec-convection-in-1-d}
-
-_Upcoming_

@@ -20,7 +20,7 @@ repos/
 .kompanion/envs.ps1
 
 # Dot-directories:
-.antigravity*/*
+
 .config/github-copilot/
 .config/gh/
 .continue/*
@@ -81,6 +81,10 @@ vscode-remote-wsl/
 
 # Rest Client:
 .rest-client/*
+
+# Antigravity
+.antigravity*/*
+antigravity-ide/
 
 #######################################################################
 # User profile: overrides

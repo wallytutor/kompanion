@@ -538,6 +538,30 @@ function Invoke-ConfigureFreeCAD {
     }
 }
 
+function Invoke-ConfigureGit {
+    Write-Head "* Configuring Git..."
+
+    $target = $null
+    $url    = $KOMPANION_SETUP.url.git
+    $output = "$env:KOMPANION_TEMP\git.zip"
+    $path   = "$env:KOMPANION_BIN\git"
+
+    $success = Invoke-DlUnzipInstall $path $url $output -Target $target
+
+    # If using PortableGit (from _git in JSON file), implement this:
+    # Invoke-DownloadIfNeeded -URL $url -Output $output
+    # Invoke-CapturedCommand $output @("-y", "-o$path")
+
+    if ($success) {
+        Set-KompanionEnvVar -Name "GIT_HOME" `
+            -Value "$env:KOMPANION_BIN\git"
+
+        Initialize-AddToPath -Directory "$env:GIT_HOME\cmd"
+    } else {
+        Write-Warn "Failed to install Git, skipping configuration..."
+    }
+}
+
 function Invoke-ConfigureGithubCLI {
     Write-Head "* Configuring GitHub CLI..."
 

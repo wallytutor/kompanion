@@ -69,7 +69,6 @@ $DEFAULT_CONFIG = [PSCustomObject]@{
     }
 }
 
-$URL_GIT         = "https://github.com/git-for-windows/git/releases/download/v2.51.0.windows.1/PortableGit-2.51.0-64-bit.7z.exe"
 $URL_SEVENZIP    = "https://github.com/commercialhaskell/stackage-content/releases/download/7z-22.01/"
 $URL_LESSMSI     = "https://github.com/activescott/lessmsi/releases/download/v2.10.3/lessmsi-v2.10.3.zip"
 $URL_IMAGEMAGICK = "https://github.com/ImageMagick/ImageMagick/releases/download/7.1.2-8/ImageMagick-7.1.2-8-portable-Q16-HDRI-x64.7z"
@@ -178,7 +177,6 @@ function Start-KompanionConfigure {
 
     Invoke-ConfigureVsCode
     Invoke-ConfigureLiteXL
-    Invoke-InstallGit
     Invoke-ConfigureGit
     Invoke-ConfigureGithubCLI
 
@@ -759,27 +757,6 @@ function Rename-FilesToStandard {
 #endregion: utils_other
 
 #region: install_configure_base
-function Invoke-ConfigureGit {
-    Write-Head "* Configuring Git..."
-
-    Set-KompanionEnvVar -Name "GIT_HOME" `
-        -Value "$env:KOMPANION_BIN\git"
-
-    Initialize-AddToPath -Directory "$env:GIT_HOME\cmd"
-}
-
-function Invoke-InstallGit {
-    $output = "$env:KOMPANION_TEMP\git.exe  "
-    $path   = "$env:KOMPANION_BIN\git"
-    $url    = $URL_GIT
-
-    if (Test-Path -Path $path) { return }
-
-    Invoke-DownloadIfNeeded -URL $url -Output $output
-    Invoke-CapturedCommand $output @("-y", "-o$path")
-    Invoke-ConfigureGit
-}
-
 function Invoke-ConfigureSevenZip {
     Write-Head "* Configuring 7-Zip..."
 

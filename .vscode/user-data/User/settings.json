@@ -17,7 +17,7 @@
     "explorer.confirmDragAndDrop": false,
     // Do not ask about pasting files in explorer:
     "explorer.confirmPasteNative": false,
-    // Do not ask about deleting files in explorer:
+    // Do not ask about deleting files:
     "explorer.confirmDelete": false,
     //////////////////////////////////////////////////////////////////////////
     // EXTENSIONS
@@ -37,7 +37,7 @@
     "workbench.tree.indent": 12,
     // Use a custom icon and color theme:
     "workbench.iconTheme": "bearded-icons",
-    "workbench.colorTheme": "Bearded Theme Altica",
+    "workbench.colorTheme": "Bearded Theme Anthracite",
     // Add a clearly visible ruler (language dependent position):
     "workbench.colorCustomizations": {
         "editorRuler.foreground": "#3d17e4",
@@ -52,6 +52,8 @@
         "*.copilotmd": "vscode.markdown.preview.editor",
         // "*.ipynb": "verso.blazorNotebook"
     },
+    // Show activity bar on top:
+    "workbench.auxiliaryActivityBar.location": "top",
     //////////////////////////////////////////////////////////////////////////
     // EDITOR / DIFFEDITOR
     //////////////////////////////////////////////////////////////////////////
@@ -59,6 +61,8 @@
     "diffEditor.ignoreTrimWhitespace": false,
     // Do not display minimap on side of document:
     "editor.minimap.enabled": false,
+    // Do not format on save:
+    "editor.formatOnSave": false,
     // Do not show pop-ups all the time:
     "editor.parameterHints.enabled": false,
     // Use Ctrl to multi-selection:
@@ -85,10 +89,76 @@
     "editor.semanticTokenColorCustomizations": {
         "enabled": true
     },
-    // Specific settings for JSONC files (mainly this file):
+    // Language specific settings:
+    "[fsharp]": {
+        "editor.tabSize": 4,
+        "editor.foldingStrategy": "auto",
+        "editor.wordWrap": "wordWrapColumn",
+        "editor.wordWrapColumn": 100,
+        "editor.rulers": [
+            79,
+            100
+        ],
+    },
     "[jsonc]": {
         "editor.tabSize": 4,
         "editor.defaultFormatter": "vscode.json-language-features"
+    },
+    "[julia]": {
+        "editor.tabSize": 4
+    },
+    "[latex]": {
+        "editor.tabSize": 2,
+        "editor.wordWrap": "wordWrapColumn",
+        "editor.wordWrapColumn": 80,
+        "rewrap.autoWrap.enabled": false
+    },
+    "[markdown]": {
+        "editor.foldingStrategy": "auto",
+        "editor.wordWrap": "wordWrapColumn",
+        "editor.wordWrapColumn": 80,
+    },
+    "[python]": {
+        "editor.tabSize": 4,
+        "editor.foldingStrategy": "indentation",
+        "editor.wordWrap": "wordWrapColumn",
+        "editor.wordWrapColumn": 80,
+    },
+    "[quarto]": {
+        "editor.lineHeight": 20,
+        "editor.wordWrap": "wordWrapColumn",
+        "editor.wordWrapColumn": 80,
+        "editor.quickSuggestions": {
+            "comments": "on",
+            "other": "on",
+            "strings": "on"
+        },
+        "editor.quickSuggestionsDelay": 250,
+        "editor.wordBasedSuggestions": "off",
+        "editor.suggestOnTriggerCharacters": true,
+        "editor.unicodeHighlight.ambiguousCharacters": false,
+        "editor.unicodeHighlight.invisibleCharacters": false
+    },
+    "[rust]": {
+        "editor.tabSize": 4,
+        // XXX: keep this as auto to allow region-based folding in Rust files.
+        // This is contrary to what a research suggests...
+        "editor.foldingStrategy": "auto",
+        "editor.semanticHighlighting.enabled": true,
+        "editor.wordWrap": "wordWrapColumn",
+        "editor.wordWrapColumn": 100,
+        "editor.rulers": [
+            79,
+            100
+        ],
+    },
+    "[typst]": {
+        "editor.lineHeight": 25,
+        "editor.wordWrap": "wordWrapColumn",
+        "editor.wordWrapColumn": 80,
+        "editor.rulers": [
+            80
+        ]
     },
     //////////////////////////////////////////////////////////////////////////
     // FILES
@@ -118,7 +188,7 @@
         "**/.quarto/": true,
         "**/.vdoc.*": true,
         // Rust targets:
-        "**/target/": true,
+        // "**/target/": true,
         // Build and distribution folders:
         "**/build/": true,
         "**/dist/": true,
@@ -164,69 +234,15 @@
     "git.openRepositoryInParentFolders": "never",
     "git.ignoreMissingGitWarning": true,
     //////////////////////////////////////////////////////////////////////////
-    // MARKDOWN
-    //////////////////////////////////////////////////////////////////////////
-    "[markdown]": {
-        "editor.foldingStrategy": "auto",
-        "editor.wordWrap": "wordWrapColumn",
-        "editor.wordWrapColumn": 80,
-        "rewrap.autoWrap.enabled": false,
-    },
-    //////////////////////////////////////////////////////////////////////////
-    // TYPST
-    //////////////////////////////////////////////////////////////////////////
-    "[typst]": {
-        "editor.lineHeight": 25,
-        "editor.wordWrap": "wordWrapColumn",
-        "editor.wordWrapColumn": 80,
-        "editor.rulers": [
-            80
-        ]
-    },
-    //////////////////////////////////////////////////////////////////////////
     // RUST
     //////////////////////////////////////////////////////////////////////////
-    "[rust]": {
-        "editor.tabSize": 4,
-        // XXX: keep this as auto to allow region-based folding in Rust files.
-        // This is contrary to what a research suggests...
-        "editor.foldingStrategy": "auto",
-        "editor.semanticHighlighting.enabled": true,
-        "editor.wordWrap": "wordWrapColumn",
-        "editor.wordWrapColumn": 100,
-        "editor.rulers": [
-            79,
-            100
-        ],
-    },
     "rust-analyzer.cargo.targetDir": true,
-    //////////////////////////////////////////////////////////////////////////
-    // QUARTO
-    //////////////////////////////////////////////////////////////////////////
-    "[quarto]": {
-        "editor.wordWrap": "wordWrapColumn",
-        "editor.wordWrapColumn": 80,
-        "editor.quickSuggestions": {
-            "comments": "on",
-            "other": "on",
-            "strings": "on"
-        },
-        "editor.quickSuggestionsDelay": 250,
-        "editor.wordBasedSuggestions": "off",
-        "editor.suggestOnTriggerCharacters": true,
-        "editor.unicodeHighlight.ambiguousCharacters": false,
-        "editor.unicodeHighlight.invisibleCharacters": false
-    },
     //////////////////////////////////////////////////////////////////////////
     // JUPYTER
     //////////////////////////////////////////////////////////////////////////
     "notebook.lineNumbers": "on",
     "jupyter.askForKernelRestart": false,
     "jupyter.interactiveWindow.creationMode": "perFile",
-    // XXX: probably not expanded (most places will not!), as I see no effect.
-    // "jupyter.kernels.excludePythonEnvironments": [
-    //     "${env:INKSCAPE_HOME}\\bin\\python.exe"
-    // ],
     //////////////////////////////////////////////////////////////////////////
     // PYTHON
     //////////////////////////////////////////////////////////////////////////
@@ -246,21 +262,17 @@
         "venv"
     ],
     "python.venvPath": "${workspaceFolder}",
-    "[python]": {
-        "editor.tabSize": 4,
-        "editor.foldingStrategy": "indentation",
-        "editor.wordWrap": "wordWrapColumn",
-        "editor.wordWrapColumn": 80,
-    },
     "python.analysis.autoSearchPaths": true,
     "python.analysis.indexing": false,
     "python.analysis.stubPath": "./typings",
     "python.analysis.typeCheckingMode": "standard",
+    "python.analysis.exclude": [
+        "**/__pyrefly_virtual__/inmemory/**"
+    ],
     "python.createEnvironment.trigger": "off",
-    // "python.defaultInterpreterPath": "python.exe",
     "python.useEnvironmentsExtension": true,
     "python.terminal.activateEnvInCurrentTerminal": true,
-    "python.terminal.activateEnvironment": true,
+    "python.terminal.activateEnvironment": false,
     "python.terminal.executeInFileDir": true,
     "python.terminal.launchArgs": [],
     "python.languageServer": "Default",
@@ -280,22 +292,10 @@
     "FSharp.inlayHints.disableLongTooltip": false,
     "FSharp.inlineValues.enabled": false,
     "FSharp.inlineValues.prefix": "",
-    "[fsharp]": {
-        "editor.tabSize": 4,
-        "editor.foldingStrategy": "auto",
-        "editor.wordWrap": "wordWrapColumn",
-        "editor.wordWrapColumn": 100,
-        "editor.rulers": [
-            79,
-            100
-        ],
-    },
     //////////////////////////////////////////////////////////////////////////
     // JULIA
     //////////////////////////////////////////////////////////////////////////
-    "[julia]": {
-        "editor.tabSize": 4
-    },
+    "julia.juliaup.install.hint": false,
     "julia.symbolCacheDownload": true,
     "julia.enableCrashReporter": false,
     "julia.enableTelemetry": false,
@@ -306,13 +306,6 @@
         "docs",
         "test"
     ],
-    "julia.juliaup.install.hint": false,
-    //////////////////////////////////////////////////////////////////////////
-    // HASKELL
-    //////////////////////////////////////////////////////////////////////////
-    //////////////////////////////////////////////////////////////////////////
-    // RACKET
-    //////////////////////////////////////////////////////////////////////////
     //////////////////////////////////////////////////////////////////////////
     // FORTRAN
     //////////////////////////////////////////////////////////////////////////
@@ -377,7 +370,6 @@
     //////////////////////////////////////////////////////////////////////////
     // TERMINAL
     //////////////////////////////////////////////////////////////////////////
-    "powershell.promptToUpdatePowerShell": false,
     // Do not ask for confirmation when pasting multiple lines:
     "terminal.integrated.enableMultiLinePasteWarning": "never",
     // Do not show sticky scroll:
@@ -400,7 +392,8 @@
     },
     "terminal.integrated.defaultProfile.windows": "Kompanion PowerShell",
     "terminal.integrated.commandsToSkipShell": [
-        "language-julia.interrupt"
+        "language-julia.interrupt",
+        "matlab.interrupt"
     ],
     // Allow shell integration for better Copilot interaction:
     "terminal.integrated.shellIntegration.enabled": true,
@@ -422,12 +415,6 @@
     //////////////////////////////////////////////////////////////////////////
     // LATEX
     //////////////////////////////////////////////////////////////////////////
-    "[latex]": {
-        "editor.tabSize": 2,
-        "editor.wordWrap": "wordWrapColumn",
-        "editor.wordWrapColumn": 80,
-        "rewrap.autoWrap.enabled": false
-    },
     "latex-workshop.latex.recipes": [
         {
             "name": "kompanion-bare-pdflatex",
@@ -512,5 +499,8 @@
     "redhat.telemetry.enabled": false,
     "vsicons.dontShowNewVersionMessage": true,
     "liveServer.settings.donotShowInfoMsg": true,
-
+    "powershell.promptToUpdatePowerShell": false,
+    "geminicodeassist.displayInlineContextHint": false,
+    "MATLAB.showFeatureNotAvailableError": false,
+    "http.systemCertificatesNode": true
 }

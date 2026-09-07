@@ -926,6 +926,28 @@ function Invoke-ConfigurePerl {
     }
 }
 
+function Invoke-ConfigurePoppler {
+    Write-Head "* Configuring Poppler..."
+
+    $version = $KOMPANION_SETUP.version.poppler
+    $target = "poppler-$version"
+    $url     = Get-PackageVersionedUrl "poppler"
+    $output = "$env:KOMPANION_TEMP\poppler.zip"
+    $path   = "$env:KOMPANION_BIN"
+
+    $success = Invoke-DlUnzipInstall $path $url $output -Target $target
+
+    if ($success) {
+        Set-KompanionEnvVar -Name "POPPLER_HOME" `
+             -Value "$env:KOMPANION_BIN\$target\Library"
+
+        Initialize-AddToPath -Directory "$env:POPPLER_HOME\bin"
+        Initialize-AddToManPath -Directory "$env:POPPLER_HOME\share\man"
+    } else {
+        Write-Warn "Failed to install Poppler, skipping configuration..."
+    }
+}
+
 function Invoke-ConfigurePrePoMax {
     Write-Head "* Configuring PrePoMax..."
 

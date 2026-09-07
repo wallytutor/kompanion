@@ -72,7 +72,6 @@ $DEFAULT_CONFIG = [PSCustomObject]@{
 $URL_SEVENZIP    = "https://github.com/commercialhaskell/stackage-content/releases/download/7z-22.01/"
 $URL_LESSMSI     = "https://github.com/activescott/lessmsi/releases/download/v2.10.3/lessmsi-v2.10.3.zip"
 $URL_IMAGEMAGICK = "https://github.com/ImageMagick/ImageMagick/releases/download/7.1.2-8/ImageMagick-7.1.2-8-portable-Q16-HDRI-x64.7z"
-$URL_POPPLER     = "https://github.com/oschwartz10612/poppler-windows/releases/download/v25.11.0-0/Release-25.11.0-0.zip"
 $URL_ZETTLR      = "https://github.com/Zettlr/Zettlr/releases/download/v4.2.0/Zettlr-4.2.0-x64.exe"
 $URL_FFMPEG      = "https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-full.7z"
 $URL_INKSCAPE    = "https://inkscape.org/gallery/item/53695/inkscape-1.4_2024-10-11_86a8ad7-x64.7z"
@@ -209,7 +208,6 @@ function Start-KompanionConfigure {
     if ($Config.base.imagemagick) { Invoke-InstallImageMagick }
     if ($Config.base.imagemagick) { Invoke-ConfigureImageMagick }
 
-    if ($Config.base.poppler)     { Invoke-InstallPoppler }
     if ($Config.base.poppler)     { Invoke-ConfigurePoppler }
 
     Write-Good "`n> Starting Kompanion simulation tools configuration..."
@@ -824,28 +822,6 @@ function Invoke-InstallLessMsi {
     Invoke-DownloadIfNeeded -URL $url -Output $output
     Invoke-UncompressZipIfNeeded -Source $output -Destination $path
     Invoke-ConfigureLessMsi
-}
-
-function Invoke-ConfigurePoppler {
-    Write-Head "* Configuring Poppler..."
-
-    Set-KompanionEnvVar -Name "POPLER_HOME" `
-         -Value "$env:KOMPANION_BIN\poppler\poppler-25.11.0\Library"
-
-    Initialize-AddToPath -Directory "$env:POPLER_HOME\bin"
-    Initialize-AddToManPath -Directory "$env:POPLER_HOME\share\man"
-}
-
-function Invoke-InstallPoppler {
-    $output = "$env:KOMPANION_TEMP\poppler.zip"
-    $path   = "$env:KOMPANION_BIN\poppler"
-    $url    = $URL_POPPLER
-
-    if (Test-Path -Path $path) { return }
-
-    Invoke-DownloadIfNeeded -URL $url -Output $output
-    Invoke-UncompressZipIfNeeded -Source $output -Destination $path
-    Invoke-ConfigurePoppler
 }
 
 function Invoke-ConfigureZettlr {

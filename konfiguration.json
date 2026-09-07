@@ -3,7 +3,11 @@
         "dotnet": "10.0.300",
         "erlang": "28.4.1",
         "gh": "2.89.0",
-        "julia": ["1", "12", "6"],
+        "julia": [
+            "1",
+            "12",
+            "6"
+        ],
         "logseq": "0.10.15",
         "meshlab": "2025.07",
         "neovim": "stable",
@@ -11,6 +15,7 @@
         "octave": "11.3.0",
         "ollama": "0.18.3",
         "pandoc": "3.8",
+        "poppler": "25.11.0",
         "quarto": "1.9.38",
         "ripgrep": "15.1.0",
         "typst": "0.15.0",
@@ -43,6 +48,7 @@
         "pandoc": "https://github.com/jgm/pandoc/releases/download/{0}/pandoc-{0}-windows-x86_64.zip",
         "paraview": "https://www.paraview.org/paraview-downloads/download.php?submit=Download&version=v6.0&type=binary&os=Windows&downloadFile=ParaView-6.0.1-Windows-Python3.12-msvc2017-AMD64.zip",
         "perl": "https://github.com/StrawberryPerl/Perl-Dist-Strawberry/releases/download/SP_54221_64bit/strawberry-perl-5.42.2.1-64bit-portable.zip",
+        "poppler": "https://github.com/oschwartz10612/poppler-windows/releases/download/v{0}-0/Release-{0}-0.zip",
         "prepomax": "https://prepomax.fs.um.si/Files/Downloads/PrePoMax%20v2.5.0.zip",
         "quarto": "https://github.com/quarto-dev/quarto-cli/releases/download/v{0}/quarto-{0}-win.zip",
         "ripgrep": "https://github.com/BurntSushi/ripgrep/releases/download/{0}/ripgrep-{0}-x86_64-pc-windows-gnu.zip",

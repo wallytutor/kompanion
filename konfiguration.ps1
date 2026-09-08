@@ -1066,6 +1066,23 @@ function Invoke-ConfigureRust {
     }
 }
 
+function Invoke-ConfigureSalome {
+    Write-Head "* Configuring SALOME..."
+    # NOTE: this needs to be downloaded manually (form to fill).
+
+    $pattern = "$env:KOMPANION_BIN\SALOME-*"
+    $latest = Get-Item -Path $pattern -ErrorAction SilentlyContinue | `
+        Where-Object { $_.PSIsContainer } | `
+        Sort-Object Name | Select-Object -Last 1
+
+    if (Test-Path $latest) {
+        Set-KompanionEnvVar -Name "SALOME_HOME" -Value "$latest"
+        Initialize-AddToPath -Directory "$env:SALOME_HOME"
+    } else {
+        Write-Warn "Failed to install SALOME, skipping configuration..."
+    }
+}
+
 function Invoke-ConfigureTabby {
     Write-Head "* Configuring Tabby..."
 

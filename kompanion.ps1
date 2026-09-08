@@ -204,6 +204,8 @@ function Start-KompanionConfigure {
 
     Write-Good "`n> Starting Kompanion simulation tools configuration..."
 
+    Invoke-ConfigureSalome
+
     if ($Config.simu.meshlab)      { Invoke-ConfigureMeshLab }
     if ($Config.simu.dwsim)        { Invoke-InstallDwsim }
     if ($Config.simu.opencascade)  { Invoke-InstallOpenCascade }
@@ -271,8 +273,6 @@ function Start-KompanionConfigure {
 
         & KompanionRebuild
     }
-
-    # SALOME
 }
 
 function Set-KompanionEnvVar {

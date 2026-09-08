@@ -15,8 +15,7 @@ param (
 
     # Build options:
     [switch]$NoPythonDeps,
-    [switch]$NoJuliaDeps,
-    [switch]$NoMajordome
+    [switch]$NoJuliaDeps
 )
 
 . "$PSScriptRoot\konfiguration.ps1"
@@ -92,10 +91,7 @@ $URL_RADCAL      = "https://github.com/firemodels/radcal/releases/download/v2.0/
 $URL_TESSERACT   = "https://github.com/tesseract-ocr/tesseract/releases/download/5.5.0/tesseract-ocr-w64-setup-5.5.0.20241111.exe"
 $URL_TESSDATA    = "https://github.com/tesseract-ocr/tessdata_best.git"
 
-$WALLYTUTOR_GITHUB = "https://github.com/wallytutor"
-$GIT_KOMPANION     = "$WALLYTUTOR_GITHUB/kompanion.git"
-$GIT_MAJORDOME     = "$WALLYTUTOR_GITHUB/python-majordome.git"
-$GIT_XPERIMENTAL   = "$WALLYTUTOR_GITHUB/xperimental.git"
+$GIT_KOMPANION     = "https://github.com/wallytutor/kompanion.git"
 #endregion: default_config
 
 #region: kompanion
@@ -161,10 +157,6 @@ function Start-KompanionConfigure {
     # ---
     # XXX: this order is important: sometimes SSL blocks downloads that
     # could succeed if done with curl, thus it comes before other tools!
-    # ---
-    # XXX: the hardcoded active languages are required by Majordome and/or
-    # just generally useful to have around; they will be installed and
-    # configured regardless of the configuration file,
     # ---
 
     Write-Good "`n> Starting Kompanion base configuration..."
@@ -280,13 +272,7 @@ function Start-KompanionConfigure {
         & KompanionRebuild
     }
 
-    if ($NoMajordome) {
-        Write-Warn "Skipping Majordome installation as requested..."
-    } else {
-        if (-not (Test-Path -Path "$env:KOMPANION_REPO\majordome")) {
-            & git clone $GIT_MAJORDOME "$env:KOMPANION_REPO\majordome"
-        }
-    }
+    # SALOME
 }
 
 function Set-KompanionEnvVar {

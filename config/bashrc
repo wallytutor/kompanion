@@ -12,9 +12,9 @@
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd)"
 
-MAJORDOME_GIT="https://github.com/wallytutor/python-majordome.git"
+# MAJORDOME_GIT="https://github.com/wallytutor/python-majordome.git"
 
-alias majordome="git clone ${MAJORDOME_GIT} majordome"
+# alias get_majordome="git clone ${MAJORDOME_GIT} majordome"
 
 ##############################################################################
 # Common aliases

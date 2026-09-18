@@ -31,6 +31,7 @@ repos/
 .logseq/*
 .securecoder/*
 .vscode/*
+.vscode-shared/*
 .zettlr/*
 
 # Rust directories:

@@ -25,10 +25,12 @@
     // Ignore all extension proposals; also block auto-update so that
     // personal/local extensions are not deleted on start-up.
     "extensions.ignoreRecommendations": true,
-    "extensions.autoUpdate": false,
+    "extensions.autoUpdate": "off",
     //////////////////////////////////////////////////////////////////////////
     // WORKBENCH
     //////////////////////////////////////////////////////////////////////////
+    // Show main sidebar on the right:
+    "workbench.sideBar.location": "right",
     // On startup do not show anything:
     "workbench.startupEditor": "none",
     // Do hide label, show icons:
@@ -37,7 +39,7 @@
     "workbench.tree.indent": 12,
     // Use a custom icon and color theme:
     "workbench.iconTheme": "bearded-icons",
-    "workbench.colorTheme": "Bearded Theme Anthracite",
+    "workbench.colorTheme": "Bearded Theme Aquarelle Cymbidium",
     // Add a clearly visible ruler (language dependent position):
     "workbench.colorCustomizations": {
         "editorRuler.foreground": "#3d17e4",
@@ -334,6 +336,7 @@
     // XXX: use Copilot behing a proxy!
     "win-ca.inject": "append",
     "chat.mcp.gallery.enabled": true,
+    "chat.disableAIFeatures": true,
     "chat.viewSessions.orientation": "stacked",
     "chat.tools.urls.autoApprove": {
         "https://code.visualstudio.com": true,

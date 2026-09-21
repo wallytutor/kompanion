@@ -27,6 +27,7 @@ $DEFAULT_CONFIG = [PSCustomObject]@{
         tabby       = $false
         nvim        = $false
 
+        devtoys     = $false
         drawio      = $false
         ffmpeg      = $false
         imagemagick = $false
@@ -174,6 +175,7 @@ function Start-KompanionConfigure {
     Invoke-ConfigureQuarto
     Invoke-ConfigureTypst
 
+    if ($Config.base.devtoys)     { Invoke-ConfigureDevToys }
     if ($Config.base.drawio)      { Invoke-ConfigureDrawio }
     if ($Config.base.jabref)      { Invoke-ConfigureJabRef }
     if ($Config.base.logseq)      { Invoke-ConfigureLogseq }

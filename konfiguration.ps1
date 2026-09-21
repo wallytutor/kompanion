@@ -410,6 +410,25 @@ function Invoke-ConfigureCurl {
     }
 }
 
+function Invoke-ConfigureDevToys {
+    Write-Head "* Configuring DevToys..."
+
+    $target = $null
+    $version = $KOMPANION_SETUP.version.devtoys
+    $url     = Get-PackageVersionedUrl "devtoys"
+    $output = "$env:KOMPANION_TEMP\devtoys.zip"
+    $path   = "$env:KOMPANION_BIN\devtoys-$version"
+
+    $success = Invoke-DlUnzipInstall $path $url $output -Target $target
+
+    if ($success) {
+        Set-KompanionEnvVar -Name "DEVTOYS_HOME" -Value "$path"
+        Initialize-AddToPath -Directory "$env:DEVTOYS_HOME"
+    } else {
+        Write-Warn "Failed to install DevToys, skipping configuration..."
+    }
+}
+
 function Invoke-ConfigureDotNET {
     Write-Head "* Configuring .NET..."
 

@@ -3,6 +3,7 @@
         "lessmsi":     false,
         "tabby":       false,
         "nvim":        false,
+        "devtoys":     false,
         "drawio":      false,
         "ffmpeg":      false,
         "imagemagick": false,

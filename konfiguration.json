@@ -1,5 +1,6 @@
 {
     "version": {
+        "devtoys": "2.0.9.0",
         "dotnet": "10.0.300",
         "erlang": "28.4.1",
         "gh": "2.89.0",
@@ -24,6 +25,7 @@
     "url": {
         "blender": "https://ftp.halifax.rwth-aachen.de/blender/release/Blender4.5/blender-4.5.4-windows-x64.zip",
         "curl": "https://curl.se/windows/dl-8.16.0_13/curl-8.16.0_13-win64-mingw.zip",
+        "devtoys": "https://github.com/DevToys-app/DevToys/releases/download/v{0}/devtoys_win_x64_portable.zip",
         "dotnet": "https://builds.dotnet.microsoft.com/dotnet/Sdk/{0}/dotnet-sdk-{0}-win-x64.zip",
         "drawio": "https://github.com/jgraph/drawio-desktop/releases/download/v29.0.3/draw.io-29.0.3-windows.zip",
         "elmer": "https://www.nic.funet.fi/pub/sci/physics/elmer/bin/windows/ElmerFEM-gui-mpi-Windows-AMD64.zip",

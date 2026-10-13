@@ -200,6 +200,8 @@
         "**/*.pyd/": true,
         // Diagram temporary files:
         "**/*.drawio.bkp": true,
+        // OpenFOAM processors:
+        "**/processor*/": true,
     },
     "files.watcherExclude": {
         // Majordome specifics:
@@ -336,7 +338,6 @@
     // XXX: use Copilot behing a proxy!
     "win-ca.inject": "append",
     "chat.mcp.gallery.enabled": true,
-    "chat.disableAIFeatures": true,
     "chat.viewSessions.orientation": "stacked",
     "chat.tools.urls.autoApprove": {
         "https://code.visualstudio.com": true,

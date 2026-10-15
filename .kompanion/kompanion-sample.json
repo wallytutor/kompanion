@@ -1,18 +1,19 @@
 {
     "base": {
-        "lessmsi":     false,
-        "tabby":       false,
-        "nvim":        false,
         "devtoys":     false,
         "drawio":      false,
         "ffmpeg":      false,
         "imagemagick": false,
         "inkscape":    false,
         "jabref":      false,
+        "lessmsi":     false,
+        "logseq":      false,
         "miktex":      false,
+        "nteract":     false,
+        "nvim":        false,
         "pandoc":      false,
         "poppler":     false,
-        "logseq":      false,
+        "tabby":       false,
         "zettlr":      false
     },
     "lang": {
@@ -23,8 +24,8 @@
         "julia":       false,
         "octave":      false,
         "perl":        false,
-        "rlang":       false,
-        "racket":      false
+        "racket":      false,
+        "rlang":       false
     },
     "simu": {
         "blender":     false,

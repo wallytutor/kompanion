@@ -1,4 +1,4 @@
-. './konfiguration.ps1'
+. "$PSScriptRoot\kompanion.ps1" -NoRun
 
 #region: test framework
 function Banner {

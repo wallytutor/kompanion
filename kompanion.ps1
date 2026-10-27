@@ -2311,6 +2311,9 @@ function Start-KompanionMain {
     Set-KompanionEnvVar -Name "KOMPANION_LOGS"  -Value "$KOMPANION_ROOT\.kompanion\logs"
     Set-KompanionEnvVar -Name "KOMPANION_TEMP"  -Value "$KOMPANION_ROOT\.kompanion\temp"
 
+    # Override it here even if declared globally so that this works in Antigravity
+    Set-KompanionEnvVar -Name "KOMPANION_SOURCE" -Value "$KOMPANION_ROOT\kompanion.ps1"
+
     Write-Good "> Starting Kompanion from $env:KOMPANION_DIR"
 
     # Ensure important directories exist:

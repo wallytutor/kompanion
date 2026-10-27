@@ -389,7 +389,7 @@
                 "-NoProfile",
                 "-NoExit",
                 "-Command",
-                ". ${env:KOMPANION_DIR}\\kompanion.ps1"
+                ". ${env:KOMPANION_SOURCE}"
             ]
         },
     },

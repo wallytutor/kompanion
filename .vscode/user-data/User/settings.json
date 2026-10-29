@@ -505,5 +505,6 @@
     "powershell.promptToUpdatePowerShell": false,
     "geminicodeassist.displayInlineContextHint": false,
     "MATLAB.showFeatureNotAvailableError": false,
-    "http.systemCertificatesNode": true
+    "http.systemCertificatesNode": true,
+    "haskell.manageHLS": "GHCup"
 }
